@@ -7,11 +7,15 @@ class CustomButton extends StatelessWidget {
   final Function onPressed;
   final Color? btnColor;
   final bool? loading;
+  final Color? bordercolor;
+  final Color? textColor;
   const CustomButton(
       {super.key,
       required this.text,
       required this.onPressed,
       this.btnColor,
+      this.bordercolor,
+      this.textColor,
       this.loading});
 
   @override
@@ -24,6 +28,7 @@ class CustomButton extends StatelessWidget {
         width: MediaQuery.of(context).size.width,
         decoration: BoxDecoration(
           color: btnColor ?? AppColor.primaryColor,
+          border: Border.all(color: bordercolor ?? Colors.transparent),
           borderRadius: BorderRadius.circular(7),
         ),
         child: Center(
@@ -33,7 +38,7 @@ class CustomButton extends StatelessWidget {
                 ? CustomLinkLabel(
                     text: text,
                     textAlign: TextAlign.center,
-                    color: Colors.white,
+                    color: textColor ?? Colors.white,
                   )
                 : loading!
                     ? const SizedBox(
@@ -47,6 +52,7 @@ class CustomButton extends StatelessWidget {
                     : CustomLinkLabel(
                         text: text,
                         textAlign: TextAlign.center,
+                        color: textColor ?? Colors.white,
                       ),
           ),
         ),
