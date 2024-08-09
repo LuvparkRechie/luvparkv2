@@ -15,6 +15,7 @@ import '../registration/index.dart';
 import '../splash_screen/index.dart';
 import '../terms/index.dart';
 import '../wallet/index.dart';
+import '../qr/index.dart';
 import 'routes.dart';
 
 class AppPages {
@@ -91,6 +92,11 @@ class AppPages {
       name: Routes.wallet,
       page: () => const WalletScreen(),
       binding: WalletBinding(),
+    ),
+    GetPage(
+      name: Routes.qrwallet,
+      page: () => const QrWallet(),
+      binding: QrWalletBinding(),
     ),
   ];
 }

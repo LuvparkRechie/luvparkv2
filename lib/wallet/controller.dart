@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 
 import 'package:get/get.dart';
@@ -8,47 +9,37 @@ import 'package:luvpark_get/http/api_keys.dart';
 import 'package:luvpark_get/http/http_request.dart';
 
 class WalletController extends GetxController
-    with GetSingleTickerProviderStateMixin { 
+    with GetSingleTickerProviderStateMixin {
   WalletController();
   RxBool isLoading = true.obs;
   RxBool isNetConn = true.obs;
   RxString toDate = "".obs;
   RxString fromDate = "".obs;
   RxList logs = [].obs;
-  
-
-
+  RxList userData = [].obs;
 
   @override
-  void onInit() { 
+  void onInit() {
     DateTime timeNow = DateTime.now();
     super.onInit();
     toDate.value = timeNow.toString().split(" ")[0];
     fromDate.value =
         timeNow.subtract(const Duration(days: 29)).toString().split(" ")[0];
-    // getUserBalance();
-    getLogs();
+    getUserBalance();
   }
 
-  // // Future<void> getUserBalance() async {
-  // //   Functions.getUserBalance(Get.context!, (dataBalance) async {
-  // //     userBal.value = dataBalance[0]["items"];
-  // //     if (!dataBalance[0]["has_net"]) {
-  // //       netConnected.value = false;
-  // //       isLoading.value = false;
-  // //       isLoadingMap.value = false;
-  // //     } else {
-  // //       isLoading.value = false;
-  // //       if (isSearch) {
-  // //         getNearest(dataBalance[0]["items"], searchCoordinates);
-  // //       } else {
-  // //         List ltlng = await Functions.getCurrentPosition();
-  // //         LatLng coordinates = LatLng(ltlng[0]["lat"], ltlng[0]["long"]);
-  // //         getNearest(dataBalance[0]["items"], coordinates);
-  // //       }
-  // //     }
-  // //   });
-  // }
+  Future<void> getUserBalance() async {
+    Functions.getUserBalance(Get.context!, (dataBalance) async {
+      if (!dataBalance[0]["has_net"]) {
+        isLoading.value = false;
+        isNetConn.value = false;
+        return;
+      } else {
+        userData.value = dataBalance[0]["items"];
+        getLogs();
+      }
+    });
+  }
 
   Future<void> getLogs() async {
     final item = await Authentication().getUserData();
@@ -95,6 +86,5 @@ class WalletController extends GetxController
         );
       }
     });
-    
   }
 }

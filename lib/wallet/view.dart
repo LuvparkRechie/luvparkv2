@@ -1,15 +1,21 @@
 // ignore_for_file: prefer_const_constructors
 
+import 'dart:convert';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:intl/intl.dart';
+import 'package:luvpark_get/auth/authentication.dart';
+import 'package:luvpark_get/custom_widgets/alert_dialog.dart';
 import 'package:luvpark_get/custom_widgets/app_color.dart';
 import 'package:luvpark_get/custom_widgets/custom_text.dart';
 import 'package:luvpark_get/custom_widgets/no_internet.dart';
 import 'package:luvpark_get/custom_widgets/park_shimmer.dart';
+import 'package:luvpark_get/routes/routes.dart';
 import 'package:luvpark_get/wallet/controller.dart';
+import 'package:luvpark_get/qr/view.dart';
 
 import 'utils/transaction_details.dart';
 
@@ -36,6 +42,11 @@ class WalletScreen extends StatelessWidget {
                     child: ListView(
                       padding: const EdgeInsets.fromLTRB(15, 15, 15, 0),
                       children: [
+                        // IconButton(
+                        //     onPressed: () {
+                        //       print("userdata ${ct.userData}");
+                        //     },
+                        //     icon: Icon(Icons.lock_clock)),
                         Row(
                           children: [
                             const Expanded(
@@ -60,9 +71,22 @@ class WalletScreen extends StatelessWidget {
                         Container(height: 15),
                         Container(
                           width: MediaQuery.of(context).size.width,
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(7),
+                          clipBehavior: Clip.antiAlias,
+                          decoration: ShapeDecoration(
                             color: Colors.white,
+                            shape: RoundedRectangleBorder(
+                              side: const BorderSide(
+                                  width: 1, color: Color(0xFFDFE7EF)),
+                              borderRadius: BorderRadius.circular(7),
+                            ),
+                            shadows: const [
+                              BoxShadow(
+                                color: Color(0x0C000000),
+                                blurRadius: 15,
+                                offset: Offset(0, 5),
+                                spreadRadius: 0,
+                              )
+                            ],
                           ),
                           child: Padding(
                             padding: const EdgeInsets.all(15),
@@ -70,7 +94,7 @@ class WalletScreen extends StatelessWidget {
                               children: [
                                 Row(
                                   children: [
-                                    const Expanded(
+                                    Expanded(
                                       child: Column(
                                         crossAxisAlignment:
                                             CrossAxisAlignment.start,
@@ -79,7 +103,7 @@ class WalletScreen extends StatelessWidget {
                                               text: "Current Balance"),
                                           SizedBox(height: 5),
                                           CustomTitle(
-                                            text: "120.00",
+                                            text: ct.userData[0]["amount_bal"],
                                             fontWeight: FontWeight.w900,
                                             fontSize: 20,
                                             textAlign: TextAlign.center,
@@ -123,9 +147,9 @@ class WalletScreen extends StatelessWidget {
                                       color: Colors.pink,
                                     ),
                                     Container(width: 5),
-                                    const Flexible(
+                                    Flexible(
                                         child: CustomParagraph(
-                                      text: "100.00",
+                                      text: ct.userData[0]["points_bal"],
                                       fontSize: 12,
                                       color: Colors.black,
                                     )),
@@ -142,58 +166,106 @@ class WalletScreen extends StatelessWidget {
                               ],
                             ),
                           ),
-                        ),
-                        Container(height: 5),
+                        ), 
                         Container(height: 15),
                         Row(
                           children: [
-                            Container(
-                              padding: const EdgeInsets.symmetric(
-                                  horizontal: 15, vertical: 8),
-                              decoration: BoxDecoration(
-                                color: Colors.white,
-                                borderRadius: BorderRadius.circular(7),
-                              ),
-                              child: Row(
-                                children: [
-                                  Icon(
-                                    Iconsax.send_2,
-                                    color: AppColor.primaryColor,
+                            GestureDetector(
+                              onTap: () async {
+                                final item =
+                                    await Authentication().getUserData();
+                                final uData = jsonDecode(item!);
+
+                                if (uData["first_name"].toString().isEmpty ||
+                                    uData["first_name"] == null) {
+                                  CustomDialog().errorDialog(
+                                      context,
+                                      "Attention",
+                                      "Complete your account information to access the requested service.\nGo to profile and update your account. ",
+                                      () {
+                                    Get.back();
+                                  });
+                                } else {}
+                                // print("items $item");
+                              },
+                              child: Container(
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: 15, vertical: 8),
+                                clipBehavior: Clip.antiAlias,
+                                decoration: ShapeDecoration(
+                                  color: Colors.white,
+                                  shape: RoundedRectangleBorder(
+                                    side: const BorderSide(
+                                        width: 1, color: Color(0xFFDFE7EF)),
+                                    borderRadius: BorderRadius.circular(7),
                                   ),
-                                  Container(width: 5),
-                                  const CustomParagraph(text: "Send")
-                                ],
+                                  shadows: const [
+                                    BoxShadow(
+                                      color: Color(0x0C000000),
+                                      blurRadius: 15,
+                                      offset: Offset(0, 5),
+                                      spreadRadius: 0,
+                                    )
+                                  ],
+                                ),
+                                child: Row(
+                                  children: [
+                                    Icon(
+                                      Iconsax.send_2,
+                                      color: AppColor.primaryColor,
+                                    ),
+                                    Container(width: 5),
+                                    const CustomParagraph(text: "Send")
+                                  ],
+                                ),
                               ),
                             ),
                             Container(width: 10),
-                            Container(
-                              padding: const EdgeInsets.symmetric(
-                                  horizontal: 15, vertical: 8),
-                              decoration: BoxDecoration(
-                                color: Colors.white,
-                                borderRadius: BorderRadius.circular(7),
-                              ),
-                              child: Row(
-                                children: [
-                                  Icon(
-                                    CupertinoIcons.qrcode_viewfinder,
-                                    color: AppColor.primaryColor,
+                            GestureDetector(
+                              onTap: () {
+                                Get.toNamed(Routes.qrwallet);
+                              },
+                              child: Container(
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: 15, vertical: 8),
+                                clipBehavior: Clip.antiAlias,
+                                decoration: ShapeDecoration(
+                                  color: Colors.white,
+                                  shape: RoundedRectangleBorder(
+                                    side: const BorderSide(
+                                        width: 1, color: Color(0xFFDFE7EF)),
+                                    borderRadius: BorderRadius.circular(7),
                                   ),
-                                  Container(width: 5),
-                                  const CustomParagraph(text: "QR")
-                                ],
+                                  shadows: const [
+                                    BoxShadow(
+                                      color: Color(0x0C000000),
+                                      blurRadius: 15,
+                                      offset: Offset(0, 5),
+                                      spreadRadius: 0,
+                                    )
+                                  ],
+                                ),
+                                child: Row(
+                                  children: [
+                                    Icon(
+                                      CupertinoIcons.qrcode_viewfinder,
+                                      color: AppColor.primaryColor,
+                                    ),
+                                    Container(width: 5),
+                                    const CustomParagraph(text: "QR")
+                                  ],
+                                ),
                               ),
                             ),
                           ],
                         ),
                         Container(height: 30),
                         Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            const Expanded(
-                              child: CustomTitle(
-                                text: "Transaction History",
-                                fontWeight: FontWeight.w600,
-                              ),
+                            CustomTitle(
+                              text: "Transaction History",
+                              fontWeight: FontWeight.w600,
                             ),
                             TextButton(
                                 onPressed: () {
@@ -222,56 +294,54 @@ class WalletScreen extends StatelessWidget {
                           ],
                         ),
                         Container(height: 15),
-                        Expanded(
-                          child: ct.isLoading.value
-                              ? const ParkShimmer()
-                              : ListView.separated(
-                                  physics: const NeverScrollableScrollPhysics(),
-                                  shrinkWrap: true,
-                                  padding: EdgeInsets.zero,
-                                  itemCount:
-                                      ct.logs.length > 5 ? 5 : ct.logs.length,
-                                  itemBuilder: (context, index) {
-                                    return GestureDetector(
-                                      onTap: () {
-                                        showModalBottomSheet(
-                                          backgroundColor: Colors.transparent,
-                                          context: context,
-                                          builder: (context) =>
-                                              TransactionDetails(
-                                            index: index,
-                                            data: ct.logs,
-                                          ),
-                                        );
-                                      },
-                                      child: ListTile(
-                                        contentPadding: EdgeInsets.zero,
-                                        title: CustomTitle(
-                                          text: ct.logs[index]["tran_desc"],
-                                          fontSize: 14,
-                                          fontWeight: FontWeight.w600,
+                        ct.isLoading.value
+                            ? const ParkShimmer()
+                            : ListView.separated(
+                                physics: const NeverScrollableScrollPhysics(),
+                                shrinkWrap: true,
+                                padding: EdgeInsets.zero,
+                                itemCount:
+                                    ct.logs.length > 5 ? 5 : ct.logs.length,
+                                itemBuilder: (context, index) {
+                                  return GestureDetector(
+                                    onTap: () {
+                                      showModalBottomSheet(
+                                        backgroundColor: Colors.transparent,
+                                        context: context,
+                                        builder: (context) =>
+                                            TransactionDetails(
+                                          index: index,
+                                          data: ct.logs,
                                         ),
-                                        subtitle: CustomParagraph(
-                                          text: DateFormat('MMM d, yyyy h:mm a')
-                                              .format(DateTime.parse(
-                                                  ct.logs[index]["tran_date"])),
-                                          fontSize: 12,
-                                        ),
-                                        trailing: Icon(
-                                          CupertinoIcons.chevron_right,
-                                          size: 14,
-                                          color: AppColor.primaryColor,
-                                        ),
+                                      );
+                                    },
+                                    child: ListTile(
+                                      contentPadding: EdgeInsets.zero,
+                                      title: CustomTitle(
+                                        text: ct.logs[index]["tran_desc"],
+                                        fontSize: 14,
+                                        fontWeight: FontWeight.w600,
                                       ),
-                                    );
-                                  },
-                                  separatorBuilder: (context, index) =>
-                                      const Divider(
-                                    endIndent: 1,
-                                    height: 1,
-                                  ),
+                                      subtitle: CustomParagraph(
+                                        text: DateFormat('MMM d, yyyy h:mm a')
+                                            .format(DateTime.parse(
+                                                ct.logs[index]["tran_date"])),
+                                        fontSize: 12,
+                                      ),
+                                      trailing: Icon(
+                                        CupertinoIcons.chevron_right,
+                                        size: 14,
+                                        color: AppColor.primaryColor,
+                                      ),
+                                    ),
+                                  );
+                                },
+                                separatorBuilder: (context, index) =>
+                                    const Divider(
+                                  endIndent: 1,
+                                  height: 1,
                                 ),
-                        ),
+                              ),
                       ],
                     ),
                   ),
@@ -313,52 +383,48 @@ class BottomSheetWidget extends StatelessWidget {
             ),
             Container(height: 10),
             Expanded(
-              child: StretchingOverscrollIndicator(
-                axisDirection: AxisDirection.down,
-                child: ctr.isLoading.value
-                    ? const ParkShimmer()
-                    : ListView.separated(
-                        padding: const EdgeInsets.all(15),
-                        itemCount: ctr.logs.length,
-                        itemBuilder: (context, index) {
-                          return GestureDetector(
-                            onTap: () {
-                              showModalBottomSheet(
-                                backgroundColor: Colors.transparent,
-                                context: context,
-                                builder: (context) => TransactionDetails(
-                                  index: index,
-                                  data: ctr.logs,
-                                ),
-                              );
-                            },
-                            child: ListTile(
-                              contentPadding: EdgeInsets.zero,
-                              title: CustomTitle(
-                                text: ctr.logs[index]["tran_desc"],
-                                fontSize: 14,
-                                fontWeight: FontWeight.w600,
+              child: ctr.isLoading.value
+                  ? const ParkShimmer()
+                  : ListView.separated(
+                      padding: const EdgeInsets.all(15),
+                      itemCount: ctr.logs.length,
+                      itemBuilder: (context, index) {
+                        return GestureDetector(
+                          onTap: () {
+                            showModalBottomSheet(
+                              backgroundColor: Colors.transparent,
+                              context: context,
+                              builder: (context) => TransactionDetails(
+                                index: index,
+                                data: ctr.logs,
                               ),
-                              subtitle: CustomParagraph(
-                                text: DateFormat('MMM d, yyyy h:mm a').format(
-                                    DateTime.parse(
-                                        ctr.logs[index]["tran_date"])),
-                                fontSize: 12,
-                              ),
-                              trailing: Icon(
-                                CupertinoIcons.chevron_right,
-                                size: 14,
-                                color: AppColor.primaryColor,
-                              ),
+                            );
+                          },
+                          child: ListTile(
+                            contentPadding: EdgeInsets.zero,
+                            title: CustomTitle(
+                              text: ctr.logs[index]["tran_desc"],
+                              fontSize: 14,
+                              fontWeight: FontWeight.w600,
                             ),
-                          );
-                        },
-                        separatorBuilder: (context, index) => const Divider(
-                          endIndent: 1,
-                          height: 1,
-                        ),
+                            subtitle: CustomParagraph(
+                              text: DateFormat('MMM d, yyyy h:mm a').format(
+                                  DateTime.parse(ctr.logs[index]["tran_date"])),
+                              fontSize: 12,
+                            ),
+                            trailing: Icon(
+                              CupertinoIcons.chevron_right,
+                              size: 14,
+                              color: AppColor.primaryColor,
+                            ),
+                          ),
+                        );
+                      },
+                      separatorBuilder: (context, index) => const Divider(
+                        endIndent: 1,
+                        height: 1,
                       ),
-              ),
+                    ),
             )
           ]);
         },
