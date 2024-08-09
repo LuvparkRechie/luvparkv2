@@ -50,7 +50,11 @@ class Variables {
     return targetDateTime.isAfter(oneHourAgo) &&
         targetDateTime.isBefore(currentDateTime);
   }
-
+  static String formatDateLocal(String dateString) {
+    DateTime timestamp = DateTime.parse(dateString);
+    String formattedTime = DateFormat('MMM d, yyyy hh:mm a').format(timestamp);
+    return formattedTime;
+  }
   static String arrayBufferToBase64(ByteBuffer buffer) {
     var bytes = Uint8List.view(buffer);
     var base64String = base64.encode(bytes);

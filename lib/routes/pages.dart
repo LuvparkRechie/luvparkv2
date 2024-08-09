@@ -1,27 +1,21 @@
 import 'package:get/get.dart';
-import 'package:luvpark_get/activate_acc/index.dart';
-import 'package:luvpark_get/login/bindings.dart';
-import 'package:luvpark_get/login/view.dart';
-import 'package:luvpark_get/main.dart';
-import 'package:luvpark_get/mapa/index.dart';
-import 'package:luvpark_get/onboarding/bindings.dart';
-import 'package:luvpark_get/onboarding/view.dart';
-import 'package:luvpark_get/otp_screen/index.dart';
-import 'package:luvpark_get/parking/bindings.dart';
-import 'package:luvpark_get/parking/view.dart';
-import 'package:luvpark_get/parking_areas/index.dart';
-import 'package:luvpark_get/parking_details/bindings.dart';
-import 'package:luvpark_get/parking_details/view.dart';
-import 'package:luvpark_get/permission/permission.dart';
-import 'package:luvpark_get/registration/index.dart';
-import 'package:luvpark_get/routes/routes.dart';
-import 'package:luvpark_get/splash_screen/bindings.dart';
-import 'package:luvpark_get/splash_screen/view.dart';
-import 'package:luvpark_get/terms/bindings.dart';
-import 'package:luvpark_get/terms/view.dart';
-
+import '../activate_acc/index.dart';
 import '../landing/bindings.dart';
 import '../landing/view.dart';
+import '../login/index.dart';
+import '../main.dart';
+import '../mapa/index.dart';
+import '../onboarding/index.dart';
+import '../otp_screen/index.dart';
+import '../parking/index.dart';
+import '../parking_areas/index.dart';
+import '../parking_details/index.dart';
+import '../permission/permission.dart';
+import '../registration/index.dart';
+import '../splash_screen/index.dart';
+import '../terms/index.dart';
+import '../wallet/index.dart';
+import 'routes.dart';
 
 class AppPages {
   static final List<GetPage> pages = [
@@ -92,6 +86,11 @@ class AppPages {
       name: Routes.map,
       page: () => const DashboardMapScreen(),
       binding: DashboardMapBinding(),
+    ),
+    GetPage(
+      name: Routes.wallet,
+      page: () => const WalletScreen(),
+      binding: WalletBinding(),
     ),
   ];
 }

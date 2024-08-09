@@ -130,7 +130,7 @@ class DashboardMapScreen extends GetView<DashboardMapController> {
                               color: Colors.blueAccent),
                           title: const CustomParagraph(text: "Wallet"),
                           onTap: () {
-                            Navigator.pop(context);
+                            Get.toNamed(Routes.wallet);
                           },
                         ),
                         ListTile(

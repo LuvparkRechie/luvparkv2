@@ -1,5 +1,6 @@
 import 'package:get/get.dart';
-import 'package:luvpark_get/wallet/controller.dart';
+import 'controller.dart';
+
 
 class WalletBinding implements Bindings {
   @override

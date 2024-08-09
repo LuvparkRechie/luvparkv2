@@ -16,7 +16,8 @@ class CustomButton extends StatelessWidget {
       this.btnColor,
       this.bordercolor,
       this.textColor,
-      this.loading});
+      this.loading,
+      int? btnHeight});
 
   @override
   Widget build(BuildContext context) {

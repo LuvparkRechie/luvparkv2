@@ -1,4 +1,4 @@
-library auditor;
+library wallet;
 
 export './bindings.dart';
 export './controller.dart';

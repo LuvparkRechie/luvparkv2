@@ -5,7 +5,11 @@ class ParkShimmer extends StatelessWidget {
   const ParkShimmer({super.key});
   @override
   Widget build(BuildContext context) {
-    return Padding(
+    return ListView.separated(
+      padding: EdgeInsets.zero,
+      itemCount: 5,
+      itemBuilder: (context, index) {
+        return Padding(
       padding: const EdgeInsets.symmetric(vertical: 5),
       child: Container(
         padding: const EdgeInsetsDirectional.all(5),
@@ -108,6 +112,12 @@ class ParkShimmer extends StatelessWidget {
             ],
           ),
         ),
+      ),
+    );
+      },
+      separatorBuilder: (context, index) => const Divider(
+        endIndent: 1,
+        height: 1,
       ),
     );
   }
