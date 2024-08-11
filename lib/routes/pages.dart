@@ -1,5 +1,9 @@
 import 'package:get/get.dart';
+
 import '../activate_acc/index.dart';
+import '../booking/index.dart';
+import '../booking/utils/booking_receipt/index.dart';
+import '../booking_notice/index.dart';
 import '../landing/bindings.dart';
 import '../landing/view.dart';
 import '../login/index.dart';
@@ -11,11 +15,11 @@ import '../parking/index.dart';
 import '../parking_areas/index.dart';
 import '../parking_details/index.dart';
 import '../permission/permission.dart';
+import '../qr/index.dart';
 import '../registration/index.dart';
 import '../splash_screen/index.dart';
 import '../terms/index.dart';
 import '../wallet/index.dart';
-import '../qr/index.dart';
 import 'routes.dart';
 
 class AppPages {
@@ -97,6 +101,21 @@ class AppPages {
       name: Routes.qrwallet,
       page: () => const QrWallet(),
       binding: QrWalletBinding(),
+    ),
+    GetPage(
+      name: Routes.booking,
+      page: () => const BookingPage(),
+      binding: BookingBinding(),
+    ),
+    GetPage(
+      name: Routes.bookingNotice,
+      page: () => const BookingNotice(),
+      binding: BookingNoticeBinding(),
+    ),
+    GetPage(
+      name: Routes.bookingReceipt,
+      page: () => const BookingReceipt(),
+      binding: BookingReceiptBinding(),
     ),
   ];
 }

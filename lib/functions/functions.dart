@@ -17,10 +17,12 @@ import 'package:luvpark_get/custom_widgets/alert_dialog.dart';
 import 'package:luvpark_get/custom_widgets/variables.dart';
 import 'package:luvpark_get/http/api_keys.dart';
 import 'package:luvpark_get/http/http_request.dart';
+import 'package:luvpark_get/location_auth/location_auth.dart';
 import 'package:luvpark_get/routes/routes.dart';
 import 'package:luvpark_get/sqlite/pa_message_table.dart';
 import 'package:luvpark_get/sqlite/reserve_notification_table.dart';
 import 'package:luvpark_get/sqlite/share_location_table.dart';
+import 'package:luvpark_get/sqlite/vehicle_brands_table.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:timezone/data/latest_all.dart' as tz;
 
@@ -492,7 +494,6 @@ class Functions {
           }
         }
       }
-
       // Return an empty list in case of errors or no data
       return [];
     } catch (e) {
@@ -560,5 +561,136 @@ class Functions {
     } catch (e) {
       return null;
     }
+  }
+
+  static Future<void> computeDistanceResorChckIN(
+      context, LatLng dest, Function cb) async {
+    LocationService.grantPermission(Get.context!, (isGranted) {
+      if (isGranted) {
+        Functions.getLocation(context, (location) {
+          LatLng ll = location;
+          hasInternetConnection((hasInternet) async {
+            if (hasInternet) {
+              final estimatedData = await Functions.fetchETA(
+                  LatLng(ll.latitude, ll.longitude), dest);
+              if (estimatedData[0]["error"] == "No Internet") {
+                cb({"success": false});
+
+                CustomDialog().internetErrorDialog(context, () {
+                  Get.back();
+                });
+                return;
+              }
+              if (estimatedData.isEmpty) {
+                cb({"success": false});
+                CustomDialog().errorDialog(context, "luvpark",
+                    Variables.popUpMessageOutsideArea, () {});
+                return;
+              } else {
+                const HttpRequest(api: ApiKeys.gApiLuvParkGetComputeDistance)
+                    .get()
+                    .then((returnData) async {
+                  if (returnData == "No Internet") {
+                    cb({"success": false});
+                    CustomDialog().internetErrorDialog(context, () {
+                      Get.back();
+                    });
+                    return;
+                  }
+                  if (returnData == null) {
+                    cb({"success": false});
+                    CustomDialog().serverErrorDialog(context, () {
+                      Get.back();
+                    });
+
+                    return;
+                  } else {
+                    //COMPUTE DISTANCE BY TIME IF AVAILABLE FOR RESERVATION`
+                    if (returnData["items"][0]["user_chk_in_um"] == "TM") {
+                      int estimatedMinute = int.parse(
+                          estimatedData[0]["time"].toString().split(" ")[0]);
+                      double distanceCanChkIn = Variables.convertToMeters(
+                          returnData["items"][0]["user_chk_in_within"]
+                              .toString());
+                      //COMPUTE DISTANCE BY TIME IF ABLE TO RESERVE BY 20000 METERS AWAY`
+                      if (estimatedMinute >=
+                              int.parse(returnData["items"][0]["min_psr_from"]
+                                  .toString()) &&
+                          estimatedMinute <=
+                              int.parse(returnData["items"][0]["max_psr_from"]
+                                  .toString())) {
+                        cb({
+                          "success": true,
+                          "can_checkIn": estimatedMinute <= distanceCanChkIn,
+                          "location": ll,
+                          "message":
+                              "Early check-in is not allowed if you are more than ${returnData["items"][0]["user_chk_in_within"].toString()} minutes away from the selected parking area.",
+                        });
+                      } else {
+                        cb({"success": false});
+
+                        CustomDialog().errorDialog(context, "luvpark",
+                            "Early booking is not allowed if you are more than ${returnData["items"][0]["max_psr_from"].toString()} minutes away from the selected parking area.",
+                            () {
+                          Get.back();
+                        });
+                      }
+                    } else {
+                      //COMPUTE DISTANCE BY DISTANCE IN METERS IF AVAILABLE FOR RESERVATION
+                      double estimatedDistance = Variables.convertToMeters(
+                          estimatedData[0]["distance"].toString());
+                      double minDistance = Variables.convertToMeters(
+                          returnData["items"][0]["min_psr_from"].toString());
+                      double maxDistance = Variables.convertToMeters(
+                          returnData["items"][0]["max_psr_from"].toString());
+                      double distanceCanChkIn = Variables.convertToMeters(
+                          returnData["items"][0]["user_chk_in_within"]
+                              .toString());
+                      if (estimatedDistance.toDouble() >=
+                              minDistance.toDouble() &&
+                          estimatedDistance.toDouble() <=
+                              maxDistance.toDouble()) {
+                        cb({
+                          "success": true,
+                          "can_checkIn": estimatedDistance <= distanceCanChkIn,
+                          "location": ll,
+                          "message":
+                              "Early check-in is not allowed if you are more than ${returnData["items"][0]["user_chk_in_within"].toString()} meters away from the selected parking area.",
+                        });
+                      } else {
+                        cb({"success": false});
+                        CustomDialog().errorDialog(context, "luvpark",
+                            "Early booking is not allowed if you are more than ${returnData["items"][0]["max_psr_from"].toString()} meters away from the selected parking area.",
+                            () {
+                          Get.back();
+                        });
+                      }
+                    }
+                  }
+                });
+              }
+            } else {
+              cb({"success": false});
+              CustomDialog().internetErrorDialog(context, () {
+                Get.back();
+              });
+              return;
+            }
+          });
+        });
+      } else {
+        CustomDialog()
+            .errorDialog(context, "luvpark", "No permissions granted.", () {
+          Get.back();
+        });
+      }
+    });
+  }
+
+  static Future<String> getBrandName(int vtId, int vbId) async {
+    final String? brandName =
+        await VehicleBrandsTable.instance.readVehicleBrandsByVbId(vtId, vbId);
+
+    return brandName!;
   }
 }

@@ -8,6 +8,7 @@ import 'package:luvpark_get/custom_widgets/app_color.dart';
 import 'package:luvpark_get/custom_widgets/custom_button.dart';
 import 'package:luvpark_get/custom_widgets/custom_text.dart';
 import 'package:luvpark_get/custom_widgets/no_internet.dart';
+import 'package:luvpark_get/custom_widgets/variables.dart';
 import 'package:luvpark_get/parking_details/controller.dart';
 
 class ParkingDetails extends GetView<ParkingDetailsController> {
@@ -27,99 +28,91 @@ class ParkingDetails extends GetView<ParkingDetailsController> {
         body: Obx(
           () => !ct.isNetConnected.value
               ? const NoInternetConnected()
-              : ct.isLoadingAmen.value
-                  ? Container(
-                      child: Text("loading amen"),
+              : ct.isLoading.value
+                  ? Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        SizedBox(
+                          width: MediaQuery.of(context).size.width * .80,
+                          height: MediaQuery.of(context).size.width * .80,
+                          child: const Image(
+                            image: AssetImage(
+                                "assets/area_details/create_route.png"),
+                            fit: BoxFit.cover,
+                          ),
+                        ),
+                        const CustomTitle(
+                            text: "Creating route please wait..."),
+                        Container(height: 10),
+                        SizedBox(
+                          child: Center(
+                            child: CircularProgressIndicator(
+                              color: Colors.grey.shade400,
+                              backgroundColor: Colors.grey.shade200,
+                            ),
+                          ),
+                        )
+                      ],
                     )
-                  : ct.isLoadingRoute.value
-                      ? Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
+                  : Stack(
+                      children: [
+                        Column(
                           children: [
-                            SizedBox(
-                              width: MediaQuery.of(context).size.width * .80,
-                              height: MediaQuery.of(context).size.width * .80,
-                              child: const Image(
-                                image: AssetImage(
-                                    "assets/area_details/create_route.png"),
-                                fit: BoxFit.cover,
+                            Expanded(
+                              child: GoogleMap(
+                                initialCameraPosition: ct.intialPosition!,
+                                mapType: MapType.normal,
+                                mapToolbarEnabled: false,
+                                zoomControlsEnabled: false,
+                                myLocationEnabled: false,
+                                myLocationButtonEnabled: false,
+                                compassEnabled: false,
+                                buildingsEnabled: false,
+                                tiltGesturesEnabled: true,
+                                markers: Set<Marker>.of(ct.markers),
+                                polylines: {ct.polyline.value},
+                                onMapCreated: ct.onMapCreated,
                               ),
                             ),
-                            const CustomTitle(
-                                text: "Creating route please wait..."),
-                            Container(height: 10),
-                            SizedBox(
-                              child: Center(
-                                child: CircularProgressIndicator(
-                                  color: Colors.grey.shade400,
-                                  backgroundColor: Colors.grey.shade200,
-                                ),
-                              ),
+                            Container(
+                              height: MediaQuery.of(context).size.height * .25,
                             )
                           ],
-                        )
-                      : Stack(
-                          children: [
-                            Column(
-                              children: [
-                                Expanded(
-                                  child: GoogleMap(
-                                    initialCameraPosition: CameraPosition(
-                                      target: ct.center,
-                                      zoom: 12.0,
-                                    ),
-                                    mapType: MapType.normal,
-                                    mapToolbarEnabled: false,
-                                    zoomControlsEnabled: false,
-                                    myLocationEnabled: false,
-                                    myLocationButtonEnabled: false,
-                                    compassEnabled: false,
-                                    buildingsEnabled: false,
-                                    tiltGesturesEnabled: true,
-                                    markers: Set<Marker>.of(ct.markers),
-                                    polylines: {ct.polyline.value},
-                                    onMapCreated: ct.onMapCreated,
-                                  ),
-                                ),
-                                Container(
-                                  height:
-                                      MediaQuery.of(context).size.height * .25,
+                        ),
+                        Positioned(bottom: 0, child: _buildDetails(ct)),
+                        Positioned(
+                          top: 40,
+                          left: 20,
+                          child: Container(
+                            width: 45,
+                            height: 45,
+                            clipBehavior: Clip.antiAlias,
+                            decoration: ShapeDecoration(
+                              color: Colors.white,
+                              shape: RoundedRectangleBorder(
+                                side: const BorderSide(
+                                    width: 1, color: Color(0xFFDFE7EF)),
+                                borderRadius: BorderRadius.circular(7),
+                              ),
+                              shadows: const [
+                                BoxShadow(
+                                  color: Color(0x0C000000),
+                                  blurRadius: 15,
+                                  offset: Offset(0, 5),
+                                  spreadRadius: 0,
                                 )
                               ],
                             ),
-                            Positioned(bottom: 0, child: _buildDetails(ct)),
-                            Positioned(
-                              top: 40,
-                              left: 20,
-                              child: Container(
-                                width: 45,
-                                height: 45,
-                                clipBehavior: Clip.antiAlias,
-                                decoration: ShapeDecoration(
-                                  color: Colors.white,
-                                  shape: RoundedRectangleBorder(
-                                    side: const BorderSide(
-                                        width: 1, color: Color(0xFFDFE7EF)),
-                                    borderRadius: BorderRadius.circular(7),
-                                  ),
-                                  shadows: const [
-                                    BoxShadow(
-                                      color: Color(0x0C000000),
-                                      blurRadius: 15,
-                                      offset: Offset(0, 5),
-                                      spreadRadius: 0,
-                                    )
-                                  ],
-                                ),
-                                child: IconButton(
-                                  icon: const Icon(Icons.chevron_left),
-                                  onPressed: () {
-                                    Get.back();
-                                  },
-                                ),
-                              ),
+                            child: IconButton(
+                              icon: const Icon(Icons.chevron_left),
+                              onPressed: () {
+                                Get.back();
+                              },
                             ),
-                          ],
+                          ),
                         ),
+                      ],
+                    ),
         ),
       ),
     );
@@ -148,16 +141,22 @@ class ParkingDetails extends GetView<ParkingDetailsController> {
         children: [
           Row(
             children: [
-              const Expanded(
+              Expanded(
                 child: ListTile(
                   contentPadding: EdgeInsets.zero,
-                  title: CustomTitle(text: "SM City Bacolod, Rizal Street"),
-                  subtitle:
-                      CustomParagraph(text: "Area, Bacolod, Negros Occidental"),
+                  title: CustomTitle(
+                    text: ct.dataNearest["park_area_name"],
+                    maxlines: 1,
+                  ),
+                  subtitle: CustomParagraph(
+                    text: ct.dataNearest["address"],
+                    maxlines: 2,
+                  ),
                 ),
               ),
               Container(width: 10),
-              const CustomParagraph(text: "10 min")
+              CustomParagraph(
+                  text: Variables.formatDistance(ct.dataNearest["distance"]))
             ],
           ),
           Padding(
@@ -260,7 +259,12 @@ class ParkingDetails extends GetView<ParkingDetailsController> {
                   ),
                 ),
                 InkWell(
-                  onTap: () {},
+                  onTap: () {
+                    Get.bottomSheet(
+                      BottomSheetWidget(),
+                      isScrollControlled: true,
+                    );
+                  },
                   child: Row(
                     children: [
                       CustomParagraph(
@@ -279,10 +283,34 @@ class ParkingDetails extends GetView<ParkingDetailsController> {
           ),
           const Divider(),
           Container(height: 20),
-          CustomButton(text: "Book now", onPressed: () {}),
+          CustomButton(
+            text: "Book now",
+            loading: ct.btnLoading.value,
+            onPressed: ct.onClickBooking,
+          ),
           Container(height: 20),
         ],
       ),
+    );
+  }
+}
+
+class BottomSheetWidget extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return GetBuilder<ParkingDetailsController>(
+      init: ParkingDetailsController(),
+      builder: (controller) {
+        return Container(
+          color: Colors.white,
+          padding: EdgeInsets.all(16),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [],
+          ),
+        );
+      },
     );
   }
 }

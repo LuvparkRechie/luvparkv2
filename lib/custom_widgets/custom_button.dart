@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:luvpark_get/custom_widgets/app_color.dart';
 import 'package:luvpark_get/custom_widgets/custom_text.dart';
 
@@ -55,6 +56,57 @@ class CustomButton extends StatelessWidget {
                         textAlign: TextAlign.center,
                         color: textColor ?? Colors.white,
                       ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class CustomButtonCancel extends StatefulWidget {
+  final String label;
+  final Color? color;
+  final Color? textColor;
+  final Color? borderColor;
+  final Function onTap;
+  const CustomButtonCancel(
+      {super.key,
+      required this.label,
+      required this.onTap,
+      this.borderColor,
+      this.color,
+      this.textColor});
+
+  @override
+  State<CustomButtonCancel> createState() => _CustomButtonCancelState();
+}
+
+class _CustomButtonCancelState extends State<CustomButtonCancel> {
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: () {
+        widget.onTap();
+      },
+      child: Container(
+        decoration: BoxDecoration(
+            color: widget.color!,
+            borderRadius: BorderRadius.circular(7),
+            border: widget.borderColor == null
+                ? null
+                : Border.all(color: widget.borderColor!)),
+        clipBehavior: Clip.antiAlias,
+        child: Center(
+          child: Padding(
+            padding: const EdgeInsets.all(15.0),
+            child: Text(
+              widget.label,
+              style: GoogleFonts.lato(
+                color: widget.textColor!,
+                fontSize: 14,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
           ),
         ),
       ),

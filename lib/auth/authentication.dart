@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:encrypted_shared_preferences/encrypted_shared_preferences.dart';
 import 'package:flutter/services.dart';
 import 'package:local_auth/local_auth.dart';
@@ -77,5 +79,12 @@ class Authentication {
   Future<void> setProfilePic(loginData) async {
     final prefs = await SharedPreferences.getInstance();
     prefs.setString('profile_pic', loginData);
+  }
+
+  //GET USER ID
+  static Future<int> getUserId() async {
+    final item = await Authentication().getUserData();
+    int userId = jsonDecode(item!)["user_id"];
+    return userId;
   }
 }

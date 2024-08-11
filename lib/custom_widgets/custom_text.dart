@@ -68,7 +68,7 @@ class CustomParagraph extends StatelessWidget {
     this.fontSize = 14.0,
     this.color,
     this.height,
-    this.fontWeight = FontWeight.w600,
+    this.fontWeight = FontWeight.w500,
     this.fontStyle = FontStyle.normal,
     this.letterSpacing = 0.0,
     this.maxlines,

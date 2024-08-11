@@ -50,11 +50,13 @@ class Variables {
     return targetDateTime.isAfter(oneHourAgo) &&
         targetDateTime.isBefore(currentDateTime);
   }
+
   static String formatDateLocal(String dateString) {
     DateTime timestamp = DateTime.parse(dateString);
     String formattedTime = DateFormat('MMM d, yyyy hh:mm a').format(timestamp);
     return formattedTime;
   }
+
   static String arrayBufferToBase64(ByteBuffer buffer) {
     var bytes = Uint8List.view(buffer);
     var base64String = base64.encode(bytes);
@@ -422,4 +424,25 @@ class Variables {
     // Convert compressed bytes to Uint8List
     return Uint8List.fromList(compressedBytes);
   }
+
+  //Format sample August 16,1998
+  static String timeNow() {
+    DateTime now = DateTime.now();
+    DateFormat dateFormat = DateFormat('MMMM d, yyyy h:mm a');
+    String formattedDate = dateFormat.format(now);
+    return formattedDate;
+  }
+
+  static String formatDistance(double distance) {
+    if (distance < 1000) {
+      // Assume distance is in meters
+      return '${distance.toStringAsFixed(2)} meters';
+    } else {
+      // Assume distance is in kilometers
+      double distanceInMeters = distance * 1000;
+      return '${distanceInMeters.toStringAsFixed(2)} meters';
+    }
+  }
+
+ 
 }

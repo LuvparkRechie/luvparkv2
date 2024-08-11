@@ -30,6 +30,33 @@ class CustomDialog {
         });
   }
 
+  void serverErrorDialog(BuildContext context, VoidCallback onTap) {
+    showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: const CustomTitle(
+              text: "Error",
+              fontSize: 16,
+              fontWeight: FontWeight.bold,
+            ),
+            content: const CustomParagraph(
+                text: "Error while connecting to server, Please try again."),
+            actions: <Widget>[
+              TextButton(
+                child: Text(
+                  "Close",
+                  style: paragraphStyle(color: AppColor.primaryColor),
+                ),
+                onPressed: () {
+                  onTap();
+                },
+              ),
+            ],
+          );
+        });
+  }
+
   void errorDialog(BuildContext context, String title, String paragraph,
       VoidCallback onTap) {
     showDialog(
@@ -88,13 +115,14 @@ class CustomDialog {
   }
 
   void confirmationDialog(
-      BuildContext context,
-      String title,
-      String paragraph,
-      String btnOk,
-      String btnNot,
-      VoidCallback onTapConfirm,
-      VoidCallback onTapClose) {
+    BuildContext context,
+    String title,
+    String paragraph,
+    String btnNot,
+    String btnOk,
+    VoidCallback onTapClose,
+    VoidCallback onTapConfirm,
+  ) {
     showDialog(
         context: context,
         builder: (BuildContext context) {
