@@ -82,7 +82,7 @@ class VehicleBrandsTable {
       orderBy: "${VHBrandsDataFields.vhBrandId} ASC",
     );
 
-    final Map<String, dynamic>? matchingRecord = maps.firstWhere(
+    final Map<String, dynamic> matchingRecord = maps.firstWhere(
       (record) =>
           record[VHBrandsDataFields.vhTypeId] == vtId &&
           record[VHBrandsDataFields.vhBrandId] == vbId,
@@ -91,9 +91,7 @@ class VehicleBrandsTable {
     );
 
     String? brandName;
-    if (matchingRecord != null) {
-      brandName = matchingRecord[VHBrandsDataFields.vhBrandName] as String?;
-    }
+    brandName = matchingRecord[VHBrandsDataFields.vhBrandName] as String?;
 
     return brandName;
   }

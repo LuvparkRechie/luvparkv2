@@ -147,7 +147,7 @@ class LoginScreen extends StatelessWidget {
                               ct.toggleLoading(!ct.isLoading.value);
 
                               if (data[0]["items"].isNotEmpty) {
-                                Get.toNamed(Routes.map);
+                                Get.offAndToNamed(Routes.map);
                               }
                             });
                           }

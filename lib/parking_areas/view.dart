@@ -11,6 +11,8 @@ import 'package:luvpark_get/functions/functions.dart';
 import 'package:luvpark_get/parking_areas/controller.dart';
 import 'package:luvpark_get/routes/routes.dart';
 
+import '../custom_widgets/showup_animation.dart';
+
 class ParkingAreas extends GetView<ParkingAreasController> {
   const ParkingAreas({super.key});
   @override
@@ -93,6 +95,7 @@ class ParkingAreas extends GetView<ParkingAreasController> {
                               letterSpacing: -0.41,
                             ),
                     ),
+                    style: paragraphStyle(),
                     onChanged: (String value) async {
                       ct.onSearch(value);
                     },
@@ -133,78 +136,86 @@ class ParkingAreas extends GetView<ParkingAreasController> {
                                 "${ct.searchedZone[index]["end_time"].toString().substring(0, 2)}:${ct.searchedZone[index]["end_time"].toString().substring(2)}";
                             bool isOpen = Functions.checkAvailability(
                                 finalSttime, finalEndtime);
-                            return InkWell(
-                              onTap: () {
-                                Get.toNamed(Routes.parkingDetails,
-                                    arguments: ct.searchedZone[index]);
-                              },
-                              child: Container(
-                                padding: const EdgeInsets.symmetric(
-                                    horizontal: 20, vertical: 10),
-                                width: MediaQuery.of(context).size.width * .88,
-                                decoration: BoxDecoration(
-                                  color: Colors.white,
-                                  border: Border.all(
-                                    color: Colors.grey.shade200,
-                                  ),
-                                  borderRadius: BorderRadius.circular(10),
-                                ),
-                                child: Row(
-                                  children: [
-                                    Expanded(
-                                      child: Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.center,
-                                        children: [
-                                          CustomTitle(
-                                            text: ct.searchedZone[index]
-                                                ["park_area_name"],
-                                            fontSize: 16,
-                                            maxlines: 1,
-                                          ),
-                                          CustomParagraph(
-                                            text: ct.searchedZone[index]
-                                                ["address"],
-                                            fontSize: 14,
-                                            maxlines: 2,
-                                          ),
-                                          Container(height: 10),
-                                          RichText(
-                                            text: TextSpan(
-                                              children: [
-                                                TextSpan(
-                                                  text:
-                                                      "${getDistanceString()}  ●  ${ct.searchedZone[index]["parking_schedule"]}  ●  ",
-                                                  style: GoogleFonts.manrope(
-                                                    color: Colors.grey,
-                                                    fontSize: 12,
-                                                    fontWeight: FontWeight.w500,
-                                                  ),
-                                                ),
-                                                TextSpan(
-                                                  text:
-                                                      isOpen ? "OPEN" : "CLOSE",
-                                                  style: GoogleFonts.manrope(
-                                                    fontWeight: FontWeight.w500,
-                                                    color: isOpen
-                                                        ? Colors.green
-                                                        : Colors.red,
-                                                    fontSize: 12,
-                                                  ),
-                                                ),
-                                              ],
-                                            ),
-                                          ),
-                                        ],
-                                      ),
+
+                            return ShowUpAnimation(
+                              delay: 5 * index,
+                              child: InkWell(
+                                onTap: () {
+                                  Get.toNamed(Routes.parkingDetails,
+                                      arguments: ct.searchedZone[index]);
+                                },
+                                child: Container(
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 20, vertical: 10),
+                                  width:
+                                      MediaQuery.of(context).size.width * .88,
+                                  decoration: BoxDecoration(
+                                    color: Colors.white,
+                                    border: Border.all(
+                                      color: Colors.grey.shade200,
                                     ),
-                                    Icon(
-                                      Icons.keyboard_arrow_right_outlined,
-                                      color: AppColor.primaryColor,
-                                    )
-                                  ],
+                                    borderRadius: BorderRadius.circular(10),
+                                  ),
+                                  child: Row(
+                                    children: [
+                                      Expanded(
+                                        child: Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          children: [
+                                            CustomTitle(
+                                              text: ct.searchedZone[index]
+                                                  ["park_area_name"],
+                                              fontSize: 16,
+                                              maxlines: 1,
+                                            ),
+                                            CustomParagraph(
+                                              text: ct.searchedZone[index]
+                                                  ["address"],
+                                              fontSize: 14,
+                                              maxlines: 2,
+                                            ),
+                                            Container(height: 10),
+                                            RichText(
+                                              text: TextSpan(
+                                                children: [
+                                                  TextSpan(
+                                                    text:
+                                                        "${getDistanceString()}  ●  ${ct.searchedZone[index]["parking_schedule"]}  ●  ",
+                                                    style: GoogleFonts.manrope(
+                                                      color: Colors.grey,
+                                                      fontSize: 12,
+                                                      fontWeight:
+                                                          FontWeight.w500,
+                                                    ),
+                                                  ),
+                                                  TextSpan(
+                                                    text: isOpen
+                                                        ? "OPEN"
+                                                        : "CLOSE",
+                                                    style: GoogleFonts.manrope(
+                                                      fontWeight:
+                                                          FontWeight.w500,
+                                                      color: isOpen
+                                                          ? Colors.green
+                                                          : Colors.red,
+                                                      fontSize: 12,
+                                                    ),
+                                                  ),
+                                                ],
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                      Icon(
+                                        Icons.keyboard_arrow_right_outlined,
+                                        color: AppColor.primaryColor,
+                                      )
+                                    ],
+                                  ),
                                 ),
                               ),
                             );
