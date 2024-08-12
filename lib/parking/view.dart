@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_multi_formatter/formatters/formatter_utils.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:luvpark_get/custom_widgets/app_color.dart';
 import 'package:luvpark_get/custom_widgets/custom_body.dart';
@@ -19,7 +21,7 @@ class ParkingScreen extends StatelessWidget {
     final ParkingController ct = Get.put(ParkingController());
 
     return DefaultTabController(
-      length: 2,
+      length: 3,
       child: CustomScaffold(
         bodyColor: AppColor.bodyColor,
         appBar: AppBar(
@@ -36,47 +38,66 @@ class ParkingScreen extends StatelessWidget {
             children: [
               Container(
                 decoration: BoxDecoration(
-                  color: Colors.white,
+                  color: AppColor.primaryColor,
                   boxShadow: [
                     BoxShadow(
-                      color: Colors.black
-                          .withOpacity(0.2), // Shadow color with opacity
-                      offset: const Offset(
-                          0, 1), // Shadow offset (0 horizontal, 4 vertical)
-                      blurRadius: 1, // Blur radius of the shadow
-                      spreadRadius: 0, // Spread radius of the shadow
+                      color: Colors.black.withOpacity(0.2),
+                      offset: const Offset(0, 1),
+                      blurRadius: 1,
+                      spreadRadius: 0,
                     ),
                   ],
                 ),
                 child: Column(
                   children: [
-                    ListTile(
-                      contentPadding: EdgeInsets.zero,
-                      leading: IconButton(
-                        padding: EdgeInsets.zero,
-                        onPressed: () {
-                          Get.back();
-                        },
-                        icon: const Icon(
-                          Icons.arrow_back,
-                          color: Colors.black,
+                    Row(
+                      children: [
+                        Expanded(
+                          child: Stack(
+                            alignment: Alignment.center,
+                            children: [
+                              Row(
+                                children: [
+                                  IconButton(
+                                    padding: EdgeInsets.zero,
+                                    onPressed: () {
+                                      Get.back();
+                                    },
+                                    icon: const Icon(
+                                      Icons.chevron_left,
+                                      color: Colors.white,
+                                    ),
+                                  ),
+                                  const CustomParagraph(
+                                    text: "Back",
+                                    color: Colors.white,
+                                  ),
+                                ],
+                              ),
+                              const Align(
+                                alignment: Alignment.center,
+                                child: CustomTitle(
+                                  text: "My Parking",
+                                  color: Colors.white,
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w900,
+                                ),
+                              ),
+                            ],
+                          ),
                         ),
-                      ),
-                      title: const CustomTitle(
-                        text: "Parking Management",
-                        fontSize: 20,
-                      ),
+                      ],
                     ),
                     Padding(
                       padding: const EdgeInsets.symmetric(
-                          horizontal: 15, vertical: 5),
+                          horizontal: 15, vertical: 15),
                       child: Container(
                         padding: const EdgeInsets.all(0),
                         decoration: BoxDecoration(
-                          color: AppColor.bodyColor,
+                          color: const Color(0xFF0D62C3),
                           borderRadius: BorderRadius.circular(7),
                           border: Border.all(
-                            color: Colors.grey.shade300,
+                            color: const Color(0xFF0D62C3),
                           ),
                         ),
                         child: Row(children: [
@@ -98,15 +119,16 @@ class ParkingScreen extends StatelessWidget {
                                 ct.onTabTapped(0);
                               },
                               child: Container(
-                                padding: const EdgeInsets.all(15),
+                                padding: const EdgeInsets.all(10),
                                 decoration: ct.currentPage.value != 0
                                     ? decor2()
                                     : decor1(),
                                 child: Center(
                                   child: CustomParagraph(
                                     text: "Reservations",
+                                    fontSize: 10,
                                     color: ct.currentPage.value != 0
-                                        ? Colors.black
+                                        ? Colors.white38
                                         : Colors.white,
                                   ),
                                 ),
@@ -132,26 +154,51 @@ class ParkingScreen extends StatelessWidget {
                                 ct.onTabTapped(1);
                               },
                               child: Container(
-                                padding: const EdgeInsets.all(15),
+                                padding: const EdgeInsets.all(10),
                                 decoration: ct.currentPage.value != 1
                                     ? decor2()
                                     : decor1(),
                                 child: Center(
                                     child: CustomParagraph(
                                   text: "Active Parking",
+                                  fontSize: 10,
                                   color: ct.currentPage.value != 1
-                                      ? Colors.black
+                                      ? Colors.white38
                                       : Colors.white,
-                                )
-                                    //  Text(
-                                    //   "Active Parking",
-                                    //   style: TextStyle(
-                                    //     color: ct.currentPage.value != 1
-                                    //         ? Colors.black
-                                    //         : Colors.white,
-                                    //   ),
-                                    // ),
+                                )),
+                              ),
+                            ),
+                          ),
+                          Expanded(
+                            child: GestureDetector(
+                              onTap: () {
+                                if (ct.isLoading.value) {
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    const SnackBar(
+                                      content: Text(
+                                          'Loading on progress, Please wait...'),
+                                      duration: Duration(seconds: 2),
+                                      backgroundColor: Colors.blue,
+                                      behavior: SnackBarBehavior.floating,
                                     ),
+                                  );
+                                  return;
+                                }
+                                ct.onTabTapped(2);
+                              },
+                              child: Container(
+                                padding: const EdgeInsets.all(10),
+                                decoration: ct.currentPage.value != 2
+                                    ? decor2()
+                                    : decor1(),
+                                child: Center(
+                                    child: CustomParagraph(
+                                  fontSize: 10,
+                                  text: "Cancellations",
+                                  color: ct.currentPage.value != 2
+                                      ? Colors.white38
+                                      : Colors.white,
+                                )),
                               ),
                             ),
                           )
@@ -212,22 +259,24 @@ class ParkingScreen extends StatelessWidget {
     );
   }
 
+//selected tab
   BoxDecoration decor1() {
     return BoxDecoration(
-      color: AppColor.primaryColor,
+      color: Colors.white30,
       borderRadius: BorderRadius.circular(7),
       border: Border.all(
-        color: AppColor.primaryColor,
+        color: Colors.transparent,
       ),
     );
   }
 
+//unselected tab
   BoxDecoration decor2() {
     return BoxDecoration(
       borderRadius: BorderRadius.circular(7),
-      color: AppColor.bodyColor,
+      color: const Color(0xFF0D62C3),
       border: Border.all(
-        color: AppColor.bodyColor,
+        color: const Color(0xFF0D62C3),
       ),
     );
   }
@@ -399,26 +448,51 @@ class ListCard extends StatelessWidget {
         decoration: ShapeDecoration(
           color: Colors.white,
           shape: RoundedRectangleBorder(
-            side: BorderSide(width: 1, color: Color(0xFFE8E6E6)),
+            side: const BorderSide(width: 1, color: Color(0xFFE8E6E6)),
             borderRadius: BorderRadius.circular(10),
           ),
         ),
         child: Column(
           children: [
             Padding(
-              padding: EdgeInsets.symmetric(horizontal: 15, vertical: 14),
+              padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 14),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   ListTile(
                     contentPadding: EdgeInsets.zero,
-                    leading: Image(
-                      image: AssetImage(
-                        "assets/dashboard_icon/res_confirm.png",
-                      ),
-                      fit: BoxFit.contain,
-                      width: 34,
-                      height: 34,
+                    leading: Stack(
+                      alignment: Alignment.center,
+                      children: [
+                        if (currentTab == 0)
+                          Container(
+                            width: 44,
+                            height: 44,
+                            decoration: const BoxDecoration(
+                              color: Color(0xFFF0E6C3),
+                              shape: BoxShape.circle,
+                            ),
+                          ),
+                        SvgPicture.asset(
+                          "assets/dashboard_icon/orange_check.svg",
+                          height: 24,
+                          width: 24,
+                        ),
+                        if (currentTab == 1)
+                          Container(
+                            width: 44,
+                            height: 44,
+                            decoration: const BoxDecoration(
+                              color: Color(0xFFEAF3EA),
+                              shape: BoxShape.circle,
+                            ),
+                          ),
+                        SvgPicture.asset(
+                          "assets/dashboard_icon/green_check.svg",
+                          height: 24,
+                          width: 24,
+                        ),
+                      ],
                     ),
                     title: CustomTitle(
                       text: title,
@@ -429,18 +503,19 @@ class ListCard extends StatelessWidget {
                     ),
                     subtitle: CustomParagraph(
                       text: subTitle,
-                      fontSize: 12,
-                      fontWeight: FontWeight.w800,
+                      fontSize: 14,
+                      fontWeight: FontWeight.w500,
                       letterSpacing: -0.41,
                     ),
                     trailing: Icon(
                       Icons.chevron_right,
+                      color: AppColor.primaryColor,
                       size: 30,
                     ),
                   ),
                   Row(
                     children: [
-                      Container(
+                      const SizedBox(
                         width: 35.50,
                         height: 35.50,
                         child: Image(
@@ -452,34 +527,38 @@ class ListCard extends StatelessWidget {
                       Container(width: 8),
                       CustomParagraph(
                         text: date,
-                        fontSize: 12,
-                        fontWeight: FontWeight.w800,
+                        fontSize: 14,
+                        fontWeight: FontWeight.w500,
                         letterSpacing: -0.41,
                       ),
                       Container(width: 15),
                       Flexible(
-                        child: Row(
-                          children: [
-                            Container(
-                              width: 35.50,
-                              height: 35.50,
-                              child: Image(
-                                image: AssetImage(
-                                    "assets/dashboard_icon/clock.png"),
-                                fit: BoxFit.contain,
+                        child: Padding(
+                          padding: const EdgeInsets.only(right: 10),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.end,
+                            children: [
+                              const SizedBox(
+                                width: 35.50,
+                                height: 35.50,
+                                child: Image(
+                                  image: AssetImage(
+                                      "assets/dashboard_icon/clock.png"),
+                                  fit: BoxFit.contain,
+                                ),
                               ),
-                            ),
-                            Container(width: 8),
-                            Flexible(
-                              child: CustomParagraph(
-                                text: time,
-                                fontSize: 12,
-                                fontWeight: FontWeight.w800,
-                                letterSpacing: -0.41,
-                                maxlines: 1,
-                              ),
-                            )
-                          ],
+                              Container(width: 8),
+                              Flexible(
+                                child: CustomParagraph(
+                                  text: time,
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.w500,
+                                  letterSpacing: -0.41,
+                                  maxlines: 1,
+                                ),
+                              )
+                            ],
+                          ),
                         ),
                       ),
                     ],
@@ -488,16 +567,16 @@ class ListCard extends StatelessWidget {
               ),
             ),
             Container(
-              padding: EdgeInsets.symmetric(horizontal: 15, vertical: 13),
-              decoration: BoxDecoration(
+              padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 13),
+              decoration: const BoxDecoration(
                   color: Color(0xFF2495eb),
                   borderRadius:
                       BorderRadius.vertical(bottom: Radius.circular(10))),
               child: Row(
                 children: [
-                  Expanded(
+                  const Expanded(
                     child: CustomTitle(
-                      text: "Total Paid",
+                      text: "Total Amount Paid",
                       color: Colors.white,
                       letterSpacing: -0.41,
                       fontSize: 14,
