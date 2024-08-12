@@ -1030,11 +1030,8 @@ class BookingPage extends GetView<BookingController> {
                                                   "tran_type": "R",
                                                 };
 
-                                                // submitReservation(
-                                                //     parameters,
-                                                //     isSelectedVehicle,
-                                                //     context,
-                                                //     false);
+                                                ct.submitReservation(
+                                                    parameters, context, false);
                                               }
 
                                               if (ct.isExtendchecked.value) {

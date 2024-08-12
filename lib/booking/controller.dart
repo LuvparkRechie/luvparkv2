@@ -2,9 +2,11 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:intl/intl.dart';
 import 'package:luvpark_get/auth/authentication.dart';
 import 'package:luvpark_get/custom_widgets/alert_dialog.dart';
+import 'package:luvpark_get/custom_widgets/variables.dart';
 import 'package:luvpark_get/functions/functions.dart';
 import 'package:luvpark_get/http/api_keys.dart';
 import 'package:luvpark_get/http/http_request.dart';
@@ -12,7 +14,6 @@ import 'package:luvpark_get/routes/routes.dart';
 import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
 
 import '../booking_notice/view.dart';
-import '../custom_widgets/variables.dart';
 
 class BookingController extends GetxController
     with GetSingleTickerProviderStateMixin {
@@ -338,9 +339,46 @@ class BookingController extends GetxController
 
   //Reservation Submit
   void submitReservation(params, context, isCheckIn) async {
+    List bookingParams = [params];
+    print("1 bookingParams $bookingParams");
     int userId = await Authentication().getUserId();
     isSubmitBooking.value = true;
 
+    final position = await Functions.getCurrentPosition();
+    LatLng current = LatLng(position[0]["lat"], position[0]["long"]);
+    LatLng destinaion = LatLng(parameters["areaData"]["pa_latitude"],
+        parameters["areaData"]["pa_longitude"]);
+    final etaData = await Functions.fetchETA(current, destinaion);
+    if (etaData.isEmpty) {
+      isSubmitBooking.value = false;
+      CustomDialog().errorDialog(context, "Error",
+          "We couldn't calculate the distance. Please check your connection and try again.",
+          () {
+        Get.back();
+      });
+      return;
+    }
+    if (etaData[0]["error"] == "No Internet") {
+      isSubmitBooking.value = false;
+      CustomDialog().internetErrorDialog(context, () {
+        Get.back();
+      });
+      return;
+    }
+
+    int etaTime =
+        int.parse(etaData[0]["time"].toString().split(" ")[0].toString());
+    int areaEtaTime =
+        int.parse(parameters["areaData"]["book_start_minutes"].toString());
+    DateTime dateIn = DateTime.parse(params["dt_in"].toString());
+
+    if (etaTime < areaEtaTime) {
+      bookingParams = bookingParams.map((e) {
+        e["dt_in"] =
+            dateIn.add(Duration(minutes: areaEtaTime)).toString().split(".")[0];
+        return e;
+      }).toList();
+    }
     HttpRequest(
         api: ApiKeys.gApiLuvParkGetResPayKey,
         parameters: {"user_id": userId}).post().then((dataRefNo) async {
@@ -359,14 +397,16 @@ class BookingController extends GetxController
       }
       if (dataRefNo["success"] == "Y") {
         Map<String, dynamic> postParameters = {
-          "client_id": params["client_id"].toString(),
-          "park_area_id": params["park_area_id"].toString(),
-          "vehicle_plate_no":
-              params["vehicle_plate_no"].toString().replaceAll(" ", "").trim(),
-          "vehicle_type_id": params["vehicle_type_id"].toString(),
-          "dt_in": params["dt_in"].toString(),
-          "dt_out": params["dt_out"].toString(),
-          "no_hours": params["no_hours"].toString(),
+          "client_id": bookingParams[0]["client_id"].toString(),
+          "park_area_id": bookingParams[0]["park_area_id"].toString(),
+          "vehicle_plate_no": bookingParams[0]["vehicle_plate_no"]
+              .toString()
+              .replaceAll(" ", "")
+              .trim(),
+          "vehicle_type_id": bookingParams[0]["vehicle_type_id"].toString(),
+          "dt_in": bookingParams[0]["dt_in"].toString(),
+          "dt_out": bookingParams[0]["dt_out"].toString(),
+          "no_hours": bookingParams[0]["no_hours"].toString(),
           "luvpay_id": userId.toString(),
           "luvpark_balance": parameters["userData"][0]["amount_bal"].toString(),
           "lp_ref_no": dataRefNo["ref_no"],
@@ -379,7 +419,6 @@ class BookingController extends GetxController
                 parameters: postParameters)
             .post()
             .then((returnPost) async {
-          print("returnPost $returnPost");
           if (returnPost == "No Internet") {
             isSubmitBooking.value = false;
             CustomDialog().internetErrorDialog(context, () {
@@ -397,12 +436,12 @@ class BookingController extends GetxController
             Map<String, dynamic> payParameters = {
               "luvpay_id": userId.toString(),
               "lp_ref_no": dataRefNo["ref_no"].toString(),
-              "no_hours": params["no_hours"].toString(),
+              "no_hours": bookingParams[0]["no_hours"].toString(),
               "ps_ref_no": returnPost["ps_ref_no"].toString(),
               "payment_hk": dataRefNo["payment_hk".toString()],
               "ticket_amount": returnPost["ticket_amount"].toString(),
-              "dt_in": params["dt_in"].toString(),
-              "dt_out": params["dt_out"].toString(),
+              "dt_in": bookingParams[0]["dt_in"].toString(),
+              "dt_out": bookingParams[0]["dt_out"].toString(),
               "park_area_name": returnPost["park_area_name"].toString(),
               "pa_longitude": returnPost["pa_longitude"].toString(),
               "pa_latitude": returnPost["pa_latitude"].toString(),
@@ -414,7 +453,6 @@ class BookingController extends GetxController
                     parameters: payParameters)
                 .post()
                 .then((returnPay) async {
-              print("returnPay $returnPay");
               if (returnPay == "No Internet") {
                 isSubmitBooking.value = false;
                 CustomDialog().internetErrorDialog(context, () {
@@ -434,15 +472,19 @@ class BookingController extends GetxController
                     'spaceName': returnPost['park_space_name'],
                     'parkArea': returnPost["park_area_name"],
                     'startDate': Variables.formatDate(
-                        params["dt_in"].toString().split(" ")[0]),
+                        bookingParams[0]["dt_in"].toString().split(" ")[0]),
                     'endDate': Variables.formatDate(
-                        params["dt_out"].toString().split(" ")[0]),
-                    'startTime':
-                        params["dt_in"].toString().split(" ")[1].toString(),
-                    'endTime':
-                        params["dt_out"].toString().split(" ")[1].toString(),
-                    'plateNo': params["vehicle_plate_no"].toString(),
-                    'hours': params["no_hours"].toString(),
+                        bookingParams[0]["dt_out"].toString().split(" ")[0]),
+                    'startTime': bookingParams[0]["dt_in"]
+                        .toString()
+                        .split(" ")[1]
+                        .toString(),
+                    'endTime': bookingParams[0]["dt_out"]
+                        .toString()
+                        .split(" ")[1]
+                        .toString(),
+                    'plateNo': bookingParams[0]["vehicle_plate_no"].toString(),
+                    'hours': bookingParams[0]["no_hours"].toString(),
                     'amount': returnPay['applied_amt'].toString(),
                     'refno': returnPost["ps_ref_no"].toString(),
                     'lat': double.parse(returnPost['ps_latitude'].toString()),
@@ -453,7 +495,7 @@ class BookingController extends GetxController
                     'reservationId': int.parse(returnPay["reservation_id"]),
                     'address': "",
                     'isAutoExtend': "",
-                    'paramsCalc': params
+                    'paramsCalc': bookingParams[0]
                   };
                   isSubmitBooking.value = false;
                   print("args $args");
@@ -533,7 +575,7 @@ class BookingController extends GetxController
       }
     });
 
-    //end
+    // //end
   }
 
   void showRewardDialog() {

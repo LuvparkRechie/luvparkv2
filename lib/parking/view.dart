@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_multi_formatter/formatters/formatter_utils.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
@@ -51,41 +50,40 @@ class ParkingScreen extends StatelessWidget {
                 child: Column(
                   children: [
                     Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Expanded(
-                          child: Stack(
-                            alignment: Alignment.center,
+                          child: Row(
                             children: [
-                              Row(
-                                children: [
-                                  IconButton(
-                                    padding: EdgeInsets.zero,
-                                    onPressed: () {
-                                      Get.back();
-                                    },
-                                    icon: const Icon(
-                                      Icons.chevron_left,
-                                      color: Colors.white,
-                                    ),
-                                  ),
-                                  const CustomParagraph(
-                                    text: "Back",
-                                    color: Colors.white,
-                                  ),
-                                ],
-                              ),
-                              const Align(
-                                alignment: Alignment.center,
-                                child: CustomTitle(
-                                  text: "My Parking",
+                              IconButton(
+                                padding: EdgeInsets.zero,
+                                onPressed: () {
+                                  Get.back();
+                                },
+                                icon: const Icon(
+                                  Icons.chevron_left,
                                   color: Colors.white,
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.w900,
                                 ),
+                              ),
+                              const CustomParagraph(
+                                text: "Back",
+                                color: Colors.white,
                               ),
                             ],
                           ),
                         ),
+                        const Expanded(
+                          child: Align(
+                            alignment: Alignment.center,
+                            child: CustomTitle(
+                              text: "My Parking",
+                              color: Colors.white,
+                              fontSize: 16,
+                              fontWeight: FontWeight.w900,
+                            ),
+                          ),
+                        ),
+                        Expanded(child: Container(width: 10))
                       ],
                     ),
                     Padding(
@@ -210,7 +208,7 @@ class ParkingScreen extends StatelessWidget {
               ),
               Expanded(
                 child: ct.isLoading.value
-                    ? const ShimmerList()
+                    ? const ParkShimmer()
                     : ct.resData.isEmpty
                         ? const NoDataFound()
                         : RefreshIndicator(
@@ -277,29 +275,6 @@ class ParkingScreen extends StatelessWidget {
       color: const Color(0xFF0D62C3),
       border: Border.all(
         color: const Color(0xFF0D62C3),
-      ),
-    );
-  }
-}
-
-class ShimmerList extends StatelessWidget {
-  const ShimmerList({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(16.0),
-      child: ListView.separated(
-        padding: const EdgeInsets.only(top: 10),
-        itemBuilder: (context, index) {
-          return const ParkShimmer();
-        },
-        separatorBuilder: (context, index) {
-          return const SizedBox(
-            height: 5,
-          );
-        },
-        itemCount: 5,
       ),
     );
   }
@@ -461,38 +436,15 @@ class ListCard extends StatelessWidget {
                 children: [
                   ListTile(
                     contentPadding: EdgeInsets.zero,
-                    leading: Stack(
-                      alignment: Alignment.center,
-                      children: [
-                        if (currentTab == 0)
-                          Container(
-                            width: 44,
-                            height: 44,
-                            decoration: const BoxDecoration(
-                              color: Color(0xFFF0E6C3),
-                              shape: BoxShape.circle,
-                            ),
-                          ),
-                        SvgPicture.asset(
-                          "assets/dashboard_icon/orange_check.svg",
-                          height: 24,
-                          width: 24,
-                        ),
-                        if (currentTab == 1)
-                          Container(
-                            width: 44,
-                            height: 44,
-                            decoration: const BoxDecoration(
-                              color: Color(0xFFEAF3EA),
-                              shape: BoxShape.circle,
-                            ),
-                          ),
-                        SvgPicture.asset(
-                          "assets/dashboard_icon/green_check.svg",
-                          height: 24,
-                          width: 24,
-                        ),
-                      ],
+                    leading: CircleAvatar(
+                      backgroundColor: currentTab == 0
+                          ? const Color(0xFFF0E6C3)
+                          : const Color(0xFFEAF3EA),
+                      child: SvgPicture.asset(
+                        "assets/dashboard_icon/${currentTab == 0 ? "orange_check" : "green_check"}.svg",
+                        height: 24,
+                        width: 24,
+                      ),
                     ),
                     title: CustomTitle(
                       text: title,
@@ -504,7 +456,6 @@ class ListCard extends StatelessWidget {
                     subtitle: CustomParagraph(
                       text: subTitle,
                       fontSize: 14,
-                      fontWeight: FontWeight.w500,
                       letterSpacing: -0.41,
                     ),
                     trailing: Icon(
@@ -528,7 +479,7 @@ class ListCard extends StatelessWidget {
                       CustomParagraph(
                         text: date,
                         fontSize: 14,
-                        fontWeight: FontWeight.w500,
+                        fontWeight: FontWeight.w600,
                         letterSpacing: -0.41,
                       ),
                       Container(width: 15),
@@ -552,7 +503,7 @@ class ListCard extends StatelessWidget {
                                 child: CustomParagraph(
                                   text: time,
                                   fontSize: 14,
-                                  fontWeight: FontWeight.w500,
+                                  fontWeight: FontWeight.w600,
                                   letterSpacing: -0.41,
                                   maxlines: 1,
                                 ),
