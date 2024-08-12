@@ -5,6 +5,7 @@ import 'package:luvpark_get/custom_widgets/custom_text.dart';
 class CustomDialog {
   void internetErrorDialog(BuildContext context, VoidCallback onTap) {
     showDialog(
+        barrierDismissible: false,
         context: context,
         builder: (BuildContext context) {
           return AlertDialog(
@@ -32,6 +33,7 @@ class CustomDialog {
 
   void serverErrorDialog(BuildContext context, VoidCallback onTap) {
     showDialog(
+        barrierDismissible: false,
         context: context,
         builder: (BuildContext context) {
           return AlertDialog(
@@ -60,6 +62,7 @@ class CustomDialog {
   void errorDialog(BuildContext context, String title, String paragraph,
       VoidCallback onTap) {
     showDialog(
+        barrierDismissible: false,
         context: context,
         builder: (BuildContext context) {
           return AlertDialog(
@@ -87,27 +90,32 @@ class CustomDialog {
   void successDialog(BuildContext context, String title, String paragraph,
       String btnName, VoidCallback onTap) {
     showDialog(
+        useSafeArea: true,
+        barrierDismissible: false,
         context: context,
         builder: (BuildContext context) {
-          return AlertDialog(
-            title: CustomTitle(
-              text: title,
-              fontSize: 16,
-              fontWeight: FontWeight.bold,
-              wordspacing: 4,
-            ),
-            content: CustomParagraph(text: paragraph),
-            actions: <Widget>[
-              TextButton(
-                child: Text(
-                  btnName,
-                  style: paragraphStyle(color: AppColor.primaryColor),
-                ),
-                onPressed: () {
-                  onTap();
-                },
+          return PopScope(
+            canPop: false,
+            child: AlertDialog(
+              title: CustomTitle(
+                text: title,
+                fontSize: 16,
+                fontWeight: FontWeight.bold,
+                wordspacing: 4,
               ),
-            ],
+              content: CustomParagraph(text: paragraph),
+              actions: <Widget>[
+                TextButton(
+                  child: Text(
+                    btnName,
+                    style: paragraphStyle(color: AppColor.primaryColor),
+                  ),
+                  onPressed: () {
+                    onTap();
+                  },
+                ),
+              ],
+            ),
           );
         });
   }
@@ -122,6 +130,7 @@ class CustomDialog {
     VoidCallback onTapConfirm,
   ) {
     showDialog(
+        barrierDismissible: false,
         context: context,
         builder: (BuildContext context) {
           return AlertDialog(
@@ -161,19 +170,24 @@ class CustomDialog {
   ) {
     showDialog(
         context: context,
+        barrierDismissible: false,
         builder: (BuildContext context) {
-          return const AlertDialog(
-            backgroundColor: Colors.transparent, // Make background transparent
-            content: SizedBox(
-              width: 100,
-              height: 100,
-              child: Center(
-                child: CircularProgressIndicator(
-                  color: Colors.blue, // Customize the spinner color
+          return const PopScope(
+            canPop: false,
+            child: AlertDialog(
+              backgroundColor:
+                  Colors.transparent, // Make background transparent
+              content: SizedBox(
+                width: 100,
+                height: 100,
+                child: Center(
+                  child: CircularProgressIndicator(
+                    color: Colors.blue, // Customize the spinner color
+                  ),
                 ),
               ),
+              elevation: 0, // Remove shadow
             ),
-            elevation: 0, // Remove shadow
           );
         });
   }

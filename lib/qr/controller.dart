@@ -12,10 +12,13 @@ import 'package:luvpark_get/custom_widgets/alert_dialog.dart';
 import 'package:luvpark_get/custom_widgets/page_loader.dart';
 import 'package:luvpark_get/http/api_keys.dart';
 import 'package:luvpark_get/http/http_request.dart';
+import 'package:luvpark_get/main.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 import 'package:screenshot/screenshot.dart';
 import 'package:share_plus/share_plus.dart';
+
+import '../routes/routes.dart';
 
 class QrWalletController extends GetxController
     with GetSingleTickerProviderStateMixin {
@@ -26,11 +29,11 @@ class QrWalletController extends GetxController
   RxBool isAgree = false.obs;
   RxBool isInternetConn = true.obs;
   RxBool isLoading = true.obs;
+  RxString mobNum = "".obs;
   RxString mono = ''.obs;
   RxString payKey = "".obs;
-  RxString mobNum = "".obs;
-  late TabController tabController;
   final ScreenshotController screenshotController = ScreenshotController();
+  late TabController tabController;
 
   @override
   void onClose() {
@@ -42,12 +45,13 @@ class QrWalletController extends GetxController
   @override
   void onInit() {
     tabController = TabController(vsync: this, length: 2);
+    tabController.addListener(onTabChanged);
     getQrData();
     super.onInit();
   }
 
-  void onTabChanged(int index) async {
-    if (index == 0) {
+  void onTabChanged() async {
+    if (tabController.index == 0) {
       getQrData();
     }
     update();
@@ -100,6 +104,8 @@ class QrWalletController extends GetxController
   }
 
   Future<void> generateQr() async {
+    CustomDialog().loadingDialog(Get.context!);
+
     int userId = await Authentication().getUserId();
     dynamic param = {"luvpay_id": userId};
     HttpRequest(api: ApiKeys.gApiSubFolderPutChangeQR, parameters: param)
@@ -129,6 +135,7 @@ class QrWalletController extends GetxController
           CustomDialog().successDialog(
               Get.context!, "Success", "Qr successfully changed", "Done", () {
             Get.back();
+            Get.back();
           });
         } else {
           CustomDialog()
@@ -139,6 +146,7 @@ class QrWalletController extends GetxController
   }
 
   Future<void> saveQr() async {
+    CustomDialog().loadingDialog(Get.context!);
     ScreenshotController()
         .captureFromWidget(myWidget(), delay: const Duration(seconds: 3))
         .then((image) async {
@@ -149,12 +157,14 @@ class QrWalletController extends GetxController
         CustomDialog().successDialog(Get.context!, "Success",
             "QR code has been saved. Please check your gallery.", "Okay", () {
           Get.back();
+          Get.back();
         });
       });
     });
   }
 
   Future<void> shareQr() async {
+    CustomDialog().loadingDialog(Get.context!);
     final directory = (await getApplicationDocumentsDirectory()).path;
     Uint8List bytes = await ScreenshotController().captureFromWidget(
       myWidget(),
@@ -163,6 +173,7 @@ class QrWalletController extends GetxController
 
     final imgFile = File('$directory/screenshot.png');
     imgFile.writeAsBytes(pngBytes);
+    Get.back();
     // ignore: deprecated_member_use
     await Share.shareFiles([imgFile.path]);
   }
@@ -191,9 +202,9 @@ class QrWalletController extends GetxController
               Container(
                 height: 20,
               ),
-              const Text(
-                "QR Pay",
-                style: TextStyle(
+              Text(
+                tabController.index == 1 ? "Scan QR Code to receive" : "QR Pay",
+                style: const TextStyle(
                   fontSize: 14,
                   fontWeight: FontWeight.w600,
                   color: Color(0xFF787878),
