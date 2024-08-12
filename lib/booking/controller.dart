@@ -338,7 +338,7 @@ class BookingController extends GetxController
 
   //Reservation Submit
   void submitReservation(params, context, isCheckIn) async {
-    int userId = await Authentication.getUserId();
+    int userId = await Authentication().getUserId();
     isSubmitBooking.value = true;
 
     HttpRequest(

@@ -82,7 +82,7 @@ class Authentication {
   }
 
   //GET USER ID
-  static Future<int> getUserId() async {
+  Future<int> getUserId() async {
     final item = await Authentication().getUserData();
     int userId = jsonDecode(item!)["user_id"];
     return userId;
