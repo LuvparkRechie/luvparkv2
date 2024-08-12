@@ -156,6 +156,28 @@ class CustomDialog {
         });
   }
 
+  void loadingDialog(
+    BuildContext context,
+  ) {
+    showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return const AlertDialog(
+            backgroundColor: Colors.transparent, // Make background transparent
+            content: SizedBox(
+              width: 100,
+              height: 100,
+              child: Center(
+                child: CircularProgressIndicator(
+                  color: Colors.blue, // Customize the spinner color
+                ),
+              ),
+            ),
+            elevation: 0, // Remove shadow
+          );
+        });
+  }
+
   void snackbarDialog(BuildContext context, String text) {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
