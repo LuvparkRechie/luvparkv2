@@ -141,10 +141,10 @@ class LandingScreen extends StatelessWidget {
                                 WidgetSpan(
                                   child: Row(
                                     children: [
-                                      const CustomTitle(
+                                      const CustomParagraph(
                                         text: "Agree with",
                                         wordspacing: 2,
-                                        color: Color(0xBF131313),
+                                        color: Colors.black,
                                         maxlines: 1,
                                       ),
                                       Container(width: 5),
@@ -153,10 +153,9 @@ class LandingScreen extends StatelessWidget {
                                           onTap: () {
                                             Get.toNamed(Routes.terms);
                                           },
-                                          child: CustomTitle(
+                                          child: const CustomLinkLabel(
                                             text: "luvpark's Terms of use",
                                             wordspacing: 2,
-                                            color: AppColor.primaryColor,
                                             maxlines: 1,
                                           ),
                                         ),

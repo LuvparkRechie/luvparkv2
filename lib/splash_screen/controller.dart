@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -30,9 +29,10 @@ class SplashController extends GetxController
     final uPass = await Authentication().getPasswordBiometric();
 
     if (data != null) {
-      final logData = jsonDecode(data);
       final LoginScreenController lgCt = Get.find<LoginScreenController>();
-      lgCt.getAccountStatus(Get.context, logData["mobile_no"], (obj) {
+
+      lgCt.getAccountStatus(Get.context, data["mobile_no"], (obj) async {
+        print("obj $obj");
         final items = obj[0]["items"];
 
         if (items.isEmpty) {
@@ -51,15 +51,21 @@ class SplashController extends GetxController
             Get.back();
           });
         } else {
-          Map<String, dynamic> postParam = {
-            "mobile_no": logData["mobile_no"],
-            "pwd": uPass,
-          };
-          lgCt.postLogin(Get.context, postParam, (data) {
-            if (data[0]["items"].isNotEmpty) {
-              Get.toNamed(Routes.map);
-            }
-          });
+          final userLogin = await Authentication().getUserLogin();
+
+          if (userLogin["is_login"] == "N") {
+            Get.toNamed(Routes.login);
+          } else {
+            Map<String, dynamic> postParam = {
+              "mobile_no": data["mobile_no"],
+              "pwd": uPass,
+            };
+            lgCt.postLogin(Get.context, postParam, (data) {
+              if (data[0]["items"].isNotEmpty) {
+                Get.toNamed(Routes.map);
+              }
+            });
+          }
         }
       });
     } else {

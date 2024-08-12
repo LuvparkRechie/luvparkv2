@@ -189,7 +189,9 @@ class LoginScreenController extends GetxController
                   Authentication().setLogin(jsonEncode(parameters));
                   Authentication().setUserData(jsonEncode(items));
                   Authentication().setPasswordBiometric(param["pwd"]);
-                  Authentication().setProfilePic(items["image_base64"]);
+                  if (items["image_base64"] != null) {
+                    Authentication().setProfilePic(items["image_base64"]);
+                  }
 
                   cb([
                     {"has_net": true, "items": objData["items"]}

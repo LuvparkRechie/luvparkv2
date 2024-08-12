@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:animate_do/animate_do.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -5,6 +7,8 @@ import 'package:flutter_multi_formatter/formatters/formatter_utils.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:luvpark_get/auth/authentication.dart';
+import 'package:luvpark_get/custom_widgets/alert_dialog.dart';
 import 'package:luvpark_get/custom_widgets/app_color.dart';
 import 'package:luvpark_get/custom_widgets/custom_body.dart';
 import 'package:luvpark_get/custom_widgets/custom_text.dart';
@@ -44,11 +48,6 @@ class DashboardMapScreen extends GetView<DashboardMapController> {
       } else {
         if (double.parse(ct.userBal[0]["amount_bal"].toString()) >=
             double.parse(ct.userBal[0]["min_wallet_bal"].toString())) {
-          SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
-            statusBarColor: Colors.transparent,
-            statusBarBrightness: Brightness.light,
-            statusBarIconBrightness: Brightness.dark,
-          ));
           if (ct.isLoadingMap.value) {
             return PopScope(
               canPop: false,
@@ -77,6 +76,11 @@ class DashboardMapScreen extends GetView<DashboardMapController> {
               )),
             );
           } else {
+            SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
+              statusBarColor: Colors.transparent,
+              statusBarBrightness: Brightness.light,
+              statusBarIconBrightness: Brightness.dark,
+            ));
             return PopScope(
               canPop: false,
               child: Scaffold(
@@ -148,8 +152,32 @@ class DashboardMapScreen extends GetView<DashboardMapController> {
                             text: "Logout",
                             color: Colors.red,
                           ),
-                          onTap: () {
+                          onTap: () async {
                             // Handle logout
+                            CustomDialog().confirmationDialog(
+                                context,
+                                "Logout",
+                                "Are you sure you want to logout?",
+                                "No",
+                                "Yes", () {
+                              Get.back();
+                            }, () async {
+                              Get.back();
+                              CustomDialog().loadingDialog(context);
+                              await Future.delayed(const Duration(seconds: 3));
+                              final userLogin =
+                                  await Authentication().getUserLogin();
+                              List userData = [userLogin];
+                              userData = userData.map((e) {
+                                e["is_login"] = "N";
+                                return e;
+                              }).toList();
+
+                              await Authentication()
+                                  .setLogin(jsonEncode(userData[0]));
+                              Get.back();
+                              Get.offAllNamed(Routes.splash);
+                            });
                           },
                         ),
                       ],
@@ -325,7 +353,9 @@ class DashboardMapScreen extends GetView<DashboardMapController> {
           Container(height: 20),
           Obx(
             () => CustomParagraph(
-              text: "${Variables.greeting()}, ${ct.myName.value}",
+              text: ct.myName.value.toString().isEmpty
+                  ? "Welcome to luvpark"
+                  : "${Variables.greeting()}, ${ct.myName.value}",
               fontSize: 16,
               fontWeight: FontWeight.w600,
               letterSpacing: -0.41,
@@ -660,18 +690,70 @@ class DashboardMapScreen extends GetView<DashboardMapController> {
   }
 
   Widget accessList(BuildContext context, DashboardMapController cs) {
-    return StretchingOverscrollIndicator(
-      axisDirection: AxisDirection.down,
-      child: ListView.builder(
-          padding: const EdgeInsets.fromLTRB(15, 10, 15, 0),
-          itemCount: 4,
-          itemBuilder: (context, index) {
-            return const ListTile(
-              title: Text("Title"),
-              leading: Icon(Icons.car_crash),
-              subtitle: Text("Subtitle"),
-            );
-          }),
+    return Padding(
+      padding: const EdgeInsets.all(15.0),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Container(height: 20),
+          Container(
+            height: 54,
+            padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
+            clipBehavior: Clip.antiAlias,
+            decoration: ShapeDecoration(
+              color: const Color(0xFFFBFBFB),
+              shape: RoundedRectangleBorder(
+                side: const BorderSide(width: 1, color: Color(0x1C2563EB)),
+                borderRadius: BorderRadius.circular(48),
+              ),
+            ),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Container(
+                  width: 24,
+                  height: 24,
+                  decoration: const BoxDecoration(
+                    image: DecorationImage(
+                      image: AssetImage("assets/dashboard_icon/search.png"),
+                      fit: BoxFit.contain,
+                    ),
+                  ),
+                ),
+                const SizedBox(width: 6),
+                Flexible(
+                  child: TextField(
+                    //  controller: ct.searchCon,
+                    decoration: InputDecoration(
+                      hintText: 'Search parking',
+                      hintStyle: paragraphStyle(),
+                      border: InputBorder.none,
+                    ),
+                    style: paragraphStyle(color: Colors.black),
+                    onChanged: (text) {
+                      cs.fetchSuggestions();
+                    },
+                  ),
+                ),
+                const SizedBox(width: 10),
+                Container(
+                  width: 24,
+                  decoration: const BoxDecoration(
+                    image: DecorationImage(
+                      image:
+                          AssetImage("assets/dashboard_icon/google_voice.png"),
+                      fit: BoxFit.contain,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+          Expanded(
+            child: _panelContent(cs),
+          ),
+        ],
+      ),
     );
   }
 }

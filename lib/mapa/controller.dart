@@ -82,6 +82,7 @@ class DashboardMapController extends GetxController
       parent: animationController,
       curve: Curves.easeInOut,
     ));
+
     getUserData(false);
   }
 
@@ -181,7 +182,11 @@ class DashboardMapController extends GetxController
     isLoading.value = true;
     isLoadingMap.value = true;
     String? userData = await Authentication().getUserData();
-    myName.value = jsonDecode(userData!)["first_name"];
+    if (jsonDecode(userData!)["first_name"] == null) {
+      myName.value = "";
+    } else {
+      myName.value = jsonDecode(userData)["first_name"];
+    }
 
     LocationService.grantPermission(Get.context!, (isGranted) {
       if (isGranted) {

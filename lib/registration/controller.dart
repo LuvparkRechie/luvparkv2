@@ -2,9 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:luvpark_get/custom_widgets/alert_dialog.dart';
 import 'package:luvpark_get/custom_widgets/variables.dart';
+import 'package:luvpark_get/http/api_keys.dart';
 import 'package:luvpark_get/http/http_request.dart';
-
-import '../http/api_keys.dart';
 
 class RegistrationController extends GetxController
     with GetSingleTickerProviderStateMixin {
@@ -45,7 +44,12 @@ class RegistrationController extends GetxController
       BuildContext context, dynamic parameters, Function cb) async {
     if (isAgree) {
       CustomDialog().confirmationDialog(context, "Confirm Registration",
-          "Are you sure you want to proceed?", "Ok", "Cancel", () {
+          "Are you sure you want to proceed?", "No", "Yes", () {
+        cb([
+          {"has_net": true, "success": false, "items": []}
+        ]);
+        Get.back();
+      }, () {
         Get.back();
         HttpRequest(api: ApiKeys.gApiLuvParkPostReg, parameters: parameters)
             .post()
@@ -82,14 +86,9 @@ class RegistrationController extends GetxController
             cb([
               {"has_net": true, "success": true, "items": returnPost["otp"]}
             ]);
-            Get.back();
+            // Get.back();
           }
         });
-      }, () {
-        cb([
-          {"has_net": true, "success": false, "items": []}
-        ]);
-        Get.back();
       });
     } else {
       CustomDialog().errorDialog(context, "Attention",

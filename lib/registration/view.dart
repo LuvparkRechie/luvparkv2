@@ -232,6 +232,7 @@ class RegistrationPage extends StatelessWidget {
                                   "Activate account",
                                   "We have sent an activation code to your mobile number.",
                                   "Continue", () async {
+                                Get.back();
                                 List argsParam = [
                                   {
                                     "otp":
@@ -241,11 +242,11 @@ class RegistrationPage extends StatelessWidget {
                                     "seq_id": 0,
                                     "seca": "",
                                     "seq_no": 1,
-                                    "new_pass": "",
+                                    "new_pass": ct.password.text,
                                   }
                                 ];
 
-                                Get.offNamed(Routes.otp, arguments: argsParam);
+                                Get.toNamed(Routes.otp, arguments: argsParam);
                               });
                             }
                           });
