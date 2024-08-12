@@ -23,9 +23,11 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: 'MyApp',
       theme: ThemeData(
-        useMaterial3: false,
+        useMaterial3: true,
+        primarySwatch: Colors.blue,
         colorScheme: ColorScheme.fromSeed(
           seedColor: AppColor.primaryColor,
+          primary: AppColor.primaryColor,
         ),
         textTheme: GoogleFonts.quicksandTextTheme(),
       ),

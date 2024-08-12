@@ -15,7 +15,6 @@ import 'package:luvpark_get/custom_widgets/no_internet.dart';
 import 'package:luvpark_get/custom_widgets/park_shimmer.dart';
 import 'package:luvpark_get/routes/routes.dart';
 import 'package:luvpark_get/wallet/controller.dart';
-import 'package:luvpark_get/qr/view.dart';
 
 import 'utils/transaction_details.dart';
 
