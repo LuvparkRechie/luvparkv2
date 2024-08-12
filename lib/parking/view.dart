@@ -10,6 +10,7 @@ import 'package:luvpark_get/custom_widgets/no_data_found.dart';
 import 'package:luvpark_get/custom_widgets/park_shimmer.dart';
 import 'package:luvpark_get/custom_widgets/variables.dart';
 
+import '../routes/routes.dart';
 import 'controller.dart';
 
 class ParkingScreen extends StatelessWidget {
@@ -418,6 +419,7 @@ class ListCard extends StatelessWidget {
         //     }
         //   }
         // });
+        Get.toNamed(Routes.bookingReceipt);
       },
       child: Container(
         decoration: ShapeDecoration(
