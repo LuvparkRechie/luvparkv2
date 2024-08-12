@@ -7,6 +7,8 @@ class AppColor {
   static const bodyColor = Color.fromRGBO(244, 243, 243, 1);
   static const scafColor = Colors.white;
 
+  static Color borderColor = const Color.fromRGBO(0, 0, 0, 0.22);
+
   //
   static const linkLabel = Color(0xFF070707);
   static Color paragraphColor = const Color(0xFF666666);

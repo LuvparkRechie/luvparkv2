@@ -99,11 +99,9 @@ class CustomDialog {
             content: CustomParagraph(text: paragraph),
             actions: <Widget>[
               TextButton(
-                child: CustomTitle(
-                  text: btnName,
-                  fontSize: 14,
-                  fontWeight: FontWeight.bold,
-                  wordspacing: 4,
+                child: Text(
+                  btnName,
+                  style: paragraphStyle(color: AppColor.primaryColor),
                 ),
                 onPressed: () {
                   onTap();
@@ -136,22 +134,18 @@ class CustomDialog {
             content: CustomParagraph(text: paragraph),
             actions: <Widget>[
               TextButton(
-                child: CustomTitle(
-                  text: btnNot,
-                  color: AppColor.primaryColor,
-                  fontSize: 13,
-                  letterSpacing: 1,
+                child: Text(
+                  btnNot,
+                  style: paragraphStyle(color: AppColor.primaryColor),
                 ),
                 onPressed: () {
                   onTapClose();
                 },
               ),
               TextButton(
-                child: CustomTitle(
-                  text: btnOk,
-                  color: AppColor.primaryColor,
-                  fontSize: 13,
-                  letterSpacing: 1,
+                child: Text(
+                  btnOk,
+                  style: paragraphStyle(color: AppColor.primaryColor),
                 ),
                 onPressed: () {
                   onTapConfirm();
