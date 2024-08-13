@@ -20,6 +20,7 @@ import '../registration/utils/otp_screen/index.dart';
 import '../splash_screen/index.dart';
 import '../terms/index.dart';
 import '../wallet/index.dart';
+import '../wallet_send/index.dart';
 import 'routes.dart';
 
 class AppPages {
@@ -116,6 +117,11 @@ class AppPages {
       name: Routes.bookingReceipt,
       page: () => const BookingReceipt(),
       binding: BookingReceiptBinding(),
+    ),
+    GetPage(
+      name: Routes.walletsend,
+      page: () => const WalletSend(),
+      binding: WalletSendBinding(),
     ),
   ];
 }

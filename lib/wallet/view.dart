@@ -165,27 +165,28 @@ class WalletScreen extends StatelessWidget {
                               ],
                             ),
                           ),
-                        ), 
+                        ),
                         Container(height: 15),
                         Row(
                           children: [
                             GestureDetector(
                               onTap: () async {
-                                final item =
-                                    await Authentication().getUserData();
-                                final uData = jsonDecode(item!);
+                                Get.toNamed(Routes.walletsend);
+                                // final item =
+                                //     await Authentication().getUserData();
+                                // final uData = jsonDecode(item!);
 
-                                if (uData["first_name"].toString().isEmpty ||
-                                    uData["first_name"] == null) {
-                                  CustomDialog().errorDialog(
-                                      context,
-                                      "Attention",
-                                      "Complete your account information to access the requested service.\nGo to profile and update your account. ",
-                                      () {
-                                    Get.back();
-                                  });
-                                } else {}
-                                // print("items $item");
+                                // if (uData["first_name"].toString().isEmpty ||
+                                //     uData["first_name"] == null) {
+                                //   CustomDialog().errorDialog(
+                                //       context,
+                                //       "Attention",
+                                //       "Complete your account information to access the requested service.\nGo to profile and update your account. ",
+                                //       () {
+                                //     Get.back();
+                                //   });
+                                // } else {}
+                                // // print("items $item");
                               },
                               child: Container(
                                 padding: const EdgeInsets.symmetric(

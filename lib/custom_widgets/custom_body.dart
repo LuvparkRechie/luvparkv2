@@ -6,29 +6,34 @@ class CustomScaffold extends StatelessWidget {
   final AppBar? appBar;
   final Color? bodyColor;
   final Widget? bottomNavigationBar;
+  final bool canPop;
   const CustomScaffold(
       {super.key,
       required this.children,
       this.appBar,
       this.bodyColor,
+      this.canPop = true,
       this.bottomNavigationBar});
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      extendBodyBehindAppBar: true,
-      backgroundColor: AppColor.scafColor,
-      appBar: appBar,
-      body: SafeArea(
-        child: Container(
-          width: MediaQuery.of(context).size.width,
-          color: bodyColor ?? AppColor.bodyColor,
-          height: MediaQuery.of(context).size.height,
-          child: children,
+    return PopScope(
+      canPop: canPop,
+      child: Scaffold(
+        extendBodyBehindAppBar: true,
+        backgroundColor: AppColor.scafColor,
+        appBar: appBar,
+        body: SafeArea(
+          child: Container(
+            width: MediaQuery.of(context).size.width,
+            color: bodyColor ?? AppColor.bodyColor,
+            height: MediaQuery.of(context).size.height,
+            child: children,
+          ),
         ),
+        resizeToAvoidBottomInset: true,
+        bottomNavigationBar: bottomNavigationBar ?? bottomNavigationBar,
       ),
-      resizeToAvoidBottomInset: true,
-      bottomNavigationBar: bottomNavigationBar ?? bottomNavigationBar,
     );
   }
 }
