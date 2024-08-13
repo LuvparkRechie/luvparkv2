@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:luvpark_get/auth/authentication.dart';
+import 'package:luvpark_get/custom_widgets/page_loader.dart';
 import 'package:luvpark_get/http/api_keys.dart';
 import 'package:luvpark_get/http/http_request.dart';
 
@@ -59,6 +60,58 @@ class WalletSendController extends GetxController
         getLogs();
       }
     });
+  }
+
+  Future<void> getVerifiedAcc() async {
+    // PageLoader();
+    // var params =
+    //     "${ApiKeys.gApiSubFolderVerifyNumber}?mobile_no=63${recepient.text.toString().replaceAll(" ", "")}";
+    // HttpRequest(
+    //   api: params,
+    // ).get().then((returnData) async {
+    //   if (returnData == "No Internet") {
+    //     Navigator.pop(context);
+    //     setState(() {
+    //       isLpAccount = false;
+    //     });
+    //     showAlertDialog(context, "Error",
+    //         "Please check your internet connection and try again", () {
+    //       Navigator.pop(context);
+    //     });
+
+    //     return;
+    //   }
+
+    //   if (returnData == null) {
+    //     Navigator.pop(context);
+    //     setState(() {
+    //       isLpAccount = false;
+    //     });
+    //     showAlertDialog(context, "Error",
+    //         "Error while connecting to server, Please contact support.", () {
+    //       Navigator.pop(context);
+    //     });
+    //   }
+
+    //   if (returnData["items"][0]["is_valid"] == "Y") {
+    //     Navigator.of(context).pop();
+    //     DbProvider().getAuthTransaction().then((enableBioTrans) async {
+    //       if (enableBioTrans) {
+    //         biometricTransaction();
+    //       } else {
+    //         sendOtp();
+    //       }
+    //     });
+    //   } else {
+    //     Navigator.pop(context);
+    //     setState(() {
+    //       isLpAccount = false;
+    //     });
+    //     showAlertDialog(context, "Error", returnData["items"][0]["msg"], () {
+    //       Navigator.pop(context);
+    //     });
+    //   }
+    // });
   }
 
   Future<void> onContinue() async {
