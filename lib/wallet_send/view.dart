@@ -39,179 +39,200 @@ class WalletSend extends GetView<WalletSendController> {
           ),
           title: CustomTitle(text: "Share")),
       canPop: true,
-      children: SingleChildScrollView(
+      children: Form(
+        key: controller.formKey,
         child: Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const SizedBox(
-                height: 20,
-              ),
-              Container(
-                decoration: BoxDecoration(
-                  color: AppColor.primaryColor,
-                  borderRadius: BorderRadius.circular(15),
-                ),
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 10.0,
-                    vertical: 15,
+            padding: const EdgeInsets.fromLTRB(15, 10, 15, 0),
+            child: Obx(
+              () => Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const SizedBox(
+                    height: 20,
                   ),
-                  child: Row(
-                    children: [
-                      Container(
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(
-                            7,
+                  Container(
+                    decoration: BoxDecoration(
+                      color: AppColor.primaryColor,
+                      borderRadius: BorderRadius.circular(15),
+                    ),
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 10.0,
+                        vertical: 15,
+                      ),
+                      child: Row(
+                        children: [
+                          Container(
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(
+                                7,
+                              ),
+                            ),
+                            child: Icon(
+                              Icons.wallet_rounded,
+                              color: AppColor.primaryColor,
+                            ),
                           ),
-                        ),
-                        child: Icon(
-                          Icons.wallet_rounded,
-                          color: AppColor.primaryColor,
-                        ),
+                          Container(
+                            width: 10,
+                          ),
+                          const CustomTitle(
+                            text: "Available Balance",
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white70,
+                            fontSize: 12,
+                            textAlign: TextAlign.center,
+                          ),
+                          Expanded(
+                            child: CustomTitle(
+                              text: controller.userData.isEmpty
+                                  ? ""
+                                  : controller.userData[0]["amount_bal"],
+                              color: Colors.white,
+                              fontSize: 14,
+                              fontWeight: FontWeight.w700,
+                              textAlign: TextAlign.right,
+                            ),
+                          ),
+                        ],
                       ),
-                      Container(
-                        width: 10,
-                      ),
-                      const CustomTitle(
-                        text: "Available Balance",
-                        fontWeight: FontWeight.bold,
-                        color: Colors.white70,
-                        fontSize: 12,
-                        textAlign: TextAlign.center,
-                      ),
-                      Expanded(
-                        child: CustomTitle(
-                          text: "2,310.00",
-                          // text: toCurrencyString(myBalance.toString()),
-                          color: Colors.white,
-                          fontSize: 14,
-                          fontWeight: FontWeight.w700,
-                          textAlign: TextAlign.right,
-                        ),
+                    ),
+                  ),
+                  SizedBox(
+                    height: 20,
+                  ),
+                  CustomTitle(
+                    text: "Recipient",
+                    color: Colors.black,
+                  ),
+                  CustomMobileNumber(
+                    onChange: (text) {
+                      controller.onTextChange();
+                    },
+                    controller: controller.recipient,
+                    inputFormatters: [Variables.maskFormatter],
+                    keyboardType: TextInputType.number,
+                    labelText: "Mobile Number",
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return "Mobile number is required";
+                      }
+                      return null;
+                    },
+                  ),
+                  CustomTitle(
+                    text: "Amount",
+                    color: Colors.black,
+                  ),
+                  CustomTextField(
+                    labelText: "0.00",
+                    controller: controller.tokenAmount,
+                    keyboardType: TextInputType.number,
+                    inputFormatters: [
+                      LengthLimitingTextInputFormatter(
+                        15,
                       ),
                     ],
+                    onChange: (text) {
+                      controller.onTextChange();
+                    },
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return "Amount is required";
+                      }
+                      return null;
+                    },
                   ),
-                ),
-              ),
-              SizedBox(
-                height: 20,
-              ),
-              CustomTitle(
-                text: "Recipient",
-                color: Colors.black,
-              ),
-              CustomMobileNumber(
-                controller: controller.recipient,
-                inputFormatters: [Variables.maskFormatter],
-                keyboardType: TextInputType.number,
-                labelText: "Mobile Number",
-              ),
-              CustomTitle(
-                text: "Amount",
-                color: Colors.black,
-              ),
-              CustomTextField(
-                labelText: "0.00",
-                controller: controller.tokenAmount,
-                keyboardType: TextInputType.number,
-                inputFormatters: [
-                  LengthLimitingTextInputFormatter(
-                    15,
+                  CustomTitle(
+                    text: "Note",
+                    color: Colors.black,
                   ),
+                  CustomTextField(
+                    inputFormatters: [
+                      LengthLimitingTextInputFormatter(
+                        90,
+                      ),
+                    ],
+                    labelText: "Optional",
+                    controller: controller.message,
+                  ),
+                  for (int i = 0; i < controller.padNumbers.length; i += 4)
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        for (int j = i;
+                            j < i + 4 && j < controller.padNumbers.length;
+                            j++)
+                          myPads((controller.padNumbers[j]), j),
+                      ],
+                    ),
+                  CustomButton(
+                      text: "Continue",
+                      btnColor: AppColor.primaryColor,
+                      onPressed: () {
+                        // controller.
+                        if (controller.formKey.currentState!.validate()) {}
+                      })
                 ],
               ),
-              CustomTitle(
-                text: "Note",
-                color: Colors.black,
-              ),
-              CustomTextField(
-                inputFormatters: [
-                  LengthLimitingTextInputFormatter(
-                    90,
-                  ),
-                ],
-                labelText: "Optional",
-                controller: controller.message,
-              ),
-              SizedBox(
-                height: 20,
-              ),
-              for (int i = 0; i < controller.padNumbers.length; i += 4)
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    for (int j = i;
-                        j < i + 4 && j < controller.padNumbers.length;
-                        j++)
-                      myPads((controller.padNumbers[j]), j),
-                  ],
-                ),
-              CustomButton(text: "Continue", onPressed: () {})
-            ],
-          ),
-        ),
+            )),
       ),
     );
   }
 
   Widget myPads(int value, int index) {
     return Expanded(
-      child: Padding(
-        padding: const EdgeInsets.all(3.0),
-        child: InkWell(
-            // onTap: () => onTapChange("$value", index),
-            child: Container(
-          padding: const EdgeInsets.fromLTRB(20, 17, 20, 17),
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(7),
+      child: GestureDetector(
+        onTap: () {
+          controller.onBtnChange(value);
+        },
+        child: Padding(
+          padding: const EdgeInsets.all(3.0),
+          child: InkWell(
+              // onTap: () => onTapChange("$value", index),
+              child: Container(
+            padding: const EdgeInsets.fromLTRB(20, 17, 20, 17),
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(7),
 
-            border: Border.all(
-                color: Colors.grey.shade200,
-                width: 1), // Color(0xFF2563EB) corresponds to #2563EB
-            color: controller.tokenAmount.text.isEmpty
-                ? AppColor.bodyColor
-                : controller.denoInd == index
-                    ? AppColor.primaryColor
-                    : AppColor.bodyColor, // Background color
-          ),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            mainAxisSize: MainAxisSize.min, // Equivalent to flex-shrink: 0
-            children: [
-              AutoSizeText(
-                "$value",
-                style: TextStyle(
-                  fontWeight: FontWeight.w600,
-                  color: controller.tokenAmount.text.isEmpty
-                      ? Colors.black
-                      : controller.tokenAmount.text.isEmpty
-                          ? AppColor.bodyColor
-                          : controller.denoInd == index
-                              ? Colors.white
-                              : Colors.black,
-                  fontSize: 20,
-                ),
-                maxLines: 1,
-                softWrap: false,
-              ),
-              CustomTitle(
-                text: "Token",
-                fontWeight: FontWeight.w500,
-                color: controller.tokenAmount.text.isEmpty
-                    ? Colors.black
-                    : controller.denoInd == index
+              border: Border.all(
+                  color: Colors.grey.shade200,
+                  width: 1), // Color(0xFF2563EB) corresponds to #2563EB
+              color: controller.indexbtn.value == value
+                  ? AppColor.primaryColor
+                  : AppColor.bodyColor, // Background color
+            ),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisSize: MainAxisSize.min, // Equivalent to flex-shrink: 0
+              children: [
+                AutoSizeText(
+                  "$value",
+                  style: TextStyle(
+                    fontWeight: FontWeight.w600,
+                    color: controller.indexbtn.value == value
                         ? Colors.white
                         : Colors.black,
-                fontSize: 12,
-                maxlines: 1,
-              ),
-            ],
-          ),
-        )),
+                    fontSize: 20,
+                  ),
+                  maxLines: 1,
+                  softWrap: false,
+                ),
+                CustomTitle(
+                  text: "Token",
+                  fontWeight: FontWeight.w500,
+                  color: controller.indexbtn.value == value
+                      ? Colors.white
+                      : Colors.black,
+                  fontSize: 12,
+                  maxlines: 1,
+                ),
+              ],
+            ),
+          )),
+        ),
       ),
     );
   }
