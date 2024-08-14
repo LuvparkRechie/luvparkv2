@@ -3,9 +3,9 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:luvpark_get/auth/authentication.dart';
-import 'package:luvpark_get/custom_widgets/page_loader.dart';
 import 'package:luvpark_get/http/api_keys.dart';
 import 'package:luvpark_get/http/http_request.dart';
+import 'package:luvpark_get/routes/routes.dart';
 
 import '../custom_widgets/alert_dialog.dart';
 import '../functions/functions.dart';
@@ -13,7 +13,8 @@ import '../functions/functions.dart';
 class WalletSendController extends GetxController
     with GetSingleTickerProviderStateMixin {
   WalletSendController();
-  GlobalKey<FormState> formKey = GlobalKey<FormState>();
+  final parameter = Get.arguments; // get arguments
+  final GlobalKey<FormState> formKeySend = GlobalKey<FormState>();
   final TextEditingController recipient = TextEditingController();
   final TextEditingController tokenAmount = TextEditingController();
   final TextEditingController message = TextEditingController();
@@ -63,55 +64,87 @@ class WalletSendController extends GetxController
   }
 
   Future<void> getVerifiedAcc() async {
-    // PageLoader();
-    // var params =
-    //     "${ApiKeys.gApiSubFolderVerifyNumber}?mobile_no=63${recepient.text.toString().replaceAll(" ", "")}";
-    // HttpRequest(
-    //   api: params,
-    // ).get().then((returnData) async {
-    //   if (returnData == "No Internet") {
-    //     Navigator.pop(context);
-    //     setState(() {
-    //       isLpAccount = false;
-    //     });
-    //     showAlertDialog(context, "Error",
-    //         "Please check your internet connection and try again", () {
-    //       Navigator.pop(context);
-    //     });
+    CustomDialog().loadingDialog(Get.context!);
 
-    //     return;
-    //   }
+    var params =
+        "${ApiKeys.gApiSubFolderVerifyNumber}?mobile_no=63${recipient.text.toString().replaceAll(" ", "")}";
+    HttpRequest(
+      api: params,
+    ).get().then((returnData) async {
+      // print("object $returnData");
+      if (returnData == "No Internet") {
+        Get.back();
+        CustomDialog().internetErrorDialog(Get.context!, () {
+          Get.back();
+        });
+        return;
+      }
 
-    //   if (returnData == null) {
-    //     Navigator.pop(context);
-    //     setState(() {
-    //       isLpAccount = false;
-    //     });
-    //     showAlertDialog(context, "Error",
-    //         "Error while connecting to server, Please contact support.", () {
-    //       Navigator.pop(context);
-    //     });
-    //   }
+      if (returnData == null) {
+        Get.back();
+        CustomDialog().serverErrorDialog(Get.context!, () {
+          Get.back();
+        });
+      }
 
-    //   if (returnData["items"][0]["is_valid"] == "Y") {
-    //     Navigator.of(context).pop();
-    //     DbProvider().getAuthTransaction().then((enableBioTrans) async {
-    //       if (enableBioTrans) {
-    //         biometricTransaction();
-    //       } else {
-    //         sendOtp();
-    //       }
-    //     });
-    //   } else {
-    //     Navigator.pop(context);
-    //     setState(() {
-    //       isLpAccount = false;
-    //     });
-    //     showAlertDialog(context, "Error", returnData["items"][0]["msg"], () {
-    //       Navigator.pop(context);
-    //     });
-    //   }
-    // });
+      if (returnData["items"][0]["is_valid"] == "Y") {
+        sendOtp();
+        return;
+      } else {
+        Get.back();
+        CustomDialog().errorDialog(
+            Get.context!, "luvpark", returnData["items"][0]["msg"], () {
+          Get.back();
+        });
+      }
+    });
+  }
+
+  Future<void> sendOtp() async {
+    Map<String, dynamic> parameters = {
+      "mobile_no": "63${recipient.text.toString().replaceAll(" ", "")}",
+    };
+
+    HttpRequest(
+            api: ApiKeys.gApiSubFolderPostReqOtpShare, parameters: parameters)
+        .post()
+        .then(
+      (retvalue) {
+        print("object$retvalue");
+        if (retvalue == "No Internet") {
+          Get.back();
+          CustomDialog().internetErrorDialog(Get.context!, () {
+            Get.back();
+          });
+          return;
+        }
+        if (retvalue == null) {
+          Get.back();
+          CustomDialog().serverErrorDialog(Get.context!, () {
+            Get.back();
+          });
+        } else {
+          if (retvalue["success"] == "Y") {
+            Get.back();
+            List otpData = [
+              {
+                "mobile_no":
+                    "63${recipient.text.toString().replaceAll(" ", "")}",
+                "otp": int.parse(retvalue["otp"].toString()),
+              }
+            ];
+
+            Get.toNamed(Routes.walletotp, arguments: otpData);
+          } else {
+            Get.back();
+            CustomDialog().errorDialog(Get.context!, "Error", retvalue["msg"],
+                () {
+              Get.back();
+            });
+          }
+        }
+      },
+    );
   }
 
   Future<void> onContinue() async {

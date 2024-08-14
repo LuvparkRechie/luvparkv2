@@ -58,6 +58,12 @@ class WalletController extends GetxController
     });
   }
 
+  Future<void> onRefresh() async {
+    isLoading.value = true;
+    getLogs();
+    getUserBalance();
+  }
+
   Future<void> getLogs() async {
     final item = await Authentication().getUserData();
     String userId = jsonDecode(item!)['user_id'].toString();

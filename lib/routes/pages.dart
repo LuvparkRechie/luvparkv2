@@ -21,6 +21,7 @@ import '../registration/utils/otp_screen/index.dart';
 import '../splash_screen/index.dart';
 import '../terms/index.dart';
 import '../wallet/index.dart';
+import '../wallet_otp/index.dart';
 import '../wallet_send/index.dart';
 import 'routes.dart';
 
@@ -128,6 +129,11 @@ class AppPages {
       name: Routes.rateBooking,
       page: () => RateBooking(),
       binding: RateBookingBinding(),
+    ),
+    GetPage(
+      name: Routes.walletotp,
+      page: () => const WalletOtp(),
+      binding: WalletOtpBinding(),
     ),
   ];
 }
