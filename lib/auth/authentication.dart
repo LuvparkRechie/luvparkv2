@@ -54,7 +54,10 @@ class Authentication {
   //RETRIEVE LOGIN
   Future<dynamic> getUserLogin() async {
     final prefs = await SharedPreferences.getInstance();
-    return jsonDecode(prefs.getString('auth_login')!);
+
+    String? data = prefs.getString('auth_login');
+    print("drir $data");
+    return data ?? jsonDecode(data!);
   }
 
   //SET BRGY

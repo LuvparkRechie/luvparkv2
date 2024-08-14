@@ -21,4 +21,5 @@ class Routes {
   static const bookingNotice = "/booking_notice";
   static const bookingReceipt = "/booking_receipt";
   static const walletsend = "/wallet_send";
+  static const rateBooking = "/rate_booking";
 }

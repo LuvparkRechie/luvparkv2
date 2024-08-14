@@ -23,7 +23,9 @@ class BookingNotice extends GetView<BookingNoticeController> {
       ),
       padding: const EdgeInsets.all(15),
       child: Obx(() => !ct.isInternetConn.value
-          ? const NoInternetConnected()
+          ? NoInternetConnected(
+              onTap: controller.getNotice,
+            )
           : ct.isLoadingPage.value
               ? const PageLoader()
               : Obx(

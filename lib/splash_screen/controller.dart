@@ -26,13 +26,13 @@ class SplashController extends GetxController
 
   Future<void> determineInitialRoute() async {
     final data = await Authentication().getUserLogin();
+    print("datasss $data");
     final uPass = await Authentication().getPasswordBiometric();
 
     if (data != null) {
       final LoginScreenController lgCt = Get.find<LoginScreenController>();
 
       lgCt.getAccountStatus(Get.context, data["mobile_no"], (obj) async {
-        print("obj $obj");
         final items = obj[0]["items"];
 
         if (items.isEmpty) {

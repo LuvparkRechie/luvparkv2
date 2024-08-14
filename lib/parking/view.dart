@@ -10,7 +10,6 @@ import 'package:luvpark_get/custom_widgets/no_data_found.dart';
 import 'package:luvpark_get/custom_widgets/park_shimmer.dart';
 import 'package:luvpark_get/custom_widgets/variables.dart';
 
-import '../routes/routes.dart';
 import 'controller.dart';
 
 class ParkingScreen extends StatelessWidget {
@@ -68,7 +67,9 @@ class ParkingScreen extends StatelessWidget {
                               ),
                               const CustomParagraph(
                                 text: "Back",
+                                fontSize: 16,
                                 color: Colors.white,
+                                fontWeight: FontWeight.w600,
                               ),
                             ],
                           ),
@@ -79,7 +80,7 @@ class ParkingScreen extends StatelessWidget {
                             child: CustomTitle(
                               text: "My Parking",
                               color: Colors.white,
-                              fontSize: 16,
+                              fontSize: 20,
                               fontWeight: FontWeight.w900,
                             ),
                           ),
@@ -281,7 +282,7 @@ class ParkingScreen extends StatelessWidget {
   }
 }
 
-class ListCard extends StatelessWidget {
+class ListCard extends GetView<ParkingController> {
   final String title, subTitle, date, time, totalAmt, status;
   final int currentTab;
   final dynamic data;
@@ -301,126 +302,7 @@ class ListCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () {
-        // CustomModal(context: context).loader();
-        // var param =
-        //     "${ApiKeys.gApiSubFolderGetDirection}?ref_no=${data["reservation_ref_no"]}";
-
-        // HttpRequest(api: param).get().then((returnData) async {
-        //   if (returnData == "No Internet") {
-        //     Navigator.of(context).pop();
-        //     showAlertDialog(context, "Error",
-        //         "Please check your internet connection and try again.", () {
-        //       Navigator.of(context).pop();
-        //     });
-        //   }
-        //   if (returnData == null) {
-        //     Navigator.of(context).pop();
-        //     showAlertDialog(context, "Error",
-        //         "Error while connecting to server, Please contact support.",
-        //         () {
-        //       Navigator.of(context).pop();
-        //     });
-
-        //     return;
-        //   } else {
-        //     if (returnData["items"].length == 0) {
-        //       Navigator.of(context).pop();
-        //       showAlertDialog(
-        //           context, "Error", "No data found, Please change location.",
-        //           () {
-        //         Navigator.of(context).pop();
-        //       });
-        //     } else {
-        //       Navigator.pop(context);
-        //       var dateInRelated = "";
-        //       var dateOutRelated = "";
-        //       dateInRelated = data["dt_in"];
-        //       dateOutRelated = data["dt_out"];
-        //       Map<String, dynamic> parameters = {
-        //         "client_id": userId,
-        //         "park_area_id": returnData["items"][0]["park_area_id"],
-        //         "vehicle_type_id": returnData["items"][0]["vehicle_type_id"],
-        //         "vehicle_plate_no":
-        //             returnData["items"][0]["vehicle_plate_no"].toString(),
-        //         "dt_in": dateInRelated,
-        //         "dt_out": dateOutRelated,
-        //         "no_hours": int.parse(data["no_hours"].toString()),
-        //         "tran_type": "E",
-        //       };
-        //       if (data["status"].toString() == "C") {
-        //         Variables.pageTrans(
-        //             ReserveReceipt(
-        //               isVehicleSelected: false,
-        //               spaceName:
-        //                   returnData["items"][0]["park_space_name"].toString(),
-        //               parkArea:
-        //                   returnData["items"][0]["park_area_name"].toString(),
-        //               startDate: Variables.formatDate(
-        //                   dateInRelated.toString().split(" ")[0]),
-        //               endDate: Variables.formatDate(
-        //                   dateOutRelated.toString().split(" ")[0]),
-        //               startTime:
-        //                   dateInRelated.toString().split(" ")[1].toString(),
-        //               endTime:
-        //                   dateOutRelated.toString().split(" ")[1].toString(),
-        //               plateNo:
-        //                   returnData["items"][0]["vehicle_plate_no"].toString(),
-        //               hours: data["no_hours"].toString(),
-        //               amount: data["amount"].toString(),
-        //               refno: data["reservation_ref_no"].toString().toString(),
-        //               lat: double.parse(returnData["items"][0]
-        //                       ["park_space_latitude"]
-        //                   .toString()),
-        //               long: double.parse(returnData["items"][0]
-        //                       ["park_space_longitude"]
-        //                   .toString()),
-        //               dtOut: dateOutRelated,
-        //               dateIn: dateInRelated,
-        //               isReserved: true,
-        //               tab: currentTab,
-        //               canReserved: true,
-        //               paramsCalc: parameters,
-        //               address: returnData["items"][0]["address"],
-        //               ticketId: returnData["items"][0]["ticket_id"],
-        //               isAutoExtend: data["is_auto_extend"].toString(),
-        //               reservationId: data["reservation_id"],
-        //               onTap: () {
-        //                 onRefresh();
-        //               },
-        //             ),
-        //             context);
-        //       } else {
-        //         Variables.pageTrans(
-        //             ParkingDetails(
-        //               startDate: dateInRelated
-        //                           .toString()
-        //                           .split(" ")[0]
-        //                           .toString() ==
-        //                       dateOutRelated.toString().split(" ")[0].toString()
-        //                   ? Variables.formatDate(
-        //                       dateInRelated.toString().split(" ")[0])
-        //                   : "${Variables.formatDate(dateInRelated.toString().split(" ")[0])} - ${Variables.formatDate(dateOutRelated.toString().split(" ")[0])}",
-        //               startTime:
-        //                   dateInRelated.toString().split(" ")[1].toString(),
-        //               endTime:
-        //                   dateOutRelated.toString().split(" ")[1].toString(),
-        //               resData: data,
-        //               returnData: returnData["items"],
-        //               dtOut: dateOutRelated,
-        //               dateIn: dateInRelated,
-        //               paramsCalc: parameters,
-        //               onTap: () {
-        //                 onRefresh();
-        //               },
-        //             ),
-        //             context);
-        //       }
-        //     }
-        //   }
-        // });
-        Get.toNamed(Routes.bookingReceipt);
-      },
+      onTap: () async {},
       child: Container(
         decoration: ShapeDecoration(
           color: Colors.white,
@@ -465,6 +347,9 @@ class ListCard extends StatelessWidget {
                       color: AppColor.primaryColor,
                       size: 30,
                     ),
+                    onTap: () {
+                      controller.getParkingDetails(data);
+                    },
                   ),
                   Row(
                     children: [

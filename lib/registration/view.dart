@@ -41,7 +41,7 @@ class RegistrationPage extends StatelessWidget {
           child: SingleChildScrollView(
             child: GetBuilder<RegistrationController>(builder: (ctxt) {
               return Form(
-                key: ct.formKeyLogin,
+                key: ct.formKeyRegister,
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -201,14 +201,14 @@ class RegistrationPage extends StatelessWidget {
                       loading: ct.isLoading.value,
                       onPressed: () {
                         FocusScope.of(context).requestFocus(FocusNode());
-                        if (ct.formKeyLogin.currentState!.validate()) {
+                        if (ct.formKeyRegister.currentState!.validate()) {
                           if (Variables.getPasswordStrengthText(
                                   ct.passStrength.value) !=
                               "Strong Password") {
                             CustomDialog().snackbarDialog(
-                              context,
-                              'For enhanced security, please create a stronger password.',
-                            );
+                                context,
+                                'For enhanced security, please create a stronger password.',
+                                Colors.red);
                             return;
                           }
                           if (ct.isLoading.value) return;
@@ -245,7 +245,7 @@ class RegistrationPage extends StatelessWidget {
                                     "new_pass": ct.password.text,
                                   }
                                 ];
-
+                                ct.formKeyRegister.currentState?.reset();
                                 Get.toNamed(Routes.otp, arguments: argsParam);
                               });
                             }

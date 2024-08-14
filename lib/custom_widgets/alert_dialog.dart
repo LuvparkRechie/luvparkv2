@@ -192,10 +192,10 @@ class CustomDialog {
         });
   }
 
-  void snackbarDialog(BuildContext context, String text) {
+  void snackbarDialog(BuildContext context, String text, Color? color) {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
-        backgroundColor: Colors.red,
+        backgroundColor: color ?? Colors.red,
         content: Text(text),
         duration: const Duration(seconds: 1), // Adjust the duration as needed
         action: SnackBarAction(

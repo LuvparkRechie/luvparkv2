@@ -13,6 +13,7 @@ import 'package:luvpark_get/sqlite/vehicle_brands_table.dart';
 class LoginScreenController extends GetxController
     with GetSingleTickerProviderStateMixin {
   LoginScreenController();
+  final GlobalKey<FormState> formKeyLogin = GlobalKey<FormState>();
   RxBool isAgree = false.obs;
   RxBool isShowPass = false.obs;
   RxBool isLoading = false.obs;

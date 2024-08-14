@@ -308,28 +308,6 @@ class Variables {
     return formattedDateString;
   }
 
-  static customBottomSheet(BuildContext context, Widget child) {
-    showModalBottomSheet(
-      context: context,
-      builder: (BuildContext context) {
-        return child;
-      },
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(
-          top: Radius.circular(20),
-        ),
-      ),
-      isScrollControlled: true,
-      enableDrag: true,
-      isDismissible: true,
-      // Custom animation for smooth transition
-      transitionAnimationController: AnimationController(
-        vsync: Navigator.of(context),
-        duration: Duration(milliseconds: 400),
-      ),
-    );
-  }
-
   //convert widget to image and display on map or capture as png
   static Future<Uint8List> capturePng(
       BuildContext context, Widget printWidget, int size, bool isOval) async {
@@ -444,5 +422,17 @@ class Variables {
     }
   }
 
- 
+  static String formatTimeLeft(Duration duration) {
+    if (duration.inSeconds < 60) {
+      return '${duration.inSeconds} ${duration.inSeconds == 1 ? 'second' : 'seconds'} left';
+    } else {
+      int hours = duration.inHours;
+      int minutes = duration.inMinutes.remainder(60);
+      if (hours == 0) {
+        return '$minutes ${minutes == 1 ? 'minute' : 'minutes'} left';
+      } else {
+        return '$hours ${hours == 1 ? 'hour' : 'hours'} & $minutes ${minutes == 1 ? 'minute' : 'minutes'} left';
+      }
+    }
+  }
 }

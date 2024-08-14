@@ -24,7 +24,8 @@ import 'package:sliding_up_panel/sliding_up_panel.dart';
 class DashboardMapController extends GetxController
     with GetSingleTickerProviderStateMixin {
   // Dependencies
-  final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
+  final GlobalKey<ScaffoldState> dashboardScaffoldKey =
+      GlobalKey<ScaffoldState>();
   final GlobalKey headerKey = GlobalKey();
   final TextEditingController searchCon = TextEditingController();
   final PanelController panelController = PanelController();

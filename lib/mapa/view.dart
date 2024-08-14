@@ -16,6 +16,7 @@ import 'package:luvpark_get/custom_widgets/variables.dart';
 import 'package:luvpark_get/functions/functions.dart';
 import 'package:luvpark_get/internet/internet_conn.dart';
 import 'package:luvpark_get/routes/routes.dart';
+import 'package:luvpark_get/voice_search/view.dart';
 import 'package:map_picker/map_picker.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:sliding_up_panel/sliding_up_panel.dart';
@@ -27,12 +28,11 @@ class DashboardMapScreen extends GetView<DashboardMapController> {
   @override
   Widget build(BuildContext context) {
     Get.put(DashboardMapController());
-    final DashboardMapController ct = Get.find<DashboardMapController>();
 
     return Obx(() {
-      if (!ct.netConnected.value) {
+      if (!controller.netConnected.value) {
         return const CustomScaffold(children: InternetConn());
-      } else if (ct.isLoading.value) {
+      } else if (controller.isLoading.value) {
         return const PopScope(
           canPop: false,
           child: CustomScaffold(
@@ -46,9 +46,9 @@ class DashboardMapScreen extends GetView<DashboardMapController> {
           ),
         );
       } else {
-        if (double.parse(ct.userBal[0]["amount_bal"].toString()) >=
-            double.parse(ct.userBal[0]["min_wallet_bal"].toString())) {
-          if (ct.isLoadingMap.value) {
+        if (double.parse(controller.userBal[0]["amount_bal"].toString()) >=
+            double.parse(controller.userBal[0]["min_wallet_bal"].toString())) {
+          if (controller.isLoadingMap.value) {
             return PopScope(
               canPop: false,
               child: CustomScaffold(
@@ -86,7 +86,7 @@ class DashboardMapScreen extends GetView<DashboardMapController> {
               child: Scaffold(
                 extendBody: true,
                 extendBodyBehindAppBar: true,
-                key: ct.scaffoldKey,
+                key: controller.dashboardScaffoldKey,
                 drawer: Drawer(
                   child: Container(
                     color: AppColor.bodyColor,
@@ -186,13 +186,13 @@ class DashboardMapScreen extends GetView<DashboardMapController> {
                 ),
                 body: Column(
                   children: [
-                    Expanded(child: accessMaps(context, ct, ct.scaffoldKey)),
+                    Expanded(child: accessMaps(context)),
                     Visibility(
-                      visible: !ct.isSidebarVisible.value,
+                      visible: !controller.isSidebarVisible.value,
                       child: SlidingUpPanel(
                         maxHeight:
                             MediaQuery.of(Get.context!).viewInsets.bottom != 0
-                                ? ct.suggestions.isEmpty
+                                ? controller.suggestions.isEmpty
                                     ? (MediaQuery.of(Get.context!)
                                             .viewInsets
                                             .bottom +
@@ -202,35 +202,39 @@ class DashboardMapScreen extends GetView<DashboardMapController> {
                                         MediaQuery.of(Get.context!)
                                             .viewInsets
                                             .bottom)
-                                : ct.suggestions.isEmpty
-                                    ? ct.minHeight.value
+                                : controller.suggestions.isEmpty
+                                    ? controller.minHeight.value
                                     : MediaQuery.of(context).size.height * .70,
-                        minHeight: ct.minHeight.value,
+                        minHeight: controller.minHeight.value,
                         parallaxEnabled: true,
                         parallaxOffset: .3,
-                        controller: ct.panelController,
+                        controller: controller.panelController,
                         header: Container(
-                            key: ct.headerKey,
-                            padding: const EdgeInsets.symmetric(vertical: 10),
-                            decoration: const BoxDecoration(
-                              color: Colors.white,
-                              borderRadius: BorderRadius.vertical(
-                                  top: Radius.circular(7)),
-                            ),
-                            width: MediaQuery.of(context).size.width,
-                            child: Builder(builder: (context) {
+                          key: controller.headerKey,
+                          padding: const EdgeInsets.symmetric(vertical: 10),
+                          decoration: const BoxDecoration(
+                            color: Colors.white,
+                            borderRadius:
+                                BorderRadius.vertical(top: Radius.circular(7)),
+                          ),
+                          width: MediaQuery.of(context).size.width,
+                          child: Builder(
+                            builder: (context) {
                               WidgetsBinding.instance.addPostFrameCallback((_) {
-                                final RenderBox renderBox = ct
+                                final RenderBox renderBox = controller
                                     .headerKey.currentContext!
                                     .findRenderObject() as RenderBox;
                                 final double height = renderBox.size.height;
-                                if (ct.headerHeight.value != height) {
-                                  ct.headerHeight.value = height;
-                                  ct.minHeight.value = ct.headerHeight.value;
+                                if (controller.headerHeight.value != height) {
+                                  controller.headerHeight.value = height;
+                                  controller.minHeight.value =
+                                      controller.headerHeight.value;
                                 }
                               });
-                              return _panel(ct);
-                            })),
+                              return _panel();
+                            },
+                          ),
+                        ),
                         panel: Container(
                           height: MediaQuery.of(context).size.height,
                           width: MediaQuery.of(context).size.width,
@@ -239,7 +243,7 @@ class DashboardMapScreen extends GetView<DashboardMapController> {
                                 BorderRadius.vertical(top: Radius.circular(7)),
                             color: Colors.white,
                           ),
-                          child: _panelContent(ct),
+                          child: _panelContent(),
                         ),
                       ),
                     ),
@@ -251,18 +255,19 @@ class DashboardMapScreen extends GetView<DashboardMapController> {
         } else {
           return PopScope(
               canPop: false,
-              child: CustomScaffold(children: accessList(context, ct)));
+              child: CustomScaffold(children: accessList(context)));
         }
       }
     });
   }
 
-  Widget _panelContent(ct) {
+  Widget _panelContent() {
     return StretchingOverscrollIndicator(
       axisDirection: AxisDirection.down,
       child: ListView.builder(
-          padding: EdgeInsets.fromLTRB(15, ct.minHeight.value + 10, 15, 5),
-          itemCount: ct.suggestions.length,
+          padding:
+              EdgeInsets.fromLTRB(15, controller.minHeight.value + 10, 15, 5),
+          itemCount: controller.suggestions.length,
           itemBuilder: (context, index) {
             return Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -270,15 +275,15 @@ class DashboardMapScreen extends GetView<DashboardMapController> {
                 InkWell(
                     onTap: () async {
                       FocusManager.instance.primaryFocus!.unfocus();
-                      await Functions.searchPlaces(
-                          context, ct.suggestions[index].split("=Rechie=")[0],
+                      await Functions.searchPlaces(context,
+                          controller.suggestions[index].split("=Rechie=")[0],
                           (searchedPlace) {
                         if (searchedPlace.isEmpty) {
                           return;
                         } else {
-                          ct.searchCoordinates =
+                          controller.searchCoordinates =
                               LatLng(searchedPlace[0], searchedPlace[1]);
-                          ct.getUserData(true);
+                          controller.getUserData(true);
                         }
                       });
                     },
@@ -300,19 +305,19 @@ class DashboardMapScreen extends GetView<DashboardMapController> {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 CustomTitle(
-                                  text: ct.suggestions[index]
+                                  text: controller.suggestions[index]
                                           .split("=structured=")[1]
                                           .contains(",")
-                                      ? ct.suggestions[index]
+                                      ? controller.suggestions[index]
                                           .split("=structured=")[1]
                                           .split(",")[0]
-                                      : ct.suggestions[index]
+                                      : controller.suggestions[index]
                                           .split("=structured=")[1],
                                   maxlines: 1,
                                   fontSize: 16,
                                 ),
                                 CustomParagraph(
-                                  text: ct.suggestions[index]
+                                  text: controller.suggestions[index]
                                       .split("=Rechie=")[0],
                                   fontSize: 12,
                                   maxlines: 2,
@@ -336,7 +341,7 @@ class DashboardMapScreen extends GetView<DashboardMapController> {
     );
   }
 
-  Widget _panel(ct) {
+  Widget _panel() {
     return Padding(
       padding: const EdgeInsets.fromLTRB(20, 20, 20, 10),
       child: Column(
@@ -353,9 +358,9 @@ class DashboardMapScreen extends GetView<DashboardMapController> {
           Container(height: 20),
           Obx(
             () => CustomParagraph(
-              text: ct.myName.value.toString().isEmpty
+              text: controller.myName.value.toString().isEmpty
                   ? "Welcome to luvpark"
-                  : "${Variables.greeting()}, ${ct.myName.value}",
+                  : "${Variables.greeting()}, ${controller.myName.value}",
               fontSize: 16,
               fontWeight: FontWeight.w600,
               letterSpacing: -0.41,
@@ -371,7 +376,7 @@ class DashboardMapScreen extends GetView<DashboardMapController> {
           Container(height: 20),
           Container(
             height: 54,
-            padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
+            padding: const EdgeInsets.symmetric(horizontal: 15),
             clipBehavior: Clip.antiAlias,
             decoration: ShapeDecoration(
               color: const Color(0xFFFBFBFB),
@@ -396,7 +401,7 @@ class DashboardMapScreen extends GetView<DashboardMapController> {
                 const SizedBox(width: 6),
                 Flexible(
                   child: TextField(
-                    controller: ct.searchCon,
+                    controller: controller.searchCon,
                     decoration: InputDecoration(
                       hintText: 'Search parking',
                       hintStyle: paragraphStyle(),
@@ -404,18 +409,30 @@ class DashboardMapScreen extends GetView<DashboardMapController> {
                     ),
                     style: paragraphStyle(color: Colors.black),
                     onChanged: (text) {
-                      ct.fetchSuggestions();
+                      controller.fetchSuggestions();
                     },
                   ),
                 ),
                 const SizedBox(width: 10),
-                Container(
-                  width: 24,
-                  decoration: const BoxDecoration(
-                    image: DecorationImage(
-                      image:
-                          AssetImage("assets/dashboard_icon/google_voice.png"),
-                      fit: BoxFit.contain,
+                InkWell(
+                  onTap: () {
+                    FocusManager.instance.primaryFocus?.unfocus();
+                    Future.delayed(const Duration(milliseconds: 200), () {
+                      Get.dialog(
+                        const VoiceSearchPopup(),
+                        barrierDismissible: false,
+                        arguments: (data) {},
+                      );
+                    });
+                  },
+                  child: Container(
+                    width: 24,
+                    decoration: const BoxDecoration(
+                      image: DecorationImage(
+                        image: AssetImage(
+                            "assets/dashboard_icon/google_voice.png"),
+                        fit: BoxFit.contain,
+                      ),
                     ),
                   ),
                 ),
@@ -427,9 +444,8 @@ class DashboardMapScreen extends GetView<DashboardMapController> {
     );
   }
 
-  Widget accessMaps(BuildContext context, DashboardMapController cs,
-      GlobalKey<ScaffoldState> scafKey) {
-    return cs.initialCameraPosition == null
+  Widget accessMaps(BuildContext context) {
+    return controller.initialCameraPosition == null
         ? const Center(
             child: Text("Loading Map"),
           )
@@ -442,7 +458,7 @@ class DashboardMapScreen extends GetView<DashboardMapController> {
                   width: 40,
                 ),
                 //add map picker controller
-                mapPickerController: cs.mapPickerController,
+                mapPickerController: controller.mapPickerController,
                 child: GoogleMap(
                   mapType: MapType.normal,
                   mapToolbarEnabled: false,
@@ -452,24 +468,24 @@ class DashboardMapScreen extends GetView<DashboardMapController> {
                   compassEnabled: false,
                   buildingsEnabled: false,
                   tiltGesturesEnabled: true,
-                  initialCameraPosition: cs.initialCameraPosition!,
-                  markers: Set<Marker>.of(cs.markers),
-                  polylines: {cs.polyline},
-                  circles: {cs.circle},
-                  onMapCreated: cs.onMapCreated,
-                  onCameraMoveStarted: cs.onCameraMoveStarted,
-                  onCameraMove: cs.onCameraMove,
+                  initialCameraPosition: controller.initialCameraPosition!,
+                  markers: Set<Marker>.of(controller.markers),
+                  polylines: {controller.polyline},
+                  circles: {controller.circle},
+                  onMapCreated: controller.onMapCreated,
+                  onCameraMoveStarted: controller.onCameraMoveStarted,
+                  onCameraMove: controller.onCameraMove,
                   onCameraIdle: () async {
-                    cs.onCameraIdle();
+                    controller.onCameraIdle();
                   },
                 ),
               ),
               Visibility(
-                visible: cs.isGetNearData.value,
+                visible: controller.isGetNearData.value,
                 child: Positioned(
                   left: MediaQuery.of(context).size.width / 3.5,
                   top: (MediaQuery.of(context).size.height -
-                          cs.minHeight.value) /
+                          controller.minHeight.value) /
                       3,
                   child: Container(
                     clipBehavior: Clip.antiAlias,
@@ -494,6 +510,7 @@ class DashboardMapScreen extends GetView<DashboardMapController> {
                   ),
                 ),
               ),
+              //Latest booking
               Positioned(
                 right: 10,
                 left: 10,
@@ -548,7 +565,7 @@ class DashboardMapScreen extends GetView<DashboardMapController> {
                     GestureDetector(
                       onTap: () {
                         Get.toNamed(Routes.parkingAreas,
-                            arguments: cs.dataNearest);
+                            arguments: controller.dataNearest);
                       },
                       child: Align(
                         alignment: Alignment.centerRight,
@@ -584,71 +601,77 @@ class DashboardMapScreen extends GetView<DashboardMapController> {
                   ],
                 ),
               ),
+              //My balance
               Positioned(
                 top: 40,
                 right: 20,
-                child: Container(
-                  width: 178,
-                  padding: const EdgeInsets.fromLTRB(7, 5, 7, 5),
-                  clipBehavior: Clip.antiAlias,
-                  decoration: ShapeDecoration(
-                    color: Colors.white,
-                    shape: RoundedRectangleBorder(
-                      side:
-                          const BorderSide(width: 1, color: Color(0xFFDFE7EF)),
-                      borderRadius: BorderRadius.circular(7),
+                child: InkWell(
+                  onTap: () {
+                    Get.toNamed(Routes.bookingReceipt);
+                  },
+                  child: Container(
+                    width: 178,
+                    padding: const EdgeInsets.fromLTRB(7, 5, 7, 5),
+                    clipBehavior: Clip.antiAlias,
+                    decoration: ShapeDecoration(
+                      color: Colors.white,
+                      shape: RoundedRectangleBorder(
+                        side: const BorderSide(
+                            width: 1, color: Color(0xFFDFE7EF)),
+                        borderRadius: BorderRadius.circular(7),
+                      ),
+                      shadows: const [
+                        BoxShadow(
+                          color: Color(0x0C000000),
+                          blurRadius: 15,
+                          offset: Offset(0, 5),
+                          spreadRadius: 0,
+                        )
+                      ],
                     ),
-                    shadows: const [
-                      BoxShadow(
-                        color: Color(0x0C000000),
-                        blurRadius: 15,
-                        offset: Offset(0, 5),
-                        spreadRadius: 0,
-                      )
-                    ],
-                  ),
-                  child: Row(
-                    children: [
-                      const SizedBox(
-                        width: 45,
-                        height: 38,
-                        child: Image(
-                          image: AssetImage("assets/images/logo.png"),
-                          width: 37,
-                          height: 32,
+                    child: Row(
+                      children: [
+                        const SizedBox(
+                          width: 45,
+                          height: 38,
+                          child: Image(
+                            image: AssetImage("assets/images/logo.png"),
+                            width: 37,
+                            height: 32,
+                          ),
                         ),
-                      ),
-                      Container(width: 8),
-                      Expanded(
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            const CustomParagraph(
-                              text: "My balance",
-                              maxlines: 1,
-                              fontSize: 16,
-                              fontWeight: FontWeight.w800,
-                            ),
-                            CustomTitle(
-                              text: toCurrencyString(22.toString()),
-                              maxlines: 1,
-                              fontSize: 18,
-                              letterSpacing: -0.41,
-                              fontWeight: FontWeight.w900,
-                            )
-                          ],
+                        Container(width: 8),
+                        Expanded(
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              const CustomParagraph(
+                                text: "My balance",
+                                maxlines: 1,
+                                fontWeight: FontWeight.w800,
+                              ),
+                              CustomTitle(
+                                text: toCurrencyString(22.toString()),
+                                maxlines: 1,
+                                fontSize: 18,
+                                letterSpacing: -0.41,
+                                fontWeight: FontWeight.w900,
+                              )
+                            ],
+                          ),
                         ),
-                      ),
-                      Container(width: 8),
-                      Icon(
-                        Icons.chevron_right_outlined,
-                        color: AppColor.secondaryColor,
-                      ),
-                    ],
+                        Container(width: 8),
+                        Icon(
+                          Icons.chevron_right_outlined,
+                          color: AppColor.secondaryColor,
+                        ),
+                      ],
+                    ),
                   ),
                 ),
               ),
+              //Drawer
               Positioned(
                 top: 40,
                 left: 20,
@@ -675,12 +698,13 @@ class DashboardMapScreen extends GetView<DashboardMapController> {
                   child: IconButton(
                     icon: AnimatedIcon(
                       icon: AnimatedIcons.menu_close,
-                      progress: cs.animationController.view,
+                      progress: controller.animationController.view,
                       color: Colors.blue,
                       size: 30,
                     ),
                     onPressed: () {
-                      scafKey.currentState?.openDrawer();
+                      controller.dashboardScaffoldKey.currentState
+                          ?.openDrawer();
                     },
                   ),
                 ),
@@ -689,7 +713,7 @@ class DashboardMapScreen extends GetView<DashboardMapController> {
           );
   }
 
-  Widget accessList(BuildContext context, DashboardMapController cs) {
+  Widget accessList(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.all(15.0),
       child: Column(
@@ -698,7 +722,7 @@ class DashboardMapScreen extends GetView<DashboardMapController> {
           Container(height: 20),
           Container(
             height: 54,
-            padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
+            padding: const EdgeInsets.symmetric(horizontal: 15),
             clipBehavior: Clip.antiAlias,
             decoration: ShapeDecoration(
               color: const Color(0xFFFBFBFB),
@@ -729,9 +753,10 @@ class DashboardMapScreen extends GetView<DashboardMapController> {
                       hintStyle: paragraphStyle(),
                       border: InputBorder.none,
                     ),
+                    textAlign: TextAlign.center,
                     style: paragraphStyle(color: Colors.black),
                     onChanged: (text) {
-                      cs.fetchSuggestions();
+                      controller.fetchSuggestions();
                     },
                   ),
                 ),
@@ -750,7 +775,7 @@ class DashboardMapScreen extends GetView<DashboardMapController> {
             ),
           ),
           Expanded(
-            child: _panelContent(cs),
+            child: _panelContent(),
           ),
         ],
       ),

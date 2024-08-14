@@ -1,9 +1,9 @@
 import 'package:get/get.dart';
-import 'package:luvpark_get/booking_notice/controller.dart';
+import 'package:luvpark_get/booking/utils/booking_receipt/controller.dart';
 
-class BookingReceiptBinding implements Bindings {
+class BookingReceiptBinding extends Bindings {
   @override
   void dependencies() {
-    Get.lazyPut<BookingNoticeController>(() => BookingNoticeController());
+    Get.lazyPut<BookingReceiptController>(() => BookingReceiptController());
   }
 }

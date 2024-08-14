@@ -25,7 +25,6 @@ class BookingPage extends GetView<BookingController> {
 
   @override
   Widget build(BuildContext context) {
-    final BookingController ct = Get.put(BookingController());
     return CustomScaffold(
       bodyColor: AppColor.bodyColor,
       appBar: AppBar(
@@ -47,7 +46,7 @@ class BookingPage extends GetView<BookingController> {
         centerTitle: true,
       ),
       children: GetBuilder<BookingController>(builder: (ctxt) {
-        return Obx(() => ct.isLoadingPage.value
+        return Obx(() => controller.isLoadingPage.value
             ? const Center(
                 child: SizedBox(
                   width: 40,
@@ -55,9 +54,9 @@ class BookingPage extends GetView<BookingController> {
                   child: CircularProgressIndicator(),
                 ),
               )
-            : !ct.isInternetConn.value
+            : !controller.isInternetConn.value
                 ? NoInternetConnected(
-                    onTap: ct.getAvailabeAreaVh,
+                    onTap: controller.getAvailabeAreaVh,
                   )
                 : Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -113,9 +112,9 @@ class BookingPage extends GetView<BookingController> {
                                                 padding: const EdgeInsets.only(
                                                     left: 8.0),
                                                 child: CustomTitle(
-                                                  text:
-                                                      ct.parameters["areaData"]
-                                                          ["park_area_name"],
+                                                  text: controller.parameters[
+                                                          "areaData"]
+                                                      ["park_area_name"],
                                                   maxlines: 1,
                                                   color: Colors.white,
                                                 ),
@@ -124,9 +123,8 @@ class BookingPage extends GetView<BookingController> {
                                                 padding: const EdgeInsets.only(
                                                     left: 8.0),
                                                 child: CustomParagraph(
-                                                  text:
-                                                      ct.parameters["areaData"]
-                                                          ["address"],
+                                                  text: controller.parameters[
+                                                      "areaData"]["address"],
                                                   fontSize: 12,
                                                   color: Colors.white70,
                                                   maxlines: 2,
@@ -173,7 +171,8 @@ class BookingPage extends GetView<BookingController> {
                                           children: [
                                             CustomTitle(
                                               text: Variables.formatDistance(
-                                                      ct.parameters["areaData"]
+                                                      controller.parameters[
+                                                              "areaData"]
                                                           ["distance"])
                                                   .toString(),
                                               color: Colors.white,
@@ -195,19 +194,21 @@ class BookingPage extends GetView<BookingController> {
                                 onTap: () async {
                                   Get.bottomSheet(
                                       BookingDuration(
-                                        numbersList: ct.numbersList,
-                                        maxHours: ct.parameters["areaData"]
+                                        numbersList: controller.numbersList,
+                                        maxHours: controller
+                                            .parameters["areaData"]
                                                 ["res_max_hours"]
                                             .toString(),
                                         onTap: (dataHours) async {
-                                          ct.inputTimeLabel.value =
+                                          controller.inputTimeLabel.value =
                                               "$dataHours ${dataHours > 1 ? "Hours" : "Hour"}";
-                                          ct.numberOfhours = dataHours;
+                                          controller.numberOfhours = dataHours;
 
-                                          ct.isHideBottom.value = false;
-                                          ct.timeComputation();
-                                          if (ct.selectedVh.isNotEmpty) {
-                                            ct.routeToComputation();
+                                          controller.isHideBottom.value = false;
+                                          controller.timeComputation();
+                                          if (controller
+                                              .selectedVh.isNotEmpty) {
+                                            controller.routeToComputation();
                                           }
                                         },
                                       ),
@@ -235,7 +236,7 @@ class BookingPage extends GetView<BookingController> {
                                   child: Padding(
                                     padding: const EdgeInsets.symmetric(
                                         horizontal: 20),
-                                    child: ct.inputTimeLabel.value ==
+                                    child: controller.inputTimeLabel.value ==
                                             'Input a Duration'
                                         ? Center(
                                             child: RichText(
@@ -247,7 +248,7 @@ class BookingPage extends GetView<BookingController> {
                                                             .middle,
                                                     child: CustomParagraph(
                                                       text:
-                                                          "${ct.inputTimeLabel.value} ",
+                                                          "${controller.inputTimeLabel.value} ",
                                                       color:
                                                           AppColor.primaryColor,
                                                       fontSize: 16,
@@ -286,13 +287,13 @@ class BookingPage extends GetView<BookingController> {
                                                       MainAxisAlignment.center,
                                                   children: [
                                                     CustomTitle(
-                                                      text: ct
+                                                      text: controller
                                                           .inputTimeLabel.value,
                                                       fontSize: 16,
                                                     ),
                                                     CustomParagraph(
                                                       text:
-                                                          "Start Booking: ${ct.startTime.text} - ${ct.endTime.text}",
+                                                          "Start Booking: ${controller.startTime.text} - ${controller.endTime.text}",
                                                       fontSize: 14,
                                                       letterSpacing: -0.41,
                                                     ),
@@ -310,7 +311,8 @@ class BookingPage extends GetView<BookingController> {
                                 ),
                               ),
                               Container(height: 20),
-                              if (ct.inputTimeLabel.value != 'Input a Duration')
+                              if (controller.inputTimeLabel.value !=
+                                  'Input a Duration')
                                 Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
@@ -339,13 +341,15 @@ class BookingPage extends GetView<BookingController> {
                                         onTap: () {
                                           WidgetsBinding.instance
                                               .addPostFrameCallback((_) {
-                                            ct.getMyVehicle();
+                                            controller.getMyVehicle();
                                             Get.bottomSheet(
                                               isScrollControlled: true,
                                               VehicleOption(
                                                 callback: (data) {
-                                                  ct.selectedVh.value = data;
-                                                  ct.routeToComputation();
+                                                  controller.selectedVh.value =
+                                                      data;
+                                                  controller
+                                                      .routeToComputation();
                                                 },
                                               ),
                                             );
@@ -359,11 +363,13 @@ class BookingPage extends GetView<BookingController> {
                                                   left: 20,
                                                   right: 20,
                                                 ),
-                                                child: ct.selectedVh.isEmpty
+                                                child: controller
+                                                        .selectedVh.isEmpty
                                                     ? CustomParagraph(
                                                         text:
                                                             "Tap to add vehicle",
-                                                        color: ct.selectedVh
+                                                        color: controller
+                                                                .selectedVh
                                                                 .isEmpty
                                                             ? AppColor
                                                                 .primaryColor
@@ -382,14 +388,16 @@ class BookingPage extends GetView<BookingController> {
                                                                 .center,
                                                         children: [
                                                           CustomTitle(
-                                                            text: ct.selectedVh[
-                                                                    0][
+                                                            text: controller
+                                                                    .selectedVh[0]
+                                                                [
                                                                 "vehicle_plate_no"],
                                                             fontSize: 16,
                                                           ),
                                                           CustomParagraph(
-                                                            text: ct.selectedVh[
-                                                                    0][
+                                                            text: controller
+                                                                    .selectedVh[0]
+                                                                [
                                                                 "vehicle_brand_name"],
                                                             letterSpacing:
                                                                 -0.41,
@@ -401,7 +409,8 @@ class BookingPage extends GetView<BookingController> {
                                             Padding(
                                               padding: const EdgeInsets.only(
                                                   right: 15),
-                                              child: ct.selectedVh.isNotEmpty
+                                              child: controller
+                                                      .selectedVh.isNotEmpty
                                                   ? Icon(
                                                       Icons
                                                           .check_circle_outline_outlined,
@@ -425,7 +434,7 @@ class BookingPage extends GetView<BookingController> {
                                 ),
 
                               //payment details
-                              if (ct.selectedVh.isNotEmpty)
+                              if (controller.selectedVh.isNotEmpty)
                                 Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
@@ -469,11 +478,13 @@ class BookingPage extends GetView<BookingController> {
                                                 Align(
                                                   alignment: Alignment.center,
                                                   child: CustomTitle(
-                                                    text: toCurrencyString(ct
-                                                            .parameters[
-                                                                "userData"][0]
-                                                                ["amount_bal"]
-                                                            .toString())
+                                                    text: toCurrencyString(
+                                                            controller
+                                                                .parameters[
+                                                                    "userData"]
+                                                                    [0][
+                                                                    "amount_bal"]
+                                                                .toString())
                                                         .toString(),
                                                     fontSize: 16,
                                                     maxlines: 1,
@@ -521,11 +532,13 @@ class BookingPage extends GetView<BookingController> {
                                                 Align(
                                                   alignment: Alignment.center,
                                                   child: CustomTitle(
-                                                    text: toCurrencyString(ct
-                                                            .parameters[
-                                                                "userData"][0]
-                                                                ["points_bal"]
-                                                            .toString())
+                                                    text: toCurrencyString(
+                                                            controller
+                                                                .parameters[
+                                                                    "userData"]
+                                                                    [0][
+                                                                    "points_bal"]
+                                                                .toString())
                                                         .toString(),
                                                     fontSize: 16,
                                                     maxlines: 1,
@@ -542,8 +555,8 @@ class BookingPage extends GetView<BookingController> {
                                     ),
                                     GestureDetector(
                                       onTap: () {
-                                        ct.toggleRewardChecked(
-                                            !ct.isRewardchecked.value);
+                                        controller.toggleRewardChecked(
+                                            !controller.isRewardchecked.value);
                                       },
                                       child: Container(
                                         padding: const EdgeInsets.symmetric(
@@ -579,11 +592,13 @@ class BookingPage extends GetView<BookingController> {
                                               Row(
                                                 children: [
                                                   Icon(
-                                                    ct.isRewardchecked.value
+                                                    controller.isRewardchecked
+                                                            .value
                                                         ? Icons
                                                             .check_circle_outline
                                                         : Icons.circle_outlined,
-                                                    color: ct.isRewardchecked
+                                                    color: controller
+                                                            .isRewardchecked
                                                             .value
                                                         ? AppColor.primaryColor
                                                         : Colors.grey,
@@ -598,10 +613,11 @@ class BookingPage extends GetView<BookingController> {
                                                     ),
                                                   ),
                                                   Container(width: 5),
-                                                  if (ct.isRewardchecked.value)
+                                                  if (controller
+                                                      .isRewardchecked.value)
                                                     GestureDetector(
-                                                      onTap:
-                                                          ct.showRewardDialog,
+                                                      onTap: controller
+                                                          .showRewardDialog,
                                                       child: Icon(
                                                         Icons.edit_note,
                                                         color: AppColor
@@ -610,7 +626,8 @@ class BookingPage extends GetView<BookingController> {
                                                     )
                                                 ],
                                               ),
-                                              if (ct.isRewardchecked.value)
+                                              if (controller
+                                                  .isRewardchecked.value)
                                                 Padding(
                                                   padding:
                                                       const EdgeInsets.all(10),
@@ -643,7 +660,7 @@ class BookingPage extends GetView<BookingController> {
                                                                 try {
                                                                   double
                                                                       points =
-                                                                      double.parse(ct
+                                                                      double.parse(controller
                                                                           .rewardsCon
                                                                           .text);
                                                                   return points
@@ -737,8 +754,8 @@ class BookingPage extends GetView<BookingController> {
                                     ),
                                     GestureDetector(
                                       onTap: () {
-                                        ct.toggleExtendChecked(
-                                            !ct.isExtendchecked.value);
+                                        controller.toggleExtendChecked(
+                                            !controller.isExtendchecked.value);
                                       },
                                       child: Container(
                                         height: 51,
@@ -773,10 +790,11 @@ class BookingPage extends GetView<BookingController> {
                                                 MainAxisAlignment.spaceBetween,
                                             children: [
                                               Icon(
-                                                ct.isExtendchecked.value
+                                                controller.isExtendchecked.value
                                                     ? Icons.check_circle_outline
                                                     : Icons.circle_outlined,
-                                                color: ct.isExtendchecked.value
+                                                color: controller
+                                                        .isExtendchecked.value
                                                     ? AppColor.primaryColor
                                                     : Colors.grey,
                                               ),
@@ -826,13 +844,13 @@ class BookingPage extends GetView<BookingController> {
                                     ),
                                   ),
                                   CustomTitle(
-                                    text:
-                                        toCurrencyString(ct.totalAmount.value),
+                                    text: toCurrencyString(
+                                        controller.totalAmount.value),
                                   ),
                                 ],
                               ),
                               Container(height: 20),
-                              if (ct.isBtnLoading.value)
+                              if (controller.isBtnLoading.value)
                                 Row(
                                   children: [
                                     Expanded(
@@ -845,12 +863,12 @@ class BookingPage extends GetView<BookingController> {
                                         ),
                                       ),
                                     ),
-                                    if (ct.parameters["queueChkIn"][0]
+                                    if (controller.parameters["queueChkIn"][0]
                                         ["is_chkIn"])
                                       Container(
                                         width: 10,
                                       ),
-                                    if (ct.parameters["queueChkIn"][0]
+                                    if (controller.parameters["queueChkIn"][0]
                                         ["is_chkIn"])
                                       Expanded(
                                         child: Shimmer.fromColors(
@@ -870,42 +888,48 @@ class BookingPage extends GetView<BookingController> {
                                   children: [
                                     Expanded(
                                       child: CustomButton(
-                                          loading: ct.isSubmitBooking.value,
-                                          text: ct.parameters["queueChkIn"][0]
-                                                  ["is_queue"]
+                                          loading:
+                                              controller.isSubmitBooking.value,
+                                          text: controller
+                                                      .parameters["queueChkIn"]
+                                                  [0]["is_queue"]
                                               ? "Confirm this Queue"
                                               : "Confirm this booking",
-                                          btnColor: ct.selectedVh.isEmpty
-                                              ? AppColor.primaryColor
-                                                  .withOpacity(.6)
-                                              : AppColor.primaryColor,
+                                          btnColor:
+                                              controller.selectedVh.isEmpty
+                                                  ? AppColor.primaryColor
+                                                      .withOpacity(.6)
+                                                  : AppColor.primaryColor,
                                           textColor: Colors.white,
-                                          onPressed: ct.selectedVh.isEmpty
+                                          onPressed: controller
+                                                  .selectedVh.isEmpty
                                               ? () {}
                                               : () {
                                                   var dateIn = DateTime.parse(
-                                                      "${ct.startDate.text} ${ct.timeInParam.text}");
+                                                      "${controller.startDate.text} ${controller.timeInParam.text}");
 
                                                   var dateOut = dateIn.add(
                                                       Duration(
-                                                          hours: ct
+                                                          hours: controller
                                                               .numberOfhours));
 
                                                   void bongGo() {
                                                     Map<String, dynamic>
                                                         parameters = {
                                                       "client_id":
-                                                          ct.parameters[
+                                                          controller.parameters[
                                                                   "areaData"]
                                                               ["client_id"],
                                                       "park_area_id":
-                                                          ct.parameters[
+                                                          controller.parameters[
                                                                   "areaData"]
                                                               ["park_area_id"],
-                                                      "vehicle_plate_no": ct
-                                                              .selectedVh[0]
-                                                          ["vehicle_plate_no"],
-                                                      "vehicle_type_id": ct
+                                                      "vehicle_plate_no":
+                                                          controller
+                                                                  .selectedVh[0]
+                                                              [
+                                                              "vehicle_plate_no"],
+                                                      "vehicle_type_id": controller
                                                           .selectedVh[0][
                                                               "vehicle_type_id"]
                                                           .toString(),
@@ -916,18 +940,19 @@ class BookingPage extends GetView<BookingController> {
                                                       "dt_out": dateOut
                                                           .toString()
                                                           .split(".")[0],
-                                                      "no_hours":
-                                                          ct.numberOfhours,
+                                                      "no_hours": controller
+                                                          .numberOfhours,
                                                       "tran_type": "R",
                                                     };
 
-                                                    ct.submitReservation(
-                                                        parameters,
-                                                        context,
-                                                        false);
+                                                    controller
+                                                        .submitReservation(
+                                                            parameters,
+                                                            context,
+                                                            false);
                                                   }
 
-                                                  if (ct
+                                                  if (controller
                                                       .isExtendchecked.value) {
                                                     bongGo();
                                                   } else {
@@ -939,24 +964,24 @@ class BookingPage extends GetView<BookingController> {
                                                             "No",
                                                             "Yes", () {
                                                       Get.back();
-                                                      ct.isExtendchecked.value =
-                                                          false;
+                                                      controller.isExtendchecked
+                                                          .value = false;
                                                       bongGo();
                                                     }, () {
                                                       Get.back();
-                                                      ct.isExtendchecked.value =
-                                                          true;
+                                                      controller.isExtendchecked
+                                                          .value = true;
                                                       bongGo();
                                                     });
                                                   }
                                                 }),
                                     ),
-                                    if (ct.parameters["queueChkIn"][0]
+                                    if (controller.parameters["queueChkIn"][0]
                                         ["is_chkIn"])
                                       Container(
                                         width: 10,
                                       ),
-                                    if (ct.isBtnLoading.value)
+                                    if (controller.isBtnLoading.value)
                                       Row(
                                         children: [
                                           Expanded(
@@ -970,12 +995,14 @@ class BookingPage extends GetView<BookingController> {
                                               ),
                                             ),
                                           ),
-                                          if (ct.parameters["queueChkIn"][0]
+                                          if (controller
+                                                  .parameters["queueChkIn"][0]
                                               ["is_chkIn"])
                                             Container(
                                               width: 10,
                                             ),
-                                          if (ct.parameters["queueChkIn"][0]
+                                          if (controller
+                                                  .parameters["queueChkIn"][0]
                                               ["is_chkIn"])
                                             Expanded(
                                               child: Shimmer.fromColors(
@@ -990,9 +1017,9 @@ class BookingPage extends GetView<BookingController> {
                                             )
                                         ],
                                       )
-                                    else if (ct.parameters["queueChkIn"][0]
-                                            ["is_chkIn"] &&
-                                        !ct.parameters["queueChkIn"][0]
+                                    else if (controller.parameters["queueChkIn"]
+                                            [0]["is_chkIn"] &&
+                                        !controller.parameters["queueChkIn"][0]
                                             ["is_queue"])
                                       Expanded(
                                         child: CustomButton(
@@ -1002,19 +1029,21 @@ class BookingPage extends GetView<BookingController> {
                                             textColor: Colors.white,
                                             onPressed: () {
                                               var dateIn = DateTime.parse(
-                                                  "${ct.startDate.text} ${ct.timeInParam.text}");
+                                                  "${controller.startDate.text} ${controller.timeInParam.text}");
 
                                               var dateOut = dateIn.add(Duration(
-                                                  hours: ct.numberOfhours));
+                                                  hours: controller
+                                                      .numberOfhours));
                                               // routeToComputation();
                                               void bongGo() {
                                                 Map<String, dynamic>
                                                     parameters = {
-                                                  "client_id":
-                                                      ct.parameters["areaData"]
-                                                          ["client_id"],
+                                                  "client_id": controller
+                                                          .parameters[
+                                                      "areaData"]["client_id"],
                                                   "park_area_id":
-                                                      ct.parameters["areaData"]
+                                                      controller.parameters[
+                                                              "areaData"]
                                                           ["park_area_id"],
                                                   "vehicle_plate_no":
                                                       "Plate No VH",
@@ -1026,15 +1055,17 @@ class BookingPage extends GetView<BookingController> {
                                                   "dt_out": dateOut
                                                       .toString()
                                                       .split(".")[0],
-                                                  "no_hours": ct.numberOfhours,
+                                                  "no_hours":
+                                                      controller.numberOfhours,
                                                   "tran_type": "R",
                                                 };
 
-                                                ct.submitReservation(
+                                                controller.submitReservation(
                                                     parameters, context, false);
                                               }
 
-                                              if (ct.isExtendchecked.value) {
+                                              if (controller
+                                                  .isExtendchecked.value) {
                                                 bongGo();
                                               } else {
                                                 CustomDialog().confirmationDialog(
@@ -1044,13 +1075,13 @@ class BookingPage extends GetView<BookingController> {
                                                     "Cancel",
                                                     "Proceed", () {
                                                   Get.back();
-                                                  ct.isExtendchecked.value =
-                                                      false;
+                                                  controller.isExtendchecked
+                                                      .value = false;
                                                   bongGo();
                                                 }, () {
                                                   Get.back();
-                                                  ct.isExtendchecked.value =
-                                                      true;
+                                                  controller.isExtendchecked
+                                                      .value = true;
                                                   bongGo();
                                                 });
                                               }
@@ -1122,7 +1153,7 @@ class BookingDuration extends GetView<BookingController> {
                       ),
                       CustomTextField(
                         label: "Input number of hours",
-                        controller: ct.noHours,
+                        controller: controller.noHours,
                         inputFormatters: <TextInputFormatter>[
                           FilteringTextInputFormatter.allow(
                               RegExp(r'^\d*\.?\d*$')),
@@ -1132,43 +1163,48 @@ class BookingDuration extends GetView<BookingController> {
                             : const TextInputType.numberWithOptions(
                                 signed: true, decimal: false),
                         onChanged: (value) {
-                          ct.noHours.text =
+                          controller.noHours.text =
                               value.replaceAll(RegExp(r'[^a-zA-Z0-9]'), '');
-                          ct.inpDisplay.text =
+                          controller.inpDisplay.text =
                               value.replaceAll(RegExp(r'[^a-zA-Z0-9]'), '');
 
                           if (value.isNotEmpty &&
                               int.parse(value) >
-                                  int.parse(ct.parameters["areaData"]
+                                  int.parse(controller.parameters["areaData"]
                                           ["res_max_hours"]
                                       .toString()) &&
-                              int.parse(ct.parameters["areaData"]
+                              int.parse(controller.parameters["areaData"]
                                           ["res_max_hours"]
                                       .toString()) !=
                                   0) {
                             CustomDialog().errorDialog(context, "luvpark",
-                                "Booking limit is up to ${ct.parameters["areaData"]["res_max_hours"].toString()} hours only.",
+                                "Booking limit is up to ${controller.parameters["areaData"]["res_max_hours"].toString()} hours only.",
                                 () {
                               Get.back();
-                              ct.noHours.text = ct.noHours.text
-                                  .substring(0, ct.noHours.text.length - 1);
+                              controller.noHours.text = controller.noHours.text
+                                  .substring(
+                                      0, controller.noHours.text.length - 1);
 
-                              ct.inpDisplay.text = ct.noHours.text
-                                  .substring(0, ct.noHours.text.length - 1);
-                              ct.inpDisplay.text = ct.noHours.text
-                                  .substring(0, ct.noHours.text.length - 1);
+                              controller.inpDisplay.text =
+                                  controller.noHours.text.substring(
+                                      0, controller.noHours.text.length - 1);
+                              controller.inpDisplay.text =
+                                  controller.noHours.text.substring(
+                                      0, controller.noHours.text.length - 1);
 
-                              ct.noHours.selection = TextSelection.fromPosition(
-                                  TextPosition(offset: ct.noHours.text.length));
+                              controller.noHours.selection =
+                                  TextSelection.fromPosition(TextPosition(
+                                      offset: controller.noHours.text.length));
 
-                              ct.selectedNumber.value =
-                                  int.parse(ct.noHours.text);
+                              controller.selectedNumber.value =
+                                  int.parse(controller.noHours.text);
                             });
                           }
 
-                          ct.selectedNumber.value = (ct.noHours.text.isEmpty
-                              ? null
-                              : int.parse(ct.noHours.text))!;
+                          controller.selectedNumber.value =
+                              (controller.noHours.text.isEmpty
+                                  ? null
+                                  : int.parse(controller.noHours.text))!;
                         },
                       ),
                     ],
@@ -1201,9 +1237,9 @@ class BookingDuration extends GetView<BookingController> {
                       child: CustomButton(
                           text: "Confirm",
                           onPressed: () {
-                            ct.inputTimeLabel.value =
-                                "${ct.selectedNumber.value} ${ct.selectedNumber.value > 1 ? "Hours" : "Hour"}";
-                            onTap(ct.selectedNumber.value);
+                            controller.inputTimeLabel.value =
+                                "${controller.selectedNumber.value} ${controller.selectedNumber.value > 1 ? "Hours" : "Hour"}";
+                            onTap(controller.selectedNumber.value);
                             Get.back();
                           }),
                     ),
@@ -1229,22 +1265,23 @@ class BookingDuration extends GetView<BookingController> {
   Widget numberHoursWidget(data, i, ct) {
     return Obx(
       () => Container(
-        color:
-            ct.selectedNumber.value == data[i] ? const Color(0xFFe8f3fe) : null,
+        color: controller.selectedNumber.value == data[i]
+            ? const Color(0xFFe8f3fe)
+            : null,
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 15),
           child: ListTile(
             onTap: () {
-              ct.onTapChanged(i);
+              controller.onTapChanged(i);
             },
             contentPadding: EdgeInsets.zero,
             title: CustomParagraph(
               text: '${data[i]} ${data[i] > 1 ? "hours" : "hour"}',
-              color: ct.selectedNumber.value == numbersList[i]
+              color: controller.selectedNumber.value == numbersList[i]
                   ? AppColor.primaryColor
                   : Colors.black,
             ),
-            trailing: ct.selectedNumber.value == data[i]
+            trailing: controller.selectedNumber.value == data[i]
                 ? Icon(Icons.check, color: AppColor.primaryColor)
                 : null,
           ),
@@ -1266,9 +1303,9 @@ class VehicleOption extends GetView<BookingController> {
       children: [
         Obx(
           () => Container(
-            height: ct.isFirstScreen.value &&
-                    ct.isNetConnVehicles.value &&
-                    !ct.isLoadingVehicles.value
+            height: controller.isFirstScreen.value &&
+                    controller.isNetConnVehicles.value &&
+                    !controller.isLoadingVehicles.value
                 ? MediaQuery.of(context).viewInsets.bottom != 0
                     ? MediaQuery.of(context).viewInsets.bottom
                     : null
@@ -1277,15 +1314,15 @@ class VehicleOption extends GetView<BookingController> {
               borderRadius: BorderRadius.circular(7),
               color: Colors.white,
             ),
-            child: !ct.isNetConnVehicles.value
+            child: !controller.isNetConnVehicles.value
                 ? NoInternetConnected(
                     onTap: () {
-                      ct.getMyVehicle();
+                      controller.getMyVehicle();
                     },
                   )
-                : ct.isLoadingVehicles.value
+                : controller.isLoadingVehicles.value
                     ? const PageLoader()
-                    : ct.myVehiclesData.isEmpty
+                    : controller.myVehiclesData.isEmpty
                         ? const NoDataFound()
                         : Padding(
                             padding: const EdgeInsets.all(20.0),
@@ -1295,9 +1332,9 @@ class VehicleOption extends GetView<BookingController> {
                                 Container(height: 10),
                                 InkWell(
                                   onTap: () {
-                                    if (!ct.isFirstScreen.value) {
-                                      ct.onScreenChanged(
-                                          !ct.isFirstScreen.value);
+                                    if (!controller.isFirstScreen.value) {
+                                      controller.onScreenChanged(
+                                          !controller.isFirstScreen.value);
                                       return;
                                     }
                                     Get.back();
@@ -1308,9 +1345,9 @@ class VehicleOption extends GetView<BookingController> {
                                   ),
                                 ),
                                 Container(height: 20),
-                                ct.isFirstScreen.value
+                                controller.isFirstScreen.value
                                     ? Form(
-                                        key: ct.formKey,
+                                        key: controller.bookKey,
                                         child: Column(
                                           crossAxisAlignment:
                                               CrossAxisAlignment.start,
@@ -1321,7 +1358,7 @@ class VehicleOption extends GetView<BookingController> {
                                             Container(height: 10),
                                             CustomTextField(
                                               label: "Plate No.",
-                                              controller: ct.plateNo,
+                                              controller: controller.plateNo,
                                               textCapitalization:
                                                   TextCapitalization.characters,
                                               validator: (data) {
@@ -1346,10 +1383,12 @@ class VehicleOption extends GetView<BookingController> {
                                                   Container(height: 10),
                                                   CustomDropdown(
                                                     labelText: "Vehicle Type",
-                                                    ddData: ct.ddVehiclesData,
-                                                    ddValue: ct.dropdownValue,
+                                                    ddData: controller
+                                                        .ddVehiclesData,
+                                                    ddValue: controller
+                                                        .dropdownValue,
                                                     onChange: (newValue) {
-                                                      ct.dropdownValue =
+                                                      controller.dropdownValue =
                                                           newValue;
                                                     },
                                                   ),
@@ -1358,7 +1397,7 @@ class VehicleOption extends GetView<BookingController> {
                                                     text: "Confirm",
                                                     onPressed: () {
                                                       if (ct
-                                                          .formKey.currentState!
+                                                          .bookKey.currentState!
                                                           .validate()) {
                                                         String vtName = ct
                                                             .ddVehiclesData
@@ -1382,7 +1421,9 @@ class VehicleOption extends GetView<BookingController> {
                                                             'vehicle_brand_name':
                                                                 vtName,
                                                             'vehicle_plate_no':
-                                                                ct.plateNo.text
+                                                                controller
+                                                                    .plateNo
+                                                                    .text
                                                           }
                                                         ]);
                                                         Get.back();
@@ -1396,9 +1437,10 @@ class VehicleOption extends GetView<BookingController> {
                                                       color: AppColor.bodyColor,
                                                       label: "My Vehicle",
                                                       onTap: () {
-                                                        ct.onScreenChanged(!ct
-                                                            .isFirstScreen
-                                                            .value);
+                                                        controller
+                                                            .onScreenChanged(!ct
+                                                                .isFirstScreen
+                                                                .value);
                                                       })
                                                 ],
                                               ),
@@ -1410,7 +1452,8 @@ class VehicleOption extends GetView<BookingController> {
                                           child: ListView.separated(
                                             padding: const EdgeInsets.symmetric(
                                                 horizontal: 10),
-                                            itemCount: ct.myVehiclesData.length,
+                                            itemCount: controller
+                                                .myVehiclesData.length,
                                             itemBuilder: (context, index) {
                                               return ListTile(
                                                 title: Row(
@@ -1418,7 +1461,8 @@ class VehicleOption extends GetView<BookingController> {
                                                       MainAxisAlignment.end,
                                                   children: [
                                                     CustomTitle(
-                                                      text: ct.myVehiclesData[
+                                                      text: controller
+                                                                  .myVehiclesData[
                                                               index]
                                                           ["vehicle_plate_no"],
                                                       fontSize: 14,
@@ -1430,7 +1474,8 @@ class VehicleOption extends GetView<BookingController> {
                                                       MainAxisAlignment.end,
                                                   children: [
                                                     CustomParagraph(
-                                                      text: ct.myVehiclesData[
+                                                      text: controller
+                                                                  .myVehiclesData[
                                                               index][
                                                           "vehicle_brand_name"],
                                                       fontSize: 12,
@@ -1442,7 +1487,8 @@ class VehicleOption extends GetView<BookingController> {
                                                       const EdgeInsets.only(
                                                           top: 5),
                                                   child: Icon(
-                                                    int.parse(ct.myVehiclesData[
+                                                    int.parse(controller
+                                                                .myVehiclesData[
                                                                     index][
                                                                     "vehicle_type_id"]
                                                                 .toString()) ==
@@ -1456,7 +1502,8 @@ class VehicleOption extends GetView<BookingController> {
                                                     Icons.keyboard_arrow_right),
                                                 onTap: () {
                                                   callback([
-                                                    ct.myVehiclesData[index]
+                                                    controller
+                                                        .myVehiclesData[index]
                                                   ]);
                                                   Get.back();
                                                 },

@@ -120,6 +120,9 @@ dependencies:
   google_fonts: ^4.0.4
   map_picker: ^0.0.3
   flutter_svg: ^2.0.9
+  loader_overlay: ^4.0.1
+  speech_to_text: ^6.6.0
+ 
 
 dev_dependencies:
   flutter_test:

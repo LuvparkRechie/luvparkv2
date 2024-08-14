@@ -28,6 +28,8 @@ class BookingNoticeController extends GetxController
   }
 
   Future<void> getNotice() async {
+    isInternetConn.value = true;
+    isLoadingPage.value = true;
     String subApi = "${ApiKeys.gApiLuvParkGetNotice}?msg_code=PREBOOKMSG";
 
     HttpRequest(api: subApi).get().then((retDataNotice) async {

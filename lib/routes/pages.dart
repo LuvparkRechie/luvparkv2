@@ -1,4 +1,5 @@
 import 'package:get/get.dart';
+import 'package:luvpark_get/rate_booking/index.dart';
 
 import '../activate_acc/index.dart';
 import '../booking/index.dart';
@@ -115,13 +116,18 @@ class AppPages {
     ),
     GetPage(
       name: Routes.bookingReceipt,
-      page: () => const BookingReceipt(),
+      page: () => BookingReceipt(),
       binding: BookingReceiptBinding(),
     ),
     GetPage(
       name: Routes.walletsend,
       page: () => const WalletSend(),
       binding: WalletSendBinding(),
+    ),
+    GetPage(
+      name: Routes.rateBooking,
+      page: () => RateBooking(),
+      binding: RateBookingBinding(),
     ),
   ];
 }

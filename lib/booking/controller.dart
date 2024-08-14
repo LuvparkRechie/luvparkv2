@@ -55,7 +55,7 @@ class BookingController extends GetxController
   RxString vehicleTypeValue = "".obs;
 
   //VH OPTION PARAm
-  GlobalKey<FormState> formKey = GlobalKey<FormState>();
+  final GlobalKey<FormState> bookKey = GlobalKey<FormState>();
   RxBool isFirstScreen = true.obs;
   RxBool isLoadingVehicles = true.obs;
   RxBool isNetConnVehicles = true.obs;
@@ -340,7 +340,7 @@ class BookingController extends GetxController
   //Reservation Submit
   void submitReservation(params, context, isCheckIn) async {
     List bookingParams = [params];
-    print("1 bookingParams $bookingParams");
+
     int userId = await Authentication().getUserId();
     isSubmitBooking.value = true;
 
@@ -372,13 +372,14 @@ class BookingController extends GetxController
         int.parse(parameters["areaData"]["book_start_minutes"].toString());
     DateTime dateIn = DateTime.parse(params["dt_in"].toString());
 
-    if (etaTime < areaEtaTime) {
+    if (etaTime > areaEtaTime) {
       bookingParams = bookingParams.map((e) {
         e["dt_in"] =
             dateIn.add(Duration(minutes: areaEtaTime)).toString().split(".")[0];
         return e;
       }).toList();
     }
+
     HttpRequest(
         api: ApiKeys.gApiLuvParkGetResPayKey,
         parameters: {"user_id": userId}).post().then((dataRefNo) async {
@@ -493,13 +494,13 @@ class BookingController extends GetxController
                     'isReserved': false,
                     'isShowRate': true,
                     'reservationId': int.parse(returnPay["reservation_id"]),
-                    'address': "",
-                    'isAutoExtend': "",
+                    'address': parameters["areaData"]["address"],
+                    'isAutoExtend': false,
+                    'isBooking': true,
                     'paramsCalc': bookingParams[0]
                   };
                   isSubmitBooking.value = false;
-                  print("args $args");
-                  Get.offAllNamed(Routes.bookingReceipt, arguments: args);
+                  Get.offNamed(Routes.bookingReceipt, arguments: args);
                   return;
                 } else {
                   isSubmitBooking.value = false;
@@ -660,5 +661,11 @@ class BookingController extends GetxController
     //     );
     //   },
     // );
+  }
+
+  @override
+  void onClose() {
+    super.onClose();
+    bookKey.currentState?.reset();
   }
 }

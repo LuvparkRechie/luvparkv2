@@ -344,7 +344,7 @@ class NotificationController {
 
   static Future<void> onActionReceivedImplementationMethod(
       ReceivedAction receivedAction) async {
-    BuildContext context = MyApp.navigatorKey.currentState!.context;
+    // BuildContext context = MyApp.navigatorKey.currentState!.context;
 
     void redirect() async {
       MyApp.navigatorKey.currentState?.pushNamedAndRemoveUntil(

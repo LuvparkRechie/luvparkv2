@@ -12,7 +12,7 @@ class RegistrationController extends GetxController
   RxBool isLoading = false.obs;
   RxInt passStrength = 0.obs;
 
-  final GlobalKey<FormState> formKeyLogin = GlobalKey<FormState>();
+  final GlobalKey<FormState> formKeyRegister = GlobalKey<FormState>();
   TextEditingController mobileNumber = TextEditingController();
   TextEditingController password = TextEditingController();
   bool isLogin = false;

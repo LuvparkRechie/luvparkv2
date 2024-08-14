@@ -16,8 +16,6 @@ import 'package:luvpark_get/routes/routes.dart';
 class LoginScreen extends StatelessWidget {
   LoginScreen({super.key});
 
-  final GlobalKey<FormState> formKeyLogin = GlobalKey<FormState>();
-
   @override
   Widget build(BuildContext context) {
     final LoginScreenController ct = Get.put(LoginScreenController());
@@ -33,7 +31,7 @@ class LoginScreen extends StatelessWidget {
         children: Padding(
           padding: const EdgeInsets.fromLTRB(20, 0, 15, 20),
           child: Form(
-            key: formKeyLogin,
+            key: ct.formKeyLogin,
             child: StretchingOverscrollIndicator(
               axisDirection: AxisDirection.down,
               child: SingleChildScrollView(
@@ -98,13 +96,13 @@ class LoginScreen extends StatelessWidget {
                           if (ct.mobileNumber.text.isEmpty) {
                             ct.toggleLoading(!ct.isLoading.value);
                             CustomDialog().snackbarDialog(
-                                context, "Mobile number is empty");
+                                context, "Mobile number is empty", Colors.red);
                             return;
                           }
                           if (ct.password.text.isEmpty) {
                             ct.toggleLoading(!ct.isLoading.value);
-                            CustomDialog()
-                                .snackbarDialog(context, "Password is empty");
+                            CustomDialog().snackbarDialog(
+                                context, "Password is empty", Colors.red);
                             return;
                           }
                           ct.getAccountStatus(context,
@@ -140,6 +138,7 @@ class LoginScreen extends StatelessWidget {
                                 ct.toggleLoading(!ct.isLoading.value);
 
                                 if (data[0]["items"].isNotEmpty) {
+                                  ct.formKeyLogin.currentState?.reset();
                                   Get.offAndToNamed(Routes.map);
                                 }
                               });

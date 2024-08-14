@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:luvpark_get/auth/authentication.dart';
 import 'package:luvpark_get/custom_widgets/alert_dialog.dart';
+import 'package:luvpark_get/custom_widgets/variables.dart';
 import 'package:luvpark_get/functions/functions.dart';
 import 'package:luvpark_get/http/api_keys.dart';
 import 'package:luvpark_get/http/http_request.dart';
+import 'package:luvpark_get/routes/routes.dart';
 
 class ParkingController extends GetxController
     with GetSingleTickerProviderStateMixin {
@@ -89,11 +92,118 @@ class ParkingController extends GetxController
               return element["is_active"] == "Y" && element["status"] == "U";
             }).toList();
           }
-          print("resData $resData");
         }
       } finally {
         isLoading.value = false; // Ensure loading ends
       }
     });
+  }
+
+  // BTN details
+  Future<void> getParkingDetails(dynamic data) async {
+    int userId = await Authentication().getUserId();
+    CustomDialog().loadingDialog(Get.context!);
+    var param =
+        "${ApiKeys.gApiSubFolderGetDirection}?ref_no=${data["reservation_ref_no"]}";
+
+    HttpRequest(api: param).get().then((returnData) async {
+      if (returnData == "No Internet") {
+        Get.back();
+        CustomDialog().internetErrorDialog(Get.context!, () {
+          Get.back();
+        });
+      }
+      if (returnData == null) {
+        Get.back();
+        CustomDialog().serverErrorDialog(Get.context!, () {
+          Get.back();
+        });
+
+        return;
+      } else {
+        if (returnData["items"].length == 0) {
+          Get.back();
+          CustomDialog().errorDialog(Get.context!, "luvpark", "No data found",
+              () {
+            Get.back();
+          });
+          return;
+        } else {
+          Get.back();
+          var dateInRelated = "";
+          var dateOutRelated = "";
+          dateInRelated = data["dt_in"];
+          dateOutRelated = data["dt_out"];
+
+          Map<String, dynamic> parameters = {
+            "client_id": userId,
+            "park_area_id": returnData["items"][0]["park_area_id"],
+            "vehicle_type_id": returnData["items"][0]["vehicle_type_id"],
+            "vehicle_plate_no":
+                returnData["items"][0]["vehicle_plate_no"].toString(),
+            "dt_in": dateInRelated,
+            "dt_out": dateOutRelated,
+            "no_hours": int.parse(data["no_hours"].toString()),
+            "tran_type": "E",
+          };
+
+          if (data["status"].toString() == "C") {
+            dynamic args = {
+              'spaceName': returnData["items"][0]["park_space_name"].toString(),
+              'parkArea': returnData["items"][0]["park_area_name"].toString(),
+              'startDate':
+                  Variables.formatDate(dateInRelated.toString().split(" ")[0]),
+              'endDate':
+                  Variables.formatDate(dateOutRelated.toString().split(" ")[0]),
+              'startTime': dateInRelated.toString().split(" ")[1].toString(),
+              'endTime': dateOutRelated.toString().split(" ")[1].toString(),
+              'plateNo': returnData["items"][0]["vehicle_plate_no"].toString(),
+              'hours': data["no_hours"].toString(),
+              'amount': data["amount"].toString(),
+              'refno': data["reservation_ref_no"].toString().toString(),
+              'lat': double.parse(
+                  returnData["items"][0]["park_space_latitude"].toString()),
+              'long': double.parse(
+                  returnData["items"][0]["park_space_longitude"].toString()),
+              'canReserved': true,
+              'isReserved': false,
+              'isShowRate': false,
+              'reservationId': data["reservation_id"],
+              'address': returnData["items"][0]["address"],
+              'isAutoExtend': data["is_auto_extend"].toString(),
+              'isBooking': false,
+              'paramsCalc': parameters
+            };
+            // print("args $args");
+            // Get.offAll(Routes.bookingReceipt, arguments: args);
+            Get.toNamed(Routes.bookingReceipt, arguments: args);
+          } else {
+            // Variables.pageTrans(
+            //     ParkingDetails(
+            //       startDate: dateInRelated
+            //                   .toString()
+            //                   .split(" ")[0]
+            //                   .toString() ==
+            //               dateOutRelated.toString().split(" ")[0].toString()
+            //           ? Variables.formatDate(
+            //               dateInRelated.toString().split(" ")[0])
+            //           : "${Variables.formatDate(dateInRelated.toString().split(" ")[0])} - ${Variables.formatDate(dateOutRelated.toString().split(" ")[0])}",
+            //       startTime: dateInRelated.toString().split(" ")[1].toString(),
+            //       endTime: dateOutRelated.toString().split(" ")[1].toString(),
+            //       resData: data,
+            //       returnData: returnData["items"],
+            //       dtOut: dateOutRelated,
+            //       dateIn: dateInRelated,
+            //       paramsCalc: parameters,
+            //       onTap: () {
+            //         onRefresh();
+            //       },
+            //     ),
+            //     context);
+          }
+        }
+      }
+    });
+    // // Get.toNamed(Routes.bookingReceipt);
   }
 }
