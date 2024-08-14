@@ -101,16 +101,17 @@ class WalletSendController extends GetxController
   }
 
   Future<void> sendOtp() async {
+    final item = await Authentication().getUserLogin();
     Map<String, dynamic> parameters = {
-      "mobile_no": "63${recipient.text.toString().replaceAll(" ", "")}",
+      "mobile_no": item["mobile_no"],
     };
-
+    print(parameters);
     HttpRequest(
             api: ApiKeys.gApiSubFolderPostReqOtpShare, parameters: parameters)
         .post()
         .then(
       (retvalue) {
-        print("object$retvalue");
+        // print("params $parameters");
         if (retvalue == "No Internet") {
           Get.back();
           CustomDialog().internetErrorDialog(Get.context!, () {
@@ -128,13 +129,18 @@ class WalletSendController extends GetxController
             Get.back();
             List otpData = [
               {
-                "mobile_no":
-                    "63${recipient.text.toString().replaceAll(" ", "")}",
+                "amount": tokenAmount.text.toString().replaceAll(",", ""),
+                "to_msg": message.text,
+                "mobile_no": item["mobile_no"],
                 "otp": int.parse(retvalue["otp"].toString()),
+                "to_mobile_no": "63${recipient.text.replaceAll(" ", "")}"
               }
             ];
-
-            Get.toNamed(Routes.walletotp, arguments: otpData);
+            // print("print otp data$otpData");
+            Get.toNamed(
+              Routes.walletotp,
+              arguments: otpData,
+            );
           } else {
             Get.back();
             CustomDialog().errorDialog(Get.context!, "Error", retvalue["msg"],

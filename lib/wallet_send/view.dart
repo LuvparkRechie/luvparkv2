@@ -196,6 +196,9 @@ class WalletSend extends GetView<WalletSendController> {
                             myPads((controller.padNumbers[j]), j),
                         ],
                       ),
+                    SizedBox(
+                      height: 10,
+                    ),
                     CustomButton(
                         text: "Continue",
                         btnColor: AppColor.primaryColor,
@@ -204,10 +207,12 @@ class WalletSend extends GetView<WalletSendController> {
                           if (controller.formKeySend.currentState!.validate()) {
                             final item = await Authentication().getUserLogin();
 
-                            print("datasa ${item["mobile_no"]}");
+                            // print("datasa ${item["mobile_no"]}");
                             if (item["mobile_no"].toString() ==
                                 "63${controller.recipient.text.replaceAll(" ", "")}") {
-                              // CustomDialog().
+                              CustomDialog().snackbarDialog(context,
+                                  "Please use another number.", Colors.red);
+                              return;
                             }
 
                             CustomDialog().confirmationDialog(

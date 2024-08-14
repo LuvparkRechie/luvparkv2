@@ -172,10 +172,7 @@ class WalletOtp extends GetView<WalletOtpController> {
                   () => CustomButton(
                     loading: controller.isLoading.value,
                     text: "Verify",
-                    onPressed: () {
-                      if (controller.isLoading.value) return;
-                      controller.onVerify();
-                    },
+                    onPressed: controller.onVerify,
                   ),
                 ),
                 Container(

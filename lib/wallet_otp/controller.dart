@@ -2,10 +2,13 @@ import 'dart:async';
 
 import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
+import 'package:luvpark_get/auth/authentication.dart';
 
 import '../custom_widgets/alert_dialog.dart';
 import '../http/api_keys.dart';
 import '../http/http_request.dart';
+import '../notification_controller/notification_controller.dart';
+import '../routes/routes.dart';
 
 class WalletOtpController extends GetxController {
   WalletOtpController();
@@ -117,67 +120,82 @@ class WalletOtpController extends GetxController {
     });
   }
 
+  Future<void> verifyOtp() async {
+    int userId = await Authentication().getUserId();
+    // print("$userId");
+    CustomDialog().loadingDialog(Get.context!);
+    Map<String, dynamic> parameters = {
+      "user_id": userId.toString(),
+      "to_mobile_no": paramArgs[0]["to_mobile_no"],
+      "amount": paramArgs[0]["amount"].toString().replaceAll(",", ""),
+      "to_msg": paramArgs[0]["to_msg"],
+    };
+    // print("object1$parameters");
+
+    HttpRequest(api: ApiKeys.gApiSubFolderPutShareLuv, parameters: parameters)
+        .put()
+        .then(
+      (retvalue) {
+        if (retvalue == "No Internet") {
+          Get.back();
+          CustomDialog().errorDialog(Get.context!, "Error",
+              "Please check your internet connection and try again.", () {
+            Get.back();
+          });
+          return;
+        }
+        if (retvalue == null) {
+          Get.back();
+          CustomDialog().errorDialog(Get.context!, "Error",
+              "Error while connecting to server, Please try again.", () {
+            Get.back();
+            if (Navigator.canPop(Get.context!)) {
+              Get.back();
+            }
+          });
+        } else {
+          if (retvalue["success"] == "Y") {
+            NotificationController.shareTokenNotification(
+                0, 0, 'Transfer Token', "${retvalue["msg"]}.", "walletScreen");
+
+            Get.back();
+
+            CustomDialog().successDialog(Get.context!, "Success",
+                "Transaction successfully sent", "Okay", () {
+              Get.back();
+              Get.offAndToNamed(Routes.wallet);
+            });
+          } else {
+            Get.back();
+            CustomDialog().errorDialog(
+              Get.context!,
+              "Error",
+              retvalue["msg"],
+              () {
+                Get.back();
+              },
+            );
+          }
+        }
+      },
+    );
+  }
+
   void onVerify() {
-    // isLoading.value = true;
-    // if (paramArgs[0]['otp'] == int.parse(inputPin.value)) {
-    //   var otpData = {
-    //     "mobile_no": paramArgs[0]["mobile_no"],
-    //     "reg_type": "VERIFY",
-    //     "otp": int.parse(inputPin.value)
-    //   };
-
-    //   HttpRequest(api: ApiKeys.gApiSubFolderPutOTP, parameters: otpData)
-    //       .put()
-    //       .then((returnData) async {
-    //     if (returnData == "No Internet") {
-    //       isLoading.value = false;
-    //       CustomDialog().internetErrorDialog(Get.context!, () {
-    //         Get.back();
-    //       });
-    //       return;
-    //     }
-    //     if (returnData == null) {
-    //       isLoading.value = false;
-    //       CustomDialog().serverErrorDialog(Get.context!, () {
-    //         Get.back();
-    //       });
-    //       return;
-    //     }
-    //     if (returnData["success"] == 'Y') {
-    //       final LoginScreenController lct = Get.put(LoginScreenController());
-    //       timer!.cancel();
-
-    //       Map<String, dynamic> postParam = {
-    //         "mobile_no": paramArgs[0]["mobile_no"],
-    //         "pwd": paramArgs[0]["new_pass"],
-    //       };
-
-    //       lct.postLogin(Get.context, postParam, (data) {
-    //         isLoading.value = false;
-    //         if (data[0]["items"].isNotEmpty) {
-    //           FocusManager.instance.primaryFocus?.unfocus();
-    //           Navigator.of(Get.context!).pushReplacement(
-    //             MaterialPageRoute(
-    //               builder: (context) => const SuccessRegistration(),
-    //             ),
-    //           );
-    //         }
-    //       });
-    //     } else {
-    //       isLoading.value = false;
-    //       CustomDialog().errorDialog(Get.context!, "luvpark", returnData["msg"],
-    //           () {
-    //         Get.back();
-    //       });
-    //     }
-    //   });
-    // } else {
-    //   isLoading.value = false;
-    //   CustomDialog().errorDialog(
-    //       Get.context!, "luvpark", "Invalid OTP code. Please try again.", () {
-    //     Get.back();
-    //   });
-    // }
+    // print("paramArgs $paramArgs");
+    if (isLoading.value) return;
+    if (inputPin.isEmpty) return;
+    if ((int.parse(inputPin.toString()) !=
+            int.parse(paramArgs[0]["otp"].toString())) ||
+        inputPin.value.length != 6) {
+      CustomDialog().errorDialog(Get.context!, "luvpark",
+          "Invalid OTP code. Please try again.. Please try again.", () {
+        Get.back();
+      });
+      return;
+    }
+    verifyOtp();
+    //  controller.verifyOtp();
   }
 
   @override
