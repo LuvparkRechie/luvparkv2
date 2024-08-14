@@ -22,4 +22,5 @@ class Routes {
   static const bookingReceipt = "/booking_receipt";
   static const walletsend = "/wallet_send";
   static const rateBooking = "/rate_booking";
+  static const walletotp = "/wallet_otp";
 }

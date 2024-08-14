@@ -5,17 +5,16 @@ import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
+import 'package:luvpark_get/auth/authentication.dart';
 import 'package:luvpark_get/custom_widgets/alert_dialog.dart';
 import 'package:luvpark_get/custom_widgets/custom_body.dart';
 import 'package:luvpark_get/custom_widgets/custom_button.dart';
 import 'package:luvpark_get/custom_widgets/custom_text.dart';
 import 'package:luvpark_get/custom_widgets/custom_textfield.dart';
-import 'package:luvpark_get/routes/routes.dart';
 import 'package:luvpark_get/wallet_send/index.dart';
 
 import '../custom_widgets/app_color.dart';
 import '../custom_widgets/variables.dart';
-import '../wallet/view.dart';
 
 class WalletSend extends GetView<WalletSendController> {
   const WalletSend({super.key});
@@ -27,7 +26,8 @@ class WalletSend extends GetView<WalletSendController> {
           leading: IconButton(
               icon: Icon(Icons.chevron_left_outlined),
               onPressed: () {
-                Get.off(WalletScreen());
+                controller.parameter();
+                Get.back();
               }),
           elevation: 0,
           backgroundColor: AppColor.bodyColor,
@@ -40,20 +40,20 @@ class WalletSend extends GetView<WalletSendController> {
             statusBarIconBrightness:
                 Platform.isIOS ? Brightness.light : Brightness.dark,
           ),
-          title: CustomTitle(text: "Share")),
+          title: CustomTitle(
+            text: "Share",
+            fontSize: 20,
+          )),
       canPop: true,
       children: SingleChildScrollView(
         child: Form(
-          key: controller.formKey,
+          key: controller.formKeySend,
           child: Padding(
               padding: const EdgeInsets.fromLTRB(15, 10, 15, 0),
               child: Obx(
                 () => Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const SizedBox(
-                      height: 20,
-                    ),
                     Container(
                       decoration: BoxDecoration(
                         color: AppColor.primaryColor,
@@ -199,9 +199,17 @@ class WalletSend extends GetView<WalletSendController> {
                     CustomButton(
                         text: "Continue",
                         btnColor: AppColor.primaryColor,
-                        onPressed: () {
+                        onPressed: () async {
                           // controller.
-                          if (controller.formKey.currentState!.validate()) {
+                          if (controller.formKeySend.currentState!.validate()) {
+                            final item = await Authentication().getUserLogin();
+
+                            print("datasa ${item["mobile_no"]}");
+                            if (item["mobile_no"].toString() ==
+                                "63${controller.recipient.text.replaceAll(" ", "")}") {
+                              // CustomDialog().
+                            }
+
                             CustomDialog().confirmationDialog(
                                 context,
                                 "Confirmation",
@@ -210,6 +218,7 @@ class WalletSend extends GetView<WalletSendController> {
                                 "Yes", () {
                               Get.back();
                             }, () {
+                              Get.back();
                               controller.getVerifiedAcc();
                             });
                           }
