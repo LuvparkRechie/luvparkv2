@@ -138,7 +138,6 @@ class LoginScreen extends StatelessWidget {
                                 ct.toggleLoading(!ct.isLoading.value);
 
                                 if (data[0]["items"].isNotEmpty) {
-                                  ct.formKeyLogin.currentState?.reset();
                                   Get.offAndToNamed(Routes.map);
                                 }
                               });

@@ -56,8 +56,11 @@ class Authentication {
     final prefs = await SharedPreferences.getInstance();
 
     String? data = prefs.getString('auth_login');
-    print("drir $data");
-    return data ?? jsonDecode(data!);
+
+    if (data == null) {
+      return null;
+    }
+    return jsonDecode(data);
   }
 
   //SET BRGY

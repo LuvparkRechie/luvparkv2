@@ -215,6 +215,7 @@ class LoginScreenController extends GetxController
 
   @override
   void onClose() {
+    formKeyLogin.currentState?.reset();
     super.onClose();
   }
 }

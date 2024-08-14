@@ -26,8 +26,6 @@ class SplashController extends GetxController
 
   Future<void> determineInitialRoute() async {
     final data = await Authentication().getUserLogin();
-    print("datasss $data");
-    final uPass = await Authentication().getPasswordBiometric();
 
     if (data != null) {
       final LoginScreenController lgCt = Get.find<LoginScreenController>();
@@ -56,6 +54,7 @@ class SplashController extends GetxController
           if (userLogin["is_login"] == "N") {
             Get.toNamed(Routes.login);
           } else {
+            final uPass = await Authentication().getPasswordBiometric();
             Map<String, dynamic> postParam = {
               "mobile_no": data["mobile_no"],
               "pwd": uPass,
