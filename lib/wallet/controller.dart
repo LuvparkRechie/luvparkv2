@@ -20,6 +20,7 @@ class WalletController extends GetxController
 
   @override
   void onInit() {
+    // fetchData();
     DateTime timeNow = DateTime.now();
     super.onInit();
     toDate.value = timeNow.toString().split(" ")[0];
@@ -27,6 +28,22 @@ class WalletController extends GetxController
         timeNow.subtract(const Duration(days: 29)).toString().split(" ")[0];
     getUserBalance();
   }
+
+  // void fetchData() async {
+  //   // Simulate network call
+  //   isLoading.value = true;
+  //   await Future.delayed(Duration(seconds: 2));
+  //   // Update data
+  //   logs.value =
+  //       await fetchLogs(); // Replace with your actual data fetching method
+  //   userData.value =
+  //       await fetchUserData(); // Replace with your actual data fetching method
+  //   isLoading.value = false;
+  // }
+
+  // void refresh() {
+  //   fetchData();
+  // }
 
   Future<void> getUserBalance() async {
     Functions.getUserBalance(Get.context!, (dataBalance) async {

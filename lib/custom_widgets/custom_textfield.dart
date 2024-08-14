@@ -29,6 +29,7 @@ class CustomTextField extends StatefulWidget {
   final FontWeight? fontweight;
   final TextAlign? textAlign;
   final TextCapitalization textCapitalization;
+  final String? Function(String?)? validator;
 
   const CustomTextField(
       {super.key,
@@ -49,6 +50,7 @@ class CustomTextField extends StatefulWidget {
       this.textAlign,
       this.filledColor,
       this.isFilled,
+      this.validator,
       this.keyboardType = TextInputType.text,
       this.textCapitalization = TextCapitalization.none,
       this.onTap});
@@ -124,41 +126,42 @@ class _CustomTextFieldState extends State<CustomTextField> {
         onTap: () {
           widget.onTap!();
         },
-        validator: (value) {
-          if (widget.labelText == "Email") {
-            if (value!.isEmpty) {
-              focusNode.requestFocus();
-              return "Field is required";
-            } else {
-              if (!EmailValidator.validate(value) ||
-                  !Variables.emailRegex.hasMatch(value)) {
-                focusNode.requestFocus();
-                return "Invalid email format";
+        validator: widget.validator ??
+            (value) {
+              if (widget.labelText == "Email") {
+                if (value!.isEmpty) {
+                  focusNode.requestFocus();
+                  return "Field is required";
+                } else {
+                  if (!EmailValidator.validate(value) ||
+                      !Variables.emailRegex.hasMatch(value)) {
+                    focusNode.requestFocus();
+                    return "Invalid email format";
+                  }
+                }
+              } else if (widget.labelText == "Password") {
+                if (value!.isEmpty) {
+                  focusNode.requestFocus();
+                  return "Field is required";
+                }
+              } else if (widget.labelText == "Plate No.") {
+                if (value!.isEmpty) {
+                  focusNode.requestFocus();
+                  return "Plate no is required";
+                }
+              } else {
+                if (widget.labelText.toLowerCase().contains("optional")) {
+                  return null;
+                } else {
+                  if (value!.isEmpty) {
+                    focusNode.requestFocus();
+                    return "Field is required";
+                  }
+                }
               }
-            }
-          } else if (widget.labelText == "Password") {
-            if (value!.isEmpty) {
-              focusNode.requestFocus();
-              return "Field is required";
-            }
-          } else if (widget.labelText == "Plate No.") {
-            if (value!.isEmpty) {
-              focusNode.requestFocus();
-              return "Plate no is required";
-            }
-          } else {
-            if (widget.labelText.toLowerCase().contains("optional")) {
-              return null;
-            } else {
-              if (value!.isEmpty) {
-                focusNode.requestFocus();
-                return "Field is required";
-              }
-            }
-          }
 
-          return null;
-        },
+              return null;
+            },
       ),
     );
   }
@@ -259,21 +262,22 @@ class _CustomMobileNumberState extends State<CustomMobileNumber> {
         ),
         onChanged: widget.onChange,
         onTap: widget.isEnabled ? widget.onTap : null,
-        validator: (value) {
-          if (widget.labelText == "10 digit mobile number") {
-            if (value!.isEmpty) {
-              return 'Field is required';
-            }
-            if (value.toString().replaceAll(" ", "").length < 10) {
-              return 'Invalid mobile number';
-            }
-            if (value.toString().replaceAll(" ", "")[0] == '0') {
-              return 'Invalid mobile number';
-            }
-          }
+        validator: widget.validator ??
+            (value) {
+              if (widget.labelText == "10 digit mobile number") {
+                if (value!.isEmpty) {
+                  return 'Field is required';
+                }
+                if (value.toString().replaceAll(" ", "").length < 10) {
+                  return 'Invalid mobile number';
+                }
+                if (value.toString().replaceAll(" ", "")[0] == '0') {
+                  return 'Invalid mobile number';
+                }
+              }
 
-          return null;
-        },
+              return null;
+            },
       ),
     );
   }
