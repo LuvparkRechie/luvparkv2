@@ -25,13 +25,10 @@ class VoiceSearchPopup extends StatelessWidget {
                   color: Colors.blue,
                 ),
                 const SizedBox(height: 20),
-                Text(
-                  controller.isListening.value
-                      ? "Listening..."
-                      : "Press the button below to start voice search",
+                const Text(
+                  "Listening...",
                   textAlign: TextAlign.center,
-                  style: const TextStyle(
-                      fontSize: 16, fontWeight: FontWeight.w500),
+                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
                 ),
                 const SizedBox(height: 20),
                 Text(
@@ -40,58 +37,9 @@ class VoiceSearchPopup extends StatelessWidget {
                       fontSize: 20, fontWeight: FontWeight.bold),
                 ),
                 const SizedBox(height: 20),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    ElevatedButton(
-                      onPressed: () {
-                        if (!controller.initialized) {
-                          Get.snackbar(
-                              'Error', 'Speech recognition is not initialized');
-                          return;
-                        }
-
-                        if (controller.isListening.value) {
-                          controller.stopListening();
-                        } else {
-                          controller.startListening();
-                        }
-                      },
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: controller.isListening.value
-                            ? Colors.red
-                            : Colors.green,
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 20, vertical: 10),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(10),
-                        ),
-                      ),
-                      child:
-                          Text(controller.isListening.value ? "Stop" : "Start"),
-                    ),
-                  ],
-                ),
               ],
             ),
           ),
-          actions: [
-            TextButton(
-              onPressed: () {
-                Get.back();
-              },
-              child: const Text("Close"),
-            ),
-            TextButton(
-              onPressed: () {
-                Get.back();
-                if (controller.searchText.value.isNotEmpty) {
-                  controller.parameters(controller.searchText.value);
-                }
-              },
-              child: const Text("Search"),
-            ),
-          ],
         );
       },
     );

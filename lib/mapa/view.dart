@@ -417,13 +417,13 @@ class DashboardMapScreen extends GetView<DashboardMapController> {
                 InkWell(
                   onTap: () {
                     FocusManager.instance.primaryFocus?.unfocus();
-                    Future.delayed(const Duration(milliseconds: 200), () {
-                      Get.dialog(
-                        const VoiceSearchPopup(),
-                        barrierDismissible: false,
-                        arguments: (data) {},
-                      );
-                    });
+                    Get.dialog(
+                      const VoiceSearchPopup(),
+                      arguments: (data) {
+                        controller.searchCon.text = data;
+                        controller.fetchSuggestions();
+                      },
+                    );
                   },
                   child: Container(
                     width: 24,
