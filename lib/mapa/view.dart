@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:animate_do/animate_do.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -7,8 +5,6 @@ import 'package:flutter_multi_formatter/formatters/formatter_utils.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:luvpark_get/auth/authentication.dart';
-import 'package:luvpark_get/custom_widgets/alert_dialog.dart';
 import 'package:luvpark_get/custom_widgets/app_color.dart';
 import 'package:luvpark_get/custom_widgets/custom_body.dart';
 import 'package:luvpark_get/custom_widgets/custom_text.dart';
@@ -358,7 +354,7 @@ class DashboardMapScreen extends GetView<DashboardMapController> {
             children: [
               MapPicker(
                 iconWidget: SvgPicture.asset(
-                  "assets/dashboard_icon/location_icon.svg",
+                  "assets/dashboard_icon/marker_pin.svg",
                   height: 40,
                   width: 40,
                 ),

@@ -37,13 +37,14 @@ class DashboardMapController extends GetxController
   RxList<Marker> markers = <Marker>[].obs;
   RxList<dynamic> userBal = <dynamic>[].obs;
   RxList<dynamic> dataNearest = [].obs;
+  //drawerdata
+  dynamic userProfile = [].obs;
   Circle circle = const Circle(circleId: CircleId('dottedCircle'));
   RxList suggestions = [].obs;
   Polyline polyline = const Polyline(
     polylineId: PolylineId('dottedPolyLine'),
   );
   MapPickerController mapPickerController = MapPickerController();
-
   LatLng searchCoordinates = const LatLng(0, 0);
 
   // Configuration Variables
@@ -464,5 +465,13 @@ class DashboardMapController extends GetxController
         ),
       ),
     );
+  }
+
+  //Get drawer data
+
+  void getDrawerData() async {
+    final item = await Authentication().getUserData();
+    userProfile = jsonDecode(item!);
+    print("get drawer data $userProfile");
   }
 }

@@ -6,14 +6,16 @@ import 'package:luvpark_get/auth/authentication.dart';
 import 'package:luvpark_get/custom_widgets/alert_dialog.dart';
 import 'package:luvpark_get/custom_widgets/app_color.dart';
 import 'package:luvpark_get/custom_widgets/custom_text.dart';
-import 'package:luvpark_get/drawer/controller.dart';
+import 'package:luvpark_get/mapa/controller.dart';
 import 'package:luvpark_get/routes/routes.dart';
 
-class CustomDrawer extends GetView<CustomDrawerController> {
+class CustomDrawer extends GetView<DashboardMapController> {
   const CustomDrawer({super.key});
 
   @override
   Widget build(BuildContext context) {
+    controller.getDrawerData();
+
     return Drawer(
       child: Container(
         color: AppColor.bodyColor,
