@@ -1,4 +1,5 @@
 import 'package:get/get.dart';
+import 'package:luvpark_get/drawer/view.dart';
 import 'package:luvpark_get/rate_booking/index.dart';
 
 import '../activate_acc/index.dart';
@@ -134,6 +135,10 @@ class AppPages {
       name: Routes.walletotp,
       page: () => const WalletOtp(),
       binding: WalletOtpBinding(),
+    ),
+    GetPage(
+      name: Routes.customdrawer,
+      page: () => const CustomDrawer(),
     ),
   ];
 }

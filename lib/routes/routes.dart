@@ -23,4 +23,5 @@ class Routes {
   static const walletsend = "/wallet_send";
   static const rateBooking = "/rate_booking";
   static const walletotp = "/wallet_otp";
+  static const customdrawer = "/customdrawer";
 }
