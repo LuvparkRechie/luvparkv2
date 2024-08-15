@@ -1,6 +1,6 @@
 import 'package:get/get.dart';
 import 'package:luvpark_get/rate_booking/index.dart';
-
+import 'package:luvpark_get/wallet_recharge/index.dart';
 import '../activate_acc/index.dart';
 import '../booking/index.dart';
 import '../booking/utils/booking_receipt/index.dart';
@@ -22,6 +22,7 @@ import '../splash_screen/index.dart';
 import '../terms/index.dart';
 import '../wallet/index.dart';
 import '../wallet_otp/index.dart';
+import '../wallet_recharge_load/index.dart';
 import '../wallet_send/index.dart';
 import 'routes.dart';
 
@@ -134,6 +135,16 @@ class AppPages {
       name: Routes.walletotp,
       page: () => const WalletOtp(),
       binding: WalletOtpBinding(),
+    ),
+    GetPage(
+      name: Routes.walletrecharge,
+      page: () => const WalletRechargeScreen(),
+      binding: WalletRechargeBinding(),
+    ),
+    GetPage(
+      name: Routes.walletrechargeload,
+      page: () => const WalletRechargeLoadScreen(),
+      binding: WalletRechargeLoadBinding(),
     ),
   ];
 }

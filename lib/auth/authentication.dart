@@ -45,6 +45,16 @@ class Authentication {
     return prefs.getString('userData');
   }
 
+  Future<dynamic> getUserData2() async {
+    final prefs = await SharedPreferences.getInstance();
+    String? data = prefs.getString('userData');
+
+    if (data == null) {
+      return null;
+    }
+    return jsonDecode(data);
+  }
+
   //SET LOGIN
   Future<void> setLogin(loginData) async {
     final prefs = await SharedPreferences.getInstance();
