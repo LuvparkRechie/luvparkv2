@@ -3,8 +3,10 @@
 import 'dart:io';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:luvpark_get/custom_widgets/custom_appbar.dart';
 import 'package:luvpark_get/custom_widgets/custom_body.dart';
 import 'package:luvpark_get/custom_widgets/custom_text.dart';
 import 'package:luvpark_get/custom_widgets/no_internet.dart';
@@ -22,15 +24,37 @@ class QrWallet extends GetView<QrWalletController> {
     return CustomScaffold(
       bodyColor: Colors.white,
       appBar: AppBar(
-        leading: IconButton(
-            onPressed: () {
-              Get.back();
-            },
-            icon: Icon(
-              Icons.arrow_back_ios_new_outlined,
-              color: Colors.black,
-              size: 15,
-            )),
+        centerTitle: true,
+        leadingWidth: 100,
+        title: CustomTitle(
+          text: "My Qr",
+          fontSize: 20,
+          fontWeight: FontWeight.w900,
+        ),
+        leading: InkWell(
+          onTap: () {
+            Get.back();
+          },
+          child: const Row(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              Icon(
+                Icons.chevron_left,
+                color: Colors.black,
+              ),
+              CustomParagraph(
+                text: "Back",
+                fontSize: 16,
+                fontWeight: FontWeight.w600,
+              ),
+            ],
+          ),
+        ),
+        systemOverlayStyle: SystemUiOverlayStyle(
+          statusBarColor: Colors.white,
+          statusBarBrightness: Brightness.light,
+          statusBarIconBrightness: Brightness.dark,
+        ),
         elevation: 0,
         backgroundColor: Colors.white,
         bottom: TabBar(

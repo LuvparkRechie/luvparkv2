@@ -6,8 +6,8 @@ import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:intl/intl.dart';
-import 'package:luvpark_get/auth/authentication.dart';
 import 'package:luvpark_get/custom_widgets/app_color.dart';
+import 'package:luvpark_get/custom_widgets/custom_appbar.dart';
 import 'package:luvpark_get/custom_widgets/custom_text.dart';
 import 'package:luvpark_get/custom_widgets/no_internet.dart';
 import 'package:luvpark_get/custom_widgets/park_shimmer.dart';
@@ -49,62 +49,12 @@ class WalletScreen extends GetView<WalletController> {
                           axisDirection: AxisDirection.down,
                           child: Column(
                             children: [
-                              // IconButton(
-                              //     onPressed: () {
-                              //       print("userdata ${ct.userData}");
-                              //     },
-                              //     icon: Icon(Icons.lock_clock)),
-                              Container(
-                                color: Colors.white,
-                                child: Row(
-                                  children: [
-                                    Expanded(
-                                      child: Row(
-                                        children: [
-                                          IconButton(
-                                            padding: EdgeInsets.zero,
-                                            onPressed: () {
-                                              Get.back();
-                                            },
-                                            icon: const Icon(
-                                              Icons.chevron_left,
-                                              color: Colors.black,
-                                            ),
-                                          ),
-                                          const CustomParagraph(
-                                            text: "Back",
-                                            fontSize: 16,
-                                            fontWeight: FontWeight.w600,
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                    const Expanded(
-                                      child: Align(
-                                        alignment: Alignment.center,
-                                        child: CustomTitle(
-                                          text: "My Parking",
-                                          fontSize: 20,
-                                          fontWeight: FontWeight.w900,
-                                        ),
-                                      ),
-                                    ),
-                                    Expanded(
-                                      child: Align(
-                                        alignment: Alignment.centerRight,
-                                        child: Padding(
-                                          padding:
-                                              const EdgeInsets.only(right: 15),
-                                          child: CustomParagraph(
-                                            text: "Filter",
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                  ],
-                                ),
+                              CustomAppbar(
+                                onTap: () {
+                                  Get.back();
+                                },
+                                title: "My Parking",
                               ),
-
                               Expanded(
                                 child: Padding(
                                   padding:

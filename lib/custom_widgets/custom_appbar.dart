@@ -26,31 +26,29 @@ class CustomAppbar extends StatelessWidget {
         statusBarBrightness: Brightness.light,
         statusBarIconBrightness: Brightness.dark,
       ),
-      leading: Row(
-        mainAxisAlignment: MainAxisAlignment.start,
-        children: [
-          IconButton(
-            alignment: Alignment.center,
-            padding: EdgeInsets.zero,
-            onPressed: () {
-              //defaultBack
-              if (onTap == null) {
-                Get.back();
-                return;
-              }
-              onTap!();
-            },
-            icon: const Icon(
+      leading: InkWell(
+        onTap: () {
+          // defaultBack
+          if (onTap == null) {
+            Get.back();
+            return;
+          }
+          onTap!();
+        },
+        child: const Row(
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            Icon(
               Icons.chevron_left,
               color: Colors.black,
             ),
-          ),
-          const CustomParagraph(
-            text: "Back",
-            fontSize: 16,
-            fontWeight: FontWeight.w600,
-          ),
-        ],
+            CustomParagraph(
+              text: "Back",
+              fontSize: 16,
+              fontWeight: FontWeight.w600,
+            ),
+          ],
+        ),
       ),
       leadingWidth: 100,
       title: CustomTitle(
