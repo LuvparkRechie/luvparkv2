@@ -2,17 +2,15 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
 import 'package:luvpark_get/auth/authentication.dart';
 import 'package:luvpark_get/custom_widgets/alert_dialog.dart';
 import 'package:luvpark_get/custom_widgets/app_color.dart';
 import 'package:luvpark_get/custom_widgets/custom_text.dart';
+import 'package:luvpark_get/drawer/controller.dart';
 import 'package:luvpark_get/routes/routes.dart';
 
-class CustomDrawer extends StatelessWidget {
-  const CustomDrawer({
-    super.key,
-  });
+class CustomDrawer extends GetView<CustomDrawerController> {
+  const CustomDrawer({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -25,30 +23,50 @@ class CustomDrawer extends StatelessWidget {
             DrawerHeader(
               decoration: BoxDecoration(
                 color: AppColor.primaryColor,
-                borderRadius: const BorderRadius.vertical(
-                  bottom: Radius.circular(20),
-                ),
               ),
-              child: const Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  CircleAvatar(
-                    backgroundColor: Colors.white,
-                    radius: 30,
-                    child:
-                        Icon(Icons.person, size: 30, color: Colors.blueAccent),
-                  ),
-                  SizedBox(height: 10),
-                  CustomTitle(
-                    text: "Rechie Arnado",
-                    color: Colors.white,
-                    fontSize: 20,
-                  ),
-                  CustomParagraph(
-                    text: "rechkings20@gmail.com",
-                    color: Colors.white70,
-                  )
-                ],
+              child: const Padding(
+                padding: EdgeInsets.only(bottom: 10),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    // Row(
+                    //   children: [
+                    //     CircleAvatar(
+                    //       backgroundColor: Colors.white,
+                    //       radius: 24,
+                    //       child: controller.myProfilePic.value.isNotEmpty
+                    //           ? Image.network(controller.myProfilePic.value)
+                    //           : const Icon(Icons.person,
+                    //               size: 24, color: Colors.blueAccent),
+                    //     ),
+                    //     Container(
+                    //       width: 10,
+                    //     ),
+                    //     Column(
+                    //       mainAxisAlignment: MainAxisAlignment.center,
+                    //       crossAxisAlignment: CrossAxisAlignment.start,
+                    //       children: [
+                    //         CustomTitle(
+                    //           text: controller.fullName.value.isNotEmpty
+                    //               ? controller.fullName.value
+                    //               : "Full Name",
+                    //           color: Colors.white,
+                    //           fontSize: 18,
+                    //         ),
+                    //         CustomParagraph(
+                    //           text: controller.email.value.isNotEmpty
+                    //               ? controller.email.value
+                    //               : "Email Address",
+                    //           color: Colors.white70,
+                    //           fontSize: 13,
+                    //         ),
+                    //       ],
+                    //     ),
+                    //   ],
+                    // ),
+                  ],
+                ),
               ),
             ),
             ListTile(

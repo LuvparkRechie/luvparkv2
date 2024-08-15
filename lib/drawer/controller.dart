@@ -1,10 +1,23 @@
-import 'package:get/get.dart';
+import 'dart:convert';
 
-// ignore: deprecated_member_use
+import 'package:get/get.dart';
+import 'package:luvpark_get/auth/authentication.dart';
+
 class CustomDrawerController extends GetxController {
+  CustomDrawerController();
+
+  var userdata;
+
   @override
   void onInit() {
     super.onInit();
-    print("Custom Drawer");
+    getAccountData();
+  }
+
+  void getAccountData() async {
+    final item = await Authentication().getUserData();
+    userdata = jsonDecode(item!);
+
+    print(userdata);
   }
 }

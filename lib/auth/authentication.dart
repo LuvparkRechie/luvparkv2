@@ -87,6 +87,17 @@ class Authentication {
     prefs.setString('profile_pic', loginData);
   }
 
+  Future<dynamic> getUserProfilePic() async {
+    final prefs = await SharedPreferences.getInstance();
+
+    String? data = prefs.getString('profile_pic');
+
+    if (data == null) {
+      return null;
+    }
+    return jsonDecode(data);
+  }
+
   //GET USER ID
   Future<int> getUserId() async {
     final item = await Authentication().getUserData();

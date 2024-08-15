@@ -1,4 +1,5 @@
 import 'package:get/get.dart';
+import 'package:luvpark_get/drawer/index.dart';
 import 'package:luvpark_get/drawer/view.dart';
 import 'package:luvpark_get/rate_booking/index.dart';
 
@@ -139,6 +140,7 @@ class AppPages {
     GetPage(
       name: Routes.customdrawer,
       page: () => const CustomDrawer(),
+      binding: CustomDrawerBinding(),
     ),
   ];
 }

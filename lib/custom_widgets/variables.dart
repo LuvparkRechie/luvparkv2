@@ -46,7 +46,7 @@ class Variables {
 //Data Encryption
   static bool withinOneHourRange(DateTime targetDateTime) {
     DateTime currentDateTime = DateTime.now();
-    DateTime oneHourAgo = currentDateTime.subtract(Duration(hours: 1));
+    DateTime oneHourAgo = currentDateTime.subtract(const Duration(hours: 1));
     return targetDateTime.isAfter(oneHourAgo) &&
         targetDateTime.isBefore(currentDateTime);
   }
@@ -293,7 +293,7 @@ class Variables {
 
   //2020-20-20 to 2020/20/20
   static String formatDate(String inputDateString) {
-    String _twoDigits(int n) {
+    String twoDigits(int n) {
       // Helper function to add leading zeros to single-digit numbers
       return n.toString().padLeft(2, '0');
     }
@@ -303,7 +303,7 @@ class Variables {
 
     // Format the DateTime object into the desired string format
     String formattedDateString =
-        "${dateTime.year}/${_twoDigits(dateTime.month)}/${_twoDigits(dateTime.day)}";
+        "${dateTime.year}/${twoDigits(dateTime.month)}/${twoDigits(dateTime.day)}";
 
     return formattedDateString;
   }
@@ -312,8 +312,9 @@ class Variables {
   static Future<Uint8List> capturePng(
       BuildContext context, Widget printWidget, int size, bool isOval) async {
     Uint8List markerBeytes;
-    Uint8List bytes = await ScreenshotController()
-        .captureFromWidget(printWidget, delay: Duration(milliseconds: 10));
+    Uint8List bytes = await ScreenshotController().captureFromWidget(
+        printWidget,
+        delay: const Duration(milliseconds: 10));
     Uint8List pngBytes = bytes.buffer.asUint8List();
 
     markerBeytes = isOval
