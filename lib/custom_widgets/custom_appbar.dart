@@ -19,6 +19,7 @@ class CustomAppbar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return AppBar(
+      elevation: 1,
       centerTitle: true,
       backgroundColor: bgColor ?? Colors.white,
       systemOverlayStyle: const SystemUiOverlayStyle(

@@ -55,7 +55,7 @@ class QrWallet extends GetView<QrWalletController> {
           statusBarBrightness: Brightness.light,
           statusBarIconBrightness: Brightness.dark,
         ),
-        elevation: 0,
+        elevation: 1,
         backgroundColor: Colors.white,
         bottom: TabBar(
           indicatorSize: TabBarIndicatorSize.tab,
