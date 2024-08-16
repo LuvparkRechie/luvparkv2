@@ -5,6 +5,8 @@ import 'package:get/get.dart';
 
 class WalletRechargeLoadController extends GetxController
     with GetSingleTickerProviderStateMixin {
+  final String tokenAmount =
+      Get.arguments; // from wallet recharge screen tokenAmount
   WalletRechargeLoadController();
 
   @override

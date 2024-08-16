@@ -13,7 +13,7 @@ import '../functions/functions.dart';
 class WalletSendController extends GetxController
     with GetSingleTickerProviderStateMixin {
   WalletSendController();
-  final parameter = Get.arguments; // get arguments
+  final parameter = Get.arguments; // sending args to another screen
   final GlobalKey<FormState> formKeySend = GlobalKey<FormState>();
   final TextEditingController recipient = TextEditingController();
   final TextEditingController tokenAmount = TextEditingController();

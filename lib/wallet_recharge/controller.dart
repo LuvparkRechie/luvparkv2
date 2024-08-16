@@ -6,12 +6,13 @@ import 'package:get/get.dart';
 class WalletRechargeController extends GetxController
     with GetSingleTickerProviderStateMixin {
   WalletRechargeController();
+  final parameter = Get.arguments;
   Timer? _debounce;
   TextEditingController tokenAmount = TextEditingController();
   RxBool isActiveBtn = false.obs;
   RxBool isShowKeyboard = false.obs;
   RxInt? selectedPaymentType = 0.obs;
-  var denoInd = 0.obs;
+  var denoInd = (-1).obs; // no default color for pads
   var ndData = [].obs;
   final List<String> dataList = [
     "20",
@@ -41,17 +42,16 @@ class WalletRechargeController extends GetxController
             0) {
       isActiveBtn.value = false;
     } else {
-      isActiveBtn.value = false;
+      isActiveBtn.value = true;
     }
   }
 
-  Future<void> pads() async {
+//function for my pads
+  Future<void> pads(int index) async {
     FocusScope.of(Get.context!).requestFocus(FocusNode());
-
-    // denoInd = index;
-    // selectedPaymentType = index;
-    // tokenAmount.text = value;
-    // isActiveBtn = true;
+    tokenAmount.text = dataList[index];
+    denoInd.value = index; // Update the selected index
+    isActiveBtn.value = true;
   }
 
   Future<void> generateBank() async {}
@@ -62,6 +62,7 @@ class WalletRechargeController extends GetxController
 
   void dispose() {
     _debounce?.cancel();
+    tokenAmount.dispose();
     super.dispose();
   }
 }

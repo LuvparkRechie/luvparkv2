@@ -48,7 +48,7 @@ class WalletScreen extends GetView<WalletController> {
                             onTap: () {
                               Get.back();
                             },
-                            title: "My Parking",
+                            title: "My Wallet",
                             action: [
                               InkWell(
                                 onTap: () {

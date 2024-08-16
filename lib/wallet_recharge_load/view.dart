@@ -1,6 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:luvpark_get/custom_widgets/custom_appbar.dart';
+import 'package:luvpark_get/custom_widgets/custom_body.dart';
 
 import 'controller.dart';
 
@@ -9,6 +11,7 @@ class WalletRechargeLoadScreen extends GetView<WalletRechargeLoadController> {
 
   @override
   Widget build(BuildContext context) {
-    return const Scaffold();
+    return CustomScaffold(
+        children: Column(children: [CustomAppbar(title: "Load")]));
   }
 }
