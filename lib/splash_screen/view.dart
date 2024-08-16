@@ -25,8 +25,8 @@ class SplashScreen extends GetView<SplashController> {
                     child: Hero(
                       tag: "logo",
                       child: SizedBox(
-                        height: 200,
-                        width: 200,
+                        height: 100,
+                        width: 100,
                         child: Image.asset(
                           "assets/images/logo.png",
                           fit: BoxFit.cover,

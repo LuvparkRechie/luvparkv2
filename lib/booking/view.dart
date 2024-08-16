@@ -1399,17 +1399,15 @@ class VehicleOption extends GetView<BookingController> {
                                                       if (ct
                                                           .bookKey.currentState!
                                                           .validate()) {
-                                                        String vtName = ct
+                                                        dynamic selVh = ct
                                                             .ddVehiclesData
                                                             .where((element) {
-                                                              return element[
-                                                                      "value"] ==
-                                                                  int.parse(ct
-                                                                      .dropdownValue!
-                                                                      .toString());
-                                                            })
-                                                            .toList()[0]["text"]
-                                                            .toString();
+                                                          return element[
+                                                                  "value"] ==
+                                                              int.parse(ct
+                                                                  .dropdownValue!
+                                                                  .toString());
+                                                        }).toList()[0];
 
                                                         callback([
                                                           {
@@ -1419,14 +1417,25 @@ class VehicleOption extends GetView<BookingController> {
                                                             'vehicle_brand_id':
                                                                 0,
                                                             'vehicle_brand_name':
-                                                                vtName,
+                                                                selVh["text"],
                                                             'vehicle_plate_no':
                                                                 controller
                                                                     .plateNo
                                                                     .text
                                                           }
                                                         ]);
-                                                        Get.back();
+                                                        print("callback ${{
+                                                          'vehicle_type_id': ct
+                                                              .dropdownValue!
+                                                              .toString(),
+                                                          'vehicle_brand_id': 0,
+                                                          'vehicle_brand_name':
+                                                              selVh["text"],
+                                                          'vehicle_plate_no':
+                                                              controller
+                                                                  .plateNo.text
+                                                        }}");
+                                                        // Get.back();
                                                       }
                                                     },
                                                   ),
@@ -1435,8 +1444,8 @@ class VehicleOption extends GetView<BookingController> {
                                                       borderColor: Colors.black,
                                                       textColor: Colors.black,
                                                       color: AppColor.bodyColor,
-                                                      label: "My Vehicle",
-                                                      onTap: () {
+                                                      text: "My Vehicle",
+                                                      onPressed: () {
                                                         controller
                                                             .onScreenChanged(!ct
                                                                 .isFirstScreen
@@ -1501,10 +1510,31 @@ class VehicleOption extends GetView<BookingController> {
                                                 trailing: const Icon(
                                                     Icons.keyboard_arrow_right),
                                                 onTap: () {
-                                                  callback([
+                                                  List vhDatas = [
                                                     controller
                                                         .myVehiclesData[index]
-                                                  ]);
+                                                  ];
+                                                  List recData =
+                                                      controller.ddVehiclesData;
+
+                                                  dynamic inatay =
+                                                      recData.where((e) {
+                                                    return e["value"] ==
+                                                        controller.myVehiclesData[
+                                                                index]
+                                                            ["vehicle_type_id"];
+                                                  }).toList()[0];
+
+                                                  vhDatas = vhDatas.map((e) {
+                                                    e["base_hours"] =
+                                                        inatay["base_hours"];
+                                                    e["succeeding_rate"] =
+                                                        inatay[
+                                                            "succeeding_rate"];
+                                                    return e;
+                                                  }).toList();
+
+                                                  callback(vhDatas);
                                                   Get.back();
                                                 },
                                               );

@@ -64,15 +64,15 @@ class CustomButton extends StatelessWidget {
 }
 
 class CustomButtonCancel extends StatefulWidget {
-  final String label;
+  final String text;
   final Color? color;
   final Color? textColor;
   final Color? borderColor;
-  final Function onTap;
+  final Function onPressed;
   const CustomButtonCancel(
       {super.key,
-      required this.label,
-      required this.onTap,
+      required this.text,
+      required this.onPressed,
       this.borderColor,
       this.color,
       this.textColor});
@@ -86,7 +86,7 @@ class _CustomButtonCancelState extends State<CustomButtonCancel> {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        widget.onTap();
+        widget.onPressed();
       },
       child: Container(
         decoration: BoxDecoration(
@@ -100,7 +100,7 @@ class _CustomButtonCancelState extends State<CustomButtonCancel> {
           child: Padding(
             padding: const EdgeInsets.all(15.0),
             child: Text(
-              widget.label,
+              widget.text,
               style: GoogleFonts.lato(
                 color: widget.textColor!,
                 fontSize: 14,

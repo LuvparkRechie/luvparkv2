@@ -12,12 +12,12 @@ import 'package:luvpark_get/custom_widgets/variables.dart';
 
 import 'controller.dart';
 
-class ParkingScreen extends StatelessWidget {
+class ParkingScreen extends GetView<ParkingController> {
   const ParkingScreen({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    final ParkingController ct = Get.put(ParkingController());
+    // final ParkingController ct = Get.put(ParkingController());
 
     return DefaultTabController(
       length: 3,
@@ -104,7 +104,7 @@ class ParkingScreen extends StatelessWidget {
                           Expanded(
                             child: GestureDetector(
                               onTap: () {
-                                if (ct.isLoading.value) {
+                                if (controller.isLoading.value) {
                                   ScaffoldMessenger.of(context).showSnackBar(
                                     const SnackBar(
                                       content: Text(
@@ -116,18 +116,18 @@ class ParkingScreen extends StatelessWidget {
                                   );
                                   return;
                                 }
-                                ct.onTabTapped(0);
+                                controller.onTabTapped(0);
                               },
                               child: Container(
                                 padding: const EdgeInsets.all(10),
-                                decoration: ct.currentPage.value != 0
+                                decoration: controller.currentPage.value != 0
                                     ? decor2()
                                     : decor1(),
                                 child: Center(
                                   child: CustomParagraph(
                                     text: "Reservations",
                                     fontSize: 10,
-                                    color: ct.currentPage.value != 0
+                                    color: controller.currentPage.value != 0
                                         ? Colors.white38
                                         : Colors.white,
                                   ),
@@ -139,7 +139,7 @@ class ParkingScreen extends StatelessWidget {
                           Expanded(
                             child: GestureDetector(
                               onTap: () {
-                                if (ct.isLoading.value) {
+                                if (controller.isLoading.value) {
                                   ScaffoldMessenger.of(context).showSnackBar(
                                     const SnackBar(
                                       content: Text(
@@ -151,86 +151,90 @@ class ParkingScreen extends StatelessWidget {
                                   );
                                   return;
                                 }
-                                ct.onTabTapped(1);
+                                controller.onTabTapped(1);
                               },
                               child: Container(
                                 padding: const EdgeInsets.all(10),
-                                decoration: ct.currentPage.value != 1
+                                decoration: controller.currentPage.value != 1
                                     ? decor2()
                                     : decor1(),
                                 child: Center(
                                     child: CustomParagraph(
                                   text: "Active Parking",
                                   fontSize: 10,
-                                  color: ct.currentPage.value != 1
+                                  color: controller.currentPage.value != 1
                                       ? Colors.white38
                                       : Colors.white,
                                 )),
                               ),
                             ),
                           ),
-                          Expanded(
-                            child: GestureDetector(
-                              onTap: () {
-                                if (ct.isLoading.value) {
-                                  ScaffoldMessenger.of(context).showSnackBar(
-                                    const SnackBar(
-                                      content: Text(
-                                          'Loading on progress, Please wait...'),
-                                      duration: Duration(seconds: 2),
-                                      backgroundColor: Colors.blue,
-                                      behavior: SnackBarBehavior.floating,
-                                    ),
-                                  );
-                                  return;
-                                }
-                                ct.onTabTapped(2);
-                              },
-                              child: Container(
-                                padding: const EdgeInsets.all(10),
-                                decoration: ct.currentPage.value != 2
-                                    ? decor2()
-                                    : decor1(),
-                                child: Center(
-                                    child: CustomParagraph(
-                                  fontSize: 10,
-                                  text: "Cancellations",
-                                  color: ct.currentPage.value != 2
-                                      ? Colors.white38
-                                      : Colors.white,
-                                )),
-                              ),
-                            ),
-                          )
+                          // Expanded(
+                          //   child: GestureDetector(
+                          //     onTap: () {
+                          //       if (controller.isLoading.value) {
+                          //         ScaffoldMessenger.of(context).showSnackBar(
+                          //           const SnackBar(
+                          //             content: Text(
+                          //                 'Loading on progress, Please wait...'),
+                          //             duration: Duration(seconds: 2),
+                          //             backgroundColor: Colors.blue,
+                          //             behavior: SnackBarBehavior.floating,
+                          //           ),
+                          //         );
+                          //         return;
+                          //       }
+                          //       controller.onTabTapped(2);
+                          //     },
+                          //     child: Container(
+                          //       padding: const EdgeInsets.all(10),
+                          //       decoration: controller.currentPage.value != 2
+                          //           ? decor2()
+                          //           : decor1(),
+                          //       child: Center(
+                          //           child: CustomParagraph(
+                          //         fontSize: 10,
+                          //         text: "Cancellations",
+                          //         color: controller.currentPage.value != 2
+                          //             ? Colors.white38
+                          //             : Colors.white,
+                          //       )),
+                          //     ),
+                          //   ),
+                          // )
                         ]),
                       ),
                     ),
                   ],
                 ),
               ),
+              Container(height: 10),
               Expanded(
-                child: ct.isLoading.value
+                child: controller.isLoading.value
                     ? const ParkShimmer()
-                    : ct.resData.isEmpty
+                    : controller.resData.isEmpty
                         ? const NoDataFound()
                         : RefreshIndicator(
-                            onRefresh: ct.onRefresh,
+                            onRefresh: controller.onRefresh,
                             child: ListView.separated(
                                 padding: const EdgeInsets.symmetric(
                                     vertical: 10, horizontal: 15),
                                 itemBuilder: (context, index) {
-                                  String title = ct.resData[index]["notes"];
-                                  String subTitle =
-                                      ct.resData[index]["reservation_ref_no"];
+                                  String title =
+                                      controller.resData[index]["notes"];
+                                  String subTitle = controller.resData[index]
+                                      ["reservation_ref_no"];
                                   String date = Variables.convertDateFormat(
-                                      ct.resData[index]["dt_in"]);
+                                      controller.resData[index]["dt_in"]);
                                   String time =
-                                      "${Variables.convertTime(ct.resData[index]["dt_in"].toString().split(" ")[1])} - ${Variables.convertTime(ct.resData[index]["dt_out"].toString().split(" ")[1])}";
-                                  String totalAmt = toCurrencyString(
-                                      ct.resData[index]["amount"].toString());
-                                  String status = ct.resData[index]["status"] ==
+                                      "${Variables.convertTime(controller.resData[index]["dt_in"].toString().split(" ")[1])} - ${Variables.convertTime(controller.resData[index]["dt_out"].toString().split(" ")[1])}";
+                                  String totalAmt = toCurrencyString(controller
+                                      .resData[index]["amount"]
+                                      .toString());
+                                  String status = controller.resData[index]
+                                              ["status"] ==
                                           "U"
-                                      ? "${ct.resData[index]["is_auto_extend"].toString() == "Y" ? "EXTENDED" : "ACTIVE"} PARKING"
+                                      ? "${controller.resData[index]["is_auto_extend"].toString() == "Y" ? "EXTENDED" : "ACTIVE"} PARKING"
                                       : "CONFIRMED";
 
                                   return ListCard(
@@ -240,8 +244,8 @@ class ParkingScreen extends StatelessWidget {
                                     time: time,
                                     totalAmt: totalAmt,
                                     status: status,
-                                    data: ct.resData[index],
-                                    currentTab: ct.currentPage.value,
+                                    data: controller.resData[index],
+                                    currentTab: controller.currentPage.value,
                                     onRefresh: () {},
                                   );
                                 },
@@ -249,7 +253,7 @@ class ParkingScreen extends StatelessWidget {
                                     const SizedBox(
                                       height: 15,
                                     ),
-                                itemCount: ct.resData.length),
+                                itemCount: controller.resData.length),
                           ),
               ),
             ],

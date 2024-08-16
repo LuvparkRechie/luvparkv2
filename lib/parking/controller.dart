@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:luvpark_get/auth/authentication.dart';
@@ -12,12 +14,15 @@ class ParkingController extends GetxController
     with GetSingleTickerProviderStateMixin {
   late TabController tabController;
   TextEditingController searchCtrl = TextEditingController();
+  late StreamController<void> _dataController;
+  late StreamSubscription<void> _dataSubscription;
   PageController pageController = PageController();
   final GlobalKey tabBarKey = GlobalKey();
   RxInt currentPage = 0.obs;
   RxList resData = [].obs;
   RxBool hasNet = false.obs;
   RxDouble tabHeight = 0.0.obs;
+  bool isAllowToSync = true;
 
   RxBool isLoading = false.obs; // Changed from hasNet to isLoading
 
@@ -27,8 +32,11 @@ class ParkingController extends GetxController
   void onInit() {
     super.onInit();
     tabController = TabController(vsync: this, length: 2);
-
-    getReserveData("C");
+    _dataController = StreamController<void>();
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      onRefresh();
+    });
+    streamData();
   }
 
   @override
@@ -36,6 +44,7 @@ class ParkingController extends GetxController
     tabController.dispose();
     pageController.dispose();
     searchCtrl.dispose();
+    _dataSubscription.cancel();
     super.onClose();
   }
 
@@ -47,6 +56,24 @@ class ParkingController extends GetxController
 
   Future<void> onRefresh() async {
     getReserveData(currentPage.value == 0 ? "C" : "U");
+  }
+
+  void streamData() {
+    _dataSubscription = _dataController.stream.listen((data) {});
+    fetchDataPeriodically();
+  }
+
+  void fetchDataPeriodically() async {
+    _dataSubscription = Stream.periodic(const Duration(seconds: 20), (count) {
+      fetchData();
+    }).listen((event) {});
+  }
+
+  Future<void> fetchData() async {
+    await Future.delayed(const Duration(seconds: 5));
+    if (isAllowToSync) {
+      onRefresh();
+    }
   }
 
   //Get Reserve Data
@@ -66,6 +93,7 @@ class ParkingController extends GetxController
         final returnData = await HttpRequest(
                 api: "${ApiKeys.gApiSubFolderGetReservations}?user_id=$id")
             .get();
+        isAllowToSync = true;
 
         if (returnData == "No Internet") {
           isLoading.value = false; // End loading
@@ -172,7 +200,10 @@ class ParkingController extends GetxController
             'isAutoExtend': data["is_auto_extend"].toString(),
             'isBooking': false,
             'paramsCalc': parameters,
-            'status': data["status"].toString() == "C" ? "R" : "A"
+            'status': data["status"].toString() == "C" ? "R" : "A",
+            'onRefresh': () {
+              onRefresh();
+            }
           };
           Get.toNamed(Routes.bookingReceipt, arguments: args);
         }

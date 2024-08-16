@@ -129,7 +129,6 @@ class DashboardMapController extends GetxController
       initialCameraPosition!.target.latitude,
       initialCameraPosition!.target.longitude,
     );
-    print("address $address");
 
     addressText.value = address!;
 

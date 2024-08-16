@@ -553,13 +553,15 @@ class DashboardMapScreen extends GetView<DashboardMapController> {
                                 maxlines: 1,
                                 fontWeight: FontWeight.w800,
                               ),
-                              CustomTitle(
-                                text: toCurrencyString(22.toString()),
-                                maxlines: 1,
-                                fontSize: 18,
-                                letterSpacing: -0.41,
-                                fontWeight: FontWeight.w900,
-                              )
+                              Obx(() => CustomTitle(
+                                    text: toCurrencyString(controller.userBal[0]
+                                            ["amount_bal"]
+                                        .toString()),
+                                    maxlines: 1,
+                                    fontSize: 18,
+                                    letterSpacing: -0.41,
+                                    fontWeight: FontWeight.w900,
+                                  ))
                             ],
                           ),
                         ),

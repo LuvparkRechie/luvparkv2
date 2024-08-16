@@ -270,7 +270,7 @@ class BookingReceipt extends GetView<BookingReceiptController> {
                     Expanded(
                       child: CustomButton(
                         text: "Extend parking",
-                        onPressed: () {},
+                        onPressed: controller.onExtend,
                       ),
                     ),
                   ],

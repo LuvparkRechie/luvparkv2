@@ -265,11 +265,13 @@ class BookingController extends GetxController
       isLoadingVehicles.value = false;
       ddVehiclesData.value = [];
       if (returnData["items"].length > 0) {
-        var items = returnData["items"];
+        dynamic items = returnData["items"];
         ddVehiclesData.value = items.map((item) {
           return {
             "text": item["vehicle_type_desc"],
-            "value": item["vehicle_type_id"]
+            "value": item["vehicle_type_id"],
+            "base_hours": item["base_hours"],
+            "succeeding_rate": item["succeeding_rate"],
           };
         }).toList();
       }
@@ -278,6 +280,21 @@ class BookingController extends GetxController
 
   //Compute booking payment
   Future<void> routeToComputation() async {
+    // int numHourss = inputTimeLabel.value.isEmpty
+    //     ? 0
+    //     : int.parse(inputTimeLabel.value.toString().split(" ")[0]);
+
+    // //  no_hours > base_hours THEN
+    // //      amount = amount + ((no_hours - base_hours) * succeeding_rate
+    // print("totalAmount.value ${totalAmount.value}");
+    // if (numHourss > int.parse(selectedVh[0]["base_hours"].toString())) {
+    //   print("ifff");
+    //   num inatayaUyy;
+    //     inatayaUyy = inatayaUyy +
+    //       ((numHourss - selectedVh[0]["base_hours"]) *
+    //           selectedVh[0]["succeeding_rate"]);
+    // }
+    // return;
     if (selectedVh.isEmpty) {
       CustomDialog().errorDialog(Get.context!, "luvpark", "Vehicle is required",
           () {
@@ -495,6 +512,7 @@ class BookingController extends GetxController
                     'isShowRate': true,
                     'reservationId': int.parse(returnPay["reservation_id"]),
                     'address': parameters["areaData"]["address"],
+                    'area_data': parameters["areaData"],
                     'isAutoExtend': false,
                     'isBooking': true,
                     'status': "B",
