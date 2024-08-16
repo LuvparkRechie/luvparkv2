@@ -4,7 +4,6 @@ import 'dart:math';
 import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
-import 'package:geocoding/geocoding.dart';
 import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:http/http.dart' as http;
@@ -38,7 +37,7 @@ class DashboardMapController extends GetxController
   RxList<dynamic> userBal = <dynamic>[].obs;
   RxList<dynamic> dataNearest = [].obs;
   //drawerdata
-  dynamic userProfile = [].obs;
+  var userProfile;
   Circle circle = const Circle(circleId: CircleId('dottedCircle'));
   RxList suggestions = [].obs;
   Polyline polyline = const Polyline(
@@ -126,13 +125,13 @@ class DashboardMapController extends GetxController
 
   Future<void> onCameraIdle() async {
     mapPickerController.mapFinishedMoving!();
-
-    List<Placemark> placemarks = await placemarkFromCoordinates(
+    String? address = await Functions.getAddress(
       initialCameraPosition!.target.latitude,
       initialCameraPosition!.target.longitude,
     );
-    addressText.value =
-        '${placemarks.first.name}, ${placemarks.first.administrativeArea}, ${placemarks.first.country}';
+    print("address $address");
+
+    addressText.value = address!;
 
     initialCameraPosition = CameraPosition(
       target: LatLng(initialCameraPosition!.target.latitude,
@@ -184,6 +183,9 @@ class DashboardMapController extends GetxController
     isLoading.value = true;
     isLoadingMap.value = true;
     String? userData = await Authentication().getUserData();
+    final item = await Authentication().getUserData2();
+
+    userProfile = item;
     if (jsonDecode(userData!)["first_name"] == null) {
       myName.value = "";
     } else {
@@ -252,14 +254,38 @@ class DashboardMapController extends GetxController
         ctr++;
         var items = dataNearest[i];
 
-        items["index"] = i.toString();
-        String rateDisplay = int.parse(items["min_base_rate"].toString()) ==
-                int.parse(items["max_base_rate"].toString())
-            ? "${int.parse(items["max_base_rate"].toString())}"
-            : "${items["min_base_rate"].toString()}-${items["max_base_rate"].toString()}";
+        final String isPwd = items["is_pwd"] ?? "N";
+        final String vehicleTypes = items["vehicle_types_list"];
 
-        final Uint8List markerIcon = await Variables.capturePng(Get.context!,
-            printScreen(AppColor.bodyColor, "$i", rateDisplay), 80, true);
+        String iconAsset;
+        if (isPwd == "Y") {
+          if (vehicleTypes.contains("Motorcycle") &&
+              vehicleTypes.contains("Trikes and Cars")) {
+            iconAsset =
+                'assets/dashboard_icon/cmp.png'; // Icon for both Motor and Cars with PWD indication
+          } else if (vehicleTypes.contains("Motorcycle")) {
+            iconAsset =
+                'assets/dashboard_icon/mp.png'; // Icon for Motorcycles with PWD indication
+          } else {
+            iconAsset =
+                'assets/dashboard_icon/cp.png'; // Default icon with PWD indication
+          }
+        } else {
+          if (vehicleTypes.contains("Motorcycle") &&
+              vehicleTypes.contains("Trikes and Cars")) {
+            iconAsset =
+                'assets/dashboard_icon/mc.png'; // Icon for both Motor and Cars
+          } else if (vehicleTypes.contains("Motorcycle")) {
+            iconAsset =
+                'assets/dashboard_icon/m.png'; // Icon for Motorcycles only
+          } else {
+            iconAsset = 'assets/dashboard_icon/c.png'; // Icon for Cars only
+          }
+        }
+
+        final Uint8List markerIcon =
+            await Variables.getBytesFromAsset(iconAsset, 0.7);
+
         markers.add(
           Marker(
               // ignore: deprecated_member_use
@@ -465,13 +491,5 @@ class DashboardMapController extends GetxController
         ),
       ),
     );
-  }
-
-  //Get drawer data
-
-  void getDrawerData() async {
-    final item = await Authentication().getUserData();
-    userProfile = jsonDecode(item!);
-    print("get drawer data $userProfile");
   }
 }

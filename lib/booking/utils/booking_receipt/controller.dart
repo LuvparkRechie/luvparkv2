@@ -15,7 +15,7 @@ class BookingReceiptController extends GetxController {
     super.onInit();
     parameters = Get.arguments as Map<String, dynamic>;
 
-    if (!parameters["isBooking"]) {
+    if (parameters["status"] == "A") {
       startTimer();
     }
   }
@@ -75,7 +75,7 @@ class BookingReceiptController extends GetxController {
 
   @override
   void onClose() {
-    if (!parameters["isBooking"]) {
+    if (parameters["status"] == "A") {
       _timer.cancel();
     }
     super.onClose();

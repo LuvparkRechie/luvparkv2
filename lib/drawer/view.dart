@@ -9,16 +9,11 @@ import 'package:luvpark_get/custom_widgets/custom_text.dart';
 import 'package:luvpark_get/mapa/controller.dart';
 import 'package:luvpark_get/routes/routes.dart';
 
-import 'dart:convert';
-import 'dart:typed_data';
-
 class CustomDrawer extends GetView<DashboardMapController> {
   const CustomDrawer({super.key});
 
   @override
   Widget build(BuildContext context) {
-    controller.getDrawerData();
-
     return Drawer(
       child: Column(
         children: <Widget>[
@@ -41,7 +36,9 @@ class CustomDrawer extends GetView<DashboardMapController> {
                             CircleAvatar(
                               radius: 24,
                               backgroundColor: Colors.white,
-                              backgroundImage: controller.userProfile != null
+                              backgroundImage: controller.userProfile != null &&
+                                      controller.userProfile['image_base64'] !=
+                                          null
                                   ? MemoryImage(
                                       base64Decode(controller
                                           .userProfile['image_base64']),

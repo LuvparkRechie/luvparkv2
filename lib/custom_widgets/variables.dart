@@ -436,4 +436,31 @@ class Variables {
       }
     }
   }
+
+  static Future<Uint8List> getBytesFromAsset(
+      String path, double scaleFactor) async {
+    ByteData data = await rootBundle.load(path);
+
+    // Load the image data and get the original size
+    ui.Codec codec = await ui.instantiateImageCodec(data.buffer.asUint8List());
+    ui.FrameInfo frameInfo = await codec.getNextFrame();
+    final originalImage = frameInfo.image;
+
+    // Calculate new dimensions
+    final originalWidth = originalImage.width.toDouble();
+    final originalHeight = originalImage.height.toDouble();
+    final targetWidth = (originalWidth * scaleFactor).toInt();
+    final targetHeight = (originalHeight * scaleFactor).toInt();
+
+    // Create a new codec to decode the resized image
+    ui.Codec resizedCodec = await ui.instantiateImageCodec(
+        data.buffer.asUint8List(),
+        targetWidth: targetWidth,
+        targetHeight: targetHeight);
+
+    ui.FrameInfo resizedFrameInfo = await resizedCodec.getNextFrame();
+    ByteData? resizedByteData =
+        await resizedFrameInfo.image.toByteData(format: ui.ImageByteFormat.png);
+    return resizedByteData!.buffer.asUint8List();
+  }
 }

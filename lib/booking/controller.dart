@@ -497,6 +497,7 @@ class BookingController extends GetxController
                     'address': parameters["areaData"]["address"],
                     'isAutoExtend': false,
                     'isBooking': true,
+                    'status': "B",
                     'paramsCalc': bookingParams[0]
                   };
                   isSubmitBooking.value = false;

@@ -57,7 +57,7 @@ class BookingReceipt extends GetView<BookingReceiptController> {
                         Container(
                           color: AppColor.primaryColor,
                           width: MediaQuery.of(context).size.width,
-                          height: constraints.maxHeight * .20,
+                          height: constraints.maxHeight * .15,
                         ),
                         Positioned(
                           top: 20,
@@ -76,7 +76,7 @@ class BookingReceipt extends GetView<BookingReceiptController> {
                                   children: [
                                     Padding(
                                       padding: const EdgeInsets.fromLTRB(
-                                          15, 0, 15, 15),
+                                          15, 0, 15, 0),
                                       child: Column(
                                         children: [
                                           Stack(
@@ -136,8 +136,8 @@ class BookingReceipt extends GetView<BookingReceiptController> {
                                             ],
                                           ),
                                           const SizedBox(height: 20),
-                                          if (!controller
-                                              .parameters["isBooking"])
+                                          if (controller.parameters["status"] ==
+                                              "A")
                                             Column(
                                               crossAxisAlignment:
                                                   CrossAxisAlignment.start,
@@ -231,7 +231,7 @@ class BookingReceipt extends GetView<BookingReceiptController> {
                 },
               ),
             ),
-            if (!controller.parameters["isBooking"])
+            if (controller.parameters["status"] == "A")
               Padding(
                 padding: const EdgeInsets.all(15),
                 child: Row(
@@ -295,7 +295,7 @@ class BookingReceipt extends GetView<BookingReceiptController> {
                 IconButton(
                   icon: const Icon(Icons.chevron_left, color: Colors.white),
                   onPressed: () {
-                    if (controller.parameters["isBooking"]) {
+                    if (controller.parameters["status"] == "B") {
                       Get.offAllNamed(Routes.map);
                       return;
                     }

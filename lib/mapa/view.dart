@@ -384,27 +384,28 @@ class DashboardMapScreen extends GetView<DashboardMapController> {
               Visibility(
                 visible: controller.isGetNearData.value,
                 child: Positioned(
-                  left: MediaQuery.of(context).size.width / 3.5,
+                  left: MediaQuery.of(context).size.width / 6,
+                  right: MediaQuery.of(context).size.width / 6,
                   top: (MediaQuery.of(context).size.height -
                           controller.minHeight.value) /
                       3,
                   child: Container(
                     clipBehavior: Clip.antiAlias,
-                    padding: const EdgeInsets.symmetric(
-                        vertical: 10, horizontal: 15),
+                    padding:
+                        const EdgeInsets.symmetric(vertical: 5, horizontal: 5),
                     decoration: ShapeDecoration(
                       color: const Color(0xFF0078FF),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(40),
                       ),
                     ),
-                    child: const Center(
+                    child: Center(
                       child: CustomParagraph(
-                        text: "Search this area >",
+                        text: controller.addressText.value,
                         color: Colors.white,
                         textAlign: TextAlign.center,
                         fontWeight: FontWeight.w600,
-                        maxlines: 1,
+                        maxlines: 2,
                         fontSize: 12,
                       ),
                     ),
