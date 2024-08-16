@@ -6,6 +6,7 @@ import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:intl/intl.dart';
@@ -45,10 +46,6 @@ class WalletScreen extends GetView<WalletController> {
                       child: Column(
                         children: [
                           CustomAppbar(
-                            onTap: () {
-                              Get.back();
-                            },
-                            title: "My Wallet",
                             action: [
                               InkWell(
                                 onTap: () {
@@ -116,139 +113,309 @@ class WalletScreen extends GetView<WalletController> {
                               padding: const EdgeInsets.fromLTRB(15, 15, 15, 0),
                               child: ListView(
                                 children: [
-                                  Container(
-                                    width: MediaQuery.of(context).size.width,
-                                    clipBehavior: Clip.antiAlias,
-                                    decoration: ShapeDecoration(
-                                      color: Colors.white,
-                                      shape: RoundedRectangleBorder(
-                                        side: const BorderSide(
-                                            width: 1, color: Color(0xFFDFE7EF)),
-                                        borderRadius: BorderRadius.circular(7),
-                                      ),
-                                      shadows: const [
-                                        BoxShadow(
-                                          color: Color(0x0C000000),
-                                          blurRadius: 15,
-                                          offset: Offset(0, 5),
-                                          spreadRadius: 0,
-                                        )
-                                      ],
-                                    ),
-                                    child: Padding(
-                                      padding: const EdgeInsets.all(15),
-                                      child: Column(
-                                        children: [
-                                          Row(
-                                            children: [
-                                              Expanded(
-                                                child: Column(
-                                                  crossAxisAlignment:
-                                                      CrossAxisAlignment.start,
-                                                  children: [
-                                                    CustomParagraph(
-                                                        text:
-                                                            "Current Balance"),
-                                                    SizedBox(height: 5),
-                                                    CustomTitle(
-                                                      text:
-                                                          controller.userData[0]
-                                                              ["amount_bal"],
-                                                      fontWeight:
-                                                          FontWeight.w900,
-                                                      fontSize: 20,
-                                                      textAlign:
-                                                          TextAlign.center,
+                                  SizedBox(
+                                    height: 200,
+                                    child: Stack(
+                                      children: [
+                                        SvgPicture.asset(
+                                          "assets/images/wallet_bg.svg",
+                                          height: 200,
+                                          width:
+                                              MediaQuery.of(context).size.width,
+                                        ),
+                                        Positioned(
+                                          child: SizedBox(
+                                            height: 187,
+                                            width: MediaQuery.of(context)
+                                                .size
+                                                .width,
+                                            child: Column(
+                                              children: [
+                                                Expanded(
+                                                  child: Padding(
+                                                    padding:
+                                                        EdgeInsets.fromLTRB(
+                                                      15,
+                                                      25,
+                                                      15,
+                                                      15,
                                                     ),
-                                                  ],
-                                                ),
-                                              ),
-                                              Container(width: 30),
-                                              InkWell(
-                                                onTap: () async {
-                                                  final item =
-                                                      await Authentication()
-                                                          .getUserData2();
-                                                  String? fname =
-                                                      item["first_name"];
-                                                  // print("fnameee $fname");
-                                                  if (fname == null) {
-                                                    CustomDialog().errorDialog(
-                                                        // ignore: use_build_context_synchronously
-                                                        context,
-                                                        "Attention",
-                                                        "Complete your account information to access the requested service.\nGo to profile and update your account.",
-                                                        () {
-                                                      Get.back();
-                                                    });
-                                                    return;
-                                                  }
-                                                  Get.toNamed(
-                                                      Routes.walletrecharge);
-                                                },
-                                                child: Container(
-                                                  padding: const EdgeInsets
-                                                      .symmetric(
-                                                      horizontal: 8,
-                                                      vertical: 8),
-                                                  decoration: BoxDecoration(
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            15),
-                                                    border: Border.all(
-                                                      color: AppColor
-                                                          .primaryColor
-                                                          .withOpacity(.2),
+                                                    child: Column(
+                                                      children: [
+                                                        Row(
+                                                          mainAxisAlignment:
+                                                              MainAxisAlignment
+                                                                  .spaceBetween,
+                                                          children: [
+                                                            Row(
+                                                              children: [
+                                                                Image(
+                                                                  image:
+                                                                      AssetImage(
+                                                                    "assets/images/wallet_luvpark1.png",
+                                                                  ),
+                                                                ),
+                                                                SizedBox(
+                                                                  width: 10,
+                                                                ),
+                                                                CustomTitle(
+                                                                  text:
+                                                                      'LuvPark Balance',
+                                                                  color: Colors
+                                                                      .white,
+                                                                ),
+                                                              ],
+                                                            ),
+                                                            Icon(
+                                                              Icons
+                                                                  .more_horiz_outlined,
+                                                              color:
+                                                                  Colors.white,
+                                                            )
+                                                          ],
+                                                        ),
+                                                        Row(
+                                                          children: [
+                                                            Column(
+                                                              crossAxisAlignment:
+                                                                  CrossAxisAlignment
+                                                                      .start,
+                                                              mainAxisAlignment:
+                                                                  MainAxisAlignment
+                                                                      .spaceBetween,
+                                                              children: [
+                                                                CustomTitle(
+                                                                  text: "PHP",
+                                                                  fontSize: 15,
+                                                                  color: Colors
+                                                                      .white,
+                                                                ),
+                                                                SizedBox(
+                                                                  height: 15,
+                                                                )
+                                                              ],
+                                                            ),
+                                                            CustomTitle(
+                                                              text: controller
+                                                                      .userData[0]
+                                                                  [
+                                                                  "amount_bal"],
+                                                              fontSize: 40,
+                                                              color:
+                                                                  Colors.white,
+                                                            )
+                                                          ],
+                                                        )
+                                                      ],
                                                     ),
                                                   ),
+                                                ),
+                                                Container(
+                                                  height: 40,
+                                                  padding: EdgeInsets.symmetric(
+                                                      horizontal: 15),
+                                                  width: MediaQuery.of(context)
+                                                      .size
+                                                      .width,
                                                   child: Row(
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment
+                                                            .spaceBetween,
                                                     children: [
-                                                      Icon(
-                                                        Iconsax.card_add,
-                                                        color: AppColor
-                                                            .primaryColor,
+                                                      Row(
+                                                        children: [
+                                                          // SvgPicture.asset(
+                                                          //   "assets/images/wallet_crown.svg",
+                                                          //   height: 14,
+                                                          //   width:
+                                                          //       MediaQuery.of(
+                                                          //               context)
+                                                          //           .size
+                                                          //           .width,
+                                                          // ),
+                                                          Icon(
+                                                            Iconsax.crown5,
+                                                            color:
+                                                                Color.fromRGBO(
+                                                                    255,
+                                                                    198,
+                                                                    103,
+                                                                    1),
+                                                          ),
+                                                          SizedBox(
+                                                            width: 10,
+                                                          ),
+
+                                                          CustomTitle(
+                                                            text:
+                                                                "Reward Points: ",
+                                                            color: Colors.white,
+                                                            fontWeight:
+                                                                FontWeight.w400,
+                                                          ),
+                                                          CustomTitle(
+                                                            text:
+                                                                " ${controller.userData[0]["points_bal"]} ",
+                                                            color: Colors.white,
+                                                            fontWeight:
+                                                                FontWeight.w600,
+                                                          ),
+                                                        ],
                                                       ),
-                                                      Container(width: 10),
-                                                      const CustomParagraph(
-                                                        text: "Recharge",
-                                                        fontSize: 14,
-                                                      )
+                                                      Icon(
+                                                        Icons
+                                                            .chevron_right_outlined,
+                                                        color: Colors.white,
+                                                      ),
                                                     ],
                                                   ),
-                                                ),
-                                              )
-                                            ],
+                                                )
+                                              ],
+                                            ),
                                           ),
-                                          Container(height: 20),
-                                          Row(
-                                            children: [
-                                              const Icon(
-                                                Iconsax.gift,
-                                                size: 15,
-                                                color: Colors.pink,
-                                              ),
-                                              Container(width: 5),
-                                              Flexible(
-                                                  child: CustomParagraph(
-                                                text: controller.userData[0]
-                                                    ["points_bal"],
-                                                fontSize: 12,
-                                                color: Colors.black,
-                                              )),
-                                              Container(width: 5),
-                                              const Flexible(
-                                                child: CustomParagraph(
-                                                  text: "Rewards",
-                                                  fontSize: 12,
-                                                  fontWeight: FontWeight.w500,
-                                                ),
-                                              ),
-                                            ],
-                                          ),
-                                        ],
-                                      ),
+                                        ),
+                                      ],
                                     ),
                                   ),
+                                  // Container(
+                                  //   width: MediaQuery.of(context).size.width,
+                                  //   clipBehavior: Clip.antiAlias,
+                                  //   decoration: ShapeDecoration(
+                                  //     color: Colors.white,
+                                  //     shape: RoundedRectangleBorder(
+                                  //       side: const BorderSide(
+                                  //           width: 1, color: Color(0xFFDFE7EF)),
+                                  //       borderRadius: BorderRadius.circular(7),
+                                  //     ),
+                                  //     shadows: const [
+                                  //       BoxShadow(
+                                  //         color: Color(0x0C000000),
+                                  //         blurRadius: 15,
+                                  //         offset: Offset(0, 5),
+                                  //         spreadRadius: 0,
+                                  //       )
+                                  //     ],
+                                  //   ),
+                                  //   child: Padding(
+                                  //     padding: const EdgeInsets.all(15),
+                                  //     child: Column(
+                                  //       children: [
+                                  //         Row(
+                                  //           children: [
+                                  //             SvgPicture.asset(
+                                  //               "assets/images/wallet_luvpark.svg",
+                                  //               height: 40,
+                                  //               width: 40,
+                                  //             ),
+                                  //             Expanded(
+                                  //               child: Column(
+                                  //                 crossAxisAlignment:
+                                  //                     CrossAxisAlignment.start,
+                                  //                 children: [
+                                  //                   CustomParagraph(
+                                  //                       text:
+                                  //                           "Current Balance"),
+                                  //                   SizedBox(height: 5),
+                                  //                   CustomTitle(
+                                  //                     text:
+                                  //                         controller.userData[0]
+                                  //                             ["amount_bal"],
+                                  //                     fontWeight:
+                                  //                         FontWeight.w900,
+                                  //                     fontSize: 20,
+                                  //                     textAlign:
+                                  //                         TextAlign.center,
+                                  //                   ),
+                                  //                 ],
+                                  //               ),
+                                  //             ),
+                                  //             Container(width: 30),
+                                  //             InkWell(
+                                  //               onTap: () async {
+                                  //                 final item =
+                                  //                     await Authentication()
+                                  //                         .getUserData2();
+                                  //                 String? fname =
+                                  //                     item["first_name"];
+                                  //                 // print("fnameee $fname");
+                                  //                 if (fname == null) {
+                                  //                   CustomDialog().errorDialog(
+                                  //                       // ignore: use_build_context_synchronously
+                                  //                       context,
+                                  //                       "Attention",
+                                  //                       "Complete your account information to access the requested service.\nGo to profile and update your account.",
+                                  //                       () {
+                                  //                     Get.back();
+                                  //                   });
+                                  //                   return;
+                                  //                 }
+                                  //                 Get.toNamed(
+                                  //                     Routes.walletrecharge);
+                                  //               },
+                                  //               child: Container(
+                                  //                 padding: const EdgeInsets
+                                  //                     .symmetric(
+                                  //                     horizontal: 8,
+                                  //                     vertical: 8),
+                                  //                 decoration: BoxDecoration(
+                                  //                   borderRadius:
+                                  //                       BorderRadius.circular(
+                                  //                           15),
+                                  //                   border: Border.all(
+                                  //                     color: AppColor
+                                  //                         .primaryColor
+                                  //                         .withOpacity(.2),
+                                  //                   ),
+                                  //                 ),
+                                  //                 child: Row(
+                                  //                   children: [
+                                  //                     Icon(
+                                  //                       Iconsax.card_add,
+                                  //                       color: AppColor
+                                  //                           .primaryColor,
+                                  //                     ),
+                                  //                     Container(width: 10),
+                                  //                     const CustomParagraph(
+                                  //                       text: "Recharge",
+                                  //                       fontSize: 14,
+                                  //                     )
+                                  //                   ],
+                                  //                 ),
+                                  //               ),
+                                  //             )
+                                  //           ],
+                                  //         ),
+                                  //         Container(height: 20),
+                                  //         Row(
+                                  //           children: [
+                                  //             const Icon(
+                                  //               Iconsax.gift,
+                                  //               size: 15,
+                                  //               color: Colors.pink,
+                                  //             ),
+                                  //             Container(width: 5),
+                                  //             Flexible(
+                                  //                 child: CustomParagraph(
+                                  //               text: controller.userData[0]
+                                  //                   ["points_bal"],
+                                  //               fontSize: 12,
+                                  //               color: Colors.black,
+                                  //             )),
+                                  //             Container(width: 5),
+                                  //             const Flexible(
+                                  //               child: CustomParagraph(
+                                  //                 text: "Rewards",
+                                  //                 fontSize: 12,
+                                  //                 fontWeight: FontWeight.w500,
+                                  //               ),
+                                  //             ),
+                                  //           ],
+                                  //         ),
+                                  //       ],
+                                  //     ),
+                                  //   ),
+                                  // ),
+
                                   Container(height: 15),
                                   Row(
                                     children: [

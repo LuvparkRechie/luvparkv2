@@ -49,6 +49,7 @@ class WalletRechargeScreen extends GetView<WalletRechargeController> {
                               child: TextFormField(
                                 controller: controller.tokenAmount,
                                 inputFormatters: <TextInputFormatter>[
+                                  FilteringTextInputFormatter.digitsOnly,
                                   FilteringTextInputFormatter.allow(
                                       RegExp(r'^\d*\.?\d*$')),
                                 ],

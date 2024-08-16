@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
+import 'package:luvpark_get/custom_widgets/alert_dialog.dart';
 
 class WalletRechargeController extends GetxController
     with GetSingleTickerProviderStateMixin {
@@ -35,11 +36,13 @@ class WalletRechargeController extends GetxController
   Future<void> onTextChange() async {
     denoInd.value = -1;
     selectedPaymentType = null;
-    if (tokenAmount.value.text.isEmpty ||
-        tokenAmount.text.isEmpty ||
-        double.parse(
-                tokenAmount.text.replaceAll(",", "").replaceAll(".", "")) <=
-            0) {
+
+    // Try to parse the input value
+    final input = tokenAmount.text.replaceAll(",", "").replaceAll(".", "");
+    final double? value = double.tryParse(input);
+
+    // Check if the value is valid and meets the minimum requirement
+    if (value == null || value < 20) {
       isActiveBtn.value = false;
     } else {
       isActiveBtn.value = true;

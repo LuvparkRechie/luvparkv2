@@ -5,13 +5,13 @@ import 'package:luvpark_get/custom_widgets/custom_text.dart';
 
 class CustomAppbar extends StatelessWidget {
   final Function? onTap;
-  final String title;
+  final String? title;
   final List<Widget>? action;
   final Color? bgColor;
   const CustomAppbar({
     super.key,
     this.onTap,
-    required this.title,
+    this.title,
     this.action,
     this.bgColor,
   });
@@ -19,7 +19,7 @@ class CustomAppbar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return AppBar(
-      elevation: 1,
+      elevation: 0.3,
       centerTitle: true,
       backgroundColor: bgColor ?? Colors.white,
       systemOverlayStyle: const SystemUiOverlayStyle(
@@ -52,12 +52,14 @@ class CustomAppbar extends StatelessWidget {
         ),
       ),
       leadingWidth: 100,
-      title: CustomTitle(
-        text: title,
-        fontSize: 20,
-        fontWeight: FontWeight.w900,
-        color: Colors.black,
-      ),
+      title: title == null
+          ? null
+          : CustomTitle(
+              text: title!,
+              fontSize: 20,
+              fontWeight: FontWeight.w900,
+              color: Colors.black,
+            ),
       actions: action,
     );
   }
