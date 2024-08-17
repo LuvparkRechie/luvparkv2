@@ -1,17 +1,11 @@
-// ignore_for_file: prefer_const_constructors
-
-import 'dart:convert';
-
-import 'package:auto_size_text/auto_size_text.dart';
+// ignore_for_file: prefer_const_constructorss
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:intl/intl.dart';
-import 'package:luvpark_get/auth/authentication.dart';
-import 'package:luvpark_get/custom_widgets/alert_dialog.dart';
 import 'package:luvpark_get/custom_widgets/app_color.dart';
 import 'package:luvpark_get/custom_widgets/custom_appbar.dart';
 import 'package:luvpark_get/custom_widgets/custom_text.dart';
@@ -19,6 +13,8 @@ import 'package:luvpark_get/custom_widgets/no_internet.dart';
 import 'package:luvpark_get/custom_widgets/park_shimmer.dart';
 import 'package:luvpark_get/routes/routes.dart';
 import 'package:luvpark_get/wallet/controller.dart';
+import '../auth/authentication.dart';
+import '../custom_widgets/alert_dialog.dart';
 import 'utils/transaction_details.dart';
 
 class WalletScreen extends GetView<WalletController> {
@@ -46,6 +42,7 @@ class WalletScreen extends GetView<WalletController> {
                       child: Column(
                         children: [
                           CustomAppbar(
+                            title: "My Wallet",
                             action: [
                               InkWell(
                                 onTap: () {
@@ -276,6 +273,10 @@ class WalletScreen extends GetView<WalletController> {
                                         ),
                                       ],
                                     ),
+                                  ),
+
+                                  Row(
+                                    children: [],
                                   ),
                                   // Container(
                                   //   width: MediaQuery.of(context).size.width,
@@ -525,34 +526,27 @@ class WalletScreen extends GetView<WalletController> {
                                         MainAxisAlignment.spaceBetween,
                                     children: [
                                       CustomTitle(
-                                        text: "Transaction History",
+                                        text: "Recent Activities",
                                         fontWeight: FontWeight.w600,
                                       ),
-                                      TextButton(
-                                          onPressed: () {
-                                            Get.bottomSheet(
-                                              // enableDrag: true,
-                                              enterBottomSheetDuration:
-                                                  const Duration(
-                                                milliseconds: 500,
-                                              ),
-                                              // settings: RouteSettings(),
-                                              BottomSheetWidget(),
-                                              isScrollControlled: true,
-                                            );
-                                          },
-                                          child: const Text(
-                                            "See all",
-                                            style: TextStyle(
-                                              color: Colors.blue,
-                                              fontWeight: FontWeight.bold,
+                                      InkWell(
+                                        onTap: () {
+                                          Get.bottomSheet(
+                                            // enableDrag: true,
+                                            enterBottomSheetDuration:
+                                                const Duration(
+                                              milliseconds: 500,
                                             ),
-                                          ))
-                                      // CustomParagraph(
-                                      //   text: "See all",
-                                      //   fontSize: 14,
-                                      //   color: AppColor.primaryColor,
-                                      // )
+                                            // settings: RouteSettings(),
+                                            BottomSheetWidget(),
+                                            isScrollControlled: true,
+                                          );
+                                        },
+                                        child: FaIcon(
+                                          color: Colors.blue,
+                                          FontAwesomeIcons.sliders,
+                                        ),
+                                      ),
                                     ],
                                   ),
                                   Container(height: 15),
