@@ -3,18 +3,20 @@ import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:luvpark_get/custom_widgets/custom_text.dart';
 
-class CustomAppbar extends StatelessWidget {
+class CustomAppbar extends StatelessWidget implements PreferredSizeWidget {
+  @override
+  final Size preferredSize;
   final Function? onTap;
   final String? title;
   final List<Widget>? action;
   final Color? bgColor;
-  const CustomAppbar({
-    super.key,
-    this.onTap,
-    this.title,
-    this.action,
-    this.bgColor,
-  });
+  const CustomAppbar(
+      {super.key,
+      this.onTap,
+      this.title,
+      this.action,
+      this.bgColor,
+      this.preferredSize = const Size.fromHeight(kToolbarHeight)});
 
   @override
   Widget build(BuildContext context) {
