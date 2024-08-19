@@ -58,6 +58,7 @@ class QrWallet extends GetView<QrWalletController> {
         elevation: 1,
         backgroundColor: Colors.white,
         bottom: TabBar(
+          indicatorColor: Color(0xFF0078FF),
           indicatorSize: TabBarIndicatorSize.tab,
           indicatorWeight: 4,
           labelStyle: paragraphStyle(),
@@ -193,7 +194,7 @@ class PayQr extends GetView<QrWalletController> {
                                                 AutoSizeText(
                                                   controller.fullName.value
                                                       .toUpperCase(),
-                                                  minFontSize: 12,
+                                                  maxLines: 1,
                                                   maxFontSize: 16,
                                                   style: TextStyle(
                                                     fontWeight: FontWeight.w600,
@@ -215,7 +216,7 @@ class PayQr extends GetView<QrWalletController> {
                                         ],
                                       ),
                                       Container(
-                                        height: 33,
+                                        height: 10,
                                       ),
                                       InkWell(
                                         onTap: () {
@@ -470,8 +471,8 @@ class ReceiveQr extends GetView<QrWalletController> {
                             children: [
                               AutoSizeText(
                                 controller.fullName.value.toUpperCase(),
-                                minFontSize: 12,
                                 maxFontSize: 16,
+                                maxLines: 1,
                                 style: TextStyle(
                                   fontWeight: FontWeight.w600,
                                   color: Color(0xFF353636),
