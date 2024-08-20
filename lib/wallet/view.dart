@@ -1,4 +1,6 @@
 // ignore_for_file: prefer_const_constructorss, prefer_const_constructors
+import 'dart:convert';
+
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -29,7 +31,24 @@ class WalletScreen extends GetView<WalletController> {
     return Scaffold(
         appBar: CustomAppbar(
           title: "My Wallet",
-          action: [],
+          action: [
+            Container(
+              child: CircleAvatar(
+                radius: 24,
+                backgroundColor: Colors.white,
+                backgroundImage: controller.userImage != null &&
+                        controller.userImage['image_base64'] != null
+                    ? MemoryImage(
+                        base64Decode(controller.userImage['image_base64']),
+                      )
+                    : null,
+                child: controller.userImage == null
+                    ? const Icon(Icons.person,
+                        size: 24, color: Colors.blueAccent)
+                    : null,
+              ),
+            )
+          ],
         ),
         body: SafeArea(
           child: Obx(
@@ -397,8 +416,8 @@ class WalletScreen extends GetView<WalletController> {
 
                               SlidingUpPanel(
                                   snapPoint: 0.4,
-                                  parallaxEnabled: false,
-                                  maxHeight: size.height * 0.87,
+                                  parallaxEnabled: true,
+                                  maxHeight: size.height * 0.90,
                                   minHeight: size.height * 0.45,
                                   controller: panelController,
                                   panelBuilder: (context) {
@@ -465,6 +484,9 @@ class WalletScreen extends GetView<WalletController> {
                                                         return GestureDetector(
                                                           onTap: () {
                                                             showModalBottomSheet(
+                                                              backgroundColor:
+                                                                  Colors
+                                                                      .transparent,
                                                               context: context,
                                                               builder: (context) =>
                                                                   TransactionDetails(
@@ -489,7 +511,7 @@ class WalletScreen extends GetView<WalletController> {
                                                                     .cover,
                                                                 "assets/images/${controller.logs[index]["tran_desc"] == 'Share a token' ? 'wallet_sharetoken' : controller.logs[index]["tran_desc"] == 'Received token' ? 'wallet_receivetoken' : 'wallet_payparking'}.svg",
                                                                 //if trans_Desc is equal to Share a token svg is wallet_sharetoken else Receive Token svg is wallet_receivetoken else parking transaction is svg wallet_payparking
-                                                                height: 70,
+                                                                height: 50,
                                                               ),
                                                               title:
                                                                   CustomTitle(

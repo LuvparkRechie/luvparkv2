@@ -17,8 +17,7 @@ class WalletController extends GetxController
   RxString fromDate = "".obs;
   RxList logs = [].obs;
   RxList userData = [].obs;
-
-  get userProfile => null;
+  var userImage;
 
   @override
   void onInit() {
@@ -48,6 +47,7 @@ class WalletController extends GetxController
   // }
 
   Future<void> getUserBalance() async {
+    userImage = await Authentication().getUserProfilePic();
     Functions.getUserBalance(Get.context!, (dataBalance) async {
       if (!dataBalance[0]["has_net"]) {
         isLoading.value = false;
@@ -69,8 +69,9 @@ class WalletController extends GetxController
   Future<void> getLogs() async {
     final item = await Authentication().getUserData();
     String userId = jsonDecode(item!)['user_id'].toString();
-    isLoading.value = true; String? userData = await Authentication().getUserData();
-    
+    isLoading.value = true;
+    String? userData = await Authentication().getUserData();
+
     // print("yawaaa $item");
 
     String subApi =
