@@ -4,9 +4,9 @@ import 'package:luvpark_get/http/api_keys.dart';
 import 'package:luvpark_get/http/http_request.dart';
 
 // ignore: deprecated_member_use
-class FilterMapController extends GetxController
-    with GetSingleTickerProviderStateMixin {
+class FilterMapController extends GetxController {
   FilterMapController();
+  final arguments = Get.arguments;
   final List items = [
     {"text": "Allow", "value": "Y"},
     {"text": "No overnight", "value": "N"},
@@ -33,6 +33,11 @@ class FilterMapController extends GetxController
   @override
   void onInit() {
     super.onInit();
+    filterParam.value = filterParam.map((e) {
+      e["radius"] = currentDistance.value.roundToDouble().toString();
+      return e;
+    }).toList();
+
     loadData();
   }
 
@@ -73,7 +78,6 @@ class FilterMapController extends GetxController
 
       if (returnData["items"].length > 0) {
         vhTypeData.value = returnData["items"];
-        print(vhTypeData);
 
         loadParkingType();
       } else {
@@ -111,6 +115,7 @@ class FilterMapController extends GetxController
 
     if (returnData["items"].length > 0) {
       parkTypeData.value = returnData["items"];
+
       loadAmenities();
     } else {
       CustomDialog().errorDialog(Get.context!, "luvpark", "No vehicle found",
@@ -146,7 +151,7 @@ class FilterMapController extends GetxController
 
     if (returnData["items"].length > 0) {
       amenitiesData.value = returnData["items"];
-      print("amenitiesData $amenitiesData");
+
       loadRadius();
     } else {
       CustomDialog().errorDialog(Get.context!, "luvpark", "No vehicle found",

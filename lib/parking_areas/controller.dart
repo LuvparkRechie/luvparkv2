@@ -1,7 +1,6 @@
 import 'package:get/get.dart';
 
-class ParkingAreasController extends GetxController
-    with GetSingleTickerProviderStateMixin {
+class ParkingAreasController extends GetxController {
   ParkingAreasController();
   bool isInternetConnected = true;
   final dataNearest = Get.arguments;

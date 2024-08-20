@@ -20,7 +20,8 @@ class FilterMap extends GetView<FilterMapController> {
         action: [
           InkWell(
             onTap: () {
-              print("filter param ${controller.filterParam}");
+              Get.back();
+              controller.arguments(controller.filterParam);
             },
             child: Center(
               child: Padding(
@@ -246,27 +247,30 @@ class FilterMap extends GetView<FilterMapController> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Wrap(spacing: 10.0, children: [
-          for (int i = 0; i < controller.vhTypeData.length; i++)
+          for (int i = 0; i < controller.parkTypeData.length; i++)
             FilterChip(
               checkmarkColor: Colors.white,
               backgroundColor: AppColor.primaryColor.withOpacity(.1),
               label: CustomParagraph(
-                text: controller.vhTypeData[i]["text"],
-                color: controller.sfPt
-                        .contains(controller.vhTypeData[i]["value"].toString())
+                text: controller.parkTypeData[i]["parking_type_name"],
+                color: controller.sfPt.contains(controller.parkTypeData[i]
+                            ["parking_type_code"]
+                        .toString())
                     ? Colors.white
                     : Colors.black87,
                 fontWeight: FontWeight.w700,
               ),
-              selected: controller.sfPt
-                  .contains(controller.vhTypeData[i]["value"].toString()),
+              selected: controller.sfPt.contains(
+                  controller.parkTypeData[i]["parking_type_code"].toString()),
               onSelected: (bool selected) {
                 if (selected) {
-                  controller.sfPt
-                      .add(controller.vhTypeData[i]["value"].toString());
+                  controller.sfPt.add(controller.parkTypeData[i]
+                          ["parking_type_code"]
+                      .toString());
                 } else {
-                  controller.sfPt
-                      .remove(controller.vhTypeData[i]["value"].toString());
+                  controller.sfPt.remove(controller.parkTypeData[i]
+                          ["parking_type_code"]
+                      .toString());
                 }
                 String filterVtype = controller.sfPt.join('|');
                 controller.filterParam.value = controller.filterParam.map((e) {

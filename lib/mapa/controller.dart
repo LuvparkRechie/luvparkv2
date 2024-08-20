@@ -105,6 +105,17 @@ class DashboardMapController extends GetxController
     getUserData(false);
   }
 
+  //get curr location
+  Future<void> getFilterNearest(data) async {
+    ddRadius = data[0]["radius"];
+    pTypeCode = data[0]["park_type"];
+    amenities = data[0]["amen"];
+    vtypeId = data[0]["vh_type"];
+    isAllowOverNight = data[0]["ovp"];
+
+    getUserData(false);
+  }
+
   //toggle
   void toggleSidebar() {
     if (isSidebarVisible.value) {
@@ -183,7 +194,7 @@ class DashboardMapController extends GetxController
           CameraPosition(
               target: LatLng(initialCameraPosition!.target.latitude,
                   initialCameraPosition!.target.longitude),
-              zoom: 14),
+              zoom: 17),
         ),
       );
     }
@@ -235,7 +246,7 @@ class DashboardMapController extends GetxController
 
     String params =
         "${ApiKeys.gApiSubFolderGetNearestSpace}?is_allow_overnight=$isAllowOverNight&parking_type_code=$pTypeCode&latitude=${coordinates.latitude}&longitude=${coordinates.longitude}&radius=$ddRadius&parking_amenity_code=$amenities&vehicle_type_id=$vtypeId";
-
+    print("nearest params $params");
     try {
       var returnData = await HttpRequest(api: params).get();
       if (returnData == "No Internet") {
@@ -395,7 +406,6 @@ class DashboardMapController extends GetxController
   }
 
   //SEARCH PLACE
-
   Future<void> fetchSuggestions() async {
     final url =
         'https://maps.googleapis.com/maps/api/place/autocomplete/json?input=${searchCon.text}&location=${initialCameraPosition!.target.latitude},${initialCameraPosition!.target.longitude}&radius=${double.parse(ddRadius.toString())}&key=${Variables.mapApiKey}';

@@ -469,9 +469,9 @@ class DashboardMapScreen extends GetView<DashboardMapController> {
                       children: [
                         GestureDetector(
                           onTap: () {
-                            Get.toNamed(
-                              Routes.mapFilter,
-                            );
+                            Get.toNamed(Routes.mapFilter, arguments: (data) {
+                              controller.getFilterNearest(data);
+                            });
                           },
                           child: const Align(
                             alignment: Alignment.centerRight,
@@ -526,7 +526,7 @@ class DashboardMapScreen extends GetView<DashboardMapController> {
                 right: 20,
                 child: InkWell(
                   onTap: () {
-                    Get.toNamed(Routes.bookingReceipt);
+                    Get.toNamed(Routes.wallet);
                   },
                   child: Container(
                     width: 178,

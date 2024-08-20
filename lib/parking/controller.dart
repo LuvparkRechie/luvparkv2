@@ -43,6 +43,7 @@ class ParkingController extends GetxController
   void onClose() {
     tabController.dispose();
     pageController.dispose();
+    _dataController.close();
     searchCtrl.dispose();
     _dataSubscription.cancel();
     super.onClose();
