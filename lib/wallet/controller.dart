@@ -18,6 +18,8 @@ class WalletController extends GetxController
   RxList logs = [].obs;
   RxList userData = [].obs;
 
+  get userProfile => null;
+
   @override
   void onInit() {
     // fetchData();
@@ -67,8 +69,9 @@ class WalletController extends GetxController
   Future<void> getLogs() async {
     final item = await Authentication().getUserData();
     String userId = jsonDecode(item!)['user_id'].toString();
-    isLoading.value = true;
-    // print("yawaaa");
+    isLoading.value = true; String? userData = await Authentication().getUserData();
+    
+    // print("yawaaa $item");
 
     String subApi =
         "${ApiKeys.gApiSubFolderGetTransactionLogs}?user_id=$userId&tran_date_from=$fromDate&tran_date_to=$toDate";

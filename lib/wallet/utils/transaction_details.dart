@@ -86,21 +86,26 @@ class TransactionDetails extends StatelessWidget {
                   ),
                   const MySeparator(),
                   Container(
-                    height: 50,
+                    height: 20,
                   ),
-                  Center(
-                    child: CustomTitle(
-                      text: data[index]["ref_no"].toString(),
-                      color: AppColor.primaryColor,
-                    ),
-                  ),
-                  Center(
-                    child: CustomParagraph(
-                      text: "Reference No",
-                    ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Center(
+                        child: CustomParagraph(
+                          text: "Reference No: ",
+                        ),
+                      ),
+                      Center(
+                        child: CustomTitle(
+                          text: data[index]["ref_no"].toString(),
+                          color: AppColor.primaryColor,
+                        ),
+                      ),
+                    ],
                   ),
                   Container(
-                    height: 10,
+                    height: 25,
                   ),
                   CustomButton(
                     text: 'Close',
@@ -108,6 +113,9 @@ class TransactionDetails extends StatelessWidget {
                       Navigator.of(context).pop();
                     },
                     btnHeight: 12,
+                  ),
+                  Container(
+                    height: MediaQuery.of(context).size.height / 20.5,
                   ),
                 ],
               ),
