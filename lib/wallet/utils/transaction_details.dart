@@ -1,6 +1,7 @@
-// ignore_for_file: prefer_const_constructors
+// ignore_for_file: prefer_const_constructors, deprecated_member_use, use_build_context_synchronously
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_multi_formatter/formatters/formatter_utils.dart';
 import 'package:flutter_svg/svg.dart';
 
@@ -24,7 +25,7 @@ class TransactionDetails extends StatelessWidget {
         Column(
           children: [
             SizedBox(
-              height: 35,
+              height: 38,
             ),
             Container(
               padding: EdgeInsets.fromLTRB(
@@ -35,7 +36,7 @@ class TransactionDetails extends StatelessWidget {
               ),
               decoration: BoxDecoration(
                   color: Colors.white,
-                  borderRadius: BorderRadius.vertical(top: Radius.circular(7))),
+                  borderRadius: BorderRadius.vertical(top: Radius.circular(8))),
               child: Wrap(
                 children: [
                   Center(
@@ -96,12 +97,25 @@ class TransactionDetails extends StatelessWidget {
                           text: "Reference No: ",
                         ),
                       ),
-                      Center(
-                        child: CustomTitle(
-                          text: data[index]["ref_no"].toString(),
-                          color: AppColor.primaryColor,
+                      GestureDetector(
+                        onTapDown: (details) async {
+                          await Clipboard.setData(ClipboardData(
+                            text: data[index]["ref_no"].toString(),
+                          ));
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(
+                                content: Text('Text copied to clipboard')),
+                          );
+                        },
+                        child: SelectableText(
+                          toolbarOptions: ToolbarOptions(copy: true),
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            color: AppColor.primaryColor,
+                          ),
+                          data[index]["ref_no"].toString(),
                         ),
-                      ),
+                      )
                     ],
                   ),
                   Container(

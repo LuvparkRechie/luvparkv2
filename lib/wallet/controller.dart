@@ -18,10 +18,10 @@ class WalletController extends GetxController
   RxList logs = [].obs;
   RxList userData = [].obs;
   var userImage;
+  RxString fname = "".obs;
 
   @override
   void onInit() {
-    // fetchData();
     DateTime timeNow = DateTime.now();
     super.onInit();
     toDate.value = timeNow.toString().split(" ")[0];
@@ -30,25 +30,18 @@ class WalletController extends GetxController
     getUserBalance();
   }
 
-  // void fetchData() async {
-  //   // Simulate network call
-  //   isLoading.value = true;
-  //   await Future.delayed(Duration(seconds: 2));
-  //   // Update data
-  //   logs.value =
-  //       await fetchLogs(); // Replace with your actual data fetching method
-  //   userData.value =
-  //       await fetchUserData(); // Replace with your actual data fetching method
-  //   isLoading.value = false;
-  // }
-
   // void refresh() {
   //   fetchData();
   // }
 
   Future<void> getUserBalance() async {
     userImage = await Authentication().getUserProfilePic();
+    var uData = await Authentication().getUserData();
+    var item = jsonDecode(uData!);
+    fname.value =
+        "${item['first_name'].toString()} ${item['last_name'].toString()}";
     Functions.getUserBalance(Get.context!, (dataBalance) async {
+      // print("item $item");
       if (!dataBalance[0]["has_net"]) {
         isLoading.value = false;
         isNetConn.value = false;
@@ -70,9 +63,7 @@ class WalletController extends GetxController
     final item = await Authentication().getUserData();
     String userId = jsonDecode(item!)['user_id'].toString();
     isLoading.value = true;
-    String? userData = await Authentication().getUserData();
-
-    // print("yawaaa $item");
+    // print("yawaaa");
 
     String subApi =
         "${ApiKeys.gApiSubFolderGetTransactionLogs}?user_id=$userId&tran_date_from=$fromDate&tran_date_to=$toDate";
