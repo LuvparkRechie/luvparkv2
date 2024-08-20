@@ -418,6 +418,7 @@ class DashboardMapScreen extends GetView<DashboardMapController> {
                 left: 10,
                 bottom: 25,
                 child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.end,
                   children: [
                     Container(
                       padding: const EdgeInsets.all(10),
@@ -464,41 +465,57 @@ class DashboardMapScreen extends GetView<DashboardMapController> {
                       ),
                     ),
                     Expanded(child: Container()),
-                    GestureDetector(
-                      onTap: () {
-                        Get.toNamed(Routes.parkingAreas,
-                            arguments: controller.dataNearest);
-                      },
-                      child: Align(
-                        alignment: Alignment.centerRight,
-                        child: Container(
-                          width: 48,
-                          height: 48,
-                          padding: const EdgeInsets.all(10),
-                          clipBehavior: Clip.antiAlias,
-                          decoration: ShapeDecoration(
-                            color: Colors.white,
-                            shape: RoundedRectangleBorder(
-                              side: const BorderSide(
-                                  width: 1, color: Color(0xFFDFE7EF)),
-                              borderRadius: BorderRadius.circular(57),
+                    Column(
+                      children: [
+                        GestureDetector(
+                          onTap: () {
+                            Get.toNamed(
+                              Routes.mapFilter,
+                            );
+                          },
+                          child: const Align(
+                            alignment: Alignment.centerRight,
+                            child: Image(
+                              width: 53,
+                              height: 53,
+                              image: AssetImage(
+                                  "assets/dashboard_icon/filter_map.png"),
+                              fit: BoxFit.contain,
                             ),
-                            shadows: const [
-                              BoxShadow(
-                                color: Color(0x0C000000),
-                                blurRadius: 15,
-                                offset: Offset(0, 5),
-                                spreadRadius: 0,
-                              )
-                            ],
-                          ),
-                          child: const Image(
-                            image:
-                                AssetImage("assets/dashboard_icon/vh_list.png"),
-                            fit: BoxFit.cover,
                           ),
                         ),
-                      ),
+                        Container(height: 8),
+                        GestureDetector(
+                          onTap: controller.getCurrentLoc,
+                          child: const Align(
+                            alignment: Alignment.centerRight,
+                            child: Image(
+                              width: 53,
+                              height: 53,
+                              image: AssetImage(
+                                  "assets/dashboard_icon/location.png"),
+                              fit: BoxFit.contain,
+                            ),
+                          ),
+                        ),
+                        Container(height: 8),
+                        GestureDetector(
+                          onTap: () {
+                            Get.toNamed(Routes.parkingAreas,
+                                arguments: controller.dataNearest);
+                          },
+                          child: const Align(
+                            alignment: Alignment.centerRight,
+                            child: Image(
+                              width: 53,
+                              height: 53,
+                              image: AssetImage(
+                                  "assets/dashboard_icon/area_list.png"),
+                              fit: BoxFit.contain,
+                            ),
+                          ),
+                        ),
+                      ],
                     ),
                   ],
                 ),

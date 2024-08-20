@@ -26,4 +26,5 @@ class Routes {
   static const customdrawer = "/customdrawer";
   static const walletrecharge = "/wallet_recharge";
   static const walletrechargeload = "/wallet_recharge_load";
+  static const mapFilter = "/map_filter";
 }

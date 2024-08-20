@@ -894,7 +894,7 @@ class BookingPage extends GetView<BookingController> {
                                                       .parameters["queueChkIn"]
                                                   [0]["is_queue"]
                                               ? "Confirm this Queue"
-                                              : "Confirm this booking",
+                                              : "Book now",
                                           btnColor:
                                               controller.selectedVh.isEmpty
                                                   ? AppColor.primaryColor
@@ -1024,8 +1024,11 @@ class BookingPage extends GetView<BookingController> {
                                       Expanded(
                                         child: CustomButton(
                                             text: "Check In",
-                                            btnColor: AppColor.primaryColor
-                                                .withOpacity(.6),
+                                            btnColor:
+                                                controller.selectedVh.isEmpty
+                                                    ? AppColor.primaryColor
+                                                        .withOpacity(.6)
+                                                    : AppColor.primaryColor,
                                             textColor: Colors.white,
                                             onPressed: () {
                                               var dateIn = DateTime.parse(
@@ -1421,21 +1424,17 @@ class VehicleOption extends GetView<BookingController> {
                                                             'vehicle_plate_no':
                                                                 controller
                                                                     .plateNo
-                                                                    .text
+                                                                    .text,
+                                                            'base_hours': selVh[
+                                                                "base_hours"],
+                                                            'base_rate': selVh[
+                                                                "base_rate"],
+                                                            'succeeding_rate':
+                                                                selVh[
+                                                                    "succeeding_rate"]
                                                           }
                                                         ]);
-                                                        print("callback ${{
-                                                          'vehicle_type_id': ct
-                                                              .dropdownValue!
-                                                              .toString(),
-                                                          'vehicle_brand_id': 0,
-                                                          'vehicle_brand_name':
-                                                              selVh["text"],
-                                                          'vehicle_plate_no':
-                                                              controller
-                                                                  .plateNo.text
-                                                        }}");
-                                                        // Get.back();
+                                                        Get.back();
                                                       }
                                                     },
                                                   ),
@@ -1514,28 +1513,35 @@ class VehicleOption extends GetView<BookingController> {
                                                     controller
                                                         .myVehiclesData[index]
                                                   ];
-                                                  List recData =
+                                                  dynamic recData =
                                                       controller.ddVehiclesData;
 
-                                                  dynamic inatay =
-                                                      recData.where((e) {
-                                                    return e["value"] ==
-                                                        controller.myVehiclesData[
-                                                                index]
-                                                            ["vehicle_type_id"];
-                                                  }).toList()[0];
+                                                  Map<int, Map<String, dynamic>>
+                                                      recDataMap = {
+                                                    for (var item in recData)
+                                                      item['value']: item
+                                                  };
 
-                                                  vhDatas = vhDatas.map((e) {
-                                                    e["base_hours"] =
-                                                        inatay["base_hours"];
-                                                    e["succeeding_rate"] =
-                                                        inatay[
-                                                            "succeeding_rate"];
-                                                    return e;
-                                                  }).toList();
+                                                  // Merge base_hours and succeeding_rate into vhDatas
+                                                  for (var vh in vhDatas) {
+                                                    int typeId =
+                                                        vh['vehicle_type_id'];
+                                                    if (recDataMap
+                                                        .containsKey(typeId)) {
+                                                      var rec =
+                                                          recDataMap[typeId];
+                                                      vh['base_hours'] =
+                                                          rec?['base_hours'];
+                                                      vh['base_rate'] =
+                                                          rec?['base_rate'];
+                                                      vh['succeeding_rate'] =
+                                                          rec?[
+                                                              'succeeding_rate'];
+                                                    }
+                                                  }
 
-                                                  callback(vhDatas);
                                                   Get.back();
+                                                  callback(vhDatas);
                                                 },
                                               );
                                             },

@@ -22,7 +22,7 @@ class CustomScaffold extends StatelessWidget {
       child: Scaffold(
         extendBodyBehindAppBar: true,
         backgroundColor: AppColor.scafColor,
-        appBar: appBar,
+        appBar: appBar ?? appBar,
         body: SafeArea(
           child: Container(
             width: MediaQuery.of(context).size.width,

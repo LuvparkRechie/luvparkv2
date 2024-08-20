@@ -1,6 +1,9 @@
 import 'package:get/get.dart';
+import 'package:luvpark_get/mapa/utils/bindings.dart';
+import 'package:luvpark_get/mapa/utils/view.dart';
 import 'package:luvpark_get/rate_booking/index.dart';
 import 'package:luvpark_get/wallet_recharge/index.dart';
+
 import '../activate_acc/index.dart';
 import '../booking/index.dart';
 import '../booking/utils/booking_receipt/index.dart';
@@ -145,6 +148,11 @@ class AppPages {
       name: Routes.walletrechargeload,
       page: () => const WalletRechargeLoadScreen(),
       binding: WalletRechargeLoadBinding(),
+    ),
+    GetPage(
+      name: Routes.mapFilter,
+      page: () => const FilterMap(),
+      binding: FilterMapBinding(),
     ),
   ];
 }

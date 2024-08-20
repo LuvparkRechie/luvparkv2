@@ -250,12 +250,8 @@ class Variables {
 
     // Parse numeric part to double
     double distanceValue = double.tryParse(numericPart) ?? 0;
-
-    // Check if "km" (kilometers) is present in the string
-    bool isKilometers = distanceString.toLowerCase().contains('km');
-
     // Convert to meters
-    return isKilometers ? distanceValue * 1000 : distanceValue;
+    return distanceValue * 1000;
   }
 
   //COnvert 12 hours format sample:18:00
