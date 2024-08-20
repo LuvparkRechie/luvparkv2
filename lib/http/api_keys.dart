@@ -55,8 +55,11 @@ class ApiKeys {
 //Reservation history
   static const gApiSubFolderGetReservationHistory =
       '/ords/$luvApi/tnx/reslist/';
-//GEt REservation
-  static const gApiSubFolderGetReservations = '/ords/$luvApi/ps/reservations';
+// //GEt REservation
+//   static const gApiSubFolderGetReservations = '/ords/$luvApi/ps/reservations';
+//replaced with
+  static const gApiSubFolderGetReservations =
+      '/ords/$parkSpaceApi/pm/getAdvancedParking';
 
 //Login API
 //Get user data
@@ -96,12 +99,6 @@ class ApiKeys {
   static const gApiSubFolderPutExtendPay = '/ords/$luvApi/ps/payext'; //put
   static const gApiSubFolderPutExtend = '/ords/$parkSpaceApi/park/extend'; //put
 
-//Reserve API with auto extend parameter
-  static const gApiSubFolderPostReserveParking =
-      '/ords/$parkSpaceApi/park/reserve'; //post
-//Reservation pay
-  static const gApiSubFolderPostReservePay = '/ords/$luvApi/ps/payres'; //post
-
 //Get User Info connect with union bank
   static const gApiSubFolderGetUserInfo = '/ords/$luvApi/base/userinfo';
 //UB CONNECT API
@@ -130,9 +127,6 @@ class ApiKeys {
 //$parkSpaceApi API
   static const gApiSubFolderGetRates = '/ords/$parkSpaceApi/park/rates/';
 
-//getComputation
-  static const gApiSubFolderPostReserveCalc =
-      '/ords/$parkSpaceApi/park/calcfee';
 //MPIN
   static const gApiSubFolderGetPutPostMpin = '/ords/$luvApi/auth/mpin';
 //MPIN SWitch button
@@ -159,8 +153,7 @@ class ApiKeys {
 
   //Get Parkspace app notice
   static const gApiLuvParkGetNotice = '/ords/$parkSpaceApi/notify/pbm/';
-  //Reserve payment key
-  static const gApiLuvParkGetResPayKey = '/ords/$luvApi/base/paymentkey';
+
   //Rating Question
   static const gApiLuvParkGetRatingQuestions =
       '/ords/$parkSpaceApi/rating/questions/';
@@ -234,4 +227,23 @@ class ApiKeys {
       '/ords/$parkSpaceApi/rf/amenities';
   static const gApiSubFolderGetAverage =
       '/ords/$luvApi/feedback/getAverageRatingOnBooking';
+
+  //NEW BOOKING API added august 19
+  static const gApiBooking = '/ords/$luvApi/token/luvpark/booking';
+  //https://gce81b2a8b40195-gccdb.adb.ap-singapore-1.oraclecloudapps.com/ords/luv/token/luvpark/booking
+
+  //REMOVED API
+  //Reserve payment key
+  static const gApiLuvParkGetResPayKey =
+      '/ords/$luvApi/base/paymentkey'; ////  removed
+
+//Reserve API with auto extend parameter
+  static const gApiSubFolderPostReserveParking =
+      '/ords/$parkSpaceApi/park/reserve'; //removed
+//Reservation pay
+  static const gApiSubFolderPostReservePay =
+      '/ords/$luvApi/ps/payres'; //removed
+  //getComputation
+  static const gApiSubFolderPostReserveCalc =
+      '/ords/$parkSpaceApi/park/calcfee'; //removed
 }

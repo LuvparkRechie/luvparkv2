@@ -264,6 +264,7 @@ class BookingController extends GetxController
       isNetConnVehicles.value = true;
       isLoadingVehicles.value = false;
       ddVehiclesData.value = [];
+
       if (returnData["items"].length > 0) {
         dynamic items = returnData["items"];
         ddVehiclesData.value = items.map((item) {
@@ -271,6 +272,7 @@ class BookingController extends GetxController
             "text": item["vehicle_type_desc"],
             "value": item["vehicle_type_id"],
             "base_hours": item["base_hours"],
+            "base_rate": item["base_rate"],
             "succeeding_rate": item["succeeding_rate"],
           };
         }).toList();
@@ -280,84 +282,27 @@ class BookingController extends GetxController
 
   //Compute booking payment
   Future<void> routeToComputation() async {
-    // int numHourss = inputTimeLabel.value.isEmpty
-    //     ? 0
-    //     : int.parse(inputTimeLabel.value.toString().split(" ")[0]);
-
-    // //  no_hours > base_hours THEN
-    // //      amount = amount + ((no_hours - base_hours) * succeeding_rate
-    // print("totalAmount.value ${totalAmount.value}");
-    // if (numHourss > int.parse(selectedVh[0]["base_hours"].toString())) {
-    //   print("ifff");
-    //   num inatayaUyy;
-    //     inatayaUyy = inatayaUyy +
-    //       ((numHourss - selectedVh[0]["base_hours"]) *
-    //           selectedVh[0]["succeeding_rate"]);
-    // }
-    // return;
-    if (selectedVh.isEmpty) {
-      CustomDialog().errorDialog(Get.context!, "luvpark", "Vehicle is required",
-          () {
-        Get.back();
-      });
-      return;
-    }
     isBtnLoading.value = true;
-    var dateIn = DateTime.parse("${startDate.text} ${timeInParam.text}");
 
-    var dateOut = dateIn.add(Duration(hours: numberOfhours));
+    int selNoHours = int.parse(selectedNumber.value.toString());
+    int selBaseHours = int.parse(selectedVh[0]["base_hours"].toString());
+    int selSucceedRate = int.parse(selectedVh[0]["succeeding_rate"].toString());
+    int amount = int.parse(selectedVh[0]["base_rate"].toString());
 
-    FocusManager.instance.primaryFocus!.unfocus();
+    int finalData = 0;
 
-    Map<String, dynamic> submitParam = {
-      "client_id": parameters["areaData"]["client_id"],
-      "park_area_id": parameters["areaData"]["park_area_id"],
-      "vehicle_plate_no": selectedVh[0]["vehicle_plate_no"],
-      "vehicle_type_id": selectedVh[0]["vehicle_type_id"].toString(),
-      "dt_in": dateIn.toString().toString().split(".")[0],
-      "dt_out": dateOut.toString().split(".")[0],
-      "no_hours": numberOfhours,
-      "tran_type": "R",
-    };
-
-    HttpRequest(
-            api: ApiKeys.gApiSubFolderPostReserveCalc, parameters: submitParam)
-        .post()
-        .then((returnPost) async {
-      if (returnPost == "No Internet") {
-        isBtnLoading.value = true;
-        totalAmount.value = "";
-        CustomDialog().internetErrorDialog(Get.context!, () {
-          Get.back();
-        });
-        return;
-      }
-      if (returnPost == null) {
-        isBtnLoading.value = true;
-        totalAmount.value = "";
-        CustomDialog().serverErrorDialog(Get.context!, () {
-          Get.back();
-        });
-      } else {
-        if (returnPost["success"] == 'Y') {
-          isBtnLoading.value = false;
-          totalAmount.value = returnPost["amount"].toString();
-        } else {
-          totalAmount.value = "";
-          isBtnLoading.value = true;
-          CustomDialog().errorDialog(Get.context!, "Error", returnPost['msg'],
-              () {
-            Get.back();
-          });
-        }
-      }
-    });
+    if (selNoHours > selBaseHours) {
+      finalData = amount + ((selNoHours - selBaseHours)) * selSucceedRate;
+    } else {
+      finalData = amount;
+    }
+    isBtnLoading.value = false;
+    totalAmount.value = "$finalData";
   }
 
   //Reservation Submit
   void submitReservation(params, context, isCheckIn) async {
     List bookingParams = [params];
-
     int userId = await Authentication().getUserId();
     isSubmitBooking.value = true;
 
@@ -366,6 +311,7 @@ class BookingController extends GetxController
     LatLng destinaion = LatLng(parameters["areaData"]["pa_latitude"],
         parameters["areaData"]["pa_longitude"]);
     final etaData = await Functions.fetchETA(current, destinaion);
+
     if (etaData.isEmpty) {
       isSubmitBooking.value = false;
       CustomDialog().errorDialog(context, "Error",
@@ -385,217 +331,139 @@ class BookingController extends GetxController
 
     int etaTime =
         int.parse(etaData[0]["time"].toString().split(" ")[0].toString());
-    int areaEtaTime =
-        int.parse(parameters["areaData"]["book_start_minutes"].toString());
-    DateTime dateIn = DateTime.parse(params["dt_in"].toString());
+    int areaEtaTime = etaTime +
+        int.parse(
+            parameters["areaData"]["book_grace_period_in_mins"].toString());
 
-    if (etaTime > areaEtaTime) {
-      bookingParams = bookingParams.map((e) {
-        e["dt_in"] =
-            dateIn.add(Duration(minutes: areaEtaTime)).toString().split(".")[0];
-        return e;
-      }).toList();
-    }
+    Map<String, dynamic> dynamicBookParam = {
+      "user_id": userId,
+      "amount": totalAmount.value,
+      "no_hours": selectedNumber.value.toString(),
+      "dt_in": params["dt_in"].toString(),
+      "dt_out": params["dt_out"].toString(),
+      "eta_in_mins": areaEtaTime,
+      "vehicle_type_id": params["vehicle_type_id"].toString(),
+      "vehicle_plate_no": params["vehicle_plate_no"],
+      "park_area_id": params["park_area_id"].toString(),
+    };
 
-    HttpRequest(
-        api: ApiKeys.gApiLuvParkGetResPayKey,
-        parameters: {"user_id": userId}).post().then((dataRefNo) async {
-      if (dataRefNo == "No Internet") {
-        isSubmitBooking.value = false;
-        CustomDialog().internetErrorDialog(context, () {
-          Get.back();
-        });
-        return;
-      }
-      if (dataRefNo == null) {
-        isSubmitBooking.value = false;
-        CustomDialog().serverErrorDialog(context, () {
-          Get.back();
-        });
-      }
-      if (dataRefNo["success"] == "Y") {
-        Map<String, dynamic> postParameters = {
-          "client_id": bookingParams[0]["client_id"].toString(),
-          "park_area_id": bookingParams[0]["park_area_id"].toString(),
-          "vehicle_plate_no": bookingParams[0]["vehicle_plate_no"]
-              .toString()
-              .replaceAll(" ", "")
-              .trim(),
-          "vehicle_type_id": bookingParams[0]["vehicle_type_id"].toString(),
-          "dt_in": bookingParams[0]["dt_in"].toString(),
-          "dt_out": bookingParams[0]["dt_out"].toString(),
-          "no_hours": bookingParams[0]["no_hours"].toString(),
-          "luvpay_id": userId.toString(),
-          "luvpark_balance": parameters["userData"][0]["amount_bal"].toString(),
-          "lp_ref_no": dataRefNo["ref_no"],
-          "payment_hk": dataRefNo["payment_hk"],
-          "auto_extend": isExtendchecked.value ? "Y" : "N"
-        };
+    CustomDialog().confirmationDialog(
+        context,
+        "Confirm Booking",
+        "Please ensure that you arrive at the destination by $areaEtaTime mins, or your advance booking will be forfeited.",
+        "Cancel",
+        "Proceed", () {
+      Get.back();
+    }, () {
+      Get.back();
 
-        HttpRequest(
-                api: ApiKeys.gApiSubFolderPostReserveParking,
-                parameters: postParameters)
-            .post()
-            .then((returnPost) async {
-          if (returnPost == "No Internet") {
-            isSubmitBooking.value = false;
-            CustomDialog().internetErrorDialog(context, () {
-              Get.back();
-            });
-            return;
-          }
-          if (returnPost == null) {
-            isSubmitBooking.value = false;
-            CustomDialog().serverErrorDialog(context, () {
-              Get.back();
-            });
-          }
-          if (returnPost["success"] == 'Y') {
-            Map<String, dynamic> payParameters = {
-              "luvpay_id": userId.toString(),
-              "lp_ref_no": dataRefNo["ref_no"].toString(),
-              "no_hours": bookingParams[0]["no_hours"].toString(),
-              "ps_ref_no": returnPost["ps_ref_no"].toString(),
-              "payment_hk": dataRefNo["payment_hk".toString()],
-              "ticket_amount": returnPost["ticket_amount"].toString(),
-              "dt_in": bookingParams[0]["dt_in"].toString(),
-              "dt_out": bookingParams[0]["dt_out"].toString(),
-              "park_area_name": returnPost["park_area_name"].toString(),
-              "pa_longitude": returnPost["pa_longitude"].toString(),
-              "pa_latitude": returnPost["pa_latitude"].toString(),
-              "auto_extend": isExtendchecked.value ? "Y" : "N"
+      HttpRequest(api: ApiKeys.gApiBooking, parameters: dynamicBookParam)
+          .postBody()
+          .then((objData) async {
+        if (objData == "No Internet") {
+          isSubmitBooking.value = false;
+          CustomDialog().internetErrorDialog(context, () {
+            Get.back();
+          });
+          return;
+        }
+        if (objData == null) {
+          isSubmitBooking.value = false;
+          CustomDialog().serverErrorDialog(context, () {
+            Get.back();
+          });
+        }
+        if (objData["success"] == "Y") {
+          dynamic args = {
+            'parkArea': parameters["areaData"]["park_area_name"],
+            'startDate': Variables.formatDate(
+                bookingParams[0]["dt_in"].toString().split(" ")[0]),
+            'endDate': Variables.formatDate(
+                bookingParams[0]["dt_out"].toString().split(" ")[0]),
+            'startTime':
+                bookingParams[0]["dt_in"].toString().split(" ")[1].toString(),
+            'endTime':
+                bookingParams[0]["dt_out"].toString().split(" ")[1].toString(),
+            'plateNo': bookingParams[0]["vehicle_plate_no"].toString(),
+            'hours': bookingParams[0]["no_hours"].toString(),
+            'amount': totalAmount.value.toString(),
+            'refno': objData["lp_ref_no"].toString(),
+            'lat':
+                double.parse(parameters["areaData"]['ps_latitude'].toString()),
+            'long':
+                double.parse(parameters["areaData"]['ps_longitude'].toString()),
+            'canReserved': false,
+            'isReserved': false,
+            'isShowRate': true,
+            'reservationId':
+                int.parse(parameters["areaData"]["reservation_id"]),
+            'address': parameters["areaData"]["address"],
+            'area_data': parameters["areaData"],
+            'isAutoExtend': false,
+            'isBooking': true,
+            'status': "B",
+            'paramsCalc': bookingParams[0]
+          };
+          isSubmitBooking.value = false;
+          Get.offNamed(Routes.bookingReceipt, arguments: args);
+          return;
+        }
+        if (objData["success"] == "Q") {
+          CustomDialog().confirmationDialog(
+              context, "Queue Booking", objData["msg"], "No", "Yes", () {
+            Get.back();
+          }, () {
+            Map<String, dynamic> queueParam = {
+              'luvpay_id': userId,
+              'park_area_id': params["park_area_id"],
+              'vehicle_type_id': params["vehicle_type_id"].toString(),
+              'vehicle_plate_no': params["vehicle_plate_no"]
             };
 
             HttpRequest(
-                    api: ApiKeys.gApiSubFolderPostReservePay,
-                    parameters: payParameters)
+                    api: ApiKeys.gApiLuvParkResQueue, parameters: queueParam)
                 .post()
-                .then((returnPay) async {
-              if (returnPay == "No Internet") {
+                .then((queParamData) {
+              if (queParamData == "No Internet") {
                 isSubmitBooking.value = false;
                 CustomDialog().internetErrorDialog(context, () {
                   Get.back();
                 });
-
                 return;
               }
-              if (returnPay == null) {
+              if (queParamData == null) {
                 isSubmitBooking.value = false;
                 CustomDialog().serverErrorDialog(context, () {
                   Get.back();
                 });
+                return;
               } else {
-                if (returnPay["success"] == 'Y') {
-                  dynamic args = {
-                    'spaceName': returnPost['park_space_name'],
-                    'parkArea': returnPost["park_area_name"],
-                    'startDate': Variables.formatDate(
-                        bookingParams[0]["dt_in"].toString().split(" ")[0]),
-                    'endDate': Variables.formatDate(
-                        bookingParams[0]["dt_out"].toString().split(" ")[0]),
-                    'startTime': bookingParams[0]["dt_in"]
-                        .toString()
-                        .split(" ")[1]
-                        .toString(),
-                    'endTime': bookingParams[0]["dt_out"]
-                        .toString()
-                        .split(" ")[1]
-                        .toString(),
-                    'plateNo': bookingParams[0]["vehicle_plate_no"].toString(),
-                    'hours': bookingParams[0]["no_hours"].toString(),
-                    'amount': returnPay['applied_amt'].toString(),
-                    'refno': returnPost["ps_ref_no"].toString(),
-                    'lat': double.parse(returnPost['ps_latitude'].toString()),
-                    'long': double.parse(returnPost['ps_longitude'].toString()),
-                    'canReserved': false,
-                    'isReserved': false,
-                    'isShowRate': true,
-                    'reservationId': int.parse(returnPay["reservation_id"]),
-                    'address': parameters["areaData"]["address"],
-                    'area_data': parameters["areaData"],
-                    'isAutoExtend': false,
-                    'isBooking': true,
-                    'status': "B",
-                    'paramsCalc': bookingParams[0]
-                  };
-                  isSubmitBooking.value = false;
-                  Get.offNamed(Routes.bookingReceipt, arguments: args);
-                  return;
+                isSubmitBooking.value = false;
+                if (queParamData["success"] == 'Y') {
+                  CustomDialog().successDialog(
+                      context, "Success", queParamData["msg"], "Go to dashboad",
+                      () {
+                    Get.offAllNamed(Routes.map);
+                  });
                 } else {
-                  isSubmitBooking.value = false;
                   CustomDialog()
-                      .errorDialog(context, "luvpark", returnPay['msg'], () {
+                      .errorDialog(context, 'luvpark', queParamData["msg"], () {
                     Get.back();
                   });
                 }
               }
             });
-          }
-          if (returnPost["success"] == "Q") {
-            CustomDialog().confirmationDialog(
-                context, "Queue Booking", returnPost["msg"], "No", "Yes", () {
-              Get.back();
-            }, () {
-              Map<String, dynamic> queueParam = {
-                'luvpay_id': userId,
-                'park_area_id': params["park_area_id"],
-                'vehicle_type_id': params["vehicle_type_id"].toString(),
-                'vehicle_plate_no': params["vehicle_plate_no"]
-              };
-
-              HttpRequest(
-                      api: ApiKeys.gApiLuvParkResQueue, parameters: queueParam)
-                  .post()
-                  .then((queParamData) {
-                if (queParamData == "No Internet") {
-                  isSubmitBooking.value = false;
-                  CustomDialog().internetErrorDialog(context, () {
-                    Get.back();
-                  });
-                  return;
-                }
-                if (queParamData == null) {
-                  isSubmitBooking.value = false;
-                  CustomDialog().serverErrorDialog(context, () {
-                    Get.back();
-                  });
-                  return;
-                } else {
-                  isSubmitBooking.value = false;
-                  if (queParamData["success"] == 'Y') {
-                    CustomDialog().successDialog(context, "Success",
-                        queParamData["msg"], "Go to dashboad", () {
-                      Get.offAllNamed(Routes.map);
-                    });
-                  } else {
-                    CustomDialog().errorDialog(
-                        context, 'luvpark', queParamData["msg"], () {
-                      Get.back();
-                    });
-                  }
-                }
-              });
-            });
-          }
-          //error
-          if (returnPost["success"] == 'N') {
-            isSubmitBooking.value = false;
-            CustomDialog().errorDialog(context, "luvpark", returnPost["msg"],
-                () {
-              Get.back();
-            });
-          }
-        });
-      } else {
-        isSubmitBooking.value = false;
-        CustomDialog().errorDialog(context, "luvpark", "No data found", () {
-          Get.back();
-        });
-        return;
-      }
+          });
+          return;
+        } else {
+          isSubmitBooking.value = false;
+          CustomDialog().errorDialog(context, "luvpark", "No data found", () {
+            Get.back();
+          });
+          return;
+        }
+      });
     });
-
-    // //end
   }
 
   void showRewardDialog() {

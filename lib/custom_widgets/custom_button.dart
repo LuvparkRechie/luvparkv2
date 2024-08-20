@@ -1,3 +1,4 @@
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:luvpark_get/custom_widgets/app_color.dart';
@@ -41,6 +42,7 @@ class CustomButton extends StatelessWidget {
                     text: text,
                     textAlign: TextAlign.center,
                     color: textColor ?? Colors.white,
+                    maxlines: 1,
                   )
                 : loading!
                     ? const SizedBox(
@@ -53,6 +55,7 @@ class CustomButton extends StatelessWidget {
                       )
                     : CustomLinkLabel(
                         text: text,
+                        maxlines: 1,
                         textAlign: TextAlign.center,
                         color: textColor ?? Colors.white,
                       ),
@@ -99,13 +102,14 @@ class _CustomButtonCancelState extends State<CustomButtonCancel> {
         child: Center(
           child: Padding(
             padding: const EdgeInsets.all(15.0),
-            child: Text(
+            child: AutoSizeText(
               widget.text,
               style: GoogleFonts.lato(
                 color: widget.textColor!,
                 fontSize: 14,
                 fontWeight: FontWeight.bold,
               ),
+              maxLines: 1,
             ),
           ),
         ),

@@ -93,6 +93,18 @@ class DashboardMapController extends GetxController
     gMapController!.dispose();
   }
 
+  //get curr location
+  Future<void> getCurrentLoc() async {
+    ddRadius = "10";
+    pTypeCode = "";
+    amenities = "";
+    vtypeId = "";
+    addressText = "".obs;
+    isAllowOverNight = "";
+
+    getUserData(false);
+  }
+
   //toggle
   void toggleSidebar() {
     if (isSidebarVisible.value) {
@@ -206,6 +218,7 @@ class DashboardMapController extends GetxController
             } else {
               List ltlng = await Functions.getCurrentPosition();
               LatLng coordinates = LatLng(ltlng[0]["lat"], ltlng[0]["long"]);
+              searchCoordinates = coordinates;
               getNearest(dataBalance[0]["items"], coordinates);
             }
           }
@@ -322,7 +335,7 @@ class DashboardMapController extends GetxController
   void handleNoParkingFound() {
     netConnected.value = true;
     isLoadingMap.value = false;
-    initialCameraPosition = initialCameraPosition = CameraPosition(
+    initialCameraPosition = CameraPosition(
       target: searchCoordinates,
       zoom: 14,
       tilt: 0,

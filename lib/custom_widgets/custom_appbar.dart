@@ -8,6 +8,7 @@ class CustomAppbar extends StatelessWidget implements PreferredSizeWidget {
   final Size preferredSize;
   final Function? onTap;
   final String? title;
+  final double? titleSize;
   final List<Widget>? action;
   final Color? bgColor;
   const CustomAppbar(
@@ -16,6 +17,7 @@ class CustomAppbar extends StatelessWidget implements PreferredSizeWidget {
       this.title,
       this.action,
       this.bgColor,
+      this.titleSize,
       this.preferredSize = const Size.fromHeight(kToolbarHeight)});
 
   @override
@@ -47,8 +49,8 @@ class CustomAppbar extends StatelessWidget implements PreferredSizeWidget {
             ),
             CustomParagraph(
               text: "Back",
-              fontSize: 16,
-              fontWeight: FontWeight.w600,
+              fontSize: 14,
+              fontWeight: FontWeight.w700,
             ),
           ],
         ),
@@ -58,7 +60,7 @@ class CustomAppbar extends StatelessWidget implements PreferredSizeWidget {
           ? null
           : CustomTitle(
               text: title!,
-              fontSize: 20,
+              fontSize: titleSize ?? 16,
               fontWeight: FontWeight.w900,
               color: Colors.black,
             ),

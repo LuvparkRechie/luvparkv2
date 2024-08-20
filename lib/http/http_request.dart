@@ -55,6 +55,24 @@ class HttpRequest {
     }
   }
 
+  Future<dynamic> postBody() async {
+    var links = http.post(
+        Uri.parse(Uri.decodeFull(Uri.https(ApiKeys.gApiURL, api).toString())),
+        headers: {"Content-Type": 'application/json; charset=utf-8'},
+        body: json.encode(parameters));
+
+    try {
+      final response = await fetchDataWithTimeout(links);
+      if (response.statusCode == 200) {
+        return json.decode(response.body);
+      } else {
+        return null;
+      }
+    } catch (e) {
+      return "No Internet";
+    }
+  }
+
   //response json
   Future<dynamic> post2() async {
     var links = http.post(
