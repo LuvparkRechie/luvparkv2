@@ -57,7 +57,7 @@ class CustomDrawer extends GetView<DashboardMapController> {
                                 CustomTitle(
                                   text: controller.userProfile != null
                                       ? '${controller.userProfile['first_name']} ${controller.userProfile['last_name']}'
-                                      : "Full Name",
+                                      : "Not Specified",
                                   color: Colors.white,
                                   fontSize: 18,
                                 ),
@@ -116,10 +116,9 @@ class CustomDrawer extends GetView<DashboardMapController> {
                 ),
                 ListTile(
                   leading: const Icon(Icons.person, color: Colors.blueAccent),
-                  title:
-                      const CustomParagraph(text: "Frequently Asked Questions"),
+                  title: const CustomParagraph(text: "FAQs"),
                   onTap: () {
-                    Get.offAndToNamed(Routes.parking);
+                    Get.offAndToNamed(Routes.faqpage);
                   },
                 ),
                 ListTile(
