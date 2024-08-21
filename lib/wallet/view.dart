@@ -102,7 +102,7 @@ class WalletScreen extends GetView<WalletController> {
                                             const EdgeInsets.only(left: 15),
                                         child: CustomParagraph(
                                           text: toCurrencyString(controller
-                                              .userData[0]["points_bal"]),
+                                              .userData[0]["amount_bal"]),
                                           color: Color(0xFFF8F8F8),
                                           fontSize: 30,
                                           fontWeight: FontWeight.w700,
@@ -131,17 +131,6 @@ class WalletScreen extends GetView<WalletController> {
                                             SizedBox(
                                               width: 10,
                                             ),
-                                            // CustomParagraph(
-                                            //   text: "Reward Points: ",
-                                            //   color: Colors.white,
-                                            //   fontWeight: FontWeight.w500,
-                                            // ),
-                                            // CustomTitle(
-                                            //   text:
-                                            //       " ${controller.userData[0]["points_bal"]} ",
-                                            //   color: Colors.white,
-                                            //   fontWeight: FontWeight.w600,
-                                            // ),
                                             Text.rich(
                                               TextSpan(
                                                 children: [
@@ -152,7 +141,10 @@ class WalletScreen extends GetView<WalletController> {
                                                     ),
                                                   ),
                                                   TextSpan(
-                                                    text: '54.00',
+                                                    text: toCurrencyString(
+                                                        controller.userData[0]
+                                                                ["points_bal"]
+                                                            .toString()),
                                                     style: paragraphStyle(
                                                       color: Color(0xFFF4FAFF),
                                                       fontSize: 16,
