@@ -1,14 +1,13 @@
 // ignore_for_file: prefer_const_constructors, unrelated_type_equality_checks
 
-import 'dart:io';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_multi_formatter/formatters/formatter_utils.dart';
 import 'package:get/get.dart';
 import 'package:luvpark_get/auth/authentication.dart';
 import 'package:luvpark_get/custom_widgets/alert_dialog.dart';
 import 'package:luvpark_get/custom_widgets/custom_appbar.dart';
-import 'package:luvpark_get/custom_widgets/custom_body.dart';
 import 'package:luvpark_get/custom_widgets/custom_button.dart';
 import 'package:luvpark_get/custom_widgets/custom_text.dart';
 import 'package:luvpark_get/custom_widgets/custom_textfield.dart';
@@ -44,7 +43,7 @@ class WalletSend extends GetView<WalletSendController> {
             Form(
               key: controller.formKeySend,
               child: Padding(
-                  padding: const EdgeInsets.fromLTRB(15, 10, 15, 0),
+                  padding: const EdgeInsets.fromLTRB(15, 15, 15, 0),
                   child: Obx(
                     () => Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -76,7 +75,7 @@ class WalletSend extends GetView<WalletSendController> {
                                 Container(
                                   width: 10,
                                 ),
-                                const CustomTitle(
+                                const CustomParagraph(
                                   text: "Available Balance",
                                   fontWeight: FontWeight.bold,
                                   color: Colors.white70,
@@ -84,12 +83,12 @@ class WalletSend extends GetView<WalletSendController> {
                                   textAlign: TextAlign.center,
                                 ),
                                 Expanded(
-                                  child: CustomTitle(
+                                  child: CustomParagraph(
                                     text: controller.userData.isEmpty
                                         ? ""
-                                        : controller.userData[0]["amount_bal"],
+                                        : toCurrencyString(controller
+                                            .userData[0]["amount_bal"]),
                                     color: Colors.white,
-                                    fontSize: 14,
                                     fontWeight: FontWeight.w700,
                                     textAlign: TextAlign.right,
                                   ),

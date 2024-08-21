@@ -1,7 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
 
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:luvpark_get/auth/authentication.dart';
@@ -13,8 +12,11 @@ import 'package:luvpark_get/http/http_request.dart';
 class WalletController extends GetxController
     with GetSingleTickerProviderStateMixin {
   WalletController();
+  late StreamController<void> _dataController;
+  late StreamSubscription<void> dataSubscription;
   RxBool isLoading = true.obs;
   RxBool isNetConn = true.obs;
+  bool isAllowToSync = true;
 
   RxList logs = [].obs;
   RxList userData = [].obs;
@@ -34,7 +36,29 @@ class WalletController extends GetxController
     toDate.text = timeNow.toString().split(" ")[0];
     fromDate.text =
         timeNow.subtract(const Duration(days: 29)).toString().split(" ")[0];
-    getUserBalance();
+    _dataController = StreamController<void>();
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      getUserBalance();
+    });
+    streamData();
+  }
+
+  void streamData() {
+    dataSubscription = _dataController.stream.listen((data) {});
+    fetchDataPeriodically();
+  }
+
+  void fetchDataPeriodically() async {
+    dataSubscription = Stream.periodic(const Duration(seconds: 20), (count) {
+      fetchData();
+    }).listen((event) {});
+  }
+
+  Future<void> fetchData() async {
+    await Future.delayed(const Duration(seconds: 5));
+    if (isAllowToSync) {
+      getUserBalance();
+    }
   }
 
   Future<void> getUserBalance() async {
@@ -45,6 +69,7 @@ class WalletController extends GetxController
         "${item['first_name'].toString()} ${item['last_name'].toString()}";
     Functions.getUserBalance(Get.context!, (dataBalance) async {
       // print("item $item");
+
       if (!dataBalance[0]["has_net"]) {
         isLoading.value = false;
         isNetConn.value = false;
@@ -58,7 +83,6 @@ class WalletController extends GetxController
 
   Future<void> onRefresh() async {
     isLoading.value = true;
-    getLogs();
     getUserBalance();
   }
 
@@ -117,6 +141,7 @@ class WalletController extends GetxController
         "${ApiKeys.gApiSubFolderGetTransactionLogs}?user_id=$userId&tran_date_from=${fromDate.text}&tran_date_to=${toDate.text}";
 
     HttpRequest(api: subApi).get().then((response) {
+      isAllowToSync = true;
       // print(" ${subApi}");
       if (response == "No Internet") {
         isLoading.value = false;
@@ -153,5 +178,12 @@ class WalletController extends GetxController
         );
       }
     });
+  }
+
+  @override
+  void onClose() {
+    _dataController.close();
+    dataSubscription.cancel();
+    super.onClose();
   }
 }
