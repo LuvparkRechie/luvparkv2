@@ -573,6 +573,8 @@ class Functions {
             if (hasInternet) {
               final estimatedData = await Functions.fetchETA(
                   LatLng(ll.latitude, ll.longitude), dest);
+
+              print("estimatedDatasss $estimatedData");
               if (estimatedData[0]["error"] == "No Internet") {
                 cb({"success": false});
 
@@ -590,6 +592,7 @@ class Functions {
                 const HttpRequest(api: ApiKeys.gApiLuvParkGetComputeDistance)
                     .get()
                     .then((returnData) async {
+                  print("gApiLuvParkGetComputeDistance $returnData");
                   if (returnData == "No Internet") {
                     cb({"success": false});
                     CustomDialog().internetErrorDialog(context, () {
@@ -605,13 +608,18 @@ class Functions {
 
                     return;
                   } else {
+                    bool canCheckIn = Variables.convertToMeters2(
+                                estimatedData[0]["distance"]) >
+                            5
+                        ? false
+                        : true;
                     //COMPUTE DISTANCE BY TIME IF AVAILABLE FOR RESERVATION`
                     if (returnData["items"][0]["user_chk_in_um"] == "TM") {
                       int estimatedMinute = int.parse(
                           estimatedData[0]["time"].toString().split(" ")[0]);
-                      double distanceCanChkIn = Variables.convertToMeters(
-                          returnData["items"][0]["user_chk_in_within"]
-                              .toString());
+                      // double distanceCanChkIn = Variables.convertToMeters(
+                      //     returnData["items"][0]["user_chk_in_within"]
+                      //         .toString());
                       //COMPUTE DISTANCE BY TIME IF ABLE TO RESERVE BY 20000 METERS AWAY`
                       if (estimatedMinute >=
                               int.parse(returnData["items"][0]["min_psr_from"]
@@ -621,7 +629,8 @@ class Functions {
                                   .toString())) {
                         cb({
                           "success": true,
-                          "can_checkIn": estimatedMinute <= distanceCanChkIn,
+                          // "can_checkIn": estimatedMinute <= distanceCanChkIn,
+                          "can_checkIn": canCheckIn,
                           "location": ll,
                           "message":
                               "Early check-in is not allowed if you are more than ${returnData["items"][0]["user_chk_in_within"].toString()} minutes away from the selected parking area.",
@@ -641,21 +650,22 @@ class Functions {
                           estimatedData[0]["distance"].toString());
                       double minDistance = Variables.convertToMeters(
                           returnData["items"][0]["min_psr_from"].toString());
-                      double maxDistance = Variables.convertToMeters(
-                          returnData["items"][0]["max_psr_from"].toString());
+                      // double maxDistance = double.parse(
+                      //     returnData["items"][0]["max_psr_from"].toString());
                       double distanceCanChkIn = Variables.convertToMeters(
                           returnData["items"][0]["user_chk_in_within"]
                               .toString());
+
                       if (estimatedDistance.toDouble() >=
                               minDistance.toDouble() &&
                           estimatedDistance.toDouble() <=
-                              maxDistance.toDouble()) {
+                              distanceCanChkIn.toDouble()) {
                         cb({
                           "success": true,
-                          "can_checkIn": estimatedDistance <= distanceCanChkIn,
+                          // "can_checkIn": estimatedDistance <= distanceCanChkIn,
+                          "can_checkIn": canCheckIn,
                           "location": ll,
-                          "message":
-                              "Early check-in is not allowed if you are more than ${returnData["items"][0]["user_chk_in_within"].toString()} meters away from the selected parking area.",
+                          "message": "",
                         });
                       } else {
                         cb({"success": false});
