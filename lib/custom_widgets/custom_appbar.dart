@@ -51,6 +51,7 @@ class CustomAppbar extends StatelessWidget implements PreferredSizeWidget {
             CustomParagraph(
               text: "Back",
               fontSize: 14,
+              color: Colors.black87,
               fontWeight: FontWeight.w700,
             ),
           ],
