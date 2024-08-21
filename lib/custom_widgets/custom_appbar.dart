@@ -10,6 +10,7 @@ class CustomAppbar extends StatelessWidget implements PreferredSizeWidget {
   final String? title;
   final double? titleSize;
   final List<Widget>? action;
+  final Color? titleColor;
   final PreferredSizeWidget? bottom;
 
   final Color? bgColor;
@@ -21,6 +22,7 @@ class CustomAppbar extends StatelessWidget implements PreferredSizeWidget {
       this.bgColor,
       this.titleSize,
       this.bottom,
+      this.titleColor,
       this.preferredSize = const Size.fromHeight(kToolbarHeight)});
 
   @override
@@ -29,10 +31,11 @@ class CustomAppbar extends StatelessWidget implements PreferredSizeWidget {
       elevation: 0.3,
       centerTitle: true,
       backgroundColor: bgColor ?? Colors.white,
-      systemOverlayStyle: const SystemUiOverlayStyle(
-        statusBarColor: Colors.white,
+      systemOverlayStyle: SystemUiOverlayStyle(
+        statusBarColor: bgColor ?? Colors.white,
         statusBarBrightness: Brightness.light,
-        statusBarIconBrightness: Brightness.dark,
+        statusBarIconBrightness:
+            bgColor != null ? Brightness.light : Brightness.dark,
       ),
       leading: Padding(
         padding: const EdgeInsets.only(left: 5),
@@ -45,17 +48,17 @@ class CustomAppbar extends StatelessWidget implements PreferredSizeWidget {
             }
             onTap!();
           },
-          child: const Row(
+          child: Row(
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
               Icon(
                 Icons.chevron_left,
-                color: Colors.black,
+                color: titleColor ?? Colors.black,
               ),
               CustomParagraph(
                 text: "Back",
                 fontSize: 14,
-                color: Colors.black87,
+                color: titleColor ?? Colors.black87,
                 fontWeight: FontWeight.w700,
               ),
             ],
@@ -69,7 +72,7 @@ class CustomAppbar extends StatelessWidget implements PreferredSizeWidget {
               text: title!,
               fontSize: titleSize ?? 16,
               fontWeight: FontWeight.w900,
-              color: Colors.black,
+              color: titleColor ?? Colors.black,
             ),
       actions: action,
       bottom: bottom ?? bottom,

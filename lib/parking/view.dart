@@ -80,7 +80,7 @@ class ParkingScreen extends GetView<ParkingController> {
                             child: CustomTitle(
                               text: "My Parking",
                               color: Colors.white,
-                              fontSize: 20,
+                              fontSize: 16,
                               fontWeight: FontWeight.w900,
                             ),
                           ),
@@ -169,39 +169,6 @@ class ParkingScreen extends GetView<ParkingController> {
                               ),
                             ),
                           ),
-                          // Expanded(
-                          //   child: GestureDetector(
-                          //     onTap: () {
-                          //       if (controller.isLoading.value) {
-                          //         ScaffoldMessenger.of(context).showSnackBar(
-                          //           const SnackBar(
-                          //             content: Text(
-                          //                 'Loading on progress, Please wait...'),
-                          //             duration: Duration(seconds: 2),
-                          //             backgroundColor: Colors.blue,
-                          //             behavior: SnackBarBehavior.floating,
-                          //           ),
-                          //         );
-                          //         return;
-                          //       }
-                          //       controller.onTabTapped(2);
-                          //     },
-                          //     child: Container(
-                          //       padding: const EdgeInsets.all(10),
-                          //       decoration: controller.currentPage.value != 2
-                          //           ? decor2()
-                          //           : decor1(),
-                          //       child: Center(
-                          //           child: CustomParagraph(
-                          //         fontSize: 10,
-                          //         text: "Cancellations",
-                          //         color: controller.currentPage.value != 2
-                          //             ? Colors.white38
-                          //             : Colors.white,
-                          //       )),
-                          //     ),
-                          //   ),
-                          // )
                         ]),
                       ),
                     ),

@@ -32,6 +32,7 @@ class QrWalletController extends GetxController
   RxString mobNum = "".obs;
   RxString mono = ''.obs;
   RxString payKey = "".obs;
+  RxInt currentPage = 0.obs;
   final ScreenshotController screenshotController = ScreenshotController();
   late TabController tabController;
 
@@ -45,13 +46,19 @@ class QrWalletController extends GetxController
   @override
   void onInit() {
     tabController = TabController(vsync: this, length: 2);
-    tabController.addListener(onTabChanged);
+    //tabController.addListener(onTabChanged);
     getQrData();
     super.onInit();
   }
+  // void onTabTapped(int index) {
+  //   currentPage.value = index;
 
-  void onTabChanged() async {
-    if (tabController.index == 0) {
+  //   getReserveData(index == 0 ? "C" : "U");
+  // }
+  void onTabChanged(int index) async {
+    print(index);
+    currentPage.value = index;
+    if (currentPage.value == 0) {
       getQrData();
     }
     update();
