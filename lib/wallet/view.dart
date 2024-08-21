@@ -94,124 +94,95 @@ class WalletScreen extends GetView<WalletController> {
                                       ),
                                     ],
                                   ),
-                                  Stack(
-                                    children: [
-                                      SvgPicture.asset(
-                                        "assets/images/wallet_bg.svg",
-                                        height: 200,
-                                        width:
-                                            MediaQuery.of(context).size.width,
+                                  SizedBox(
+                                    height: 10,
+                                  ),
+                                  Container(
+                                    padding: EdgeInsets.fromLTRB(
+                                      15,
+                                      25,
+                                      15,
+                                      15,
+                                    ),
+                                    height: 200,
+                                    decoration: BoxDecoration(
+                                      image: DecorationImage(
+                                        image: AssetImage(
+                                            "assets/images/wallet_bg.png"),
                                       ),
-                                      Positioned(
-                                        child: Column(
+                                    ),
+                                    child: Column(
+                                      children: [
+                                        Row(
                                           children: [
-                                            Padding(
-                                              padding: EdgeInsets.fromLTRB(
-                                                15,
-                                                25,
-                                                15,
-                                                15,
-                                              ),
-                                              child: Column(
-                                                children: [
-                                                  Row(
-                                                    children: [
-                                                      Image(
-                                                        image: AssetImage(
-                                                          "assets/images/wallet_luvpark1.png",
-                                                        ),
-                                                      ),
-                                                      SizedBox(
-                                                        width: 10,
-                                                      ),
-                                                      CustomTitle(
-                                                        text: 'luvpark Balance',
-                                                        color: Colors.white,
-                                                      ),
-                                                    ],
-                                                  ),
-                                                  Row(
-                                                    children: [
-                                                      Column(
-                                                        crossAxisAlignment:
-                                                            CrossAxisAlignment
-                                                                .start,
-                                                        mainAxisAlignment:
-                                                            MainAxisAlignment
-                                                                .spaceBetween,
-                                                        children: [],
-                                                      ),
-                                                      CustomTitle(
-                                                        text: NumberFormat
-                                                                .currency(
-                                                                    symbol: "")
-                                                            .format(double.parse(
-                                                                controller
-                                                                        .userData[0]
-                                                                    [
-                                                                    "amount_bal"])),
-                                                        fontSize: 34,
-                                                        color: Colors.white,
-                                                      )
-                                                    ],
-                                                  )
-                                                ],
+                                            Image(
+                                              image: AssetImage(
+                                                "assets/images/wallet_luvpark1.png",
                                               ),
                                             ),
-                                            Container(
-                                              height: 80,
-                                              padding: EdgeInsets.symmetric(
-                                                  horizontal: 15),
-                                              width: MediaQuery.of(context)
-                                                  .size
-                                                  .width,
-                                              child: Row(
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment
-                                                        .spaceBetween,
-                                                children: [
-                                                  Row(
-                                                    children: [
-                                                      // SvgPicture.asset(
-                                                      //   "assets/images/wallet_crown.svg",
-                                                      //   height: 14,
-                                                      //   width:
-                                                      //       MediaQuery.of(
-                                                      //               context)
-                                                      //           .size
-                                                      //           .width,
-                                                      // ),
-                                                      Icon(
-                                                        Iconsax.crown5,
-                                                        color:
-                                                            Color(0xFFFFFDF9),
-                                                      ),
-                                                      SizedBox(
-                                                        width: 10,
-                                                      ),
-
-                                                      CustomTitle(
-                                                        text: "Reward Points: ",
-                                                        color: Colors.white,
-                                                        fontWeight:
-                                                            FontWeight.w400,
-                                                      ),
-                                                      CustomTitle(
-                                                        text:
-                                                            " ${controller.userData[0]["points_bal"]} ",
-                                                        color: Colors.white,
-                                                        fontWeight:
-                                                            FontWeight.w600,
-                                                      ),
-                                                    ],
-                                                  ),
-                                                ],
-                                              ),
+                                            SizedBox(
+                                              width: 10,
+                                            ),
+                                            CustomTitle(
+                                              text: 'luvpark Balance',
+                                              color: Colors.white,
                                             ),
                                           ],
                                         ),
-                                      ),
-                                    ],
+                                        Row(
+                                          children: [
+                                            Column(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment
+                                                      .spaceBetween,
+                                              children: [],
+                                            ),
+                                            CustomTitle(
+                                              text: NumberFormat.currency(
+                                                      symbol: "")
+                                                  .format(double.parse(
+                                                      controller.userData[0]
+                                                          ["amount_bal"])),
+                                              fontSize: 34,
+                                              color: Colors.white,
+                                            ),
+                                          ],
+                                        ),
+                                        SizedBox(
+                                          height: 50,
+                                        ),
+                                        Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceBetween,
+                                          children: [
+                                            Row(
+                                              children: [
+                                                Icon(
+                                                  Iconsax.crown5,
+                                                  color: Color(0xFFFFFDF9),
+                                                ),
+                                                SizedBox(
+                                                  width: 10,
+                                                ),
+                                                CustomTitle(
+                                                  text: "Reward Points: ",
+                                                  color: Colors.white,
+                                                  fontWeight: FontWeight.w400,
+                                                ),
+                                                CustomTitle(
+                                                  text:
+                                                      " ${controller.userData[0]["points_bal"]} ",
+                                                  color: Colors.white,
+                                                  fontWeight: FontWeight.w600,
+                                                ),
+                                              ],
+                                            ),
+                                          ],
+                                        ),
+                                      ],
+                                    ),
                                   ),
                                   Row(
                                       mainAxisAlignment:
@@ -355,10 +326,11 @@ class WalletScreen extends GetView<WalletController> {
                             ),
 
                             SlidingUpPanel(
-                                renderPanelSheet: false,
-                                snapPoint: 0.5,
-                                parallaxEnabled: true,
-                                parallaxOffset: 20,
+                                panelSnapping: false,
+                                // renderPanelSheet: true,
+                                snapPoint: 0.1,
+                                parallaxEnabled: false,
+                                parallaxOffset: 15,
                                 maxHeight: size.height * 0.90,
                                 minHeight: size.height * 0.44,
                                 controller: panelController,
