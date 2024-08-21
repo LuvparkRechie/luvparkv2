@@ -10,6 +10,7 @@ class CustomAppbar extends StatelessWidget implements PreferredSizeWidget {
   final String? title;
   final double? titleSize;
   final List<Widget>? action;
+  final PreferredSizeWidget? bottom;
 
   final Color? bgColor;
   const CustomAppbar(
@@ -19,6 +20,7 @@ class CustomAppbar extends StatelessWidget implements PreferredSizeWidget {
       this.action,
       this.bgColor,
       this.titleSize,
+      this.bottom,
       this.preferredSize = const Size.fromHeight(kToolbarHeight)});
 
   @override
@@ -32,29 +34,32 @@ class CustomAppbar extends StatelessWidget implements PreferredSizeWidget {
         statusBarBrightness: Brightness.light,
         statusBarIconBrightness: Brightness.dark,
       ),
-      leading: InkWell(
-        onTap: () {
-          // defaultBack
-          if (onTap == null) {
-            Get.back();
-            return;
-          }
-          onTap!();
-        },
-        child: const Row(
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: [
-            Icon(
-              Icons.chevron_left,
-              color: Colors.black,
-            ),
-            CustomParagraph(
-              text: "Back",
-              fontSize: 14,
-              color: Colors.black87,
-              fontWeight: FontWeight.w700,
-            ),
-          ],
+      leading: Padding(
+        padding: const EdgeInsets.only(left: 5),
+        child: InkWell(
+          onTap: () {
+            // defaultBack
+            if (onTap == null) {
+              Get.back();
+              return;
+            }
+            onTap!();
+          },
+          child: const Row(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              Icon(
+                Icons.chevron_left,
+                color: Colors.black,
+              ),
+              CustomParagraph(
+                text: "Back",
+                fontSize: 14,
+                color: Colors.black87,
+                fontWeight: FontWeight.w700,
+              ),
+            ],
+          ),
         ),
       ),
       leadingWidth: 100,
@@ -67,6 +72,7 @@ class CustomAppbar extends StatelessWidget implements PreferredSizeWidget {
               color: Colors.black,
             ),
       actions: action,
+      bottom: bottom ?? bottom,
     );
   }
 }
