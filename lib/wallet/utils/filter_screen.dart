@@ -47,9 +47,7 @@ class WalletTransactionFilter extends GetView<WalletController> {
                 )
               ],
             ),
-            SizedBox(
-              height: 20,
-            ),
+            Container(height: 20),
             CustomTitle(text: "Start Date"),
             CustomTextField(
               suffixIcon: Iconsax.calendar_1,

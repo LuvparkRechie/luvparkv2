@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:luvpark_get/auth/authentication.dart';
 import 'package:luvpark_get/custom_widgets/alert_dialog.dart';
@@ -25,20 +26,54 @@ class CustomDrawer extends GetView<DashboardMapController> {
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     const SizedBox(height: 67),
-                    CircleAvatar(
-                      radius: 44,
-                      backgroundColor: Colors.white,
-                      backgroundImage: controller.userProfile != null &&
-                              controller.userProfile['image_base64'] != null
-                          ? MemoryImage(
-                              base64Decode(
-                                  controller.userProfile['image_base64']),
-                            )
-                          : null,
-                      child: controller.userProfile == null
-                          ? const Icon(Icons.person,
-                              size: 44, color: Colors.blueAccent)
-                          : null,
+                    Stack(
+                      alignment: Alignment.topLeft,
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.only(left: 29),
+                          child: Row(
+                            children: [
+                              Container(
+                                height: 38,
+                                width: 45,
+                                decoration: const BoxDecoration(
+                                  color: Colors.transparent,
+                                ),
+                                child: Image.asset(
+                                  "assets/images/logo.png",
+                                  fit: BoxFit.cover,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.only(top: 20),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              CircleAvatar(
+                                radius: 44,
+                                backgroundColor: Colors.white,
+                                backgroundImage: controller.userProfile !=
+                                            null &&
+                                        controller
+                                                .userProfile['image_base64'] !=
+                                            null
+                                    ? MemoryImage(
+                                        base64Decode(controller
+                                            .userProfile['image_base64']),
+                                      )
+                                    : null,
+                                child: controller.userProfile == null
+                                    ? const Icon(Icons.person,
+                                        size: 44, color: Colors.blueAccent)
+                                    : null,
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
                     ),
                     Container(
                       height: 10,
@@ -183,7 +218,13 @@ class CustomDrawer extends GetView<DashboardMapController> {
                   trailing: const Icon(Icons.chevron_right_sharp,
                       color: Color(0xFF1C1C1E)),
                   onTap: () {
-                    Get.toNamed(Routes.wallet);
+                    // Variables.pageTrans(
+                    //     const WebviewPage(
+                    //       urlDirect: "https://luvpark.ph/terms-of-use/",
+                    //       label: "Terms of use",
+                    //       isBuyToken: false,
+                    //     ),
+                    //     context);
                   },
                 ),
                 ListTile(
@@ -199,7 +240,13 @@ class CustomDrawer extends GetView<DashboardMapController> {
                   trailing: const Icon(Icons.chevron_right_sharp,
                       color: Color(0xFF1C1C1E)),
                   onTap: () {
-                    Navigator.pop(context);
+                    // Variables.pageTrans(
+                    //     const WebviewPage(
+                    //       urlDirect: "https://luvpark.ph/privacy-policy/",
+                    //       label: "Privacy Policy",
+                    //       isBuyToken: false,
+                    //     ),
+                    //     context);
                   },
                 ),
               ],

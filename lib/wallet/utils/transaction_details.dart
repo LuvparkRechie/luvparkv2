@@ -42,8 +42,10 @@ class TransactionDetails extends StatelessWidget {
                   Center(
                     child: CustomTitle(
                       text: 'Transaction Details',
-                      fontSize: 20,
+                      fontSize: 22,
                       maxlines: 1,
+                      color: Color(0xFF070707),
+                      fontWeight: FontWeight.w800,
                     ),
                   ),
                   Container(
@@ -52,7 +54,8 @@ class TransactionDetails extends StatelessWidget {
                   Center(
                     child: CustomParagraph(
                       text: "${data[index]["tran_desc"]}",
-                      color: AppColor.primaryColor,
+                      color: Color(0xFF616161),
+                      fontWeight: FontWeight.w400,
                       textAlign: TextAlign.left,
                       fontSize: 16,
                       maxlines: 1,
@@ -61,7 +64,9 @@ class TransactionDetails extends StatelessWidget {
                   Container(
                     height: 10,
                   ),
-                  const MySeparator(),
+                  const MySeparator(
+                    color: Color(0xFFD9D9D9),
+                  ),
                   Container(
                     height: 20,
                   ),
@@ -85,7 +90,9 @@ class TransactionDetails extends StatelessWidget {
                   Container(
                     height: 20,
                   ),
-                  const MySeparator(),
+                  const MySeparator(
+                    color: Color(0xFFD9D9D9),
+                  ),
                   Container(
                     height: 20,
                   ),
@@ -94,6 +101,8 @@ class TransactionDetails extends StatelessWidget {
                     children: [
                       Center(
                         child: CustomParagraph(
+                          color: Color(0xFF070707),
+                          fontSize: 12,
                           text: "Reference No: ",
                         ),
                       ),
@@ -110,8 +119,9 @@ class TransactionDetails extends StatelessWidget {
                         child: SelectableText(
                           toolbarOptions: ToolbarOptions(copy: true),
                           style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            color: AppColor.primaryColor,
+                            fontWeight: FontWeight.w600,
+                            color: Color(0xFF070707),
+                            fontSize: 12,
                           ),
                           data[index]["ref_no"].toString(),
                         ),
@@ -136,14 +146,11 @@ class TransactionDetails extends StatelessWidget {
             ),
           ],
         ),
-        Container(
-          decoration: BoxDecoration(),
-          child: SvgPicture.asset(
-            "assets/images/${data[index]["tran_desc"] == 'Share a token' ? 'wallet_sharetoken' : data[index]["tran_desc"] == 'Received token' ? 'wallet_receivetoken' : 'wallet_payparking'}.svg",
-            //if trans_Desc is equal to Share a token svg is wallet_sharetoken else Receive Token svg is wallet_receivetoken else parking transaction is svg wallet_payparking
-            height: 70,
-            width: MediaQuery.of(context).size.width,
-          ),
+        SvgPicture.asset(
+          "assets/images/${data[index]["tran_desc"] == 'Share a token' ? 'wallet_sharetoken' : data[index]["tran_desc"] == 'Received token' ? 'wallet_receivetoken' : 'wallet_payparking'}.svg",
+          //if trans_Desc is equal to Share a token svg is wallet_sharetoken else Receive Token svg is wallet_receivetoken else parking transaction is svg wallet_payparking
+          height: 65,
+          width: 65,
         )
       ],
     );
@@ -154,6 +161,8 @@ class TransactionDetails extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         CustomParagraph(
+          fontWeight: FontWeight.w400,
+          color: Color(0xFF070707),
           text: label,
         ),
         Expanded(
@@ -161,7 +170,7 @@ class TransactionDetails extends StatelessWidget {
             alignment: Alignment.centerRight,
             child: CustomParagraph(
               text: value,
-              color: AppColor.primaryColor,
+              color: Color(0xFF616161),
             ),
           ),
         ),
