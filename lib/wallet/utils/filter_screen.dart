@@ -36,6 +36,7 @@ class WalletTransactionFilter extends GetView<WalletController> {
                     children: [
                       CustomTitle(
                         text: "Transaction Period",
+                        color: Colors.black,
                         fontWeight: FontWeight.bold,
                         fontSize: 20,
                       ),
@@ -50,7 +51,11 @@ class WalletTransactionFilter extends GetView<WalletController> {
                   SizedBox(
                     height: 15,
                   ),
-                  CustomTitle(text: "Start Date"),
+                  CustomParagraph(
+                    fontWeight: FontWeight.w800,
+                    text: "Start Date",
+                    color: Colors.black,
+                  ),
                   CustomTextField(
                     suffixIcon: Iconsax.calendar_1,
                     onTap: () {
@@ -63,7 +68,11 @@ class WalletTransactionFilter extends GetView<WalletController> {
                     labelText: "From",
                     controller: controller.fromDate,
                   ),
-                  CustomTitle(text: "End Date"),
+                  CustomParagraph(
+                    fontWeight: FontWeight.w800,
+                    text: "End Date",
+                    color: Colors.black,
+                  ),
                   CustomTextField(
                     suffixIcon: Iconsax.calendar_1,
                     onTap: () {
