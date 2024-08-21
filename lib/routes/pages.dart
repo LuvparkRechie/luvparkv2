@@ -3,8 +3,8 @@ import 'package:luvpark_get/mapa/utils/bindings.dart';
 import 'package:luvpark_get/mapa/utils/view.dart';
 import 'package:luvpark_get/faq/index.dart';
 import 'package:luvpark_get/rate_booking/index.dart';
+import 'package:luvpark_get/wallet_qr/index.dart';
 import 'package:luvpark_get/wallet_recharge/index.dart';
-
 import '../activate_acc/index.dart';
 import '../booking/index.dart';
 import '../booking/utils/booking_receipt/index.dart';
@@ -19,7 +19,7 @@ import '../parking/index.dart';
 import '../parking_areas/index.dart';
 import '../parking_details/index.dart';
 import '../permission/permission.dart';
-import '../qr/index.dart';
+
 import '../registration/index.dart';
 import '../registration/utils/otp_screen/index.dart';
 import '../splash_screen/index.dart';

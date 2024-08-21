@@ -125,7 +125,7 @@ class WalletRechargeScreen extends GetView<WalletRechargeController> {
                                     .replaceAll(" ", ""),
                               );
                             }
-                          : () {}, // No-op function when the button is disabled
+                          : () {},
                     ),
                   )
                 ],

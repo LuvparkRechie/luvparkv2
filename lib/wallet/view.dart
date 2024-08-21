@@ -221,9 +221,8 @@ class WalletScreen extends GetView<WalletController> {
                                           onTap: () async {
                                             final item = await Authentication()
                                                 .getUserData2();
-
                                             String? fname = item["first_name"];
-
+                                            // print("fnameee $fname");
                                             if (fname == null) {
                                               CustomDialog().errorDialog(
                                                   // ignore: use_build_context_synchronously
@@ -235,7 +234,6 @@ class WalletScreen extends GetView<WalletController> {
                                               });
                                               return;
                                             }
-
                                             Get.toNamed(Routes.walletrecharge);
                                           },
                                           child: Column(

@@ -63,34 +63,46 @@ class WalletController extends GetxController
   }
 
   Future<void> applyFilter() async {
-    if (formKeyFilter.currentState?.validate() ?? false) {
-      final String startDate = fromDate.text;
-      final String endDate = toDate.text;
-
-      if (startDate.isNotEmpty && endDate.isNotEmpty) {
-        print(
-            "Filter applied with start date: $startDate and end date: $endDate");
-        Get.back();
-      } else {
-        print("Please select both start and end dates.");
-        Get.back();
-      }
+    // print("yawa");
+    FocusManager.instance.primaryFocus!.unfocus();
+    if (fromDate.text.isEmpty || toDate.text.isEmpty) {
+      return;
+    } else {
+      Get.back();
+      getLogs();
     }
   }
 
   Future<void> selectDate(BuildContext context, bool isStartDate) async {
+    final DateTime today = DateTime.now();
+    final DateTime firstDateLimit =
+        today.subtract(const Duration(days: 29)); // Limit to the last 29 days
+
+    DateTime? firstDate;
+    DateTime? lastDate;
+
+    if (isStartDate) {
+      firstDate = firstDateLimit; // Allow selection starting from 29 days ago
+      lastDate = today; // Prevent selecting dates after today
+    } else {
+      firstDate =
+          DateTime.parse(fromDate.text); // Start date selected by the user
+      lastDate = today; // Prevent selecting dates after today
+    }
+
     final DateTime? pickedDate = await showDatePicker(
       context: context,
-      initialDate: DateTime.now(),
-      firstDate: DateTime(2000),
-      lastDate: DateTime(2101),
+      initialDate: today,
+      firstDate: firstDate,
+      lastDate: lastDate,
     );
 
     if (pickedDate != null) {
+      final formattedDate = pickedDate.toString().split(' ')[0];
       if (isStartDate) {
-        fromDate.text = pickedDate.toString().split(' ')[0];
+        fromDate.text = formattedDate;
       } else {
-        toDate.text = pickedDate.toString().split(' ')[0];
+        toDate.text = formattedDate;
       }
     }
   }
@@ -105,7 +117,7 @@ class WalletController extends GetxController
         "${ApiKeys.gApiSubFolderGetTransactionLogs}?user_id=$userId&tran_date_from=${fromDate.text}&tran_date_to=${toDate.text}";
 
     HttpRequest(api: subApi).get().then((response) {
-      print(" ${subApi}");
+      // print(" ${subApi}");
       if (response == "No Internet") {
         isLoading.value = false;
         isNetConn.value = false;
