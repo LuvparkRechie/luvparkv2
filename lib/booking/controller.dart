@@ -305,7 +305,6 @@ class BookingController extends GetxController
     List bookingParams = [params];
     int userId = await Authentication().getUserId();
     isSubmitBooking.value = true;
-
     final position = await Functions.getCurrentPosition();
     LatLng current = LatLng(position[0]["lat"], position[0]["long"]);
     LatLng destinaion = LatLng(parameters["areaData"]["pa_latitude"],
@@ -321,6 +320,7 @@ class BookingController extends GetxController
       });
       return;
     }
+
     if (etaData[0]["error"] == "No Internet") {
       isSubmitBooking.value = false;
       CustomDialog().internetErrorDialog(context, () {
@@ -404,9 +404,15 @@ class BookingController extends GetxController
             'status': "B",
             'paramsCalc': bookingParams[0]
           };
-          isSubmitBooking.value = false;
-          Get.offNamed(Routes.bookingReceipt, arguments: args);
-          return;
+          if (isCheckIn) {
+            checkIn(objData["ticket_id"], current.latitude, current.longitude,
+                args);
+            return;
+          } else {
+            isSubmitBooking.value = false;
+            Get.offNamed(Routes.bookingReceipt, arguments: args);
+            return;
+          }
         }
         if (objData["success"] == "Q") {
           CustomDialog().confirmationDialog(
@@ -463,6 +469,78 @@ class BookingController extends GetxController
           return;
         }
       });
+    });
+  }
+
+  //Manual checkin
+  Future<void> checkIn(ticketId, lat, long, args) async {
+    var otpData = {
+      "device_key": null,
+      "emp_id": null,
+      "ticket_id": ticketId,
+      "longitude": long,
+      "latitude": lat,
+      "is_auto": "Y",
+    };
+
+    HttpRequest(api: ApiKeys.gApiLuvParkPutChkIn, parameters: otpData)
+        .put()
+        .then((returnData) async {
+      if (returnData == "No Internet") {
+        isSubmitBooking.value = false;
+        CustomDialog().internetErrorDialog(Get.context!, () {
+          Get.back();
+        });
+        return;
+      }
+      if (returnData == null) {
+        isSubmitBooking.value = false;
+        CustomDialog().serverErrorDialog(Get.context!, () {
+          Get.back();
+        });
+
+        return;
+      }
+
+      if (returnData["success"] == 'Y') {
+        var otpData = {
+          "ticket_ref_no": returnData['ticket_ref_no'],
+        };
+        HttpRequest(api: ApiKeys.gApiLuvParkPutLPChkIn, parameters: otpData)
+            .put()
+            .then((returnData2) async {
+          if (returnData2 == "No Internet") {
+            isSubmitBooking.value = false;
+            CustomDialog().internetErrorDialog(Get.context!, () {
+              Get.back();
+            });
+            return;
+          }
+          if (returnData2 == null) {
+            isSubmitBooking.value = false;
+            CustomDialog().serverErrorDialog(Get.context!, () {
+              Get.back();
+            });
+            return;
+          }
+          isSubmitBooking.value = false;
+          if (returnData2["success"] == 'Y') {
+            Get.offNamed(Routes.bookingReceipt, arguments: args);
+            //Success
+          } else {
+            CustomDialog()
+                .errorDialog(Get.context!, "luvpark", returnData["msg"], () {
+              Get.back();
+            });
+          }
+        });
+      } else {
+        isSubmitBooking.value = false;
+        CustomDialog().errorDialog(Get.context!, "luvpark", returnData["msg"],
+            () {
+          Get.back();
+        });
+      }
     });
   }
 

@@ -254,6 +254,20 @@ class Variables {
     return distanceValue * 1000;
   }
 
+  static double convertToMeters2(String distanceString) {
+    // Extract numeric part of the string
+    String numericPart = distanceString.replaceAll(RegExp(r'[^0-9.]'), '');
+
+    // Parse numeric part to double
+    double distanceValue = double.tryParse(numericPart) ?? 0;
+
+    // Check if "km" (kilometers) is present in the string
+    bool isKilometers = distanceString.toLowerCase().contains('km');
+
+    // Convert to meters
+    return isKilometers ? distanceValue * 1000 : distanceValue;
+  }
+
   //COnvert 12 hours format sample:18:00
   static String convert24HourTo12HourFormat(String time24Hour) {
     List<String> parts = time24Hour.split(':');
