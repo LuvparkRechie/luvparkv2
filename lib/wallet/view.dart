@@ -15,6 +15,7 @@ import 'package:luvpark_get/custom_widgets/no_internet.dart';
 import 'package:luvpark_get/custom_widgets/park_shimmer.dart';
 import 'package:luvpark_get/routes/routes.dart';
 import 'package:luvpark_get/wallet/controller.dart';
+import 'package:luvpark_get/wallet/utils/filter_screen.dart';
 import 'package:sliding_up_panel/sliding_up_panel.dart';
 import '../auth/authentication.dart';
 import '../custom_widgets/alert_dialog.dart';
@@ -50,332 +51,308 @@ class WalletScreen extends GetView<WalletController> {
                         axisDirection: AxisDirection.down,
                         child: Stack(
                           children: [
-                            Expanded(
-                              child: Padding(
-                                padding:
-                                    const EdgeInsets.fromLTRB(15, 15, 15, 0),
-                                child: ListView(
-                                  children: [
-                                    Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.start,
-                                      children: [
-                                        Container(
-                                          decoration: BoxDecoration(
-                                            border: Border.all(
-                                              color: Colors.blue,
-                                            ),
-                                            shape: BoxShape.circle,
+                            Padding(
+                              padding: const EdgeInsets.fromLTRB(15, 15, 15, 0),
+                              child: ListView(
+                                children: [
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    children: [
+                                      Container(
+                                        decoration: BoxDecoration(
+                                          border: Border.all(
+                                            color: Colors.blue,
                                           ),
-                                          child: CircleAvatar(
-                                            radius: 17,
-                                            backgroundImage: controller
-                                                            .userImage !=
-                                                        null &&
-                                                    controller.userImage != null
-                                                ? MemoryImage(
-                                                    base64Decode(
-                                                        controller.userImage),
-                                                  )
-                                                : null,
-                                            child: controller.userImage == null
-                                                ? const Icon(Icons.person,
-                                                    size: 34,
-                                                    color: Colors.blueAccent)
-                                                : null,
-                                          ),
+                                          shape: BoxShape.circle,
                                         ),
-                                        SizedBox(
-                                          width: 5,
+                                        child: CircleAvatar(
+                                          radius: 17,
+                                          backgroundImage:
+                                              controller.userImage != null &&
+                                                      controller.userImage !=
+                                                          null
+                                                  ? MemoryImage(
+                                                      base64Decode(
+                                                          controller.userImage),
+                                                    )
+                                                  : null,
+                                          child: controller.userImage == null
+                                              ? const Icon(Icons.person,
+                                                  size: 34,
+                                                  color: Colors.blueAccent)
+                                              : null,
                                         ),
-                                        CustomTitle(
-                                          text: controller.fname.value,
-                                          color: Color(0xFF1E1E1E),
-                                          fontSize: 22,
-                                        ),
-                                        SizedBox(
-                                          width: 15,
-                                        ),
-                                      ],
-                                    ),
-                                    Stack(
-                                      children: [
-                                        SvgPicture.asset(
-                                          "assets/images/wallet_bg.svg",
-                                          height: 210,
-                                          width:
-                                              MediaQuery.of(context).size.width,
-                                        ),
-                                        Positioned(
-                                          child: SizedBox(
-                                            height: 187,
-                                            width: MediaQuery.of(context)
-                                                .size
-                                                .width,
-                                            child: Column(
-                                              children: [
-                                                Expanded(
-                                                  child: Padding(
-                                                    padding:
-                                                        EdgeInsets.fromLTRB(
-                                                      15,
-                                                      25,
-                                                      15,
-                                                      15,
-                                                    ),
-                                                    child: Column(
-                                                      children: [
-                                                        Row(
-                                                          children: [
-                                                            Image(
-                                                              image: AssetImage(
-                                                                "assets/images/wallet_luvpark1.png",
-                                                              ),
-                                                            ),
-                                                            SizedBox(
-                                                              width: 10,
-                                                            ),
-                                                            CustomTitle(
-                                                              text:
-                                                                  'luvpark Balance',
-                                                              color:
-                                                                  Colors.white,
-                                                            ),
-                                                          ],
-                                                        ),
-                                                        Row(
-                                                          children: [
-                                                            Column(
-                                                              crossAxisAlignment:
-                                                                  CrossAxisAlignment
-                                                                      .start,
-                                                              mainAxisAlignment:
-                                                                  MainAxisAlignment
-                                                                      .spaceBetween,
-                                                              children: [],
-                                                            ),
-                                                            CustomTitle(
-                                                              text: NumberFormat
-                                                                      .currency(
-                                                                          symbol:
-                                                                              "")
-                                                                  .format(double.parse(
-                                                                      controller
-                                                                              .userData[0]
-                                                                          [
-                                                                          "amount_bal"])),
-                                                              fontSize: 50,
-                                                              color:
-                                                                  Colors.white,
-                                                            )
-                                                          ],
-                                                        )
-                                                      ],
-                                                    ),
-                                                  ),
-                                                ),
-                                                Container(
-                                                  height: 40,
-                                                  padding: EdgeInsets.symmetric(
-                                                      horizontal: 15),
-                                                  width: MediaQuery.of(context)
-                                                      .size
-                                                      .width,
-                                                  child: Row(
-                                                    mainAxisAlignment:
-                                                        MainAxisAlignment
-                                                            .spaceBetween,
+                                      ),
+                                      SizedBox(
+                                        width: 10,
+                                      ),
+                                      CustomTitle(
+                                        fontWeight: FontWeight.w800,
+                                        text: controller.fname.value,
+                                        color: Color(0xFF1E1E1E),
+                                        fontSize: 20,
+                                      ),
+                                    ],
+                                  ),
+                                  Stack(
+                                    children: [
+                                      SvgPicture.asset(
+                                        "assets/images/wallet_bg.svg",
+                                        height: 200,
+                                        width:
+                                            MediaQuery.of(context).size.width,
+                                      ),
+                                      Positioned(
+                                        child: Column(
+                                          children: [
+                                            Padding(
+                                              padding: EdgeInsets.fromLTRB(
+                                                15,
+                                                25,
+                                                15,
+                                                15,
+                                              ),
+                                              child: Column(
+                                                children: [
+                                                  Row(
                                                     children: [
-                                                      Row(
-                                                        children: [
-                                                          // SvgPicture.asset(
-                                                          //   "assets/images/wallet_crown.svg",
-                                                          //   height: 14,
-                                                          //   width:
-                                                          //       MediaQuery.of(
-                                                          //               context)
-                                                          //           .size
-                                                          //           .width,
-                                                          // ),
-                                                          Icon(
-                                                            Iconsax.crown5,
-                                                            color: Color(
-                                                                0xFFFFFDF9),
-                                                          ),
-                                                          SizedBox(
-                                                            width: 10,
-                                                          ),
-
-                                                          CustomTitle(
-                                                            text:
-                                                                "Reward Points: ",
-                                                            color: Colors.white,
-                                                            fontWeight:
-                                                                FontWeight.w400,
-                                                          ),
-                                                          CustomTitle(
-                                                            text:
-                                                                " ${controller.userData[0]["points_bal"]} ",
-                                                            color: Colors.white,
-                                                            fontWeight:
-                                                                FontWeight.w600,
-                                                          ),
-                                                        ],
+                                                      Image(
+                                                        image: AssetImage(
+                                                          "assets/images/wallet_luvpark1.png",
+                                                        ),
+                                                      ),
+                                                      SizedBox(
+                                                        width: 10,
+                                                      ),
+                                                      CustomTitle(
+                                                        text: 'luvpark Balance',
+                                                        color: Colors.white,
                                                       ),
                                                     ],
                                                   ),
-                                                ),
-                                              ],
+                                                  Row(
+                                                    children: [
+                                                      Column(
+                                                        crossAxisAlignment:
+                                                            CrossAxisAlignment
+                                                                .start,
+                                                        mainAxisAlignment:
+                                                            MainAxisAlignment
+                                                                .spaceBetween,
+                                                        children: [],
+                                                      ),
+                                                      CustomTitle(
+                                                        text: NumberFormat
+                                                                .currency(
+                                                                    symbol: "")
+                                                            .format(double.parse(
+                                                                controller
+                                                                        .userData[0]
+                                                                    [
+                                                                    "amount_bal"])),
+                                                        fontSize: 34,
+                                                        color: Colors.white,
+                                                      )
+                                                    ],
+                                                  )
+                                                ],
+                                              ),
                                             ),
+                                            Container(
+                                              height: 80,
+                                              padding: EdgeInsets.symmetric(
+                                                  horizontal: 15),
+                                              width: MediaQuery.of(context)
+                                                  .size
+                                                  .width,
+                                              child: Row(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment
+                                                        .spaceBetween,
+                                                children: [
+                                                  Row(
+                                                    children: [
+                                                      // SvgPicture.asset(
+                                                      //   "assets/images/wallet_crown.svg",
+                                                      //   height: 14,
+                                                      //   width:
+                                                      //       MediaQuery.of(
+                                                      //               context)
+                                                      //           .size
+                                                      //           .width,
+                                                      // ),
+                                                      Icon(
+                                                        Iconsax.crown5,
+                                                        color:
+                                                            Color(0xFFFFFDF9),
+                                                      ),
+                                                      SizedBox(
+                                                        width: 10,
+                                                      ),
+
+                                                      CustomTitle(
+                                                        text: "Reward Points: ",
+                                                        color: Colors.white,
+                                                        fontWeight:
+                                                            FontWeight.w400,
+                                                      ),
+                                                      CustomTitle(
+                                                        text:
+                                                            " ${controller.userData[0]["points_bal"]} ",
+                                                        color: Colors.white,
+                                                        fontWeight:
+                                                            FontWeight.w600,
+                                                      ),
+                                                    ],
+                                                  ),
+                                                ],
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                  Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        InkWell(
+                                          onTap: () async {
+                                            final item = await Authentication()
+                                                .getUserData2();
+
+                                            String? fname = item["first_name"];
+
+                                            if (fname == null) {
+                                              CustomDialog().errorDialog(
+                                                  // ignore: use_build_context_synchronously
+                                                  context,
+                                                  "Attention",
+                                                  "Complete your account information to access the requested service.\nGo to profile and update your account.",
+                                                  () {
+                                                Get.back();
+                                              });
+                                              return;
+                                            }
+
+                                            Get.toNamed(Routes.walletrecharge);
+                                          },
+                                          child: Column(
+                                            children: [
+                                              Container(
+                                                padding: EdgeInsets.all(10),
+                                                width: 50,
+                                                height: 50,
+                                                clipBehavior: Clip.antiAlias,
+                                                decoration: BoxDecoration(
+                                                  shape: BoxShape.circle,
+                                                  color: Color(0xFFE0EEFF),
+                                                ),
+                                                child: SvgPicture.asset(
+                                                  "assets/images/wallet_icons_load.svg",
+                                                ),
+                                              ),
+                                              SizedBox(
+                                                height: 5,
+                                              ),
+                                              AutoSizeText(
+                                                  maxFontSize: 16,
+                                                  maxLines: 1,
+                                                  style: TextStyle(
+                                                    fontWeight: FontWeight.w600,
+                                                    color: Color(0xFF0078FF),
+                                                    letterSpacing: -0.32,
+                                                  ),
+                                                  textAlign: TextAlign.center,
+                                                  "Load")
+                                            ],
                                           ),
                                         ),
-                                      ],
-                                    ),
-                                    Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceBetween,
-                                        children: [
-                                          InkWell(
-                                            onTap: () async {
-                                              final item =
-                                                  await Authentication()
-                                                      .getUserData2();
-                                              String? fname =
-                                                  item["first_name"];
-                                              // print("fnameee $fname");
-                                              if (fname == null) {
-                                                CustomDialog().errorDialog(
-                                                    // ignore: use_build_context_synchronously
-                                                    context,
-                                                    "Attention",
-                                                    "Complete your account information to access the requested service.\nGo to profile and update your account.",
-                                                    () {
-                                                  Get.back();
-                                                });
-                                                return;
-                                              }
-                                              Get.toNamed(
-                                                  Routes.walletrecharge);
-                                            },
-                                            child: Column(
-                                              children: [
-                                                Container(
-                                                  padding: EdgeInsets.all(10),
-                                                  width: 50,
-                                                  height: 50,
-                                                  clipBehavior: Clip.antiAlias,
-                                                  decoration: BoxDecoration(
-                                                    shape: BoxShape.circle,
-                                                    color: Color(0xFFE0EEFF),
-                                                  ),
-                                                  child: SvgPicture.asset(
-                                                    "assets/images/wallet_icons_load.svg",
-                                                  ),
+                                        InkWell(
+                                          onTap: () async {
+                                            Get.toNamed(Routes.walletsend,
+                                                arguments: () {
+                                              controller.getLogs();
+                                              controller.getUserBalance();
+                                            });
+                                          },
+                                          child: Column(
+                                            children: [
+                                              Container(
+                                                padding: EdgeInsets.all(10),
+                                                width: 50,
+                                                height: 50,
+                                                clipBehavior: Clip.antiAlias,
+                                                decoration: BoxDecoration(
+                                                  shape: BoxShape.circle,
+                                                  color: Color(0xFFE0EEFF),
                                                 ),
-                                                SizedBox(
-                                                  height: 5,
+                                                child: SvgPicture.asset(
+                                                  "assets/images/wallet_icons_send.svg",
                                                 ),
-                                                AutoSizeText(
-                                                    maxFontSize: 16,
-                                                    maxLines: 1,
-                                                    style: TextStyle(
-                                                      fontWeight:
-                                                          FontWeight.w600,
-                                                      color: Color(0xFF0078FF),
-                                                      letterSpacing: -0.32,
-                                                    ),
-                                                    textAlign: TextAlign.center,
-                                                    "Load")
-                                              ],
-                                            ),
+                                              ),
+                                              SizedBox(
+                                                height: 5,
+                                              ),
+                                              AutoSizeText(
+                                                  maxFontSize: 16,
+                                                  maxLines: 1,
+                                                  style: TextStyle(
+                                                    fontWeight: FontWeight.w600,
+                                                    color: Color(0xFF0078FF),
+                                                    letterSpacing: -0.32,
+                                                  ),
+                                                  textAlign: TextAlign.center,
+                                                  "Send")
+                                            ],
                                           ),
-                                          InkWell(
-                                            onTap: () async {
-                                              Get.toNamed(Routes.walletsend,
-                                                  arguments: () {
-                                                controller.getLogs();
-                                                controller.getUserBalance();
-                                              });
-                                            },
-                                            child: Column(
-                                              children: [
-                                                Container(
-                                                  padding: EdgeInsets.all(10),
-                                                  width: 50,
-                                                  height: 50,
-                                                  clipBehavior: Clip.antiAlias,
-                                                  decoration: BoxDecoration(
-                                                    shape: BoxShape.circle,
-                                                    color: Color(0xFFE0EEFF),
-                                                  ),
-                                                  child: SvgPicture.asset(
-                                                    "assets/images/wallet_icons_send.svg",
-                                                  ),
+                                        ),
+                                        InkWell(
+                                          onTap: () {
+                                            Get.toNamed(Routes.qrwallet);
+                                          },
+                                          child: Column(
+                                            children: [
+                                              Container(
+                                                padding: EdgeInsets.all(10),
+                                                width: 50,
+                                                height: 50,
+                                                clipBehavior: Clip.antiAlias,
+                                                decoration: BoxDecoration(
+                                                  shape: BoxShape.circle,
+                                                  color: Color(0xFFE0EEFF),
                                                 ),
-                                                SizedBox(
-                                                  height: 5,
+                                                child: SvgPicture.asset(
+                                                  "assets/images/wallet_icons_qr.svg",
                                                 ),
-                                                AutoSizeText(
-                                                    maxFontSize: 16,
-                                                    maxLines: 1,
-                                                    style: TextStyle(
-                                                      fontWeight:
-                                                          FontWeight.w600,
-                                                      color: Color(0xFF0078FF),
-                                                      letterSpacing: -0.32,
-                                                    ),
-                                                    textAlign: TextAlign.center,
-                                                    "Send")
-                                              ],
-                                            ),
+                                              ),
+                                              SizedBox(
+                                                height: 5,
+                                              ),
+                                              AutoSizeText(
+                                                  maxFontSize: 16,
+                                                  maxLines: 1,
+                                                  style: TextStyle(
+                                                    fontWeight: FontWeight.w600,
+                                                    color: Color(0xFF0078FF),
+                                                    letterSpacing: -0.32,
+                                                  ),
+                                                  textAlign: TextAlign.center,
+                                                  "QR Code")
+                                            ],
                                           ),
-                                          InkWell(
-                                            onTap: () {
-                                              Get.toNamed(Routes.qrwallet);
-                                            },
-                                            child: Column(
-                                              children: [
-                                                Container(
-                                                  padding: EdgeInsets.all(10),
-                                                  width: 50,
-                                                  height: 50,
-                                                  clipBehavior: Clip.antiAlias,
-                                                  decoration: BoxDecoration(
-                                                    shape: BoxShape.circle,
-                                                    color: Color(0xFFE0EEFF),
-                                                  ),
-                                                  child: SvgPicture.asset(
-                                                    "assets/images/wallet_icons_qr.svg",
-                                                  ),
-                                                ),
-                                                SizedBox(
-                                                  height: 5,
-                                                ),
-                                                AutoSizeText(
-                                                    maxFontSize: 16,
-                                                    maxLines: 1,
-                                                    style: TextStyle(
-                                                      fontWeight:
-                                                          FontWeight.w600,
-                                                      color: Color(0xFF0078FF),
-                                                      letterSpacing: -0.32,
-                                                    ),
-                                                    textAlign: TextAlign.center,
-                                                    "QR Code")
-                                              ],
-                                            ),
-                                          ),
-                                          SizedBox(
-                                            // height: 50,
-                                            width: 50,
-                                          ),
-                                        ]),
-                                    Divider(),
-                                    Row(
-                                      children: [],
-                                    ),
-                                  ],
-                                ),
+                                        ),
+                                        SizedBox(
+                                          // height: 50,
+                                          width: 50,
+                                        ),
+                                      ]),
+                                  Divider(),
+                                  Row(
+                                    children: [],
+                                  ),
+                                ],
                               ),
                             ),
 
@@ -387,7 +364,7 @@ class WalletScreen extends GetView<WalletController> {
                                 maxHeight: size.height * 0.90,
                                 minHeight: size.height * 0.44,
                                 controller: panelController,
-                                panelBuilder: (context) {
+                                panelBuilder: (controller) {
                                   return Container(
                                     decoration: BoxDecoration(
                                       color: Colors.white,
@@ -428,10 +405,21 @@ class WalletScreen extends GetView<WalletController> {
                                                   text: "Recent Activities",
                                                   fontWeight: FontWeight.w600,
                                                 ),
-                                                SvgPicture.asset(
-                                                  "assets/images/wallet_filter.svg",
-                                                  height: 19,
-                                                  color: Color(0xFF0078FF),
+                                                InkWell(
+                                                  onTap: () {
+                                                    showModalBottomSheet(
+                                                        isDismissible: false,
+                                                        backgroundColor:
+                                                            Colors.transparent,
+                                                        context: context,
+                                                        builder: (context) =>
+                                                            WalletTransactionFilter());
+                                                  },
+                                                  child: SvgPicture.asset(
+                                                    "assets/images/wallet_filter.svg",
+                                                    height: 19,
+                                                    color: Color(0xFF0078FF),
+                                                  ),
                                                 ),
                                               ],
                                             ),

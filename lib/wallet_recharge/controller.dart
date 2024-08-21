@@ -2,7 +2,6 @@ import 'dart:async';
 
 import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
-import 'package:luvpark_get/custom_widgets/alert_dialog.dart';
 
 class WalletRechargeController extends GetxController
     with GetSingleTickerProviderStateMixin {

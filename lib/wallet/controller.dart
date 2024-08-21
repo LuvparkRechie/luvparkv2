@@ -1,6 +1,8 @@
 import 'dart:async';
 import 'dart:convert';
 
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:luvpark_get/auth/authentication.dart';
 import 'package:luvpark_get/custom_widgets/alert_dialog.dart';
@@ -13,26 +15,27 @@ class WalletController extends GetxController
   WalletController();
   RxBool isLoading = true.obs;
   RxBool isNetConn = true.obs;
-  RxString toDate = "".obs;
-  RxString fromDate = "".obs;
+
   RxList logs = [].obs;
   RxList userData = [].obs;
   var userImage;
   RxString fname = "".obs;
 
+  //FILTER VARIABLES
+  final GlobalKey<FormState> formKeyFilter = GlobalKey<FormState>();
+  final TextEditingController fromDate = TextEditingController();
+  final TextEditingController toDate = TextEditingController();
+
   @override
   void onInit() {
-    DateTime timeNow = DateTime.now();
     super.onInit();
-    toDate.value = timeNow.toString().split(" ")[0];
-    fromDate.value =
+
+    DateTime timeNow = DateTime.now();
+    toDate.text = timeNow.toString().split(" ")[0];
+    fromDate.text =
         timeNow.subtract(const Duration(days: 29)).toString().split(" ")[0];
     getUserBalance();
   }
-
-  // void refresh() {
-  //   fetchData();
-  // }
 
   Future<void> getUserBalance() async {
     userImage = await Authentication().getUserProfilePic();
@@ -59,16 +62,50 @@ class WalletController extends GetxController
     getUserBalance();
   }
 
+  Future<void> applyFilter() async {
+    if (formKeyFilter.currentState?.validate() ?? false) {
+      final String startDate = fromDate.text;
+      final String endDate = toDate.text;
+
+      if (startDate.isNotEmpty && endDate.isNotEmpty) {
+        print(
+            "Filter applied with start date: $startDate and end date: $endDate");
+        Get.back();
+      } else {
+        print("Please select both start and end dates.");
+        Get.back();
+      }
+    }
+  }
+
+  Future<void> selectDate(BuildContext context, bool isStartDate) async {
+    final DateTime? pickedDate = await showDatePicker(
+      context: context,
+      initialDate: DateTime.now(),
+      firstDate: DateTime(2000),
+      lastDate: DateTime(2101),
+    );
+
+    if (pickedDate != null) {
+      if (isStartDate) {
+        fromDate.text = pickedDate.toString().split(' ')[0];
+      } else {
+        toDate.text = pickedDate.toString().split(' ')[0];
+      }
+    }
+  }
+
   Future<void> getLogs() async {
     final item = await Authentication().getUserData();
     String userId = jsonDecode(item!)['user_id'].toString();
     isLoading.value = true;
-    // print("yawaaa");
+    // print("yawaaa ${item}");
 
     String subApi =
-        "${ApiKeys.gApiSubFolderGetTransactionLogs}?user_id=$userId&tran_date_from=$fromDate&tran_date_to=$toDate";
+        "${ApiKeys.gApiSubFolderGetTransactionLogs}?user_id=$userId&tran_date_from=${fromDate.text}&tran_date_to=${toDate.text}";
 
     HttpRequest(api: subApi).get().then((response) {
+      print(" ${subApi}");
       if (response == "No Internet") {
         isLoading.value = false;
         isNetConn.value = false;

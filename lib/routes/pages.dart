@@ -149,5 +149,10 @@ class AppPages {
       page: () => const FilterMap(),
       binding: FilterMapBinding(),
     ),
+    GetPage(
+      name: Routes.walletrecharge,
+      page: () => const WalletRechargeScreen(),
+      binding: WalletRechargeBinding(),
+    ),
   ];
 }
