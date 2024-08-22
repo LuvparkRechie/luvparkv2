@@ -25,6 +25,8 @@ import '../permission/permission.dart';
 
 import '../registration/index.dart';
 import '../registration/utils/otp_screen/index.dart';
+import '../security_Settings/view.dart';
+import '../security_settings/bindings.dart';
 import '../splash_screen/index.dart';
 import '../terms/index.dart';
 import '../wallet/index.dart';
@@ -166,6 +168,11 @@ class AppPages {
       name: Routes.profile,
       page: () => const Profile(),
       binding: ProfileScreenBinding(),
+    ),
+    GetPage(
+      name: Routes.security,
+      page: () => const Security(),
+      binding: SecuritySettingsBinding(),
     ),
   ];
 }

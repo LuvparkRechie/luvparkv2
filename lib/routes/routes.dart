@@ -30,4 +30,5 @@ class Routes {
   static const faqpage = "/faqpage";
   static const aboutus = "/aboutus";
   static const profile = "/profile";
+  static const security = "/security";
 }
