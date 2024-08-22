@@ -57,7 +57,7 @@ class QrWalletController extends GetxController
   //   getReserveData(index == 0 ? "C" : "U");
   // }
   void onTabChanged(int index) async {
-    print(index);
+    // print(index);
     currentPage.value = index;
     if (currentPage.value == 0) {
       getQrData();
@@ -173,6 +173,7 @@ class QrWalletController extends GetxController
   }
 
   Future<void> shareQr() async {
+    print("currentPage.value ${currentPage.value}");
     CustomDialog().loadingDialog(Get.context!);
     final directory = (await getApplicationDocumentsDirectory()).path;
     Uint8List bytes = await ScreenshotController().captureFromWidget(
@@ -202,7 +203,7 @@ class QrWalletController extends GetxController
                 height: 20,
               ),
               QrImageView(
-                data: tabController.index == 1 ? mobNum.value : payKey.value,
+                data: currentPage.value == 1 ? mobNum.value : payKey.value,
                 version: QrVersions.auto,
                 size: MediaQuery.of(Get.context!).size.width * .50,
                 gapless: false,
@@ -212,7 +213,7 @@ class QrWalletController extends GetxController
                 height: 20,
               ),
               Text(
-                tabController.index == 1 ? "Scan QR Code to receive" : "QR Pay",
+                currentPage.value == 1 ? "Scan QR Code to receive" : "QR Pay",
                 style: const TextStyle(
                   fontSize: 14,
                   fontWeight: FontWeight.w600,
