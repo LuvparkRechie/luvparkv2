@@ -1,4 +1,5 @@
 import 'package:get/get.dart';
+import 'package:luvpark_get/about_us/index.dart';
 import 'package:luvpark_get/mapa/utils/bindings.dart';
 import 'package:luvpark_get/mapa/utils/view.dart';
 import 'package:luvpark_get/faq/index.dart';
@@ -153,6 +154,11 @@ class AppPages {
       name: Routes.walletrecharge,
       page: () => const WalletRechargeScreen(),
       binding: WalletRechargeBinding(),
+    ),
+    GetPage(
+      name: Routes.aboutus,
+      page: () => const AboutUs(),
+      binding: AboutUsBinding(),
     ),
   ];
 }

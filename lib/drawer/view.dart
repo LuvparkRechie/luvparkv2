@@ -8,6 +8,7 @@ import 'package:luvpark_get/custom_widgets/alert_dialog.dart';
 import 'package:luvpark_get/custom_widgets/custom_text.dart';
 import 'package:luvpark_get/mapa/controller.dart';
 import 'package:luvpark_get/routes/routes.dart';
+import 'package:luvpark_get/web_view/webview.dart';
 
 class CustomDrawer extends GetView<DashboardMapController> {
   const CustomDrawer({super.key});
@@ -53,7 +54,7 @@ class CustomDrawer extends GetView<DashboardMapController> {
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
                               CircleAvatar(
-                                radius: 44,
+                                radius: 44.5,
                                 backgroundColor: Colors.white,
                                 backgroundImage: controller.userProfile !=
                                             null &&
@@ -83,7 +84,7 @@ class CustomDrawer extends GetView<DashboardMapController> {
                           ? '${controller.userProfile['first_name']} ${controller.userProfile['last_name']}'
                           : "Not Specified",
                       color: Colors.black,
-                      fontSize: 16,
+                      fontSize: 18,
                       fontStyle: FontStyle.normal,
                       textAlign: TextAlign.center,
                       fontWeight: FontWeight.w700,
@@ -161,22 +162,22 @@ class CustomDrawer extends GetView<DashboardMapController> {
                     Get.toNamed(Routes.wallet);
                   },
                 ),
-                ListTile(
-                  leading: const Icon(Icons.settings, color: Color(0xFF1C1C1E)),
-                  title: const CustomTitle(
-                    text: "Settings",
-                    fontSize: 14,
-                    fontStyle: FontStyle.normal,
-                    fontWeight: FontWeight.w700,
-                    letterSpacing: -0.408,
-                    color: Color(0xFF1C1C1E),
-                  ),
-                  trailing: const Icon(Icons.chevron_right_sharp,
-                      color: Color(0xFF1C1C1E)),
-                  onTap: () {
-                    Navigator.pop(context);
-                  },
-                ),
+                // ListTile(
+                //   leading: const Icon(Icons.settings, color: Color(0xFF1C1C1E)),
+                //   title: const CustomTitle(
+                //     text: "Settings",
+                //     fontSize: 14,
+                //     fontStyle: FontStyle.normal,
+                //     fontWeight: FontWeight.w700,
+                //     letterSpacing: -0.408,
+                //     color: Color(0xFF1C1C1E),
+                //   ),
+                //   trailing: const Icon(Icons.chevron_right_sharp,
+                //       color: Color(0xFF1C1C1E)),
+                //   onTap: () {
+                //     Navigator.pop(context);
+                //   },
+                // ),
                 Container(height: 22),
                 const Padding(
                   padding: EdgeInsets.symmetric(horizontal: 15.0),
@@ -188,6 +189,22 @@ class CustomDrawer extends GetView<DashboardMapController> {
                     fontWeight: FontWeight.w700,
                     color: Color(0xFFA1A1A9),
                   ),
+                ),
+                ListTile(
+                  leading: const Icon(Icons.settings, color: Color(0xFF1C1C1E)),
+                  title: const CustomTitle(
+                    text: "About Us",
+                    fontSize: 14,
+                    fontStyle: FontStyle.normal,
+                    fontWeight: FontWeight.w700,
+                    letterSpacing: -0.408,
+                    color: Color(0xFF1C1C1E),
+                  ),
+                  trailing: const Icon(Icons.chevron_right_sharp,
+                      color: Color(0xFF1C1C1E)),
+                  onTap: () {
+                    Get.offAndToNamed(Routes.aboutus);
+                  },
                 ),
                 ListTile(
                   leading: const Icon(Icons.person, color: Color(0xFF1C1C1E)),
@@ -218,13 +235,11 @@ class CustomDrawer extends GetView<DashboardMapController> {
                   trailing: const Icon(Icons.chevron_right_sharp,
                       color: Color(0xFF1C1C1E)),
                   onTap: () {
-                    // Variables.pageTrans(
-                    //     const WebviewPage(
-                    //       urlDirect: "https://luvpark.ph/terms-of-use/",
-                    //       label: "Terms of use",
-                    //       isBuyToken: false,
-                    //     ),
-                    //     context);
+                    Get.to(const WebviewPage(
+                      urlDirect: "https://luvpark.ph/terms-of-use/",
+                      label: "Terms of Use",
+                      isBuyToken: false,
+                    ));
                   },
                 ),
                 ListTile(
@@ -240,13 +255,11 @@ class CustomDrawer extends GetView<DashboardMapController> {
                   trailing: const Icon(Icons.chevron_right_sharp,
                       color: Color(0xFF1C1C1E)),
                   onTap: () {
-                    // Variables.pageTrans(
-                    //     const WebviewPage(
-                    //       urlDirect: "https://luvpark.ph/privacy-policy/",
-                    //       label: "Privacy Policy",
-                    //       isBuyToken: false,
-                    //     ),
-                    //     context);
+                    Get.to(const WebviewPage(
+                      urlDirect: "https://luvpark.ph/privacy-policy/",
+                      label: "Privacy Policy",
+                      isBuyToken: false,
+                    ));
                   },
                 ),
               ],

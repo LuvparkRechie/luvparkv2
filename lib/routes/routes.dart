@@ -28,4 +28,5 @@ class Routes {
   static const walletrechargeload = "/wallet_recharge_load";
   static const mapFilter = "/map_filter";
   static const faqpage = "/faqpage";
+  static const aboutus = "/aboutus";
 }
