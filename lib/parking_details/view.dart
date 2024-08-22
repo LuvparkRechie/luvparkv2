@@ -27,7 +27,9 @@ class ParkingDetails extends GetView<ParkingDetailsController> {
       child: Scaffold(
         body: Obx(
           () => !ct.isNetConnected.value
-              ? const NoInternetConnected()
+              ? NoInternetConnected(
+                  onTap: controller.refreshAmenData,
+                )
               : ct.isLoading.value
                   ? Column(
                       mainAxisAlignment: MainAxisAlignment.center,

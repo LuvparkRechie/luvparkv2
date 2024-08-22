@@ -1,14 +1,10 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:luvpark_get/custom_widgets/app_color.dart';
 import 'package:luvpark_get/custom_widgets/custom_appbar.dart';
 import 'package:luvpark_get/custom_widgets/custom_text.dart';
 import 'package:luvpark_get/custom_widgets/variables.dart';
-import 'package:luvpark_get/functions/functions.dart';
 import 'package:luvpark_get/parking_areas/controller.dart';
 import 'package:luvpark_get/routes/routes.dart';
 
@@ -37,54 +33,52 @@ class ParkingAreas extends GetView<ParkingAreasController> {
           children: [
             Container(height: 20),
             Container(
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(48),
-                boxShadow: [
-                  BoxShadow(
-                    color: AppColor.primaryColor.withOpacity(0.1),
-                    spreadRadius: 1,
-                    blurRadius: 0,
-                    offset: const Offset(0, 0),
-                  ),
-                ],
+              clipBehavior: Clip.antiAlias,
+              decoration: ShapeDecoration(
+                color: const Color(0xFFFBFBFB),
+                shape: RoundedRectangleBorder(
+                  side: const BorderSide(width: 1, color: Color(0x232563EB)),
+                  borderRadius: BorderRadius.circular(54),
+                ),
               ),
               child: Padding(
                 padding: const EdgeInsets.symmetric(
                   horizontal: 14,
                 ),
-                child: TextField(
-                  autofocus: false,
-                  //    controller: searchController,
-                  decoration: InputDecoration(
-                    hintText: "Search parking zone/address",
-                    border: InputBorder.none,
-                    contentPadding: const EdgeInsets.only(left: 10),
-                    hintStyle: Platform.isAndroid
-                        ? GoogleFonts.dmSans(
-                            color: const Color(0x993C3C43),
-                            fontSize: 17,
-                            fontWeight: FontWeight.w400,
-                            height: 0.08,
-                            letterSpacing: -0.41,
-                          )
-                        : const TextStyle(
-                            color: Color(0x993C3C43),
-                            fontSize: 17,
-                            fontWeight: FontWeight.w400,
-                            height: 0.08,
-                            letterSpacing: -0.41,
-                          ),
-                  ),
-                  style: paragraphStyle(),
-                  onChanged: (String value) async {
-                    ct.onSearch(value);
-                  },
+                child: Row(
+                  children: [
+                    Container(
+                      width: 24,
+                      height: 24,
+                      decoration: const BoxDecoration(
+                        image: DecorationImage(
+                          image: AssetImage("assets/dashboard_icon/search.png"),
+                          fit: BoxFit.contain,
+                        ),
+                      ),
+                    ),
+                    Expanded(
+                      child: TextField(
+                        autofocus: false,
+                        decoration: InputDecoration(
+                          hintText: "Search parking zone/address",
+                          border: InputBorder.none,
+                          contentPadding: const EdgeInsets.only(left: 10),
+                          hintStyle:
+                              paragraphStyle(fontWeight: FontWeight.w600),
+                        ),
+                        style: paragraphStyle(),
+                        onChanged: (String value) async {
+                          ct.onSearch(value);
+                        },
+                      ),
+                    ),
+                  ],
                 ),
               ),
             ),
             Container(height: 20),
-            CustomParagraph(
+            const CustomParagraph(
               text: "Nearest Parking",
               fontWeight: FontWeight.w700,
             ),
@@ -93,7 +87,7 @@ class ParkingAreas extends GetView<ParkingAreasController> {
               () => Expanded(
                 child: Container(
                   decoration: const BoxDecoration(
-                    color: AppColor.bodyColor,
+                    //   color: AppColor.bodyColor,
                     borderRadius: BorderRadius.vertical(
                       top: Radius.circular(7),
                     ),
@@ -112,18 +106,18 @@ class ParkingAreas extends GetView<ParkingAreasController> {
                               ct.searchedZone[index]["distance"].toString());
                           if (kmDist >= 1000) {
                             double distanceInKilometers = kmDist / 1000;
-                            return '${distanceInKilometers.toStringAsFixed(2)} km';
+                            return '${distanceInKilometers.round()} km';
                           } else {
-                            return '${kmDist.toStringAsFixed(2)} m';
+                            return '${kmDist.round()} m';
                           }
                         }
 
-                        String finalSttime =
-                            "${ct.searchedZone[index]["start_time"].toString().substring(0, 2)}:${ct.searchedZone[index]["start_time"].toString().substring(2)}";
-                        String finalEndtime =
-                            "${ct.searchedZone[index]["end_time"].toString().substring(0, 2)}:${ct.searchedZone[index]["end_time"].toString().substring(2)}";
-                        bool isOpen = Functions.checkAvailability(
-                            finalSttime, finalEndtime);
+                        // String finalSttime =
+                        //     "${ct.searchedZone[index]["start_time"].toString().substring(0, 2)}:${ct.searchedZone[index]["start_time"].toString().substring(2)}";
+                        // String finalEndtime =
+                        //     "${ct.searchedZone[index]["end_time"].toString().substring(0, 2)}:${ct.searchedZone[index]["end_time"].toString().substring(2)}";
+                        // bool isOpen = Functions.checkAvailability(
+                        //     finalSttime, finalEndtime);
 
                         return ShowUpAnimation(
                           delay: 5 * index,
@@ -133,18 +127,28 @@ class ParkingAreas extends GetView<ParkingAreasController> {
                                   arguments: ct.searchedZone[index]);
                             },
                             child: Container(
-                              padding: const EdgeInsets.symmetric(
-                                  horizontal: 20, vertical: 10),
+                              padding:
+                                  const EdgeInsets.fromLTRB(15, 15, 15, 15),
                               width: MediaQuery.of(context).size.width * .88,
                               decoration: BoxDecoration(
-                                color: Colors.white,
-                                border: Border.all(
+                                border: Border(
+                                    bottom: BorderSide(
                                   color: Colors.grey.shade200,
-                                ),
-                                borderRadius: BorderRadius.circular(10),
+                                )),
                               ),
                               child: Row(
                                 children: [
+                                  Container(
+                                    height: 34,
+                                    clipBehavior: Clip.antiAlias,
+                                    decoration: const BoxDecoration(),
+                                    child: const Image(
+                                      image: AssetImage(
+                                          "assets/dashboard_icon/location_on.png"),
+                                      fit: BoxFit.cover,
+                                    ),
+                                  ),
+                                  Container(width: 10),
                                   Expanded(
                                     child: Column(
                                       crossAxisAlignment:
@@ -163,40 +167,35 @@ class ParkingAreas extends GetView<ParkingAreasController> {
                                               ["address"],
                                           fontSize: 14,
                                           maxlines: 2,
+                                          fontWeight: FontWeight.w600,
                                         ),
-                                        Container(height: 10),
-                                        RichText(
-                                          text: TextSpan(
-                                            children: [
-                                              TextSpan(
-                                                text:
-                                                    "${getDistanceString()}  ●  ${ct.searchedZone[index]["parking_schedule"]}  ●  ",
-                                                style: GoogleFonts.manrope(
-                                                  color: Colors.grey,
-                                                  fontSize: 12,
-                                                  fontWeight: FontWeight.w500,
-                                                ),
-                                              ),
-                                              TextSpan(
-                                                text: isOpen ? "OPEN" : "CLOSE",
-                                                style: GoogleFonts.manrope(
-                                                  fontWeight: FontWeight.w500,
-                                                  color: isOpen
-                                                      ? Colors.green
-                                                      : Colors.red,
-                                                  fontSize: 12,
-                                                ),
-                                              ),
-                                            ],
-                                          ),
-                                        ),
+                                        // Container(height: 10),
+                                        // RichText(
+                                        //   text: TextSpan(
+                                        //     children: [
+                                        //       TextSpan(
+                                        //         text:
+                                        //             "${ct.searchedZone[index]["parking_schedule"]}  ●  ",
+                                        //         style: paragraphStyle(
+                                        //             fontSize: 12),
+                                        //       ),
+                                        //       TextSpan(
+                                        //         text: isOpen ? "OPEN" : "CLOSE",
+                                        //         style: paragraphStyle(
+                                        //           fontSize: 12,
+                                        //           color: isOpen
+                                        //               ? Colors.green
+                                        //               : Colors.red,
+                                        //         ),
+                                        //       ),
+                                        //     ],
+                                        //   ),
+                                        // ),
                                       ],
                                     ),
                                   ),
-                                  Icon(
-                                    Icons.keyboard_arrow_right_outlined,
-                                    color: AppColor.primaryColor,
-                                  )
+                                  Container(width: 5),
+                                  CustomLinkLabel(text: getDistanceString())
                                 ],
                               ),
                             ),

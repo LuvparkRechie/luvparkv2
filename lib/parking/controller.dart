@@ -24,8 +24,7 @@ class ParkingController extends GetxController
   RxDouble tabHeight = 0.0.obs;
   bool isAllowToSync = true;
 
-  RxBool isLoading = false.obs; // Changed from hasNet to isLoading
-
+  RxBool isLoading = false.obs;
   ParkingController();
 
   @override

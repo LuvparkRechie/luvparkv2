@@ -30,9 +30,4 @@ class ParkingAreasController extends GetxController {
     searchedZone.value = dataNearest;
     super.onInit();
   }
-
-  @override
-  void onClose() {
-    super.onClose();
-  }
 }

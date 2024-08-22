@@ -20,6 +20,13 @@ class FilterMap extends GetView<FilterMapController> {
         action: [
           InkWell(
             onTap: () {
+              if (controller.filterParam[0]["ovp"]!.isEmpty &&
+                  controller.filterParam[0]["amen"]!.isEmpty &&
+                  controller.filterParam[0]["vh_type"]!.isEmpty &&
+                  controller.filterParam[0]["park_type"]!.isEmpty) {
+                return;
+              }
+
               Get.back();
               controller.arguments(controller.filterParam);
             },
@@ -92,7 +99,7 @@ class FilterMap extends GetView<FilterMapController> {
                                           controller.selectedOvp.value == index
                                               ? Colors.white
                                               : Colors.black87,
-                                      fontWeight: FontWeight.w700,
+                                      fontWeight: FontWeight.w600,
                                     ),
                                   ),
                                 ),
@@ -135,7 +142,8 @@ class FilterMap extends GetView<FilterMapController> {
                               ),
                               Text(
                                 controller.labelDistance.value,
-                                style: paragraphStyle(),
+                                style:
+                                    paragraphStyle(fontWeight: FontWeight.w600),
                               ),
                             ],
                           ),
@@ -202,7 +210,7 @@ class FilterMap extends GetView<FilterMapController> {
               title: CustomParagraph(
                 text: controller.vhTypeData[i]["text"],
                 color: Colors.black87,
-                fontWeight: FontWeight.w700,
+                fontWeight: FontWeight.w600,
               ),
               value: controller.vhTypeData[i]["value"].toString(),
               groupValue: controller.selectedVehicleType.value,
@@ -223,7 +231,7 @@ class FilterMap extends GetView<FilterMapController> {
             title: const CustomParagraph(
               text: "None",
               color: Colors.black87,
-              fontWeight: FontWeight.w700,
+              fontWeight: FontWeight.w600,
             ),
             value: "",
             groupValue: controller.selectedVehicleType.value,
@@ -258,7 +266,7 @@ class FilterMap extends GetView<FilterMapController> {
                         .toString())
                     ? Colors.white
                     : Colors.black87,
-                fontWeight: FontWeight.w700,
+                fontWeight: FontWeight.w600,
               ),
               selected: controller.sfPt.contains(
                   controller.parkTypeData[i]["parking_type_code"].toString()),
@@ -303,7 +311,7 @@ class FilterMap extends GetView<FilterMapController> {
                         .toString())
                     ? Colors.white
                     : Colors.black87,
-                fontWeight: FontWeight.w700,
+                fontWeight: FontWeight.w600,
               ),
               selected: controller.sfAmen.contains(controller.amenitiesData[i]
                       ["parking_amenity_code"]

@@ -3,8 +3,7 @@ import 'package:luvpark_get/custom_widgets/alert_dialog.dart';
 import 'package:luvpark_get/http/api_keys.dart';
 import 'package:luvpark_get/http/http_request.dart';
 
-class BookingNoticeController extends GetxController
-    with GetSingleTickerProviderStateMixin {
+class BookingNoticeController extends GetxController {
   BookingNoticeController();
   RxBool isAgree = false.obs;
   RxBool isInternetConn = true.obs;

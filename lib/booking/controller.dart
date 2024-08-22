@@ -346,7 +346,7 @@ class BookingController extends GetxController
       "vehicle_plate_no": params["vehicle_plate_no"],
       "park_area_id": params["park_area_id"].toString(),
     };
-
+    print("dynamicBookParam $dynamicBookParam");
     CustomDialog().confirmationDialog(
         context,
         "Confirm Booking",
@@ -360,6 +360,7 @@ class BookingController extends GetxController
       HttpRequest(api: ApiKeys.gApiBooking, parameters: dynamicBookParam)
           .postBody()
           .then((objData) async {
+        print("objData $objData");
         if (objData == "No Internet") {
           isSubmitBooking.value = false;
           CustomDialog().internetErrorDialog(context, () {
@@ -396,7 +397,7 @@ class BookingController extends GetxController
             'isReserved': false,
             'isShowRate': true,
             'reservationId':
-                int.parse(parameters["areaData"]["reservation_id"]),
+                objData["reservation_id"] ?? objData["reservation_id"],
             'address': parameters["areaData"]["address"],
             'area_data': parameters["areaData"],
             'isAutoExtend': false,
@@ -404,15 +405,18 @@ class BookingController extends GetxController
             'status': "B",
             'paramsCalc': bookingParams[0]
           };
-          if (isCheckIn) {
-            checkIn(objData["ticket_id"], current.latitude, current.longitude,
-                args);
-            return;
-          } else {
-            isSubmitBooking.value = false;
-            Get.offNamed(Routes.bookingReceipt, arguments: args);
-            return;
-          }
+          print("isCheckIn $isCheckIn");
+          // if (isCheckIn) {
+          //   checkIn(objData["ticket_id"], current.latitude, current.longitude,
+          //       args);
+          //   return;
+          // } else {
+          //   isSubmitBooking.value = false;
+          //   Get.offNamed(Routes.bookingReceipt, arguments: args);
+          //   return;
+          // }
+          isSubmitBooking.value = false;
+          Get.offNamed(Routes.bookingReceipt, arguments: args);
         }
         if (objData["success"] == "Q") {
           CustomDialog().confirmationDialog(
