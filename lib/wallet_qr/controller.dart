@@ -35,6 +35,7 @@ class QrWalletController extends GetxController
   RxInt currentPage = 0.obs;
   final ScreenshotController screenshotController = ScreenshotController();
   late TabController tabController;
+  var userImage;
 
   @override
   void onClose() {
@@ -66,6 +67,7 @@ class QrWalletController extends GetxController
 
   ///FIrst tab
   Future<void> getQrData() async {
+    userImage = await Authentication().getUserProfilePic();
     isLoading.value = true;
     isInternetConn.value = true;
     var userData = await Authentication().getUserData();

@@ -1,5 +1,6 @@
 // ignore_for_file: prefer_const_constructors
 
+import 'dart:convert';
 import 'dart:io';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
@@ -8,6 +9,7 @@ import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:luvpark_get/custom_widgets/custom_appbar.dart';
 import 'package:luvpark_get/custom_widgets/custom_body.dart';
+import 'package:luvpark_get/custom_widgets/custom_tciket_style.dart';
 import 'package:luvpark_get/custom_widgets/custom_text.dart';
 import 'package:luvpark_get/custom_widgets/no_internet.dart';
 import 'package:luvpark_get/custom_widgets/page_loader.dart';
@@ -26,6 +28,7 @@ class QrWallet extends GetView<QrWalletController> {
   @override
   Widget build(BuildContext context) {
     return Obx(() => Scaffold(
+          backgroundColor: AppColor.primaryColor,
           body: Column(
             children: [
               CustomAppbar(
@@ -121,11 +124,9 @@ class QrWallet extends GetView<QrWalletController> {
                 ),
               ),
               Expanded(
-                child: TabBarView(
-                  controller: controller.tabController,
-                  children: const [PayQr(), ReceiveQr()],
-                ),
-              ),
+                child:
+                    controller.currentPage.value == 0 ? PayQr() : ReceiveQr(),
+              )
             ],
           ),
         ));
@@ -172,193 +173,259 @@ class ReceiveQr extends GetView<QrWalletController> {
   const ReceiveQr({super.key});
   @override
   Widget build(BuildContext context) {
-    return Column(
+    return Padding(
+      padding: const EdgeInsets.all(15),
+      child: Container(
+        color: Colors.white,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            Padding(
+              padding: EdgeInsets.fromLTRB(0, 17, 0, 0),
+              child: Column(
+                children: [
+                  Center(
+                    child: CircleAvatar(
+                        radius: 20,
+                        backgroundColor: Colors.black,
+                        child: buildProfileImage()),
+                  ),
+                  CustomTitle(
+                    text: controller.fullName.value.toUpperCase(),
+                    maxlines: 1,
+                    fontSize: 18,
+                    color: Color(0xFF070707),
+                    textAlign: TextAlign.center,
+                  ),
+                  CustomTitle(
+                    text: controller.mono.value,
+                    fontSize: 13,
+                    fontWeight: FontWeight.w600,
+                    color: Color(0xFF616161),
+                    letterSpacing: -0.32,
+                  ),
+                ],
+              ),
+            ),
+            TicketStyle(
+              dtColor: AppColor.primaryColor,
+            ),
+
+            //   child: SizedBox(
+            //     width: MediaQuery.of(context).size.width * .58,
+            //     child: Column(
+            //       mainAxisAlignment: MainAxisAlignment.center,
+            //       children: [
+            //         Column(
+            //           mainAxisAlignment: MainAxisAlignment.center,
+            //           mainAxisSize: MainAxisSize.min,
+            //           children: [
+            //             Container(
+            //               decoration: BoxDecoration(
+            //                   color: Colors.white,
+            //                   borderRadius: BorderRadius.circular(28),
+            //                   border: Border.all(
+            //                       width: 2,
+            //                       color: const Color.fromRGBO(37, 99, 235, 0.09))),
+            //               child: Padding(
+            //                 padding: const EdgeInsets.all(8.0),
+            //                 child: QrImageView(
+            //                   data: controller.mobNum.value,
+            //                   version: QrVersions.auto,
+            //                   gapless: false,
+            //                 ),
+            //               ),
+            //             ),
+            //             Container(
+            //               height: 27,
+            //             ),
+            //             Center(
+            //               child: CustomTitle(
+            //                 text: 'Scan QR code to receive',
+            //                 fontSize: 14,
+            //                 fontWeight: FontWeight.w600,
+            //                 color: const Color(0xFF787878),
+            //               ),
+            //             ),
+            //             Container(
+            //               height: 37,
+            //             ),
+            //             Row(
+            //               mainAxisAlignment: MainAxisAlignment.end,
+            //               children: [
+            //                 Container(
+            //                   width: 10,
+            //                 ),
+            //                 Container(
+            //                   height: 48,
+            //                   width: 48,
+            //                   decoration: BoxDecoration(
+            //                       shape: BoxShape.circle,
+            //                       color: AppColor.primaryColor),
+            //                   child: Center(
+            //                     child: CustomTitle(
+            //                       text: controller.firstlastCapital.value,
+            //                       fontWeight: FontWeight.w700,
+            //                       color: Colors.white,
+            //                       fontSize: 16,
+            //                       textAlign: TextAlign.center,
+            //                     ),
+            //                   ),
+            //                 ),
+            //                 Container(
+            //                   width: 10,
+            //                 ),
+            //                 Expanded(
+            //                   child: Column(
+            //                     crossAxisAlignment: CrossAxisAlignment.start,
+            //                     children: [
+            //                       AutoSizeText(
+            //                         controller.fullName.value.toUpperCase(),
+            //                         maxFontSize: 16,
+            //                         maxLines: 1,
+            //                         style: TextStyle(
+            //                           fontWeight: FontWeight.w600,
+            //                           color: Color(0xFF353636),
+            //                           letterSpacing: -0.32,
+            //                         ),
+            //                         textAlign: TextAlign.center,
+            //                       ),
+            //                       CustomTitle(
+            //                         text: controller.mono.value,
+            //                         fontSize: 14,
+            //                         fontWeight: FontWeight.w600,
+            //                         color: Color(0xFF9A9A9A),
+            //                         letterSpacing: -0.32,
+            //                       ),
+            //                     ],
+            //                   ),
+            //                 ),
+            //               ],
+            //             ),
+            //             Container(
+            //               height: 16,
+            //             ),
+            //             IntrinsicHeight(
+            //               child: Row(
+            //                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            //                 children: [
+            //                   Expanded(
+            //                     child: InkWell(
+            //                       onTap: () {
+            //                         controller.shareQr();
+            //                       },
+            //                       child: Padding(
+            //                         padding: const EdgeInsets.all(8.0),
+            //                         child: Column(
+            //                           mainAxisAlignment: MainAxisAlignment.center,
+            //                           children: [
+            //                             const Icon(
+            //                               Icons.ios_share_outlined,
+            //                               color: Colors.black,
+            //                               size: 25,
+            //                             ),
+            //                             Text(
+            //                               "Share",
+            //                               style: Platform.isAndroid
+            //                                   ? GoogleFonts.dmSans(
+            //                                       color: Colors.black,
+            //                                       fontWeight: FontWeight.w600,
+            //                                       letterSpacing: 1,
+            //                                       fontSize: 14)
+            //                                   : TextStyle(
+            //                                       color: Colors.black,
+            //                                       fontWeight: FontWeight.w600,
+            //                                       letterSpacing: 1,
+            //                                       fontSize: 14,
+            //                                       fontFamily: "SFProTextReg",
+            //                                     ),
+            //                             ),
+            //                           ],
+            //                         ),
+            //                       ),
+            //                     ),
+            //                   ),
+            //                   Container(
+            //                     width: 1,
+            //                     color: const Color.fromRGBO(30, 33, 41, 0.08),
+            //                   ),
+            //                   Expanded(
+            //                     child: InkWell(
+            //                       onTap: () {
+            //                         controller.saveQr();
+            //                       },
+            //                       child: Padding(
+            //                         padding: const EdgeInsets.all(8.0),
+            //                         child: Column(
+            //                           mainAxisAlignment: MainAxisAlignment.center,
+            //                           children: [
+            //                             const Icon(
+            //                               Icons.download_outlined,
+            //                               color: Colors.black,
+            //                               size: 25,
+            //                             ),
+            //                             Text(
+            //                               "Save",
+            //                               style: Platform.isAndroid
+            //                                   ? GoogleFonts.dmSans(
+            //                                       color: Colors.black,
+            //                                       fontWeight: FontWeight.w600,
+            //                                       letterSpacing: 1,
+            //                                       fontSize: 14)
+            //                                   : TextStyle(
+            //                                       color: Colors.black,
+            //                                       fontWeight: FontWeight.w600,
+            //                                       letterSpacing: 1,
+            //                                       fontSize: 14,
+            //                                       fontFamily: "SFProTextReg",
+            //                                     ),
+            //                             ),
+            //                           ],
+            //                         ),
+            //                       ),
+            //                     ),
+            //                   ),
+            //                 ],
+            //               ),
+            //             ),
+            //           ],
+            //         ),
+            //       ],
+            //     ),
+            //   ),
+            // ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget buildProfileImage() {
+    return Row(
       mainAxisAlignment: MainAxisAlignment.start,
       children: [
-        Padding(
-          padding: const EdgeInsets.only(top: 52.0),
-          child: SizedBox(
-            width: MediaQuery.of(context).size.width * .58,
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Container(
-                      decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(28),
-                          border: Border.all(
-                              width: 2,
-                              color: const Color.fromRGBO(37, 99, 235, 0.09))),
-                      child: Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: QrImageView(
-                          data: controller.mobNum.value,
-                          version: QrVersions.auto,
-                          gapless: false,
-                        ),
-                      ),
+        Container(
+          padding: EdgeInsets.all(18),
+          decoration: BoxDecoration(
+            shape: BoxShape.circle,
+
+            image: controller.userImage != null
+                ? DecorationImage(
+                    image: MemoryImage(
+                      base64Decode(controller.userImage!),
                     ),
-                    Container(
-                      height: 27,
-                    ),
-                    Center(
-                      child: CustomTitle(
-                        text: 'Scan QR code to receive',
-                        fontSize: 14,
-                        fontWeight: FontWeight.w600,
-                        color: const Color(0xFF787878),
-                      ),
-                    ),
-                    Container(
-                      height: 37,
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      children: [
-                        Container(
-                          width: 10,
-                        ),
-                        Container(
-                          height: 48,
-                          width: 48,
-                          decoration: BoxDecoration(
-                              shape: BoxShape.circle,
-                              color: AppColor.primaryColor),
-                          child: Center(
-                            child: CustomTitle(
-                              text: controller.firstlastCapital.value,
-                              fontWeight: FontWeight.w700,
-                              color: Colors.white,
-                              fontSize: 16,
-                              textAlign: TextAlign.center,
-                            ),
-                          ),
-                        ),
-                        Container(
-                          width: 10,
-                        ),
-                        Expanded(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              AutoSizeText(
-                                controller.fullName.value.toUpperCase(),
-                                maxFontSize: 16,
-                                maxLines: 1,
-                                style: TextStyle(
-                                  fontWeight: FontWeight.w600,
-                                  color: Color(0xFF353636),
-                                  letterSpacing: -0.32,
-                                ),
-                                textAlign: TextAlign.center,
-                              ),
-                              CustomTitle(
-                                text: controller.mono.value,
-                                fontSize: 14,
-                                fontWeight: FontWeight.w600,
-                                color: Color(0xFF9A9A9A),
-                                letterSpacing: -0.32,
-                              ),
-                            ],
-                          ),
-                        ),
-                      ],
-                    ),
-                    Container(
-                      height: 16,
-                    ),
-                    IntrinsicHeight(
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: [
-                          Expanded(
-                            child: InkWell(
-                              onTap: () {
-                                controller.shareQr();
-                              },
-                              child: Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: Column(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    const Icon(
-                                      Icons.ios_share_outlined,
-                                      color: Colors.black,
-                                      size: 25,
-                                    ),
-                                    Text(
-                                      "Share",
-                                      style: Platform.isAndroid
-                                          ? GoogleFonts.dmSans(
-                                              color: Colors.black,
-                                              fontWeight: FontWeight.w600,
-                                              letterSpacing: 1,
-                                              fontSize: 14)
-                                          : TextStyle(
-                                              color: Colors.black,
-                                              fontWeight: FontWeight.w600,
-                                              letterSpacing: 1,
-                                              fontSize: 14,
-                                              fontFamily: "SFProTextReg",
-                                            ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ),
-                          ),
-                          Container(
-                            width: 1,
-                            color: const Color.fromRGBO(30, 33, 41, 0.08),
-                          ),
-                          Expanded(
-                            child: InkWell(
-                              onTap: () {
-                                controller.saveQr();
-                              },
-                              child: Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: Column(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    const Icon(
-                                      Icons.download_outlined,
-                                      color: Colors.black,
-                                      size: 25,
-                                    ),
-                                    Text(
-                                      "Save",
-                                      style: Platform.isAndroid
-                                          ? GoogleFonts.dmSans(
-                                              color: Colors.black,
-                                              fontWeight: FontWeight.w600,
-                                              letterSpacing: 1,
-                                              fontSize: 14)
-                                          : TextStyle(
-                                              color: Colors.black,
-                                              fontWeight: FontWeight.w600,
-                                              letterSpacing: 1,
-                                              fontSize: 14,
-                                              fontFamily: "SFProTextReg",
-                                            ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
-              ],
-            ),
+                    fit: BoxFit.cover,
+                  )
+                : null, // No background image if userImage is null
           ),
+          child: controller.userImage == null
+              ? Center(
+                  child: Icon(
+                    Icons.person,
+                    color: Colors.blueAccent,
+                  ),
+                )
+              : null,
         ),
       ],
     );

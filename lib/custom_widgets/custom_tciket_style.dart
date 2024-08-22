@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:luvpark_get/custom_widgets/app_color.dart';
 
 class TicketStyle extends StatelessWidget {
-  const TicketStyle({super.key});
+  final Color? dtColor;
+  const TicketStyle({super.key, this.dtColor});
 
   @override
   Widget build(BuildContext context) {
@@ -33,19 +34,19 @@ class TicketStyle extends StatelessWidget {
             ],
           ),
         ),
-        const Positioned(
+        Positioned(
             left: -10,
             bottom: 0,
             child: CircleAvatar(
               radius: 12,
-              backgroundColor: AppColor.bodyColor,
+              backgroundColor: dtColor ?? AppColor.bodyColor,
             )),
-        const Positioned(
+        Positioned(
             right: -10,
             bottom: 0,
             child: CircleAvatar(
               radius: 12,
-              backgroundColor: AppColor.bodyColor,
+              backgroundColor: dtColor ?? AppColor.bodyColor,
             ))
       ],
     );
