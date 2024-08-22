@@ -3,6 +3,8 @@ import 'package:luvpark_get/about_us/index.dart';
 import 'package:luvpark_get/mapa/utils/bindings.dart';
 import 'package:luvpark_get/mapa/utils/view.dart';
 import 'package:luvpark_get/faq/index.dart';
+import 'package:luvpark_get/profile/index.dart';
+import 'package:luvpark_get/profile/view.dart';
 import 'package:luvpark_get/rate_booking/index.dart';
 import 'package:luvpark_get/wallet_qr/index.dart';
 import 'package:luvpark_get/wallet_recharge/index.dart';
@@ -159,6 +161,11 @@ class AppPages {
       name: Routes.aboutus,
       page: () => const AboutUs(),
       binding: AboutUsBinding(),
+    ),
+    GetPage(
+      name: Routes.profile,
+      page: () => const Profile(),
+      binding: ProfileScreenBinding(),
     ),
   ];
 }

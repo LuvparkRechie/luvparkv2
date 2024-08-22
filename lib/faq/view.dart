@@ -2,8 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:luvpark_get/custom_widgets/app_color.dart';
-import 'package:luvpark_get/custom_widgets/custom_body.dart';
-import 'package:luvpark_get/custom_widgets/custom_text.dart';
+import 'package:luvpark_get/custom_widgets/custom_appbar.dart';
 import 'package:luvpark_get/faq/controller.dart';
 
 class FaqPage extends GetView<FaqPageController> {
@@ -17,36 +16,14 @@ class FaqPage extends GetView<FaqPageController> {
       statusBarIconBrightness: Brightness.dark,
     ));
 
-    return CustomScaffold(
-      bodyColor: AppColor.bodyColor,
-      appBar: AppBar(
-        toolbarHeight: 0,
-        elevation: 0,
-        backgroundColor: AppColor.bodyColor,
-        systemOverlayStyle: const SystemUiOverlayStyle(
-          statusBarColor: AppColor.bodyColor,
-          statusBarBrightness: Brightness.light,
-          statusBarIconBrightness: Brightness.dark,
-        ),
-      ),
-      children: Padding(
-        padding: const EdgeInsets.fromLTRB(15, 10, 15, 10),
+    return const Scaffold(
+      backgroundColor: AppColor.bodyColor,
+      appBar: CustomAppbar(title: "FAQs"),
+      body: Padding(
+        padding: EdgeInsets.fromLTRB(15, 10, 15, 10),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            GestureDetector(
-              onTap: () {
-                Get.back();
-              },
-              child: const Icon(Icons.arrow_back),
-            ),
-            const SizedBox(height: 10),
-            const CustomTitle(
-              text: "Frequently Asked Questions",
-              fontSize: 20,
-              letterSpacing: 0.0,
-            ),
-            // Expanded(
             //   child: GridView.builder(
             //     gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
             //       crossAxisCount: 2,

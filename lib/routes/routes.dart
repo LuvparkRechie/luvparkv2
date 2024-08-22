@@ -29,4 +29,5 @@ class Routes {
   static const mapFilter = "/map_filter";
   static const faqpage = "/faqpage";
   static const aboutus = "/aboutus";
+  static const profile = "/profile";
 }

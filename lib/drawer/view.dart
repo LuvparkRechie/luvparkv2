@@ -1,7 +1,6 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:luvpark_get/auth/authentication.dart';
 import 'package:luvpark_get/custom_widgets/alert_dialog.dart';
@@ -92,7 +91,9 @@ class CustomDrawer extends GetView<DashboardMapController> {
                     ),
                     Container(height: 10),
                     TextButton(
-                      onPressed: () {},
+                      onPressed: () {
+                        Get.offAndToNamed(Routes.profile);
+                      },
                       style: ButtonStyle(
                         backgroundColor: MaterialStateProperty.all<Color>(
                           const Color(0xFFEDEFF3),

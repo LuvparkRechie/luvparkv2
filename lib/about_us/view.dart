@@ -3,7 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:luvpark_get/about_us/index.dart';
 import 'package:luvpark_get/custom_widgets/app_color.dart';
-import 'package:luvpark_get/custom_widgets/custom_body.dart';
+import 'package:luvpark_get/custom_widgets/custom_appbar.dart';
 import 'package:luvpark_get/custom_widgets/custom_text.dart';
 
 class AboutUs extends GetView<AboutUsController> {
@@ -11,42 +11,22 @@ class AboutUs extends GetView<AboutUsController> {
   @override
   Widget build(BuildContext context) {
     Get.put(AboutUsController());
-    final AboutUsController ct = Get.put(AboutUsController());
+    //final AboutUsController ct = Get.put(AboutUsController());
     SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
       statusBarColor: Colors.transparent,
       statusBarBrightness: Brightness.light,
       statusBarIconBrightness: Brightness.dark,
     ));
-    return CustomScaffold(
-      bodyColor: AppColor.bodyColor,
-      appBar: AppBar(
-        toolbarHeight: 0,
-        elevation: 0,
-        backgroundColor: AppColor.bodyColor,
-        systemOverlayStyle: const SystemUiOverlayStyle(
-          statusBarColor: AppColor.bodyColor,
-          statusBarBrightness: Brightness.light,
-          statusBarIconBrightness: Brightness.dark,
-        ),
+    return Scaffold(
+      backgroundColor: AppColor.bodyColor,
+      appBar: const CustomAppbar(
+        title: "About Us",
       ),
-      children: Padding(
+      body: Padding(
         padding: const EdgeInsets.fromLTRB(15, 10, 15, 10),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            GestureDetector(
-              onTap: () {
-                Get.back();
-              },
-              child: const Icon(Icons.arrow_back),
-            ),
-            const SizedBox(height: 10),
-            const CustomTitle(
-              text: "About Us",
-              fontSize: 20,
-              letterSpacing: 0.0,
-            ),
-            const SizedBox(height: 10),
             Center(
               child: Image(
                 height: MediaQuery.of(context).size.height * 0.15,
