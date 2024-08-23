@@ -25,6 +25,7 @@ class WalletRechargeLoadController extends GetxController
   ];
   @override
   void onInit() {
+    // print("toks${tokenAmount}");
     super.onInit();
   }
 

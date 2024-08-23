@@ -196,37 +196,41 @@ class WalletSend extends GetView<WalletSendController> {
                         SizedBox(
                           height: 10,
                         ),
-                        CustomButton(
-                            text: "Continue",
-                            btnColor: AppColor.primaryColor,
-                            onPressed: () async {
-                              // controller.
-                              if (controller.formKeySend.currentState!
-                                  .validate()) {
-                                final item =
-                                    await Authentication().getUserLogin();
+                        if (MediaQuery.of(context).viewInsets.bottom ==
+                            0) //hide button
+                          CustomButton(
+                              text: "Continue",
+                              btnColor: AppColor.primaryColor,
+                              onPressed: () async {
+                                // controller.
+                                if (controller.formKeySend.currentState!
+                                    .validate()) {
+                                  final item =
+                                      await Authentication().getUserLogin();
 
-                                // print("datasa ${item["mobile_no"]}");
-                                if (item["mobile_no"].toString() ==
-                                    "63${controller.recipient.text.replaceAll(" ", "")}") {
-                                  CustomDialog().snackbarDialog(context,
-                                      "Please use another number.", Colors.red);
-                                  return;
+                                  // print("datasa ${item["mobile_no"]}");
+                                  if (item["mobile_no"].toString() ==
+                                      "63${controller.recipient.text.replaceAll(" ", "")}") {
+                                    CustomDialog().snackbarDialog(
+                                        context,
+                                        "Please use another number.",
+                                        Colors.red);
+                                    return;
+                                  }
+
+                                  CustomDialog().confirmationDialog(
+                                      context,
+                                      "Confirmation",
+                                      "Are you sure you want to proceed?",
+                                      "Back",
+                                      "Yes", () {
+                                    Get.back();
+                                  }, () {
+                                    Get.back();
+                                    controller.getVerifiedAcc();
+                                  });
                                 }
-
-                                CustomDialog().confirmationDialog(
-                                    context,
-                                    "Confirmation",
-                                    "Are you sure you want to proceed?",
-                                    "Back",
-                                    "Yes", () {
-                                  Get.back();
-                                }, () {
-                                  Get.back();
-                                  controller.getVerifiedAcc();
-                                });
-                              }
-                            })
+                              })
                       ],
                     ),
                   )),

@@ -111,23 +111,25 @@ class WalletRechargeScreen extends GetView<WalletRechargeController> {
                   Container(
                     height: MediaQuery.of(context).size.height / 15,
                   ),
-                  Obx(
-                    () => CustomButton(
-                      text: "Proceed",
-                      btnColor: controller.isActiveBtn.value
-                          ? AppColor.primaryColor
-                          : AppColor.primaryColor.withOpacity(.7),
-                      onPressed: controller.isActiveBtn.value
-                          ? () {
-                              Get.toNamed(
-                                Routes.walletrechargeload,
-                                arguments: controller.tokenAmount.text
-                                    .replaceAll(" ", ""),
-                              );
-                            }
-                          : () {},
-                    ),
-                  )
+                  if (MediaQuery.of(context).viewInsets.bottom ==
+                      0) //hide button
+                    Obx(
+                      () => CustomButton(
+                        text: "Proceed",
+                        btnColor: controller.isActiveBtn.value
+                            ? AppColor.primaryColor
+                            : AppColor.primaryColor.withOpacity(.7),
+                        onPressed: controller.isActiveBtn.value
+                            ? () {
+                                Get.toNamed(
+                                  Routes.walletrechargeload,
+                                  arguments: controller.tokenAmount.text
+                                      .replaceAll(" ", ""),
+                                );
+                              }
+                            : () {},
+                      ),
+                    )
                 ],
               ),
             )
