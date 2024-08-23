@@ -2,6 +2,7 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_multi_formatter/formatters/formatter_utils.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
@@ -16,7 +17,6 @@ import 'package:luvpark_get/wallet/controller.dart';
 import 'package:luvpark_get/wallet/utils/filter_screen.dart';
 import 'package:luvpark_get/wallet/utils/transaction_details.dart';
 import 'package:luvpark_get/web_view/webview.dart';
-import 'package:sliding_up_panel/sliding_up_panel.dart';
 
 import '../auth/authentication.dart';
 import '../custom_widgets/alert_dialog.dart';
@@ -25,14 +25,19 @@ class WalletScreen extends GetView<WalletController> {
   const WalletScreen({super.key});
   @override
   Widget build(BuildContext context) {
-    // final WalletController ct = Get.put(WalletController());
-    PanelController panelController = PanelController();
-    final size = MediaQuery.of(context).size;
-
     return Obx(
       () => Scaffold(
         appBar: CustomAppbar(
           title: "My Wallet",
+          onTap: () {
+            Get.back(result: () {
+              SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
+                statusBarColor: Colors.transparent,
+                statusBarBrightness: Brightness.light,
+                statusBarIconBrightness: Brightness.dark,
+              ));
+            });
+          },
         ),
         body: SafeArea(
           child: !controller.isNetConn.value

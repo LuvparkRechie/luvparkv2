@@ -8,6 +8,7 @@ import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:luvpark_get/booking/utils/booking_receipt/controller.dart';
 import 'package:luvpark_get/custom_widgets/alert_dialog.dart';
+import 'package:luvpark_get/custom_widgets/custom_appbar.dart';
 import 'package:luvpark_get/custom_widgets/custom_button.dart';
 import 'package:luvpark_get/custom_widgets/custom_tciket_style.dart';
 import 'package:luvpark_get/custom_widgets/variables.dart';
@@ -283,47 +284,18 @@ class BookingReceipt extends GetView<BookingReceiptController> {
   }
 
   Widget _buildHeader() {
-    return Container(
-      color: AppColor.primaryColor,
-      padding: const EdgeInsets.only(top: 15),
-      child: Row(
-        children: [
-          Flexible(
-            flex: 1,
-            child: Row(
-              children: [
-                IconButton(
-                  icon: const Icon(Icons.chevron_left, color: Colors.white),
-                  onPressed: () {
-                    if (controller.parameters["status"] == "B") {
-                      Get.offAllNamed(Routes.map);
-                      return;
-                    }
-                    Get.back();
-                  },
-                ),
-                const CustomParagraph(
-                  text: "Back",
-                  fontSize: 16,
-                  color: Colors.white,
-                  fontWeight: FontWeight.w600,
-                ),
-              ],
-            ),
-          ),
-          const Flexible(
-            flex: 2,
-            child: CustomTitle(
-              text: "Parking Details",
-              color: Colors.white,
-              letterSpacing: -0.41,
-              fontWeight: FontWeight.w700,
-              fontSize: 20,
-              textAlign: TextAlign.center,
-            ),
-          ),
-        ],
-      ),
+    return CustomAppbar(
+      bgColor: AppColor.primaryColor,
+      title: "Parking Details",
+      textColor: Colors.white,
+      titleColor: Colors.white,
+      onTap: () {
+        if (controller.parameters["status"] == "B") {
+          Get.offAllNamed(Routes.map);
+          return;
+        }
+        Get.back();
+      },
     );
   }
 

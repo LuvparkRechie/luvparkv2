@@ -1,9 +1,9 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:math';
-import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:http/http.dart' as http;
@@ -66,6 +66,7 @@ class DashboardMapController extends GetxController
   @override
   void onInit() {
     super.onInit();
+
     ddRadius = "10";
     pTypeCode = "";
     amenities = "";
@@ -242,11 +243,9 @@ class DashboardMapController extends GetxController
   }
 
   void getNearest(List<dynamic> uData, LatLng coordinates) async {
-    // initialCameraPosition = null;
-
     String params =
         "${ApiKeys.gApiSubFolderGetNearestSpace}?is_allow_overnight=$isAllowOverNight&parking_type_code=$pTypeCode&latitude=${coordinates.latitude}&longitude=${coordinates.longitude}&radius=$ddRadius&parking_amenity_code=$amenities&vehicle_type_id=$vtypeId";
-    print("nearest params $params");
+
     try {
       var returnData = await HttpRequest(api: params).get();
       if (returnData == "No Internet") {

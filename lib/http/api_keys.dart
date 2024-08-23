@@ -233,17 +233,17 @@ class ApiKeys {
   //https://gce81b2a8b40195-gccdb.adb.ap-singapore-1.oraclecloudapps.com/ords/luv/token/luvpark/booking
 
   //REMOVED API
-  //Reserve payment key
-  static const gApiLuvParkGetResPayKey =
-      '/ords/$luvApi/base/paymentkey'; ////  removed
+  // //Reserve payment key
+  // static const gApiLuvParkGetResPayKey =
+  //     '/ords/$luvApi/base/paymentkey'; ////  removed
 
-//Reserve API with auto extend parameter
-  static const gApiSubFolderPostReserveParking =
-      '/ords/$parkSpaceApi/park/reserve'; //removed
-//Reservation pay
-  static const gApiSubFolderPostReservePay =
-      '/ords/$luvApi/ps/payres'; //removed
-  //getComputation
-  static const gApiSubFolderPostReserveCalc =
-      '/ords/$parkSpaceApi/park/calcfee'; //removed
+// //Reserve API with auto extend parameter
+//   static const gApiSubFolderPostReserveParking =
+//       '/ords/$parkSpaceApi/park/reserve'; //removed
+// //Reservation pay
+//   static const gApiSubFolderPostReservePay =
+//       '/ords/$luvApi/ps/payres'; //removed
+//   //getComputation
+//   static const gApiSubFolderPostReserveCalc =
+//       '/ords/$parkSpaceApi/park/calcfee'; //removed
 }

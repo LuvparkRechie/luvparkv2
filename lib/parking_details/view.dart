@@ -1,36 +1,28 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:iconsax/iconsax.dart';
 import 'package:luvpark_get/custom_widgets/app_color.dart';
 import 'package:luvpark_get/custom_widgets/custom_button.dart';
 import 'package:luvpark_get/custom_widgets/custom_text.dart';
 import 'package:luvpark_get/custom_widgets/no_internet.dart';
-import 'package:luvpark_get/custom_widgets/variables.dart';
 import 'package:luvpark_get/parking_details/controller.dart';
 
 class ParkingDetails extends GetView<ParkingDetailsController> {
   const ParkingDetails({super.key});
   @override
   Widget build(BuildContext context) {
-    Get.put(ParkingDetailsController());
-    final ParkingDetailsController ct = Get.put(ParkingDetailsController());
-    SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
-      statusBarColor: Colors.transparent,
-      statusBarBrightness: Brightness.light,
-      statusBarIconBrightness: Brightness.dark,
-    ));
     return PopScope(
       canPop: true, //!ct.isLoadingAmen.value && !ct.isLoadingRoute.value,
       child: Scaffold(
         body: Obx(
-          () => !ct.isNetConnected.value
+          () => !controller.isNetConnected.value
               ? NoInternetConnected(
                   onTap: controller.refreshAmenData,
                 )
-              : ct.isLoading.value
+              : controller.isLoading.value
                   ? Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
@@ -62,7 +54,8 @@ class ParkingDetails extends GetView<ParkingDetailsController> {
                           children: [
                             Expanded(
                               child: GoogleMap(
-                                initialCameraPosition: ct.intialPosition!,
+                                initialCameraPosition:
+                                    controller.intialPosition!,
                                 mapType: MapType.normal,
                                 mapToolbarEnabled: false,
                                 zoomControlsEnabled: false,
@@ -71,9 +64,9 @@ class ParkingDetails extends GetView<ParkingDetailsController> {
                                 compassEnabled: false,
                                 buildingsEnabled: false,
                                 tiltGesturesEnabled: true,
-                                markers: Set<Marker>.of(ct.markers),
-                                polylines: {ct.polyline.value},
-                                onMapCreated: ct.onMapCreated,
+                                markers: Set<Marker>.of(controller.markers),
+                                polylines: {controller.polyline.value},
+                                onMapCreated: controller.onMapCreated,
                               ),
                             ),
                             Container(
@@ -81,7 +74,7 @@ class ParkingDetails extends GetView<ParkingDetailsController> {
                             )
                           ],
                         ),
-                        Positioned(bottom: 0, child: _buildDetails(ct)),
+                        Positioned(bottom: 0, child: _buildDetails()),
                         Positioned(
                           top: 40,
                           left: 20,
@@ -120,7 +113,7 @@ class ParkingDetails extends GetView<ParkingDetailsController> {
     );
   }
 
-  Widget _buildDetails(ct) {
+  Widget _buildDetails() {
     return Container(
       padding: const EdgeInsets.all(20),
       width: MediaQuery.of(Get.context!).size.width,
@@ -141,26 +134,28 @@ class ParkingDetails extends GetView<ParkingDetailsController> {
       ),
       child: Column(
         children: [
-          Row(
-            children: [
-              Expanded(
-                child: ListTile(
-                  contentPadding: EdgeInsets.zero,
-                  title: CustomTitle(
-                    text: ct.dataNearest["park_area_name"],
-                    maxlines: 1,
-                  ),
-                  subtitle: CustomParagraph(
-                    text: ct.dataNearest["address"],
-                    maxlines: 2,
-                  ),
-                ),
-              ),
-              Container(width: 10),
-              CustomParagraph(
-                  text: Variables.formatDistance(ct.dataNearest["distance"]))
-            ],
-          ),
+          // Row(
+          //   children: [
+          //     Expanded(
+          //       child: ListTile(
+          //         contentPadding: EdgeInsets.zero,
+          //         title: CustomTitle(
+          //           text: controller.dataNearest["park_area_name"],
+          //           maxlines: 1,
+          //         ),
+          //         subtitle: CustomParagraph(
+          //           text: controller.dataNearest["address"],
+          //           maxlines: 2,
+          //         ),
+          //       ),
+          //     ),
+          //     Container(width: 10),
+          //     CustomParagraph(
+          //         text: Variables.formatDistance(
+          //             controller.dataNearest["distance"]))
+          //   ],
+          // ),
+
           Padding(
             padding: const EdgeInsets.symmetric(vertical: 10),
             child: Row(
@@ -176,7 +171,7 @@ class ParkingDetails extends GetView<ParkingDetailsController> {
                         maxlines: 1,
                       ),
                       CustomTitle(
-                        text: "${ct.dataNearest["parking_schedule"]}",
+                        text: "${controller.dataNearest["parking_schedule"]}",
                         maxlines: 1,
                       ),
                     ],
@@ -188,12 +183,13 @@ class ParkingDetails extends GetView<ParkingDetailsController> {
                   height: 26,
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(45),
-                    color:
-                        ct.isOpen.value ? const Color(0xFF7BB56C) : Colors.red,
+                    color: controller.isOpen.value
+                        ? const Color(0xFF7BB56C)
+                        : Colors.red,
                   ),
                   child: Center(
                     child: CustomParagraph(
-                      text: ct.isOpen.value ? "Open" : "Close",
+                      text: controller.isOpen.value ? "Open" : "Close",
                       fontSize: 14,
                       color: Colors.white,
                     ),
@@ -238,7 +234,8 @@ class ParkingDetails extends GetView<ParkingDetailsController> {
                         text: TextSpan(
                           children: [
                             TextSpan(
-                              text: "${ct.dataNearest["ps_vacant_count"]}",
+                              text:
+                                  "${controller.dataNearest["ps_vacant_count"]}",
                               style: GoogleFonts.manrope(
                                 color: Colors.black,
                                 fontSize: 14,
@@ -247,7 +244,7 @@ class ParkingDetails extends GetView<ParkingDetailsController> {
                             ),
                             TextSpan(
                               text:
-                                  "/${ct.dataNearest["ps_total_count"]} slots available",
+                                  "/${controller.dataNearest["ps_total_count"]} slots available",
                               style: GoogleFonts.manrope(
                                 color: AppColor.paragraphColor,
                                 fontSize: 14,
@@ -263,7 +260,7 @@ class ParkingDetails extends GetView<ParkingDetailsController> {
                 InkWell(
                   onTap: () {
                     Get.bottomSheet(
-                      BottomSheetWidget(),
+                      const BottomSheetWidget(),
                       isScrollControlled: true,
                     );
                   },
@@ -287,8 +284,8 @@ class ParkingDetails extends GetView<ParkingDetailsController> {
           Container(height: 20),
           CustomButton(
             text: "Book now",
-            loading: ct.btnLoading.value,
-            onPressed: ct.onClickBooking,
+            loading: controller.btnLoading.value,
+            onPressed: controller.onClickBooking,
           ),
           Container(height: 20),
         ],
@@ -297,22 +294,368 @@ class ParkingDetails extends GetView<ParkingDetailsController> {
   }
 }
 
-class BottomSheetWidget extends StatelessWidget {
+class BottomSheetWidget extends GetView<ParkingDetailsController> {
+  const BottomSheetWidget({super.key});
+
   @override
   Widget build(BuildContext context) {
-    return GetBuilder<ParkingDetailsController>(
-      init: ParkingDetailsController(),
-      builder: (controller) {
-        return Container(
-          color: Colors.white,
-          padding: EdgeInsets.all(16),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [],
+    return Container(
+      height: MediaQuery.of(context).size.height * .80,
+      decoration: const BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.vertical(
+          top: Radius.circular(7),
+        ),
+      ),
+      padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 20),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          InkWell(
+            onTap: () {
+              Get.back();
+            },
+            child: Row(
+              children: [
+                Icon(
+                  Icons.chevron_left,
+                  size: 24,
+                  color: AppColor.primaryColor,
+                ),
+                const SizedBox(width: 3),
+                Text(
+                  'Back',
+                  style: TextStyle(
+                    color: AppColor.primaryColor,
+                    fontSize: 16,
+                    fontFamily: 'Manrope',
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+              ],
+            ),
           ),
-        );
-      },
+          Container(height: 20),
+          Expanded(
+              child: SingleChildScrollView(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  children: [
+                    const Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          CustomTitle(
+                            text: "SM SOUTH LEFT",
+                            fontSize: 20,
+                          ),
+                          CustomParagraph(
+                            text:
+                                "SM SOUTH MWCV+3HRT Farther M. Ferrs St. Bacolod, 6100 Negros Occidental",
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ],
+                      ),
+                    ),
+                    IconButton(
+                      onPressed: () {},
+                      icon: const Icon(
+                        Iconsax.heart,
+                        color: Colors.blueGrey,
+                      ),
+                    ),
+                  ],
+                ),
+                Container(height: 15),
+                Text.rich(
+                  TextSpan(
+                    children: [
+                      TextSpan(
+                        text: "Open ",
+                        style: paragraphStyle(
+                          color: Colors.green,
+                        ),
+                      ),
+                      TextSpan(
+                        text: ' ●  9:00 AM to 7:00 PM  ●  ',
+                        style: paragraphStyle(),
+                      ),
+                      TextSpan(
+                        text: '6 slots left',
+                        style: paragraphStyle(color: const Color(0xFFE03C20)),
+                      ),
+                    ],
+                  ),
+                ),
+                Container(height: 15),
+                const CustomTitle(
+                  text: "Available Vehicles",
+                  color: Colors.black87,
+                  fontWeight: FontWeight.w700,
+                  fontSize: 16,
+                ),
+                Container(height: 15),
+                Obx(
+                  () => SingleChildScrollView(
+                    scrollDirection: Axis.horizontal,
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: controller.vehicleTypes.map((type) {
+                        final color = Color(
+                            int.parse(type['color'].substring(1), radix: 16) +
+                                0xFF000000);
+
+                        return Padding(
+                          padding: const EdgeInsets.only(right: 8.0),
+                          child: Container(
+                            padding: const EdgeInsets.all(10),
+                            decoration: BoxDecoration(
+                                color: Colors.white,
+                                borderRadius: BorderRadius.circular(5),
+                                border:
+                                    Border.all(color: color.withOpacity(.5))),
+                            child: Column(
+                              mainAxisSize: MainAxisSize.min,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                SizedBox(
+                                  width: 25,
+                                  height: 25,
+                                  child: Image(
+                                    image: AssetImage(
+                                        "assets/dashboard_icon/${type["icon"]}.png"),
+                                    color: color,
+                                  ),
+                                ),
+                                const SizedBox(height: 8),
+                                CustomParagraph(
+                                  text: '${type['name']} [ ${type['count']} ]',
+                                  fontWeight: FontWeight.w700,
+                                  color: color,
+                                )
+                              ],
+                            ),
+                          ),
+                        );
+                      }).toList(),
+                    ),
+                  ),
+                ),
+                Container(height: 25),
+                const Divider(
+                  height: 3,
+                ),
+                Container(height: 15),
+                const CustomTitle(
+                  text: "Parking Amenities",
+                  color: Colors.black87,
+                  fontWeight: FontWeight.w700,
+                  fontSize: 16,
+                ),
+                Container(height: 15),
+                SingleChildScrollView(
+                  scrollDirection: Axis.horizontal,
+                  child: Row(
+                    children: [
+                      _buildColumn("2.5m x 5m\nPerpendicular"),
+                      _buildColumn("CCTV Camera available"),
+                      _buildColumn("Concrete floor"),
+                      _buildColumn("Streetlights available"),
+                    ],
+                  ),
+                ),
+                Container(height: 20),
+                const CustomTitle(
+                  text: "Parking Rates",
+                  color: Colors.black87,
+                  fontWeight: FontWeight.w700,
+                  fontSize: 16,
+                ),
+                Container(height: 15),
+                Container(
+                  width: MediaQuery.of(context).size.width,
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 5, vertical: 15),
+                  decoration: ShapeDecoration(
+                    color: const Color(0xFFE2F0FF),
+                    shape: RoundedRectangleBorder(
+                      side:
+                          const BorderSide(width: 1, color: Color(0xFF7FB2EC)),
+                      borderRadius: BorderRadius.circular(5),
+                    ),
+                  ),
+                  child: const Row(
+                    children: [
+                      Expanded(
+                        child: Column(
+                          children: [
+                            CustomTitle(
+                              text: '15',
+                              textAlign: TextAlign.center,
+                              color: Color(0xFF2563EB),
+                              fontWeight: FontWeight.w700,
+                              fontSize: 25,
+                            ),
+                            CustomParagraph(
+                              text: 'Base Rate',
+                              textAlign: TextAlign.center,
+                              fontWeight: FontWeight.w700,
+                            ),
+                          ],
+                        ),
+                      ),
+                      Expanded(
+                        child: Column(
+                          children: [
+                            CustomTitle(
+                              text: '15',
+                              textAlign: TextAlign.center,
+                              color: Color(0xFF2563EB),
+                              fontWeight: FontWeight.w700,
+                              fontSize: 25,
+                            ),
+                            CustomParagraph(
+                              text: 'Succeedig Rate',
+                              textAlign: TextAlign.center,
+                              fontWeight: FontWeight.w700,
+                              maxlines: 1,
+                            ),
+                          ],
+                        ),
+                      ),
+                      Expanded(
+                        child: Column(
+                          children: [
+                            CustomTitle(
+                              text: '15',
+                              textAlign: TextAlign.center,
+                              color: Color(0xFF2563EB),
+                              fontWeight: FontWeight.w700,
+                              fontSize: 25,
+                            ),
+                            CustomParagraph(
+                              text: 'Base Hours',
+                              textAlign: TextAlign.center,
+                              fontWeight: FontWeight.w700,
+                            ),
+                          ],
+                        ),
+                      )
+                    ],
+                  ),
+                ),
+                Container(height: 15),
+                Container(
+                  width: MediaQuery.of(context).size.width,
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 5, vertical: 15),
+                  decoration: ShapeDecoration(
+                    color: const Color(0xFFE2F0FF),
+                    shape: RoundedRectangleBorder(
+                      side:
+                          const BorderSide(width: 1, color: Color(0xFF7FB2EC)),
+                      borderRadius: BorderRadius.circular(5),
+                    ),
+                  ),
+                  child: const Row(
+                    children: [
+                      Expanded(
+                        child: Column(
+                          children: [
+                            CustomTitle(
+                              text: '15',
+                              textAlign: TextAlign.center,
+                              color: Color(0xFF2563EB),
+                              fontWeight: FontWeight.w700,
+                              fontSize: 25,
+                            ),
+                            CustomParagraph(
+                              text: 'Base Rate',
+                              textAlign: TextAlign.center,
+                              fontWeight: FontWeight.w700,
+                            ),
+                          ],
+                        ),
+                      ),
+                      Expanded(
+                        child: Column(
+                          children: [
+                            CustomTitle(
+                              text: '15',
+                              textAlign: TextAlign.center,
+                              color: Color(0xFF2563EB),
+                              fontWeight: FontWeight.w700,
+                              fontSize: 25,
+                            ),
+                            CustomParagraph(
+                              text: 'Succeedig Rate',
+                              textAlign: TextAlign.center,
+                              fontWeight: FontWeight.w700,
+                              maxlines: 1,
+                            ),
+                          ],
+                        ),
+                      ),
+                      Expanded(
+                        child: Column(
+                          children: [
+                            CustomTitle(
+                              text: '15',
+                              textAlign: TextAlign.center,
+                              color: Color(0xFF2563EB),
+                              fontWeight: FontWeight.w700,
+                              fontSize: 25,
+                            ),
+                            CustomParagraph(
+                              text: 'Base Hours',
+                              textAlign: TextAlign.center,
+                              fontWeight: FontWeight.w700,
+                            ),
+                          ],
+                        ),
+                      )
+                    ],
+                  ),
+                ),
+                Container(height: 15),
+              ],
+            ),
+          ))
+        ],
+      ),
+    );
+  }
+
+  Widget _buildColumn(String text) {
+    return SizedBox(
+      width: MediaQuery.of(Get.context!).size.width / 3.5,
+      child: Padding(
+        padding: const EdgeInsets.only(right: 10), // Padding to ensure spacing
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Container(
+              width: 49,
+              height: 49,
+              decoration: ShapeDecoration(
+                color: const Color(0xFFEDF7FF),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(7),
+                ),
+              ),
+            ),
+            const SizedBox(height: 10),
+            CustomParagraph(
+              text: text,
+              textAlign: TextAlign.center,
+              maxlines: 2,
+            ),
+          ],
+        ),
+      ),
     );
   }
 }

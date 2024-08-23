@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
@@ -66,9 +67,13 @@ class BookingController extends GetxController
   //Booking param
   RxBool isSubmitBooking = false.obs;
 
+  Timer? inactivityTimer;
+  final int timeoutDuration = 180; //3 mins
+
   @override
   void onInit() {
     super.onInit();
+    _startInactivityTimer();
     _updateMaskFormatter("");
 
     int endNumber =
@@ -93,6 +98,49 @@ class BookingController extends GetxController
       timeComputation();
       getAvailabeAreaVh();
     });
+  }
+
+  void _startInactivityTimer() {
+    inactivityTimer?.cancel();
+    inactivityTimer =
+        Timer(Duration(seconds: timeoutDuration), _handleInactivity);
+  }
+
+  void _handleInactivity() {
+    inactivityTimer?.cancel();
+    showDialog(
+      context: Get.context!,
+      builder: (BuildContext context) {
+        return PopScope(
+          canPop: false,
+          child: AlertDialog(
+            title: const Text('No Interaction Detected'),
+            content: const Text(
+                'No gestures were detected within the last minute. Reloading the page.'),
+            actions: <Widget>[
+              TextButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                  _reloadPage();
+                },
+                child: const Text('OK'),
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
+  void _reloadPage() {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      timeComputation();
+      getAvailabeAreaVh();
+    });
+  }
+
+  void onUserInteraction() {
+    _startInactivityTimer(); // Reset timer on any interaction
   }
 
   void _updateMaskFormatter(mask) {
@@ -301,8 +349,9 @@ class BookingController extends GetxController
   }
 
   //Reservation Submit
-  void submitReservation(params, context, isCheckIn) async {
+  void submitReservation(params) async {
     List bookingParams = [params];
+
     int userId = await Authentication().getUserId();
     isSubmitBooking.value = true;
     final position = await Functions.getCurrentPosition();
@@ -313,7 +362,7 @@ class BookingController extends GetxController
 
     if (etaData.isEmpty) {
       isSubmitBooking.value = false;
-      CustomDialog().errorDialog(context, "Error",
+      CustomDialog().errorDialog(Get.context!, "Error",
           "We couldn't calculate the distance. Please check your connection and try again.",
           () {
         Get.back();
@@ -323,7 +372,7 @@ class BookingController extends GetxController
 
     if (etaData[0]["error"] == "No Internet") {
       isSubmitBooking.value = false;
-      CustomDialog().internetErrorDialog(context, () {
+      CustomDialog().internetErrorDialog(Get.context!, () {
         Get.back();
       });
       return;
@@ -346,9 +395,9 @@ class BookingController extends GetxController
       "vehicle_plate_no": params["vehicle_plate_no"],
       "park_area_id": params["park_area_id"].toString(),
     };
-    print("dynamicBookParam $dynamicBookParam");
+
     CustomDialog().confirmationDialog(
-        context,
+        Get.context!,
         "Confirm Booking",
         "Please ensure that you arrive at the destination by $areaEtaTime mins, or your advance booking will be forfeited.",
         "Cancel",
@@ -363,19 +412,19 @@ class BookingController extends GetxController
         print("objData $objData");
         if (objData == "No Internet") {
           isSubmitBooking.value = false;
-          CustomDialog().internetErrorDialog(context, () {
+          CustomDialog().internetErrorDialog(Get.context!, () {
             Get.back();
           });
           return;
         }
         if (objData == null) {
           isSubmitBooking.value = false;
-          CustomDialog().serverErrorDialog(context, () {
+          CustomDialog().serverErrorDialog(Get.context!, () {
             Get.back();
           });
         }
         if (objData["success"] == "Y") {
-          dynamic args = {
+          dynamic paramArgs = {
             'parkArea': parameters["areaData"]["park_area_name"],
             'startDate': Variables.formatDate(
                 bookingParams[0]["dt_in"].toString().split(" ")[0]),
@@ -390,14 +439,13 @@ class BookingController extends GetxController
             'amount': totalAmount.value.toString(),
             'refno': objData["lp_ref_no"].toString(),
             'lat':
-                double.parse(parameters["areaData"]['ps_latitude'].toString()),
+                double.parse(parameters["areaData"]['pa_latitude'].toString()),
             'long':
-                double.parse(parameters["areaData"]['ps_longitude'].toString()),
+                double.parse(parameters["areaData"]['pa_longitude'].toString()),
             'canReserved': false,
             'isReserved': false,
             'isShowRate': true,
-            'reservationId':
-                objData["reservation_id"] ?? objData["reservation_id"],
+            'reservationId': objData["reservation_id"],
             'address': parameters["areaData"]["address"],
             'area_data': parameters["areaData"],
             'isAutoExtend': false,
@@ -405,22 +453,21 @@ class BookingController extends GetxController
             'status': "B",
             'paramsCalc': bookingParams[0]
           };
-          print("isCheckIn $isCheckIn");
-          // if (isCheckIn) {
-          //   checkIn(objData["ticket_id"], current.latitude, current.longitude,
-          //       args);
-          //   return;
-          // } else {
-          //   isSubmitBooking.value = false;
-          //   Get.offNamed(Routes.bookingReceipt, arguments: args);
-          //   return;
-          // }
-          isSubmitBooking.value = false;
-          Get.offNamed(Routes.bookingReceipt, arguments: args);
+
+          if (parameters["canCheckIn"]) {
+            checkIn(objData["reservation_id"], objData["lp_ref_no"],
+                current.latitude, current.longitude, paramArgs);
+            return;
+          } else {
+            isSubmitBooking.value = false;
+            Get.offAndToNamed(Routes.bookingReceipt, arguments: paramArgs);
+
+            return;
+          }
         }
         if (objData["success"] == "Q") {
           CustomDialog().confirmationDialog(
-              context, "Queue Booking", objData["msg"], "No", "Yes", () {
+              Get.context!, "Queue Booking", objData["msg"], "No", "Yes", () {
             Get.back();
           }, () {
             Map<String, dynamic> queueParam = {
@@ -436,28 +483,27 @@ class BookingController extends GetxController
                 .then((queParamData) {
               if (queParamData == "No Internet") {
                 isSubmitBooking.value = false;
-                CustomDialog().internetErrorDialog(context, () {
+                CustomDialog().internetErrorDialog(Get.context!, () {
                   Get.back();
                 });
                 return;
               }
               if (queParamData == null) {
                 isSubmitBooking.value = false;
-                CustomDialog().serverErrorDialog(context, () {
+                CustomDialog().serverErrorDialog(Get.context!, () {
                   Get.back();
                 });
                 return;
               } else {
                 isSubmitBooking.value = false;
                 if (queParamData["success"] == 'Y') {
-                  CustomDialog().successDialog(
-                      context, "Success", queParamData["msg"], "Go to dashboad",
-                      () {
+                  CustomDialog().successDialog(Get.context!, "Success",
+                      queParamData["msg"], "Go to dashboad", () {
                     Get.offAllNamed(Routes.map);
                   });
                 } else {
-                  CustomDialog()
-                      .errorDialog(context, 'luvpark', queParamData["msg"], () {
+                  CustomDialog().errorDialog(
+                      Get.context!, 'luvpark', queParamData["msg"], () {
                     Get.back();
                   });
                 }
@@ -467,7 +513,8 @@ class BookingController extends GetxController
           return;
         } else {
           isSubmitBooking.value = false;
-          CustomDialog().errorDialog(context, "luvpark", "No data found", () {
+          CustomDialog().errorDialog(Get.context!, "luvpark", objData["msg"],
+              () {
             Get.back();
           });
           return;
@@ -476,9 +523,9 @@ class BookingController extends GetxController
     });
   }
 
-  //Manual checkin
-  Future<void> checkIn(ticketId, lat, long, args) async {
-    var otpData = {
+  //Self checkin
+  Future<void> checkIn(ticketId, refNo, lat, long, args) async {
+    dynamic chkInParam = {
       "device_key": null,
       "emp_id": null,
       "ticket_id": ticketId,
@@ -487,9 +534,12 @@ class BookingController extends GetxController
       "is_auto": "Y",
     };
 
-    HttpRequest(api: ApiKeys.gApiLuvParkPutChkIn, parameters: otpData)
+    print("chkInParam $chkInParam");
+
+    HttpRequest(api: ApiKeys.gApiLuvParkPutChkIn, parameters: chkInParam)
         .put()
         .then((returnData) async {
+      print("returnData $returnData");
       if (returnData == "No Internet") {
         isSubmitBooking.value = false;
         CustomDialog().internetErrorDialog(Get.context!, () {
@@ -636,5 +686,6 @@ class BookingController extends GetxController
   void onClose() {
     super.onClose();
     bookKey.currentState?.reset();
+    inactivityTimer?.cancel();
   }
 }

@@ -73,11 +73,14 @@ class DashboardMapScreen extends GetView<DashboardMapController> {
               )),
             );
           } else {
-            SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
-              statusBarColor: Colors.transparent,
-              statusBarBrightness: Brightness.light,
-              statusBarIconBrightness: Brightness.dark,
-            ));
+            WidgetsBinding.instance.addPostFrameCallback((_) {
+              SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
+                statusBarColor: Colors.transparent,
+                statusBarBrightness: Brightness.light,
+                statusBarIconBrightness: Brightness.dark,
+              ));
+            });
+
             return PopScope(
               canPop: false,
               child: Scaffold(
@@ -89,62 +92,67 @@ class DashboardMapScreen extends GetView<DashboardMapController> {
                   children: [
                     Expanded(child: accessMaps(context)),
                     Visibility(
-                      visible: !controller.isSidebarVisible.value,
-                      child: SlidingUpPanel(
-                        maxHeight:
-                            MediaQuery.of(Get.context!).viewInsets.bottom != 0
-                                ? controller.suggestions.isEmpty
-                                    ? (MediaQuery.of(Get.context!)
-                                            .viewInsets
-                                            .bottom +
-                                        20)
-                                    : (MediaQuery.of(context).size.height *
-                                            .70 -
-                                        MediaQuery.of(Get.context!)
-                                            .viewInsets
-                                            .bottom)
-                                : controller.suggestions.isEmpty
-                                    ? controller.minHeight.value
-                                    : MediaQuery.of(context).size.height * .70,
-                        minHeight: controller.minHeight.value,
-                        parallaxEnabled: true,
-                        parallaxOffset: .3,
-                        controller: controller.panelController,
-                        header: Container(
-                          key: controller.headerKey,
-                          padding: const EdgeInsets.symmetric(vertical: 10),
-                          decoration: const BoxDecoration(
-                            color: Colors.white,
-                            borderRadius:
-                                BorderRadius.vertical(top: Radius.circular(7)),
+                      visible: controller.isGetNearData.value,
+                      child: FadeInUp(
+                        duration: const Duration(milliseconds: 200),
+                        child: SlidingUpPanel(
+                          maxHeight: MediaQuery.of(Get.context!)
+                                      .viewInsets
+                                      .bottom !=
+                                  0
+                              ? controller.suggestions.isEmpty
+                                  ? (MediaQuery.of(Get.context!)
+                                          .viewInsets
+                                          .bottom +
+                                      20)
+                                  : (MediaQuery.of(context).size.height * .70 -
+                                      MediaQuery.of(Get.context!)
+                                          .viewInsets
+                                          .bottom)
+                              : controller.suggestions.isEmpty
+                                  ? controller.minHeight.value
+                                  : MediaQuery.of(context).size.height * .70,
+                          minHeight: controller.minHeight.value,
+                          parallaxEnabled: true,
+                          parallaxOffset: .3,
+                          controller: controller.panelController,
+                          header: Container(
+                            key: controller.headerKey,
+                            padding: const EdgeInsets.symmetric(vertical: 10),
+                            decoration: const BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.vertical(
+                                  top: Radius.circular(7)),
+                            ),
+                            width: MediaQuery.of(context).size.width,
+                            child: Builder(
+                              builder: (context) {
+                                WidgetsBinding.instance
+                                    .addPostFrameCallback((_) {
+                                  final RenderBox renderBox = controller
+                                      .headerKey.currentContext!
+                                      .findRenderObject() as RenderBox;
+                                  final double height = renderBox.size.height;
+                                  if (controller.headerHeight.value != height) {
+                                    controller.headerHeight.value = height;
+                                    controller.minHeight.value =
+                                        controller.headerHeight.value;
+                                  }
+                                });
+                                return _panel();
+                              },
+                            ),
                           ),
-                          width: MediaQuery.of(context).size.width,
-                          child: Builder(
-                            builder: (context) {
-                              WidgetsBinding.instance.addPostFrameCallback((_) {
-                                final RenderBox renderBox = controller
-                                    .headerKey.currentContext!
-                                    .findRenderObject() as RenderBox;
-                                final double height = renderBox.size.height;
-                                if (controller.headerHeight.value != height) {
-                                  controller.headerHeight.value = height;
-                                  controller.minHeight.value =
-                                      controller.headerHeight.value;
-                                }
-                              });
-                              return _panel();
-                            },
+                          panel: Container(
+                            height: MediaQuery.of(context).size.height,
+                            width: MediaQuery.of(context).size.width,
+                            decoration: const BoxDecoration(
+                              borderRadius: BorderRadius.vertical(
+                                  top: Radius.circular(7)),
+                              color: Colors.white,
+                            ),
+                            child: _panelContent(),
                           ),
-                        ),
-                        panel: Container(
-                          height: MediaQuery.of(context).size.height,
-                          width: MediaQuery.of(context).size.width,
-                          decoration: const BoxDecoration(
-                            borderRadius:
-                                BorderRadius.vertical(top: Radius.circular(7)),
-                            color: Colors.white,
-                          ),
-                          child: _panelContent(),
                         ),
                       ),
                     ),
@@ -381,143 +389,147 @@ class DashboardMapScreen extends GetView<DashboardMapController> {
                   },
                 ),
               ),
+              // Visibility(
+              //   visible: controller.isGetNearData.value,
+              //   child: Positioned(
+              //     left: MediaQuery.of(context).size.width / 6,
+              //     right: MediaQuery.of(context).size.width / 6,
+              //     top: (MediaQuery.of(context).size.height -
+              //             controller.minHeight.value) /
+              //         3,
+              //     child: Container(
+              //       clipBehavior: Clip.antiAlias,
+              //       padding:
+              //           const EdgeInsets.symmetric(vertical: 5, horizontal: 5),
+              //       decoration: ShapeDecoration(
+              //         color: const Color(0xFF0078FF),
+              //         shape: RoundedRectangleBorder(
+              //           borderRadius: BorderRadius.circular(40),
+              //         ),
+              //       ),
+              //       child: Center(
+              //         child: CustomParagraph(
+              //           text: controller.addressText.value,
+              //           color: Colors.white,
+              //           textAlign: TextAlign.center,
+              //           fontWeight: FontWeight.w600,
+              //           maxlines: 2,
+              //           fontSize: 12,
+              //         ),
+              //       ),
+              //     ),
+              //   ),
+              // ),
+              //Latest booking
               Visibility(
                 visible: controller.isGetNearData.value,
                 child: Positioned(
-                  left: MediaQuery.of(context).size.width / 6,
-                  right: MediaQuery.of(context).size.width / 6,
-                  top: (MediaQuery.of(context).size.height -
-                          controller.minHeight.value) /
-                      3,
-                  child: Container(
-                    clipBehavior: Clip.antiAlias,
-                    padding:
-                        const EdgeInsets.symmetric(vertical: 5, horizontal: 5),
-                    decoration: ShapeDecoration(
-                      color: const Color(0xFF0078FF),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(40),
-                      ),
-                    ),
-                    child: Center(
-                      child: CustomParagraph(
-                        text: controller.addressText.value,
-                        color: Colors.white,
-                        textAlign: TextAlign.center,
-                        fontWeight: FontWeight.w600,
-                        maxlines: 2,
-                        fontSize: 12,
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-              //Latest booking
-              Positioned(
-                right: 10,
-                left: 10,
-                bottom: 25,
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.end,
-                  children: [
-                    Container(
-                      padding: const EdgeInsets.all(10),
-                      clipBehavior: Clip.antiAlias,
-                      decoration: ShapeDecoration(
-                        color: Colors.white,
-                        shape: RoundedRectangleBorder(
-                          side: const BorderSide(
-                              width: 1, color: Color(0xFFDFE7EF)),
-                          borderRadius: BorderRadius.circular(57),
+                  right: 10,
+                  left: 10,
+                  bottom: 25,
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.end,
+                    children: [
+                      Container(
+                        padding: const EdgeInsets.all(10),
+                        clipBehavior: Clip.antiAlias,
+                        decoration: ShapeDecoration(
+                          color: Colors.white,
+                          shape: RoundedRectangleBorder(
+                            side: const BorderSide(
+                                width: 1, color: Color(0xFFDFE7EF)),
+                            borderRadius: BorderRadius.circular(57),
+                          ),
+                          shadows: const [
+                            BoxShadow(
+                              color: Color(0x0C000000),
+                              blurRadius: 15,
+                              offset: Offset(0, 5),
+                              spreadRadius: 0,
+                            )
+                          ],
                         ),
-                        shadows: const [
-                          BoxShadow(
-                            color: Color(0x0C000000),
-                            blurRadius: 15,
-                            offset: Offset(0, 5),
-                            spreadRadius: 0,
-                          )
-                        ],
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Container(
+                              width: 24,
+                              height: 24,
+                              clipBehavior: Clip.antiAlias,
+                              decoration: const BoxDecoration(),
+                              child: const Image(
+                                image:
+                                    AssetImage("assets/dashboard_icon/car.png"),
+                                fit: BoxFit.contain,
+                              ),
+                            ),
+                            Container(width: 5),
+                            const CustomTitle(
+                                text: "Land Cruiser", fontSize: 14),
+                            Container(width: 5),
+                            CustomLinkLabel(
+                              text: "YKB-7635",
+                              fontSize: 14,
+                              color: AppColor.primaryColor,
+                            )
+                          ],
+                        ),
                       ),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
+                      Expanded(child: Container()),
+                      Column(
                         children: [
-                          Container(
-                            width: 24,
-                            height: 24,
-                            clipBehavior: Clip.antiAlias,
-                            decoration: const BoxDecoration(),
-                            child: const Image(
-                              image:
-                                  AssetImage("assets/dashboard_icon/car.png"),
-                              fit: BoxFit.contain,
+                          GestureDetector(
+                            onTap: () {
+                              Get.toNamed(Routes.mapFilter, arguments: (data) {
+                                controller.getFilterNearest(data);
+                              });
+                            },
+                            child: const Align(
+                              alignment: Alignment.centerRight,
+                              child: Image(
+                                width: 53,
+                                height: 53,
+                                image: AssetImage(
+                                    "assets/dashboard_icon/filter_map.png"),
+                                fit: BoxFit.contain,
+                              ),
                             ),
                           ),
-                          Container(width: 5),
-                          const CustomTitle(text: "Land Cruiser", fontSize: 14),
-                          Container(width: 5),
-                          CustomLinkLabel(
-                            text: "YKB-7635",
-                            fontSize: 14,
-                            color: AppColor.primaryColor,
-                          )
+                          Container(height: 8),
+                          GestureDetector(
+                            onTap: controller.getCurrentLoc,
+                            child: const Align(
+                              alignment: Alignment.centerRight,
+                              child: Image(
+                                width: 53,
+                                height: 53,
+                                image: AssetImage(
+                                    "assets/dashboard_icon/location.png"),
+                                fit: BoxFit.contain,
+                              ),
+                            ),
+                          ),
+                          Container(height: 8),
+                          GestureDetector(
+                            onTap: () {
+                              Get.toNamed(Routes.parkingAreas,
+                                  arguments: controller.dataNearest);
+                            },
+                            child: const Align(
+                              alignment: Alignment.centerRight,
+                              child: Image(
+                                width: 53,
+                                height: 53,
+                                image: AssetImage(
+                                    "assets/dashboard_icon/area_list.png"),
+                                fit: BoxFit.contain,
+                              ),
+                            ),
+                          ),
                         ],
                       ),
-                    ),
-                    Expanded(child: Container()),
-                    Column(
-                      children: [
-                        GestureDetector(
-                          onTap: () {
-                            Get.toNamed(Routes.mapFilter, arguments: (data) {
-                              controller.getFilterNearest(data);
-                            });
-                          },
-                          child: const Align(
-                            alignment: Alignment.centerRight,
-                            child: Image(
-                              width: 53,
-                              height: 53,
-                              image: AssetImage(
-                                  "assets/dashboard_icon/filter_map.png"),
-                              fit: BoxFit.contain,
-                            ),
-                          ),
-                        ),
-                        Container(height: 8),
-                        GestureDetector(
-                          onTap: controller.getCurrentLoc,
-                          child: const Align(
-                            alignment: Alignment.centerRight,
-                            child: Image(
-                              width: 53,
-                              height: 53,
-                              image: AssetImage(
-                                  "assets/dashboard_icon/location.png"),
-                              fit: BoxFit.contain,
-                            ),
-                          ),
-                        ),
-                        Container(height: 8),
-                        GestureDetector(
-                          onTap: () {
-                            Get.toNamed(Routes.parkingAreas,
-                                arguments: controller.dataNearest);
-                          },
-                          child: const Align(
-                            alignment: Alignment.centerRight,
-                            child: Image(
-                              width: 53,
-                              height: 53,
-                              image: AssetImage(
-                                  "assets/dashboard_icon/area_list.png"),
-                              fit: BoxFit.contain,
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
               ),
               //My balance

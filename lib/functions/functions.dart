@@ -569,12 +569,12 @@ class Functions {
       if (isGranted) {
         Functions.getLocation(context, (location) {
           LatLng ll = location;
+
           hasInternetConnection((hasInternet) async {
             if (hasInternet) {
               final estimatedData = await Functions.fetchETA(
                   LatLng(ll.latitude, ll.longitude), dest);
-
-              print("estimatedDatasss $estimatedData");
+              print("estimatedData() ${estimatedData}");
               if (estimatedData[0]["error"] == "No Internet") {
                 cb({"success": false});
 
@@ -592,7 +592,7 @@ class Functions {
                 const HttpRequest(api: ApiKeys.gApiLuvParkGetComputeDistance)
                     .get()
                     .then((returnData) async {
-                  print("gApiLuvParkGetComputeDistance $returnData");
+                  print("returnData $returnData");
                   if (returnData == "No Internet") {
                     cb({"success": false});
                     CustomDialog().internetErrorDialog(context, () {
@@ -646,15 +646,14 @@ class Functions {
                       }
                     } else {
                       //COMPUTE DISTANCE BY DISTANCE IN METERS IF AVAILABLE FOR RESERVATION
-                      double estimatedDistance = Variables.convertToMeters(
+                      double estimatedDistance = Variables.convertToMeters2(
                           estimatedData[0]["distance"].toString());
-                      double minDistance = Variables.convertToMeters(
+                      double minDistance = Variables.convertToMeters2(
                           returnData["items"][0]["min_psr_from"].toString());
                       // double maxDistance = double.parse(
                       //     returnData["items"][0]["max_psr_from"].toString());
-                      double distanceCanChkIn = Variables.convertToMeters(
-                          returnData["items"][0]["user_chk_in_within"]
-                              .toString());
+                      double distanceCanChkIn = Variables.convertToMeters2(
+                          "${returnData["items"][0]["user_chk_in_within"].toString()} km");
 
                       if (estimatedDistance.toDouble() >=
                               minDistance.toDouble() &&

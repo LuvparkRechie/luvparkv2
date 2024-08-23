@@ -127,8 +127,7 @@ class ParkingAreas extends GetView<ParkingAreasController> {
                                   arguments: ct.searchedZone[index]);
                             },
                             child: Container(
-                              padding:
-                                  const EdgeInsets.fromLTRB(15, 15, 15, 15),
+                              padding: const EdgeInsets.fromLTRB(0, 15, 15, 15),
                               width: MediaQuery.of(context).size.width * .88,
                               decoration: BoxDecoration(
                                 border: Border(
@@ -194,7 +193,7 @@ class ParkingAreas extends GetView<ParkingAreasController> {
                                       ],
                                     ),
                                   ),
-                                  Container(width: 5),
+                                  Container(width: 10),
                                   CustomLinkLabel(text: getDistanceString())
                                 ],
                               ),

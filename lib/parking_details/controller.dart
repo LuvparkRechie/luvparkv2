@@ -30,6 +30,7 @@ class ParkingDetailsController extends GetxController
   LatLng center = const LatLng(0, 0);
   LatLng destLoc = const LatLng(0, 0);
   CameraPosition? intialPosition;
+  RxList vehicleTypes = <dynamic>[].obs;
 
   String finalSttime = "";
   String finalEndtime = "";
@@ -37,6 +38,8 @@ class ParkingDetailsController extends GetxController
   @override
   void onInit() {
     super.onInit();
+    final vehicleTypesList = dataNearest['vehicle_types_list'] as String;
+    vehicleTypes.value = _parseVehicleTypes(vehicleTypesList);
     finalSttime = formatTime(dataNearest["start_time"]);
     finalEndtime = formatTime(dataNearest["end_time"]);
     isOpen.value = Functions.checkAvailability(finalSttime, finalEndtime);
@@ -242,15 +245,9 @@ class ParkingDetailsController extends GetxController
               btnLoading.value = false;
               if (success["success"]) {
                 Get.toNamed(Routes.booking, arguments: {
-                  "queueChkIn": [
-                    {
-                      "is_chkIn": success["can_checkIn"],
-                      "is_queue": dataNearest["is_allow_reserve"] == "N"
-                    }
-                  ],
                   "currentLocation": success["location"],
                   "areaData": dataNearest,
-                  "isCheckIn": success["can_checkIn"],
+                  "canCheckIn": success["can_checkIn"],
                   "userData": items,
                 });
               }
@@ -259,5 +256,41 @@ class ParkingDetailsController extends GetxController
         }
       });
     }
+  }
+
+  List<Map<String, String>> _parseVehicleTypes(String vhTpList) {
+    final types = vhTpList.split(' | ');
+    final parsedTypes = <Map<String, String>>[];
+    Color color;
+
+    for (var type in types) {
+      final parts = type.split('(');
+      if (parts.length < 2) continue;
+
+      final name = parts[0].trim();
+      final count = parts[1].split('/')[0].trim();
+
+      final lowerCaseName = name.toLowerCase();
+      String iconKey;
+      if (lowerCaseName.contains("motorcycle")) {
+        color = const Color(0xFFD65F5F);
+        iconKey = "scooter";
+      } else if (lowerCaseName.contains("trikes")) {
+        color = const Color(0xFFDCA945);
+        iconKey = "car";
+      } else {
+        color = const Color.fromARGB(255, 69, 145, 220);
+        iconKey = "delivery";
+      }
+
+      final colorString = '#${color.value.toRadixString(16).padLeft(8, '0')}';
+      parsedTypes.add({
+        'name': name,
+        'count': count,
+        'color': colorString,
+        'icon': iconKey,
+      });
+    }
+    return parsedTypes;
   }
 }

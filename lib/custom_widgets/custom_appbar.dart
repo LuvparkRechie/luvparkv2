@@ -11,7 +11,9 @@ class CustomAppbar extends StatelessWidget implements PreferredSizeWidget {
   final double? titleSize;
   final List<Widget>? action;
   final Color? titleColor;
+  final Color? textColor;
   final PreferredSizeWidget? bottom;
+  final double elevation;
 
   final Color? bgColor;
   const CustomAppbar(
@@ -23,12 +25,14 @@ class CustomAppbar extends StatelessWidget implements PreferredSizeWidget {
       this.titleSize,
       this.bottom,
       this.titleColor,
+      this.elevation = 0.3,
+      this.textColor,
       this.preferredSize = const Size.fromHeight(kToolbarHeight)});
 
   @override
   Widget build(BuildContext context) {
     return AppBar(
-      elevation: 0.3,
+      elevation: elevation,
       centerTitle: true,
       backgroundColor: bgColor ?? Colors.white,
       systemOverlayStyle: SystemUiOverlayStyle(
@@ -53,7 +57,7 @@ class CustomAppbar extends StatelessWidget implements PreferredSizeWidget {
             children: [
               Icon(
                 Icons.chevron_left,
-                color: titleColor ?? Colors.black,
+                color: textColor ?? Colors.black,
               ),
               CustomParagraph(
                 text: "Back",

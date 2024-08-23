@@ -8,8 +8,9 @@ import 'package:luvpark_get/functions/functions.dart';
 import 'package:luvpark_get/http/api_keys.dart';
 import 'package:luvpark_get/http/http_request.dart';
 
-class BookingReceiptController extends GetxController {
-  late final Map<String, dynamic> parameters;
+class BookingReceiptController extends GetxController
+    with GetTickerProviderStateMixin {
+  final parameters = Get.arguments;
   late Timer _timer;
   RxDouble progress = 0.0.obs;
   RxInt noHours = 1.obs;
@@ -19,7 +20,6 @@ class BookingReceiptController extends GetxController {
   @override
   void onInit() {
     super.onInit();
-    parameters = Get.arguments as Map<String, dynamic>;
 
     if (parameters["status"] == "A") {
       startTimer();
