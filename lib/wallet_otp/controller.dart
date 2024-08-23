@@ -163,7 +163,7 @@ class WalletOtpController extends GetxController {
             CustomDialog().successDialog(Get.context!, "Success",
                 "Transaction successfully sent", "Okay", () {
               Get.back();
-              Get.offAndToNamed(Routes.wallet);
+              Get.back();
             });
           } else {
             Get.back();

@@ -222,6 +222,3 @@ class QrWalletController extends GetxController
         ),
       );
 }
-
-//Tab 2
-

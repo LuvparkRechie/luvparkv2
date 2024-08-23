@@ -10,6 +10,7 @@ import 'package:luvpark_get/profile/view.dart';
 import 'package:luvpark_get/rate_booking/index.dart';
 import 'package:luvpark_get/wallet_qr/index.dart';
 import 'package:luvpark_get/wallet_recharge/index.dart';
+import 'package:luvpark_get/wallet_recharge_load/index.dart';
 import '../activate_acc/index.dart';
 import '../booking/index.dart';
 import '../booking/utils/booking_receipt/index.dart';
@@ -180,6 +181,11 @@ class AppPages {
       name: Routes.changepassword,
       page: () => const ChangePassword(),
       binding: ChangePasswordBinding(),
+    ),
+    GetPage(
+      name: Routes.walletrechargeload,
+      page: () => const WalletRechargeLoadScreen(),
+      binding: WalletRechargeLoadBinding(),
     ),
   ];
 }
