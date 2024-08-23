@@ -16,111 +16,123 @@ class Security extends GetView<SecuritySettingsController> {
       statusBarBrightness: Brightness.light,
       statusBarIconBrightness: Brightness.dark,
     ));
-    return Obx(
-      () => Scaffold(
-        backgroundColor: AppColor.bodyColor,
-        appBar: const CustomAppbar(title: "My Profile"),
-        body: Column(
-          children: [
-            Container(
-              padding: const EdgeInsets.fromLTRB(15, 20, 15, 15),
-              height: 140,
-              width: MediaQuery.of(context).size.width,
-              decoration: const BoxDecoration(
-                image: DecorationImage(
-                    image: AssetImage("assets/images/wallet_bg.png"),
-                    fit: BoxFit.fill),
+    return Scaffold(
+      backgroundColor: AppColor.bodyColor,
+      appBar: const CustomAppbar(title: ""),
+      body: Column(
+        children: [
+          Container(
+            height: 20,
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Container(
+                padding: const EdgeInsets.all(24.0),
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  color: AppColor.primaryColor.withOpacity(0.1),
+                ),
+                child: Center(
+                  child: Icon(
+                    Iconsax.shield_tick,
+                    color: AppColor.primaryColor,
+                    size: 55,
+                  ),
+                ),
               ),
-              child: Row(
-                children: [
-                  Expanded(
-                    flex: 2,
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        const CustomTitle(
-                          text: "Invite Friends",
-                          color: Colors.white,
-                          fontStyle: FontStyle.normal,
-                          fontWeight: FontWeight.w700,
-                          letterSpacing: -0.408,
-                        ),
-                        const SizedBox(height: 5),
-                        RichText(
-                          text: const TextSpan(
-                            children: [
-                              TextSpan(
-                                text:
-                                    "Invite your friends for easier booking experiences and get ",
-                                style: TextStyle(
-                                  color: Colors.white60,
-                                  fontStyle: FontStyle.normal,
-                                  letterSpacing: -0.408,
-                                ),
-                              ),
-                              TextSpan(
-                                text: "reward points",
-                                style: TextStyle(
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.w700,
-                                  fontStyle: FontStyle.normal,
-                                  letterSpacing: -0.408,
-                                ),
-                              ),
-                              TextSpan(
-                                text: " each",
-                                style: TextStyle(
-                                  color: Colors.white60,
-                                  fontStyle: FontStyle.normal,
-                                  letterSpacing: -0.408,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ],
+            ],
+          ),
+          Container(
+            height: 10,
+          ),
+          const Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              CustomTitle(
+                text: "Security Settings",
+                fontSize: 16,
+                fontStyle: FontStyle.normal,
+                fontWeight: FontWeight.w700,
+                letterSpacing: -0.408,
+                color: Color(0xFF1C1C1E),
+              ),
+            ],
+          ),
+          Container(height: 20),
+          Expanded(
+            child: ListView(
+              padding: const EdgeInsets.symmetric(
+                horizontal: 15,
+                vertical: 15,
+              ),
+              children: [
+                ListTile(
+                  leading: Container(
+                    padding: const EdgeInsets.all(13),
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      color: AppColor.primaryColor.withOpacity(0.1),
+                    ),
+                    child: Icon(
+                      Iconsax.lock,
+                      color: AppColor.primaryColor,
+                      size: 20,
                     ),
                   ),
-                  const Expanded(
-                    flex: 1,
-                    child: Center(
-                      child: Icon(
-                        Iconsax.user_add,
-                        color: Colors.white,
-                        size: 42,
-                      ),
+                  title: const CustomTitle(
+                    text: "Change Password",
+                    fontSize: 14,
+                    fontStyle: FontStyle.normal,
+                    fontWeight: FontWeight.w700,
+                    letterSpacing: -0.408,
+                  ),
+                  subtitle: const CustomParagraph(
+                    text:
+                        "Update your current password to ensure your account remains secure.",
+                    letterSpacing: -0.408,
+                    fontSize: 12,
+                  ),
+                  trailing: const Icon(Icons.chevron_right_sharp,
+                      color: Color(0xFF1C1C1E)),
+                  onTap: () {},
+                ),
+                Divider(color: Colors.grey.shade500),
+                ListTile(
+                  leading: Container(
+                    padding: const EdgeInsets.all(13),
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      color: AppColor.primaryColor.withOpacity(0.1),
+                    ),
+                    child: Icon(
+                      Iconsax.finger_cricle,
+                      color: AppColor.primaryColor,
+                      size: 20,
                     ),
                   ),
-                ],
-              ),
+                  title: const CustomTitle(
+                    text: "Biometric Authentication",
+                    fontSize: 14,
+                    fontStyle: FontStyle.normal,
+                    fontWeight: FontWeight.w700,
+                    letterSpacing: -0.408,
+                  ),
+                  subtitle: const CustomParagraph(
+                    text:
+                        "Use your device's biometric for a quick and secure login. (Under maintenance)",
+                    letterSpacing: -0.408,
+                    fontSize: 12,
+                  ),
+                  trailing: const Icon(Icons.chevron_right_sharp,
+                      color: Color(0xFF1C1C1E)),
+                  onTap: () {},
+                ),
+                Divider(color: Colors.grey.shade500),
+              ],
             ),
-            Container(height: 20),
-            Expanded(
-              child: ListView(
-                padding: EdgeInsets.zero,
-                children: [
-                  ListTile(
-                    leading: const Icon(Iconsax.shield_tick,
-                        color: Color(0xFF1C1C1E)),
-                    title: const CustomTitle(
-                      text: "Security Settings",
-                      fontSize: 14,
-                      fontStyle: FontStyle.normal,
-                      fontWeight: FontWeight.w700,
-                      letterSpacing: -0.408,
-                      color: Color(0xFF1C1C1E),
-                    ),
-                    trailing: const Icon(Icons.chevron_right_sharp,
-                        color: Color(0xFF1C1C1E)),
-                    onTap: () {
-                      // Get.offAndToNamed(Routes.parking);
-                    },
-                  ),
-                ],
-              ),
-            ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }

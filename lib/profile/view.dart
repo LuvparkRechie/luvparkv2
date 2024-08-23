@@ -172,6 +172,42 @@ class Profile extends GetView<ProfileScreenController> {
                           padding: EdgeInsets.zero,
                           children: [
                             ListTile(
+                              leading: const Icon(Iconsax.personalcard,
+                                  color: Color(0xFF1C1C1E)),
+                              title: const CustomTitle(
+                                text: "My Account",
+                                fontSize: 14,
+                                fontStyle: FontStyle.normal,
+                                fontWeight: FontWeight.w700,
+                                letterSpacing: -0.408,
+                                color: Color(0xFF1C1C1E),
+                              ),
+                              trailing: const Icon(Icons.chevron_right_sharp,
+                                  color: Color(0xFF1C1C1E)),
+                              onTap: () {
+                                //Get.toNamed();
+                              },
+                            ),
+                            const Divider(),
+                            ListTile(
+                              leading: const Icon(Iconsax.note,
+                                  color: Color(0xFF1C1C1E)),
+                              title: const CustomTitle(
+                                text: "Transaction History",
+                                fontSize: 14,
+                                fontStyle: FontStyle.normal,
+                                fontWeight: FontWeight.w700,
+                                letterSpacing: -0.408,
+                                color: Color(0xFF1C1C1E),
+                              ),
+                              trailing: const Icon(Icons.chevron_right_sharp,
+                                  color: Color(0xFF1C1C1E)),
+                              onTap: () {
+                                Get.toNamed(Routes.security);
+                              },
+                            ),
+                            const Divider(),
+                            ListTile(
                               leading: const Icon(Iconsax.shield_tick,
                                   color: Color(0xFF1C1C1E)),
                               title: const CustomTitle(
@@ -185,9 +221,10 @@ class Profile extends GetView<ProfileScreenController> {
                               trailing: const Icon(Icons.chevron_right_sharp,
                                   color: Color(0xFF1C1C1E)),
                               onTap: () {
-                                Get.offAndToNamed(Routes.security);
+                                Get.toNamed(Routes.security);
                               },
                             ),
+                            const Divider(),
                           ],
                         ),
                       ),
