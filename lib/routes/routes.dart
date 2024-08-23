@@ -31,4 +31,5 @@ class Routes {
   static const aboutus = "/aboutus";
   static const profile = "/profile";
   static const security = "/security";
+  static const changepassword = "/changepassword";
 }

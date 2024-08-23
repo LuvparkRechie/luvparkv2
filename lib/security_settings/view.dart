@@ -5,6 +5,7 @@ import 'package:iconsax/iconsax.dart';
 import 'package:luvpark_get/custom_widgets/app_color.dart';
 import 'package:luvpark_get/custom_widgets/custom_appbar.dart';
 import 'package:luvpark_get/custom_widgets/custom_text.dart';
+import 'package:luvpark_get/routes/routes.dart';
 import 'package:luvpark_get/security_Settings/controller.dart';
 
 class Security extends GetView<SecuritySettingsController> {
@@ -95,7 +96,9 @@ class Security extends GetView<SecuritySettingsController> {
                   ),
                   trailing: const Icon(Icons.chevron_right_sharp,
                       color: Color(0xFF1C1C1E)),
-                  onTap: () {},
+                  onTap: () {
+                    Get.toNamed(Routes.changepassword);
+                  },
                 ),
                 Divider(color: Colors.grey.shade500),
                 ListTile(
