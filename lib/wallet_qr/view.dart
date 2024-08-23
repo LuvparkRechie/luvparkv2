@@ -60,7 +60,9 @@ class QrWallet extends GetView<QrWalletController> {
                             }
                             controller.onTabChanged(0);
                           },
-                          child: Container(
+                          child: AnimatedContainer(
+                            duration: Duration(milliseconds: 200),
+                            curve: Curves.easeIn,
                             padding: const EdgeInsets.all(10),
                             decoration: controller.currentPage.value != 0
                                 ? decor2()
@@ -95,7 +97,9 @@ class QrWallet extends GetView<QrWalletController> {
                             }
                             controller.onTabChanged(1);
                           },
-                          child: Container(
+                          child: AnimatedContainer(
+                            duration: Duration(milliseconds: 200),
+                            curve: Curves.easeOut,
                             padding: const EdgeInsets.all(10),
                             decoration: controller.currentPage.value != 1
                                 ? decor2()
@@ -485,10 +489,6 @@ class ReceiveQr extends GetView<QrWalletController> {
                   InkWell(
                     onTap: () {
                       controller.shareQr();
-                      // Get.bottomSheet(Container(
-                      //   color: Colors.red,
-                      //   child: Text("Hello World"),
-                      // ));
                     },
                     child: Container(
                       decoration: BoxDecoration(

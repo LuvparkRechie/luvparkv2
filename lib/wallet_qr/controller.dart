@@ -35,6 +35,7 @@ class QrWalletController extends GetxController
   RxInt currentPage = 0.obs;
   final ScreenshotController screenshotController = ScreenshotController();
   late TabController tabController;
+  // ignore: prefer_typing_uninitialized_variables
   var userImage;
 
   @override
@@ -47,15 +48,11 @@ class QrWalletController extends GetxController
   @override
   void onInit() {
     tabController = TabController(vsync: this, length: 2);
-    //tabController.addListener(onTabChanged);
+
     getQrData();
     super.onInit();
   }
-  // void onTabTapped(int index) {
-  //   currentPage.value = index;
 
-  //   getReserveData(index == 0 ? "C" : "U");
-  // }
   void onTabChanged(int index) async {
     // print(index);
     currentPage.value = index;
@@ -173,7 +170,7 @@ class QrWalletController extends GetxController
   }
 
   Future<void> shareQr() async {
-    print("currentPage.value ${currentPage.value}");
+    // print("currentPage.value ${currentPage.value}");
     CustomDialog().loadingDialog(Get.context!);
     final directory = (await getApplicationDocumentsDirectory()).path;
     Uint8List bytes = await ScreenshotController().captureFromWidget(
