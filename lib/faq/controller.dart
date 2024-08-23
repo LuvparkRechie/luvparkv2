@@ -37,8 +37,8 @@ class FaqPageController extends GetxController {
       });
       return;
     }
-
     if (returnData["items"].length > 0) {
+      print("return data: $returnData");
       faqsData.value = returnData["items"];
     } else {
       CustomDialog().errorDialog(Get.context!, "Luvpark", "No data found", () {
