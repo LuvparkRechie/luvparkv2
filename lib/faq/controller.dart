@@ -9,7 +9,6 @@ class FaqPageController extends GetxController {
   RxBool isLoadingPage = true.obs;
   RxBool isNetConn = true.obs;
   RxBool isExpanded = false.obs;
-  RxBool isShow = true.obs;
   RxSet<int> expandedIndexes = <int>{}.obs;
 
   @override
@@ -74,6 +73,7 @@ class FaqPageController extends GetxController {
     }
 
     if (returnData["items"].length > 0) {
+      expandedIndexes.clear();
       faqsData[index]['answers'] = returnData["items"];
 
       expandedIndexes.add(index);
@@ -85,13 +85,10 @@ class FaqPageController extends GetxController {
   }
 
   void onExpand(bool onExpand, int index, item) async {
-    isShow.value = onExpand;
     if (onExpand) {
       if (!expandedIndexes.contains(index)) {
         await getFaqAnswers(item['faq_id'].toString(), index);
       }
-    } else {
-      expandedIndexes.remove(index);
     }
     update();
   }
