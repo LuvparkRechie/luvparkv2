@@ -52,7 +52,9 @@ class WalletRechargeLoadScreen extends GetView<WalletRechargeLoadController> {
                           padding: const EdgeInsets.only(right: 5),
                           child: InkWell(
                             onTap: () {
-                              controller.onSelectBank(index);
+                              controller.getBankUrl(
+                                  controller.bankPartner[index]["value"],
+                                  index);
                             },
                             child: Container(
                               height: 70,
@@ -126,20 +128,17 @@ class WalletRechargeLoadScreen extends GetView<WalletRechargeLoadController> {
                         CustomTitle(text: "Recipient Number"),
                         CustomMobileNumber(
                           labelText: "Mobile No",
-                          controller: controller.mobileNo,
+                          controller: controller.mobNum,
                           inputFormatters: [Variables.maskFormatter],
                           onChange: (value) {
-                            // setState(() {
-                            //   isActiveBtn = false;
-                            // });
-                            // _onSearchChanged(
-                            //     value.replaceAll(" ", ""), false);
-                            // //  onChangeText();
+                            controller.isActiveBtn = false.obs;
+                            controller.getData();
                           },
                         ),
                         SizedBox(height: 10),
                         CustomTitle(text: "Recipient Name"),
                         CustomTextField(
+                          isReadOnly: true,
                           controller: controller.rname,
                           labelText: "Recipient Name",
                         ),
@@ -159,11 +158,12 @@ class WalletRechargeLoadScreen extends GetView<WalletRechargeLoadController> {
                 if (MediaQuery.of(context).viewInsets.bottom == 0) //hide button
                   CustomButton(
                     text: "Pay Now",
+                    btnColor: controller.isActiveBtn.value ||
+                            controller.isSelectedPartner.value
+                        ? AppColor.primaryColor.withOpacity(.7)
+                        : AppColor.primaryColor,
                     onPressed: () {
-                      FocusManager.instance.primaryFocus!.unfocus();
-                      if (controller.page1Key.currentState!.validate()) {
-                        controller.onPay();
-                      }
+                      controller.onPay();
                     },
                   ),
               ],

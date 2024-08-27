@@ -11,6 +11,7 @@ import 'package:intl/intl.dart';
 import 'package:luvpark_get/custom_widgets/app_color.dart';
 import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
 import 'package:screenshot/screenshot.dart';
+import 'package:pointycastle/export.dart' as crypto;
 
 BuildContext? ctxt;
 
@@ -44,6 +45,20 @@ class Variables {
   static int loginAttemptCount = 0;
 
 //Data Encryption
+
+  static Future<Uint8List> encryptData(
+      Uint8List secretKey, Uint8List iv, String plainText) async {
+    final cipher = crypto.GCMBlockCipher(crypto.AESEngine());
+    final keyParams = crypto.KeyParameter(secretKey);
+    final cipherParams = crypto.ParametersWithIV(keyParams, iv);
+    cipher.init(true, cipherParams);
+
+    final encodedPlainText = utf8.encode(plainText);
+    final cipherText = cipher.process(Uint8List.fromList(encodedPlainText));
+
+    return Uint8List.fromList(cipherText);
+  }
+
   static bool withinOneHourRange(DateTime targetDateTime) {
     DateTime currentDateTime = DateTime.now();
     DateTime oneHourAgo = currentDateTime.subtract(const Duration(hours: 1));
