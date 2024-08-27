@@ -5,6 +5,8 @@ import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
 import 'package:luvpark_get/custom_widgets/alert_dialog.dart';
 import 'package:luvpark_get/http/http_request.dart';
+import 'package:luvpark_get/web_view/webview.dart';
+import 'package:page_transition/page_transition.dart';
 
 import '../auth/authentication.dart';
 import '../custom_widgets/variables.dart';
@@ -63,36 +65,38 @@ class WalletRechargeLoadController extends GetxController
 
     CustomDialog().loadingDialog(Get.context!);
     HttpRequest(api: subApi).get().then((objData) {
-      if (objData == "No Internet") {
-        isSelectedPartner = false.obs;
-        selectedBankType;
-        selectedBankTracker;
+      if (isValidNumber == false.obs) {
+        if (objData == "No Internet") {
+          isSelectedPartner = false.obs;
+          selectedBankType;
+          selectedBankTracker;
 
-        Get.back();
-        CustomDialog().errorDialog(Get.context!, "Error",
-            "Please check your internet connection and try again.", () {
           Get.back();
-        });
-        return;
-      }
-      if (objData == null || objData["items"].length == 0) {
-        Get.back();
-
-        isSelectedPartner = false.obs;
-        isLoadingPage = false.obs;
-        selectedBankType;
-        selectedBankTracker = null;
-
-        CustomDialog().errorDialog(Get.context!, "Error",
-            "Error while connecting to server, Please try again.", () {
+          CustomDialog().errorDialog(Get.context!, "Error",
+              "Please check your internet connection and try again.", () {
+            Get.back();
+          });
+          return;
+        }
+        if (objData == null || objData["items"].length == 0) {
           Get.back();
-        });
 
-        return;
-      } else {
-        Get.back();
-        getBankData(objData["items"][0]["app_id"],
-            objData["items"][0]["page_url"], index);
+          isSelectedPartner = false.obs;
+          isLoadingPage = false.obs;
+          selectedBankType;
+          selectedBankTracker = null;
+
+          CustomDialog().errorDialog(Get.context!, "Error",
+              "Error while connecting to server, Please try again.", () {
+            Get.back();
+          });
+
+          return;
+        } else {
+          Get.back();
+          getBankData(objData["items"][0]["app_id"],
+              objData["items"][0]["page_url"], index);
+        }
       }
     });
   }
@@ -162,14 +166,13 @@ class WalletRechargeLoadController extends GetxController
     // ignore: use_build_context_synchronously
 
     // ignore: use_build_context_synchronously
-    // Navigator.push(
-    //     context,
-    //     PageTransition(
-    //       type: PageTransitionType.scale,
-    //       duration: const Duration(seconds: 1),
-    //       alignment: Alignment.centerLeft,
-    //       child: WebviewPage(urlDirect: "$pageUrl$hash", label: "Bank Payment"),
-    //     ));
+    Get.to(Get.context!,
+        arguments: PageTransition(
+          type: PageTransitionType.scale,
+          duration: const Duration(seconds: 1),
+          alignment: Alignment.centerLeft,
+          child: WebviewPage(urlDirect: "$pageUrl$hash", label: "Bank Payment"),
+        ));
   }
 
   Future<void> generateBank() async {}

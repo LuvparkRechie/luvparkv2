@@ -37,4 +37,5 @@ class Routes {
   static const forgotPassSuccess = "/forgot_password_success";
   static const forgotVerifiedAcct = "/forgot_vefified_acct";
   static const createNewPass = "/create_password";
+  static const walletrechargeloadpayment = "/wallet_recharge_load_payment";
 }

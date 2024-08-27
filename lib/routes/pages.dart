@@ -9,6 +9,7 @@ import 'package:luvpark_get/rate_booking/index.dart';
 import 'package:luvpark_get/wallet_qr/index.dart';
 import 'package:luvpark_get/wallet_recharge/index.dart';
 import 'package:luvpark_get/wallet_recharge_load/index.dart';
+import 'package:luvpark_get/wallet_recharge_load_payment/index.dart';
 
 import '../activate_acc/index.dart';
 import '../booking/index.dart';
@@ -210,6 +211,11 @@ class AppPages {
       name: Routes.forgotVerifiedAcct,
       page: () => const ForgotVerifiedAcct(),
       binding: ForgotVerifiedAcctBinding(),
+    ),
+    GetPage(
+      name: Routes.walletrechargeloadpayment,
+      page: () => const WalletRechargeLoadPaymentScreen(),
+      binding: WalletRechargeLoadPaymentBinding(),
     ),
   ];
 }
