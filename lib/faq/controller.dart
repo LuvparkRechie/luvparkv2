@@ -89,7 +89,10 @@ class FaqPageController extends GetxController {
       if (!expandedIndexes.contains(index)) {
         await getFaqAnswers(item['faq_id'].toString(), index);
       }
+    } else {
+      expandedIndexes.clear();
     }
+
     update();
   }
 }
