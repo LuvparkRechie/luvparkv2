@@ -5,7 +5,6 @@ import 'package:iconsax/iconsax.dart';
 import 'package:luvpark_get/custom_widgets/app_color.dart';
 import 'package:luvpark_get/custom_widgets/custom_text.dart';
 import 'package:luvpark_get/faq/controller.dart';
-import 'package:luvpark_get/faq/index.dart';
 
 class FaqPage extends GetView<FaqPageController> {
   const FaqPage({super.key});
@@ -22,17 +21,15 @@ class FaqPage extends GetView<FaqPageController> {
         child: FaqsAppbar(),
       ),
       body: Obx(() {
-        // if (controller.isLoadingPage.value) {
-        //   return const Center(child: CircularProgressIndicator());
-        // }
-
-        // if (!controller.isNetConn.value) {
-        //   return const Center(child: Text("No internet connection"));
-        // }
-
-        // if (controller.faqsData.isEmpty) {
-        //   return const Center(child: Text("No FAQs available"));
-        // }
+        if (controller.isLoadingPage.value) {
+          return const Center(child: CircularProgressIndicator());
+        }
+        if (!controller.isNetConn.value) {
+          return const Center(child: Text("No internet connection"));
+        }
+        if (controller.faqsData.isEmpty) {
+          return const Center(child: Text("No FAQs available"));
+        }
 
         return Padding(
           padding: const EdgeInsets.symmetric(horizontal: 15),
@@ -44,23 +41,63 @@ class FaqPage extends GetView<FaqPageController> {
             ),
             itemBuilder: (context, index) {
               var faq = controller.faqsData[index];
-              return ListTile(
+              bool isExpanded = controller.expandedIndexes.contains(index);
+
+              return ExpansionTile(
                 title: CustomParagraph(
                   text: faq['faq_text'] ?? 'No text available',
                   color: Colors.black,
                   fontSize: 14,
                   fontWeight: FontWeight.w600,
                 ),
-                onTap: () {
-                  // Handle FAQ item tap if needed
-                  if (!controller.expandedIndexes.contains(index)) {
-                    controller.getFaqAnswers(faq['faq_id'].toString(), index);
-                  }
-                },
                 trailing: Icon(
-                  Iconsax.add,
+                  isExpanded ? Iconsax.minus : Iconsax.add,
                   color: AppColor.primaryColor,
                 ),
+                onExpansionChanged: (expanded) async {
+                  if (expanded) {
+                    if (!controller.expandedIndexes.contains(index)) {
+                      await controller.getFaqAnswers(
+                          faq['faq_id'].toString(), index);
+                    }
+                  } else {
+                    controller.expandedIndexes.remove(index);
+                  }
+                },
+                children: [
+                  if (isExpanded)
+                    Padding(
+                      padding: const EdgeInsets.all(15),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          if (faq['answers'] == null ||
+                              (faq['answers'] as List).isEmpty)
+                            const CustomParagraph(
+                              text: 'No answers available',
+                              color: Colors.black54,
+                              fontSize: 14,
+                              fontWeight: FontWeight.w400,
+                            )
+                          else
+                            ...((faq['answers'] as List)
+                                .asMap()
+                                .entries
+                                .map((entry) {
+                              int index = entry.key;
+                              var answer = entry.value;
+                              return CustomParagraph(
+                                text:
+                                    '${index + 1}. ${answer['faq_ans_text'] ?? 'No answer available'}',
+                                color: Colors.black,
+                                fontSize: 14,
+                                fontWeight: FontWeight.w400,
+                              );
+                            }).toList()),
+                        ],
+                      ),
+                    ),
+                ],
               );
             },
           ),
@@ -71,9 +108,7 @@ class FaqPage extends GetView<FaqPageController> {
 }
 
 class FaqsAppbar extends StatelessWidget {
-  const FaqsAppbar({
-    super.key,
-  });
+  const FaqsAppbar({super.key});
 
   @override
   Widget build(BuildContext context) {

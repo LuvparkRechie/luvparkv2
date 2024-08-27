@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:iconsax/iconsax.dart';
 import 'package:luvpark_get/auth/authentication.dart';
 import 'package:luvpark_get/custom_widgets/alert_dialog.dart';
 import 'package:luvpark_get/custom_widgets/custom_text.dart';
@@ -192,7 +193,7 @@ class CustomDrawer extends GetView<DashboardMapController> {
                   ),
                 ),
                 ListTile(
-                  leading: const Icon(Icons.settings, color: Color(0xFF1C1C1E)),
+                  leading: const Icon(Iconsax.car5, color: Color(0xFF1C1C1E)),
                   title: const CustomTitle(
                     text: "About Us",
                     fontSize: 14,
@@ -208,7 +209,8 @@ class CustomDrawer extends GetView<DashboardMapController> {
                   },
                 ),
                 ListTile(
-                  leading: const Icon(Icons.person, color: Color(0xFF1C1C1E)),
+                  leading: const Icon(Iconsax.message_question5,
+                      color: Color(0xFF1C1C1E)),
                   title: const CustomTitle(
                     text: "FAQs",
                     fontSize: 14,
@@ -224,7 +226,10 @@ class CustomDrawer extends GetView<DashboardMapController> {
                   },
                 ),
                 ListTile(
-                  leading: const Icon(Icons.settings, color: Color(0xFF1C1C1E)),
+                  leading: const Icon(
+                    Iconsax.note_15,
+                    color: Color(0xFF1C1C1E),
+                  ),
                   title: const CustomTitle(
                     text: "Terms of Use",
                     fontSize: 14,
@@ -244,7 +249,10 @@ class CustomDrawer extends GetView<DashboardMapController> {
                   },
                 ),
                 ListTile(
-                  leading: const Icon(Icons.settings, color: Color(0xFF1C1C1E)),
+                  leading: const Icon(
+                    Iconsax.note_15,
+                    color: Color(0xFF1C1C1E),
+                  ),
                   title: const CustomTitle(
                     text: "Privacy Policy",
                     fontSize: 14,
