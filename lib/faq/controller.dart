@@ -4,9 +4,12 @@ import 'package:luvpark_get/http/api_keys.dart';
 import 'package:luvpark_get/http/http_request.dart';
 
 class FaqPageController extends GetxController {
+  FaqPageController();
   RxList<Map<String, dynamic>> faqsData = <Map<String, dynamic>>[].obs;
   RxBool isLoadingPage = true.obs;
   RxBool isNetConn = true.obs;
+  RxBool isExpanded = false.obs;
+  RxBool isShow = true.obs;
   RxSet<int> expandedIndexes = <int>{}.obs;
 
   @override
@@ -48,10 +51,11 @@ class FaqPageController extends GetxController {
   }
 
   Future<void> getFaqAnswers(String id, int index) async {
+    CustomDialog().loadingDialog(Get.context!);
     var returnData = await HttpRequest(
       api: '${ApiKeys.gAPISubFolderFaqAnswer}?faq_id=$id',
     ).get();
-
+    Get.back();
     if (returnData == "No Internet") {
       isNetConn.value = false;
       isLoadingPage.value = false;
@@ -71,12 +75,24 @@ class FaqPageController extends GetxController {
 
     if (returnData["items"].length > 0) {
       faqsData[index]['answers'] = returnData["items"];
+
       expandedIndexes.add(index);
-      update(); // Notify listeners
     } else {
       CustomDialog().errorDialog(Get.context!, "Luvpark", "No data found", () {
         Get.back();
       });
     }
+  }
+
+  void onExpand(bool onExpand, int index, item) async {
+    isShow.value = onExpand;
+    if (onExpand) {
+      if (!expandedIndexes.contains(index)) {
+        await getFaqAnswers(item['faq_id'].toString(), index);
+      }
+    } else {
+      expandedIndexes.remove(index);
+    }
+    update();
   }
 }

@@ -11,8 +11,6 @@ class FaqPage extends GetView<FaqPageController> {
 
   @override
   Widget build(BuildContext context) {
-    Get.put(FaqPageController());
-
     return Scaffold(
       extendBodyBehindAppBar: true,
       backgroundColor: AppColor.bodyColor,
@@ -41,7 +39,6 @@ class FaqPage extends GetView<FaqPageController> {
             ),
             itemBuilder: (context, index) {
               var faq = controller.faqsData[index];
-              bool isExpanded = controller.expandedIndexes.contains(index);
 
               return ExpansionTile(
                 title: CustomParagraph(
@@ -51,21 +48,16 @@ class FaqPage extends GetView<FaqPageController> {
                   fontWeight: FontWeight.w600,
                 ),
                 trailing: Icon(
-                  isExpanded ? Iconsax.minus : Iconsax.add,
+                  controller.expandedIndexes.contains(index)
+                      ? Iconsax.minus
+                      : Iconsax.add,
                   color: AppColor.primaryColor,
                 ),
-                onExpansionChanged: (expanded) async {
-                  if (expanded) {
-                    if (!controller.expandedIndexes.contains(index)) {
-                      await controller.getFaqAnswers(
-                          faq['faq_id'].toString(), index);
-                    }
-                  } else {
-                    controller.expandedIndexes.remove(index);
-                  }
+                onExpansionChanged: (onExpand) async {
+                  controller.onExpand(onExpand, index, faq);
                 },
                 children: [
-                  if (isExpanded)
+                  if (controller.expandedIndexes.contains(index))
                     Padding(
                       padding: const EdgeInsets.all(15),
                       child: Column(
