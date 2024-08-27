@@ -5,6 +5,7 @@ import 'package:get/get.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:luvpark_get/auth/authentication.dart';
 import 'package:luvpark_get/custom_widgets/alert_dialog.dart';
+import 'package:luvpark_get/custom_widgets/app_color.dart';
 import 'package:luvpark_get/custom_widgets/custom_text.dart';
 import 'package:luvpark_get/mapa/controller.dart';
 import 'package:luvpark_get/routes/routes.dart';
@@ -66,7 +67,10 @@ class CustomDrawer extends GetView<DashboardMapController> {
                                             .userProfile['image_base64']),
                                       )
                                     : null,
-                                child: controller.userProfile == null
+                                child: controller.userProfile == null ||
+                                        controller
+                                                .userProfile['image_base64'] ==
+                                            null
                                     ? const Icon(Icons.person,
                                         size: 44, color: Colors.blueAccent)
                                     : null,
@@ -79,17 +83,51 @@ class CustomDrawer extends GetView<DashboardMapController> {
                     Container(
                       height: 10,
                     ),
-                    CustomTitle(
-                      text: controller.userProfile != null
-                          ? '${controller.userProfile['first_name']} ${controller.userProfile['last_name']}'
-                          : "Not Specified",
-                      color: Colors.black,
-                      fontSize: 18,
-                      fontStyle: FontStyle.normal,
-                      textAlign: TextAlign.center,
-                      fontWeight: FontWeight.w700,
-                      letterSpacing: -0.408,
-                    ),
+                    // CustomTitle(
+                    //   text: controller.userProfile != null
+                    //       ? '${controller.userProfile['first_name']} ${controller.userProfile['last_name']}'
+                    //       : "Not Specified",
+                    //   color: Colors.black,
+                    //   fontSize: 18,
+                    //   fontStyle: FontStyle.normal,
+                    //   textAlign: TextAlign.center,
+                    //   fontWeight: FontWeight.w700,
+                    //   letterSpacing: -0.408,
+                    // ),
+                    controller.userProfile != null &&
+                            controller.userProfile['first_name'] != null
+                        ? CustomTitle(
+                            text:
+                                '${controller.userProfile['first_name']} ${controller.userProfile['last_name']}',
+                            color: Colors.black,
+                            fontSize: 18,
+                            fontStyle: FontStyle.normal,
+                            textAlign: TextAlign.center,
+                            fontWeight: FontWeight.w700,
+                            letterSpacing: -0.408,
+                          )
+                        : Container(
+                            color: AppColor.primaryColor,
+                            width: double.infinity,
+                            padding: const EdgeInsets.all(16.0),
+                            // child: const Text(
+                            //   'Update your Account',
+                            //   style: TextStyle(
+                            //     color: Colors.white,
+                            //     fontSize: 16,
+                            //     fontWeight: FontWeight.w700,
+                            //   ),
+                            //   textAlign: TextAlign.center,
+                            // ),
+                            child: const CustomTitle(
+                              text: "Update your Account",
+                              color: Colors.white,
+                              fontSize: 16,
+                              fontWeight: FontWeight.w700,
+                              textAlign: TextAlign.center,
+                              letterSpacing: -0.408,
+                            ),
+                          ),
                     Container(height: 10),
                     TextButton(
                       onPressed: () {
