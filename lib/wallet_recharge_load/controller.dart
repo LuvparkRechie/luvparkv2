@@ -14,28 +14,10 @@ import '../http/api_keys.dart';
 
 class WalletRechargeLoadController extends GetxController
     with GetSingleTickerProviderStateMixin {
-  final String tokenAmount =
-      Get.arguments; // from wallet recharge screen tokenAmount
   WalletRechargeLoadController();
-  Timer? _debounce;
-  RxBool isValidNumber = false.obs;
-  RxString fullName = "".obs;
-  RxBool isActiveBtn = false.obs;
-  RxBool isSelectedPartner = false.obs;
-  RxInt? selectedBankTracker;
-  RxBool isLoadingPage = true.obs;
-  RxString pageUrl = "".obs;
-  RxString aesKeys = "".obs;
-  RxString hash = "".obs;
-  var userDataInfo;
-  final GlobalKey<FormState> page1Key = GlobalKey<FormState>();
-  final TextEditingController mobNum = TextEditingController();
-  TextEditingController rname = TextEditingController();
-  final TextEditingController userName = TextEditingController();
-  TextEditingController amountController = TextEditingController();
 
-  // Nullable integer
-  Rxn<int> selectedBankType = Rxn<int>();
+  RxString aesKeys = "".obs;
+  TextEditingController amountController = TextEditingController();
   final List<dynamic> bankPartner = [
     {
       "name": "U-Bank",
@@ -43,12 +25,43 @@ class WalletRechargeLoadController extends GetxController
       "img_url": "assets/images/ubank.png",
     },
   ];
+  RxString email = "".obs;
+  RxString fullName = "".obs;
+  RxString hash = "".obs;
+  RxBool isActiveBtn = false.obs;
+  RxBool isLoadingPage = true.obs;
+  RxBool isSelectedPartner = false.obs;
+  RxBool isValidNumber = false.obs;
+  final TextEditingController mobNum = TextEditingController();
+  final GlobalKey<FormState> page1Key = GlobalKey<FormState>();
+  RxString pageUrl = "".obs;
+  TextEditingController rname = TextEditingController();
+  RxInt? selectedBankTracker;
+  // Nullable integer
+  Rxn<int> selectedBankType = Rxn<int>();
+
+  final String tokenAmount =
+      Get.arguments; // from wallet recharge screen tokenAmount
+
+  var userDataInfo;
+  final TextEditingController userName = TextEditingController();
+
+  Timer? _debounce;
+
+  @override
+  void onClose() {
+    _debounce?.cancel();
+    super.onClose();
+  }
+
   @override
   void onInit() {
     rname = TextEditingController();
     amountController = TextEditingController(text: tokenAmount);
-
-    getData();
+    fullName.value = "";
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      getData();
+    });
     super.onInit();
   }
 
@@ -59,54 +72,13 @@ class WalletRechargeLoadController extends GetxController
     _onSearchChanged(mobNum.text, true);
   }
 
-  Future<void> getBankUrl(bankCode, int index) async {
+  Future<void> getBankUrl(bankCode, int ind) async {
     String subApi = "${ApiKeys.gApiSubFolderGetUbDetails}?code=$bankCode";
-    selectedBankType.value = index;
 
     CustomDialog().loadingDialog(Get.context!);
     HttpRequest(api: subApi).get().then((objData) {
-      if (isValidNumber == false.obs) {
-        if (objData == "No Internet") {
-          isSelectedPartner = false.obs;
-          selectedBankType;
-          selectedBankTracker;
-
-          Get.back();
-          CustomDialog().errorDialog(Get.context!, "Error",
-              "Please check your internet connection and try again.", () {
-            Get.back();
-          });
-          return;
-        }
-        if (objData == null || objData["items"].length == 0) {
-          Get.back();
-
-          isSelectedPartner = false.obs;
-          isLoadingPage = false.obs;
-          selectedBankType;
-          selectedBankTracker = null;
-
-          CustomDialog().errorDialog(Get.context!, "Error",
-              "Error while connecting to server, Please try again.", () {
-            Get.back();
-          });
-
-          return;
-        } else {
-          Get.back();
-          getBankData(objData["items"][0]["app_id"],
-              objData["items"][0]["page_url"], index);
-        }
-      }
-    });
-  }
-
-  getBankData(appId, url, ind) {
-    String bankParamApi = "${ApiKeys.gApiSubFolderGetBankParam}?app_id=$appId";
-    CustomDialog().loadingDialog(Get.context!);
-    HttpRequest(api: bankParamApi).get().then((objData) {
       if (objData == "No Internet") {
-        isSelectedPartner = false.obs;
+        isSelectedPartner.value = false;
         selectedBankType;
         selectedBankTracker;
 
@@ -120,8 +92,8 @@ class WalletRechargeLoadController extends GetxController
       if (objData == null || objData["items"].length == 0) {
         Get.back();
 
-        isSelectedPartner = false.obs;
-        isLoadingPage = false.obs;
+        isSelectedPartner.value = false;
+        isLoadingPage.value = false;
         selectedBankType;
         selectedBankTracker = null;
 
@@ -132,6 +104,44 @@ class WalletRechargeLoadController extends GetxController
 
         return;
       } else {
+        getBankData(objData["items"][0]["app_id"],
+            objData["items"][0]["page_url"], ind);
+      }
+    });
+  }
+
+  getBankData(appId, url, ind) {
+    String bankParamApi = "${ApiKeys.gApiSubFolderGetBankParam}?app_id=$appId";
+
+    HttpRequest(api: bankParamApi).get().then((objData) {
+      if (objData == "No Internet") {
+        isSelectedPartner.value = false;
+        selectedBankType;
+        selectedBankTracker;
+
+        Get.back();
+        CustomDialog().errorDialog(Get.context!, "Error",
+            "Please check your internet connection and try again.", () {
+          Get.back();
+        });
+        return;
+      }
+      if (objData == null || objData["items"].length == 0) {
+        Get.back();
+
+        isSelectedPartner.value = false;
+        isLoadingPage.value = false;
+        selectedBankType;
+        selectedBankTracker = null;
+
+        CustomDialog().errorDialog(Get.context!, "Error",
+            "Error while connecting to server, Please try again.", () {
+          Get.back();
+        });
+
+        return;
+      } else {
+        Get.back();
         var dataObj = {};
 
         for (int i = 0; i < objData["items"].length; i++) {
@@ -139,14 +149,12 @@ class WalletRechargeLoadController extends GetxController
               objData["items"][i]["param_value"];
         }
 
-        isLoadingPage = false.obs;
+        isLoadingPage.value = false;
         selectedBankType = ind;
         selectedBankTracker = ind;
-        isSelectedPartner = true.obs;
+        isSelectedPartner.value = true;
         aesKeys = dataObj["AES_KEY"];
-        pageUrl = Uri.decodeFull(url).obs;
-
-        Get.back();
+        pageUrl.value = Uri.decodeFull(url);
       }
     });
   }
@@ -161,7 +169,7 @@ class WalletRechargeLoadController extends GetxController
     final concatenatedArray = Variables.concatBuffers(nonce, encrypted);
     final output = Variables.arrayBufferToBase64(concatenatedArray);
 
-    hash = Uri.encodeComponent(output).obs;
+    hash.value = Uri.encodeComponent(output);
 
     // ignore: use_build_context_synchronously
 
@@ -176,6 +184,86 @@ class WalletRechargeLoadController extends GetxController
   }
 
   Future<void> generateBank() async {}
+
+  void onPay() async {
+    var uData = await Authentication().getUserData();
+    var item = jsonDecode(uData!);
+    if (page1Key.currentState!.validate()) {
+      FocusManager.instance.primaryFocus!.unfocus();
+      if (!isActiveBtn.value) {
+        return;
+      }
+      if (!isSelectedPartner.value) {
+        CustomDialog().errorDialog(
+            Get.context!, "Attention", "Please Select payment method", () {
+          Get.back();
+        });
+        return;
+      }
+
+      var dataParam = {
+        "amount": tokenAmount,
+        "user_id": userDataInfo["user_id"],
+        "to_mobile_no": "63${mobNum.text.replaceAll(" ", "")}",
+      };
+      CustomDialog().loadingDialog(Get.context!);
+      HttpRequest(api: ApiKeys.gApiSubFolderPostUbTrans, parameters: dataParam)
+          .post()
+          .then((returnPost) {
+        if (returnPost == "No Internet") {
+          Get.back();
+          CustomDialog().errorDialog(Get.context!, "Error",
+              "Please check your internet connection and try again.", () {
+            Get.back();
+          });
+          return;
+        }
+        if (returnPost == null) {
+          Get.back();
+          CustomDialog().errorDialog(Get.context!, "Error",
+              "Error while connecting to server, Please try again.", () {
+            Get.back();
+          });
+        } else {
+          if (returnPost["success"] == 'Y') {
+            var plainText = {
+              "Amt": tokenAmount,
+              "Email": item['email'].toString(),
+              "Mobile": mobNum.text.replaceAll(" ", ""),
+              "Redir": "https://www.example.com",
+              "References": [
+                {
+                  "Id": "1",
+                  "Name": "RECIPIENT_MOBILE_NO",
+                  "Val": "63${mobNum.text.replaceAll(" ", "")}"
+                },
+                {
+                  "Id": "2",
+                  "Name": "RECIPIENT_FULL_NAME",
+                  "Val": userName.text.replaceAll(RegExp(' +'), ' ')
+                },
+                {"Id": "3", "Name": "TNX_HK", "Val": returnPost["hash-key"]}
+              ]
+            };
+            Get.back();
+
+            testUBUriPage(json.encode(plainText), aesKeys);
+            if (Navigator.canPop(Get.context!)) {
+              Get.back();
+            }
+          } else {
+            Get.back();
+
+            CustomDialog().errorDialog(Get.context!, "Error", returnPost['msg'],
+                () {
+              Get.back();
+            });
+          }
+        }
+      });
+    }
+  }
+
   _onSearchChanged(mobile, isFirst) {
     if (_debounce?.isActive ?? false) _debounce?.cancel();
     if (mobile.toString().length < 10) {
@@ -196,9 +284,9 @@ class WalletRechargeLoadController extends GetxController
           .get()
           .then((objData) {
         if (objData == "No Internet") {
-          isValidNumber = false.obs;
+          isValidNumber.value = false;
           rname.text = "";
-          fullName = "".obs;
+          fullName.value = "";
           userName.text = "";
 
           Get.back();
@@ -214,10 +302,10 @@ class WalletRechargeLoadController extends GetxController
         if (objData == null) {
           Get.back();
 
-          isActiveBtn = false.obs;
-          isValidNumber = false.obs;
+          isActiveBtn.value = false;
+          isValidNumber.value = false;
           rname.text = "";
-          fullName = "".obs;
+          fullName.value = "";
           userName.text = "";
 
           CustomDialog().errorDialog(Get.context!, "Error",
@@ -229,12 +317,12 @@ class WalletRechargeLoadController extends GetxController
         if (objData["items"].length == 0) {
           Get.back();
 
-          isActiveBtn = false.obs;
+          isActiveBtn.value = false;
           userDataInfo = null;
           rname.text = "";
           userName.text = "";
-          fullName = "".obs;
-          isValidNumber = false.obs;
+          fullName.value = "";
+          isValidNumber.value = false;
 
           CustomDialog().errorDialog(Get.context!, "Error",
               "Sorry, we're unable to find your account.", () {
@@ -245,9 +333,9 @@ class WalletRechargeLoadController extends GetxController
         } else {
           Get.back();
 
-          isActiveBtn = true.obs;
+          isActiveBtn.value = true;
           userDataInfo = objData["items"][0];
-          isValidNumber = true.obs;
+          isValidNumber.value = true;
           String originalFullName = userDataInfo["first_name"].toString();
           String transformedFullName = Variables.transformFullName(
               originalFullName.replaceAll(RegExp(r'\..*'), ''));
@@ -270,12 +358,5 @@ class WalletRechargeLoadController extends GetxController
         }
       });
     });
-  }
-
-  void onPay() {}
-  @override
-  void onClose() {
-    _debounce?.cancel();
-    super.onClose();
   }
 }

@@ -158,8 +158,8 @@ class WalletRechargeLoadScreen extends GetView<WalletRechargeLoadController> {
                 if (MediaQuery.of(context).viewInsets.bottom == 0) //hide button
                   CustomButton(
                     text: "Pay Now",
-                    btnColor: controller.isActiveBtn.value ||
-                            controller.isSelectedPartner.value
+                    btnColor: controller.isActiveBtn == false ||
+                            controller.isSelectedPartner == false
                         ? AppColor.primaryColor.withOpacity(.7)
                         : AppColor.primaryColor,
                     onPressed: () {
