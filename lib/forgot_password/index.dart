@@ -1,4 +1,4 @@
-library walletotp;
+library auditor;
 
 export './bindings.dart';
 export './controller.dart';

@@ -14,8 +14,8 @@ import 'package:pinput/pinput.dart';
 
 import 'controller.dart';
 
-class WalletOtp extends GetView<WalletOtpController> {
-  const WalletOtp({super.key});
+class SendOtp extends GetView<SendOtpController> {
+  const SendOtp({super.key});
   @override
   Widget build(BuildContext context) {
     PinTheme getDefaultPinTheme() {

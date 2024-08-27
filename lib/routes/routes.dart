@@ -22,7 +22,7 @@ class Routes {
   static const bookingReceipt = "/booking_receipt";
   static const walletsend = "/wallet_send";
   static const rateBooking = "/rate_booking";
-  static const walletotp = "/wallet_otp";
+  static const sendOtp = "/wallet_otp";
   static const customdrawer = "/customdrawer";
   static const walletrecharge = "/wallet_recharge";
   static const walletrechargeload = "/wallet_recharge_load";
@@ -32,4 +32,9 @@ class Routes {
   static const profile = "/profile";
   static const security = "/security";
   static const changepassword = "/changepassword";
+  static const forgotPass = "/forgot_password";
+  static const forgotPassOtp = "/forgot_password_otp";
+  static const forgotPassSuccess = "/forgot_password_success";
+  static const forgotVerifiedAcct = "/forgot_vefified_acct";
+  static const createNewPass = "/create_password";
 }

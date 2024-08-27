@@ -8,10 +8,9 @@ import '../custom_widgets/alert_dialog.dart';
 import '../http/api_keys.dart';
 import '../http/http_request.dart';
 import '../notification_controller/notification_controller.dart';
-import '../routes/routes.dart';
 
-class WalletOtpController extends GetxController {
-  WalletOtpController();
+class SendOtpController extends GetxController {
+  SendOtpController();
   List paramArgs = Get.arguments;
   TextEditingController pinController = TextEditingController();
   RxBool isLoading = false.obs;
@@ -195,11 +194,11 @@ class WalletOtpController extends GetxController {
       return;
     }
     verifyOtp();
-    //  controller.verifyOtp();
   }
 
   @override
   void onClose() {
+    timer!.cancel();
     super.onClose();
   }
 }

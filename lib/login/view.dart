@@ -14,7 +14,7 @@ import 'package:luvpark_get/login/controller.dart';
 import 'package:luvpark_get/routes/routes.dart';
 
 class LoginScreen extends StatelessWidget {
-  LoginScreen({super.key});
+  const LoginScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -47,8 +47,9 @@ class LoginScreen extends StatelessWidget {
                     ),
                     Container(height: 10),
                     const CustomParagraph(
-                        text:
-                            "Please enter your mobile number and password to login"),
+                      text:
+                          "Please enter your mobile number and password to login",
+                    ),
                     const VerticalHeight(height: 30),
                     const CustomTitle(
                       text: "Mobile Number",
@@ -75,13 +76,27 @@ class LoginScreen extends StatelessWidget {
                         title: "Password",
                         labelText: "Enter your password",
                         controller: ct.password,
-                        isObscure: ct.isShowPass.value,
-                        suffixIcon: ct.isShowPass.value
+                        isObscure: !ct.isShowPass.value,
+                        suffixIcon: !ct.isShowPass.value
                             ? Icons.visibility_off
                             : Icons.visibility,
                         onIconTap: () {
                           ct.visibilityChanged(!ct.isShowPass.value);
                         },
+                      ),
+                    ),
+                    const VerticalHeight(height: 5),
+                    InkWell(
+                      onTap: () {
+                        Get.toNamed(Routes.forgotPass);
+                      },
+                      child: const Align(
+                        alignment: Alignment.centerRight,
+                        child: CustomLinkLabel(
+                          text: "Forgot Password",
+                          fontSize: 14,
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
                     ),
                     const VerticalHeight(height: 30),

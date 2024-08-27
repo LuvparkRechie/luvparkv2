@@ -151,7 +151,7 @@ class LandingScreen extends StatelessWidget {
                                       Expanded(
                                         child: InkWell(
                                           onTap: () {
-                                            Get.toNamed(Routes.terms);
+                                            Get.offAndToNamed(Routes.terms);
                                           },
                                           child: const CustomLinkLabel(
                                             text: "luvpark's Terms of use",
@@ -179,7 +179,7 @@ class LandingScreen extends StatelessWidget {
                       onPressed: !controllers.isAgree.value
                           ? () {}
                           : () {
-                              Get.toNamed(Routes.registration,
+                              Get.offAndToNamed(Routes.registration,
                                   arguments: controllers.isAgree.value);
                             }),
                 ],

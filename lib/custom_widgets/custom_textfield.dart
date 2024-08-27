@@ -1,12 +1,11 @@
 import 'dart:io';
 
 import 'package:auto_size_text/auto_size_text.dart';
-import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:luvpark_get/custom_widgets/app_color.dart';
-import 'package:luvpark_get/custom_widgets/variables.dart';
+import 'package:luvpark_get/custom_widgets/custom_text.dart';
 
 class CustomTextField extends StatefulWidget {
   final String labelText;
@@ -29,7 +28,7 @@ class CustomTextField extends StatefulWidget {
   final FontWeight? fontweight;
   final TextAlign? textAlign;
   final TextCapitalization textCapitalization;
-  final String? Function(String?)? validator;
+  final FormFieldValidator<String>? validator;
 
   const CustomTextField(
       {super.key,
@@ -66,104 +65,65 @@ class _CustomTextFieldState extends State<CustomTextField> {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.only(top: 10.0, bottom: 20),
-      child: TextFormField(
-        textCapitalization: widget.textCapitalization,
-        obscureText: widget.isObscure,
-        autofocus: false,
-        inputFormatters: widget.inputFormatters,
-        controller: widget.controller,
-        textInputAction: TextInputAction.done,
-        readOnly: widget.isReadOnly!,
-        keyboardType: widget.keyboardType!,
-        textAlign:
-            widget.textAlign != null ? widget.textAlign! : TextAlign.left,
-        focusNode: focusNode,
-        decoration: InputDecoration(
-          contentPadding:
-              const EdgeInsets.symmetric(vertical: 10, horizontal: 12),
-          filled: true,
-          focusedBorder: OutlineInputBorder(
-              borderSide: BorderSide(color: AppColor.primaryColor)),
-          fillColor: const Color(0xFFF0F6FF),
-          border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(7.0),
-              borderSide: BorderSide.none),
-          labelStyle: TextStyle(
-            color: AppColor.secondaryColor,
-            fontWeight: FontWeight.w500,
+        padding: const EdgeInsets.only(top: 10.0, bottom: 20),
+        child: TextFormField(
+          textCapitalization: widget.textCapitalization,
+          obscureText: widget.isObscure,
+          autofocus: false,
+          inputFormatters: widget.inputFormatters,
+          controller: widget.controller,
+          textInputAction: TextInputAction.done,
+          readOnly: widget.isReadOnly!,
+          keyboardType: widget.keyboardType!,
+          textAlign:
+              widget.textAlign != null ? widget.textAlign! : TextAlign.left,
+          focusNode: focusNode,
+          decoration: InputDecoration(
+            contentPadding:
+                const EdgeInsets.symmetric(vertical: 10, horizontal: 12),
+            filled: true,
+            focusedBorder: OutlineInputBorder(
+                borderSide: BorderSide(color: AppColor.primaryColor)),
+            fillColor: const Color(0xFFF0F6FF),
+            border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(7.0),
+                borderSide: BorderSide.none),
+            labelStyle: paragraphStyle(fontWeight: FontWeight.w600),
+            suffixIcon: widget.suffixIcon != null
+                ? InkWell(
+                    onTap: () {
+                      widget.onIconTap!();
+                    },
+                    child: Icon(widget.suffixIcon!),
+                  )
+                : null,
+            prefixIcon: widget.prefixIcon != null
+                ? InkWell(
+                    onTap: () {
+                      widget.onIconTap!();
+                    },
+                    child: widget.prefixIcon,
+                  )
+                : null,
+            hintText: widget.labelText == "seca1" ||
+                    widget.labelText == "seca2" ||
+                    widget.labelText == "seca3"
+                ? "Answer"
+                : widget.labelText,
           ),
-          suffixIcon: widget.suffixIcon != null
-              ? InkWell(
-                  onTap: () {
-                    widget.onIconTap!();
-                  },
-                  child: Icon(widget.suffixIcon!),
-                )
-              : null,
-          prefixIcon: widget.prefixIcon != null
-              ? InkWell(
-                  onTap: () {
-                    widget.onIconTap!();
-                  },
-                  child: widget.prefixIcon,
-                )
-              : null,
-          hintText: widget.labelText == "seca1" ||
-                  widget.labelText == "seca2" ||
-                  widget.labelText == "seca3"
-              ? "Answer"
-              : widget.labelText,
-        ),
-        style: GoogleFonts.manrope(
-          color: Colors.black,
-          fontWeight: FontWeight.w500,
-          fontSize: 14,
-        ),
-        onChanged: (value) {
-          widget.onChange!(value);
-        },
-        onTap: () {
-          widget.onTap!();
-        },
-        validator: widget.validator ??
-            (value) {
-              if (widget.labelText == "Email") {
-                if (value!.isEmpty) {
-                  focusNode.requestFocus();
-                  return "Field is required";
-                } else {
-                  if (!EmailValidator.validate(value) ||
-                      !Variables.emailRegex.hasMatch(value)) {
-                    focusNode.requestFocus();
-                    return "Invalid email format";
-                  }
-                }
-              } else if (widget.labelText == "Password") {
-                if (value!.isEmpty) {
-                  focusNode.requestFocus();
-                  return "Field is required";
-                }
-              } else if (widget.labelText == "Plate No.") {
-                if (value!.isEmpty) {
-                  focusNode.requestFocus();
-                  return "Plate no is required";
-                }
-              } else {
-                if (widget.labelText.toLowerCase().contains("optional")) {
-                  return null;
-                } else {
-                  if (value!.isEmpty) {
-                    focusNode.requestFocus();
-                    return "Field is required";
-                  }
-                }
-              }
-
-              return null;
-            },
-      ),
-    );
+          style: GoogleFonts.manrope(
+            color: Colors.black,
+            fontWeight: FontWeight.w500,
+            fontSize: 14,
+          ),
+          onChanged: (value) {
+            widget.onChange!(value);
+          },
+          onTap: () {
+            widget.onTap!();
+          },
+          validator: widget.validator,
+        ));
   }
 }
 

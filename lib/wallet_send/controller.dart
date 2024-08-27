@@ -138,7 +138,7 @@ class WalletSendController extends GetxController
             ];
             // print("print otp data$otpData");
             Get.toNamed(
-              Routes.walletotp,
+              Routes.sendOtp,
               arguments: otpData,
             );
           } else {

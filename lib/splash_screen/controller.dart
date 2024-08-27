@@ -33,6 +33,8 @@ class SplashController extends GetxController
       lgCt.getAccountStatus(Get.context, data["mobile_no"], (obj) async {
         final items = obj[0]["items"];
 
+        print("items $items");
+
         if (items.isEmpty) {
           return;
         }
@@ -60,6 +62,7 @@ class SplashController extends GetxController
               "pwd": uPass,
             };
             lgCt.postLogin(Get.context, postParam, (data) {
+              print("items post $data");
               if (data[0]["items"].isNotEmpty) {
                 Get.toNamed(Routes.map);
               }

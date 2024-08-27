@@ -46,11 +46,12 @@ class LoginScreenController extends GetxController {
     HttpRequest(api: apiParam).get().then((objData) {
       if (objData == "No Internet") {
         isInternetConnected.value = false;
+        cb([
+          {"has_net": false, "items": []}
+        ]);
+
         CustomDialog().internetErrorDialog(context, () {
           Get.back();
-          cb([
-            {"has_net": false, "items": []}
-          ]);
         });
         return;
       }
@@ -82,12 +83,13 @@ class LoginScreenController extends GetxController {
     String apiParam = ApiKeys.gApiLuvParkGetVehicleBrand;
 
     HttpRequest(api: apiParam).get().then((returnBrandData) async {
+      print("returnBrandData $returnBrandData");
       if (returnBrandData == "No Internet") {
+        cb([
+          {"has_net": false, "items": []}
+        ]);
         CustomDialog().internetErrorDialog(context, () {
           Get.back();
-          cb([
-            {"has_net": false, "items": []}
-          ]);
         });
         return;
       }

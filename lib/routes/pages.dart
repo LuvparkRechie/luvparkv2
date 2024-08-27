@@ -1,39 +1,39 @@
 import 'package:get/get.dart';
 import 'package:luvpark_get/about_us/index.dart';
 import 'package:luvpark_get/change_password/index.dart';
-import 'package:luvpark_get/change_password/view.dart';
-import 'package:luvpark_get/mapa/utils/bindings.dart';
-import 'package:luvpark_get/mapa/utils/view.dart';
 import 'package:luvpark_get/faq/index.dart';
+import 'package:luvpark_get/forgot_password/utils/forgot_otp/index.dart';
+import 'package:luvpark_get/forgot_password/utils/forgot_verified_acc/index.dart';
 import 'package:luvpark_get/profile/index.dart';
-import 'package:luvpark_get/profile/view.dart';
 import 'package:luvpark_get/rate_booking/index.dart';
 import 'package:luvpark_get/wallet_qr/index.dart';
 import 'package:luvpark_get/wallet_recharge/index.dart';
 import 'package:luvpark_get/wallet_recharge_load/index.dart';
+
 import '../activate_acc/index.dart';
 import '../booking/index.dart';
 import '../booking/utils/booking_receipt/index.dart';
 import '../booking_notice/index.dart';
-import '../landing/bindings.dart';
-import '../landing/view.dart';
+import '../forgot_password/index.dart';
+import '../forgot_password/utils/create_new/index.dart';
+import '../forgot_password/utils/forgot_otp/utils/forgot_pass_success.dart';
+import '../landing/index.dart';
 import '../login/index.dart';
 import '../main.dart';
 import '../mapa/index.dart';
+import '../mapa/utils/index.dart';
 import '../onboarding/index.dart';
 import '../parking/index.dart';
 import '../parking_areas/index.dart';
 import '../parking_details/index.dart';
 import '../permission/permission.dart';
-
 import '../registration/index.dart';
 import '../registration/utils/otp_screen/index.dart';
-import '../security_Settings/view.dart';
-import '../security_settings/bindings.dart';
+import '../security_settings/index.dart';
+import '../send_otp/index.dart';
 import '../splash_screen/index.dart';
 import '../terms/index.dart';
 import '../wallet/index.dart';
-import '../wallet_otp/index.dart';
 import '../wallet_send/index.dart';
 import 'routes.dart';
 
@@ -53,7 +53,7 @@ class AppPages {
         binding: TermsOfUseBinding()),
     GetPage(
         name: Routes.login,
-        page: () => LoginScreen(),
+        page: () => const LoginScreen(),
         binding: LoginScreenBinding()),
     // GetPage(
     //     name: Routes.dashboard,
@@ -143,9 +143,9 @@ class AppPages {
       binding: RateBookingBinding(),
     ),
     GetPage(
-      name: Routes.walletotp,
-      page: () => const WalletOtp(),
-      binding: WalletOtpBinding(),
+      name: Routes.sendOtp,
+      page: () => const SendOtp(),
+      binding: SendOtpBinding(),
     ),
     GetPage(
       name: Routes.faqpage,
@@ -186,6 +186,30 @@ class AppPages {
       name: Routes.walletrechargeload,
       page: () => const WalletRechargeLoadScreen(),
       binding: WalletRechargeLoadBinding(),
+    ),
+    GetPage(
+      name: Routes.forgotPass,
+      page: () => const ForgotPassword(),
+      binding: ForgotPasswordBinding(),
+    ),
+    GetPage(
+      name: Routes.createNewPass,
+      page: () => const CreateNewPassword(),
+      binding: CreateNewPasswordBinding(),
+    ),
+    GetPage(
+      name: Routes.forgotPassOtp,
+      page: () => const ForgotPassOtp(),
+      binding: ForgotPassOtpBinding(),
+    ),
+    GetPage(
+      name: Routes.forgotPassSuccess,
+      page: () => const ForgetPasswordSuccess(),
+    ),
+    GetPage(
+      name: Routes.forgotVerifiedAcct,
+      page: () => const ForgotVerifiedAcct(),
+      binding: ForgotVerifiedAcctBinding(),
     ),
   ];
 }
