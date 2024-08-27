@@ -6,7 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/src/services/text_formatter.dart';
 import 'package:luvpark_get/custom_widgets/custom_text.dart';
 
-class CustomTextField extends StatelessWidget {
+class CustomInputField extends StatelessWidget {
   final TextEditingController controller;
   final String label;
   final IconData? prefixIcon;
@@ -18,7 +18,7 @@ class CustomTextField extends StatelessWidget {
   final Function(String)? onChanged;
   final FormFieldValidator<String>? validator;
 
-  const CustomTextField({
+  const CustomInputField({
     Key? key,
     required this.controller,
     required this.label,

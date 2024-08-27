@@ -1050,7 +1050,7 @@ class BookingDuration extends GetView<BookingController> {
                               color: Colors.grey,
                             )),
                       ),
-                      CustomTextField(
+                      CustomInputField(
                         label: "Input number of hours",
                         controller: controller.noHours,
                         inputFormatters: <TextInputFormatter>[
@@ -1255,7 +1255,7 @@ class VehicleOption extends GetView<BookingController> {
                                                 text:
                                                     "What's your plate number?"),
                                             Container(height: 10),
-                                            CustomTextField(
+                                            CustomInputField(
                                               label: "Plate No.",
                                               controller: controller.plateNo,
                                               textCapitalization:
