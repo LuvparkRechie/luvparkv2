@@ -288,25 +288,57 @@ class CustomDrawer extends GetView<DashboardMapController> {
                   width: 200,
                   child: TextButton(
                     onPressed: () {
-                      CustomDialog().confirmationDialog(context, "Logout",
-                          "Are you sure you want to logout?", "No", "Yes", () {
-                        Get.back();
-                      }, () async {
-                        Get.back();
-                        CustomDialog().loadingDialog(context);
-                        await Future.delayed(const Duration(seconds: 3));
-                        final userLogin = await Authentication().getUserLogin();
-                        List userData = [userLogin];
-                        userData = userData.map((e) {
-                          e["is_login"] = "N";
-                          return e;
-                        }).toList();
+                      // CustomDialog().confirmationDialog(context, "Logout",
+                      //     "Are you sure you want to logout?", "No", "Yes", () {
+                      //   Get.back();
+                      // }, () async {
+                      //   Get.back();
+                      //   CustomDialog().loadingDialog(context);
+                      //   await Future.delayed(const Duration(seconds: 3));
+                      //   final userLogin = await Authentication().getUserLogin();
+                      //   List userData = [userLogin];
+                      //   userData = userData.map((e) {
+                      //     e["is_login"] = "N";
+                      //     return e;
+                      //   }).toList();
 
-                        await Authentication()
-                            .setLogin(jsonEncode(userData[0]));
-                        Get.back();
-                        Get.offAllNamed(Routes.splash);
-                      });
+                      //   await Authentication()
+                      //       .setLogin(jsonEncode(userData[0]));
+                      //   Get.back();
+                      //   Get.offAllNamed(Routes.splash);
+                      // });
+                      CustomDialog().customPopUp(
+                        context,
+                        'Logout?',
+                        'Are you sure you want to logout',
+                        'Yes, log out',
+                        'Cancel',
+                        btnNotBackgroundColor: AppColor.primaryColor,
+                        btnNotTextColor: Colors.white,
+                        btnOkTextColor: AppColor.primaryColor,
+                        btnOkBackgroundColor: Colors.transparent,
+                        onTapConfirm: () async {
+                          Get.back();
+                        },
+                        onTapClose: () async {
+                          Get.back();
+                          CustomDialog().loadingDialog(context);
+                          await Future.delayed(const Duration(seconds: 3));
+                          final userLogin =
+                              await Authentication().getUserLogin();
+                          List userData = [userLogin];
+                          userData = userData.map((e) {
+                            e["is_login"] = "N";
+                            return e;
+                          }).toList();
+
+                          await Authentication()
+                              .setLogin(jsonEncode(userData[0]));
+                          Get.back();
+                          Get.offAllNamed(Routes.splash);
+                        },
+                        showTwoButtons: true,
+                      );
                     },
                     style: ButtonStyle(
                       backgroundColor: MaterialStateProperty.all<Color>(
@@ -379,30 +411,38 @@ class CustomDrawer extends GetView<DashboardMapController> {
                     width: 200,
                     child: TextButton(
                       onPressed: () {
-                        CustomDialog().confirmationDialog(
-                            context,
-                            "Logout",
-                            "Are you sure you want to logout?",
-                            "No",
-                            "Yes", () {
-                          Get.back();
-                        }, () async {
-                          Get.back();
-                          CustomDialog().loadingDialog(context);
-                          await Future.delayed(const Duration(seconds: 3));
-                          final userLogin =
-                              await Authentication().getUserLogin();
-                          List userData = [userLogin];
-                          userData = userData.map((e) {
-                            e["is_login"] = "N";
-                            return e;
-                          }).toList();
+                        CustomDialog().customPopUp(
+                          context,
+                          'Logout?',
+                          'Are you sure you want to logout',
+                          'Yes, log out',
+                          'Cancel',
+                          btnNotBackgroundColor: AppColor.primaryColor,
+                          btnNotTextColor: Colors.white,
+                          btnOkTextColor: AppColor.primaryColor,
+                          btnOkBackgroundColor: Colors.transparent,
+                          onTapConfirm: () async {
+                            Get.back();
+                          },
+                          onTapClose: () async {
+                            Get.back();
+                            CustomDialog().loadingDialog(context);
+                            await Future.delayed(const Duration(seconds: 3));
+                            final userLogin =
+                                await Authentication().getUserLogin();
+                            List userData = [userLogin];
+                            userData = userData.map((e) {
+                              e["is_login"] = "N";
+                              return e;
+                            }).toList();
 
-                          await Authentication()
-                              .setLogin(jsonEncode(userData[0]));
-                          Get.back();
-                          Get.offAllNamed(Routes.splash);
-                        });
+                            await Authentication()
+                                .setLogin(jsonEncode(userData[0]));
+                            Get.back();
+                            Get.offAllNamed(Routes.splash);
+                          },
+                          showTwoButtons: true,
+                        );
                       },
                       style: ButtonStyle(
                         backgroundColor: MaterialStateProperty.all<Color>(
