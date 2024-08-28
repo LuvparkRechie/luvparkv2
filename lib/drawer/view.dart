@@ -338,6 +338,7 @@ class CustomDrawer extends GetView<DashboardMapController> {
           if (controller.userProfile == null ||
               controller.userProfile['first_name'] == null)
             Container(
+              height: 720,
               color: Colors.black.withOpacity(0.5),
               child: Center(
                 child: GestureDetector(
