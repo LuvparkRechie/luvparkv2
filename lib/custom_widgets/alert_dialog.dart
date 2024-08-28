@@ -224,133 +224,136 @@ class CustomDialog {
       barrierDismissible: false,
       context: context,
       builder: (BuildContext context) {
-        return AlertDialog(
-          contentPadding: EdgeInsets.zero,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(16.0),
-          ),
-          content: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: <Widget>[
-              Container(
-                decoration: const BoxDecoration(
-                  borderRadius:
-                      BorderRadius.vertical(top: Radius.circular(16.0)),
+        return PopScope(
+          canPop: false,
+          child: AlertDialog(
+            contentPadding: EdgeInsets.zero,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(16.0),
+            ),
+            content: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: <Widget>[
+                Container(
+                  decoration: const BoxDecoration(
+                    borderRadius:
+                        BorderRadius.vertical(top: Radius.circular(16.0)),
+                  ),
+                  clipBehavior: Clip.hardEdge,
+                  child: Image.asset(
+                    'assets/images/errorbackground.png',
+                    fit: BoxFit.cover,
+                    height: 100,
+                    width: double.infinity,
+                  ),
                 ),
-                clipBehavior: Clip.hardEdge,
-                child: Image.asset(
-                  'assets/images/errorbackground.png',
-                  fit: BoxFit.cover,
-                  height: 100,
-                  width: double.infinity,
+                // Title
+                Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: CustomTitle(
+                    text: title,
+                    fontSize: 16,
+                    textAlign: TextAlign.center,
+                    letterSpacing: -0.408,
+                  ),
                 ),
-              ),
-              // Title
-              Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: CustomTitle(
-                  text: title,
-                  fontSize: 16,
-                  textAlign: TextAlign.center,
-                  letterSpacing: -0.408,
+                // Paragraph
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                  child: CustomParagraph(
+                    text: paragraph,
+                    fontWeight: FontWeight.normal,
+                    fontSize: 14,
+                    color: Colors.black54,
+                    textAlign: TextAlign.center,
+                    letterSpacing: -0.408,
+                  ),
                 ),
-              ),
-              // Paragraph
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                child: CustomParagraph(
-                  text: paragraph,
-                  fontWeight: FontWeight.normal,
-                  fontSize: 14,
-                  color: Colors.black54,
-                  textAlign: TextAlign.center,
-                  letterSpacing: -0.408,
-                ),
-              ),
-              // Buttons
-              Padding(
-                padding: const EdgeInsets.only(
-                    top: 25, right: 15, left: 15, bottom: 16),
-                child: showTwoButtons
-                    ? Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: <Widget>[
-                          Expanded(
-                            child: SizedBox(
-                              height: 40,
-                              child: TextButton(
-                                onPressed: onTapClose,
-                                style: TextButton.styleFrom(
-                                  foregroundColor: Colors.white,
-                                  backgroundColor:
-                                      btnNotBackgroundColor ?? Colors.red,
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(5),
+                // Buttons
+                Padding(
+                  padding: const EdgeInsets.only(
+                      top: 25, right: 15, left: 15, bottom: 16),
+                  child: showTwoButtons
+                      ? Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: <Widget>[
+                            Expanded(
+                              child: SizedBox(
+                                height: 40,
+                                child: TextButton(
+                                  onPressed: onTapClose,
+                                  style: TextButton.styleFrom(
+                                    foregroundColor: Colors.white,
+                                    backgroundColor:
+                                        btnNotBackgroundColor ?? Colors.red,
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(5),
+                                    ),
                                   ),
-                                ),
-                                child: CustomParagraph(
-                                  text: btnNot,
-                                  color: btnNotTextColor ?? Colors.white,
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.w500,
-                                  letterSpacing: -0.408,
-                                  textAlign: TextAlign.center,
+                                  child: CustomParagraph(
+                                    text: btnNot,
+                                    color: btnNotTextColor ?? Colors.white,
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.w500,
+                                    letterSpacing: -0.408,
+                                    textAlign: TextAlign.center,
+                                  ),
                                 ),
                               ),
                             ),
-                          ),
-                          const SizedBox(width: 8),
-                          Expanded(
-                            child: SizedBox(
-                              height: 40,
-                              child: TextButton(
-                                onPressed: onTapConfirm,
-                                style: TextButton.styleFrom(
-                                  foregroundColor: Colors.white,
-                                  backgroundColor: btnOkBackgroundColor ??
-                                      AppColor.primaryColor,
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(5),
+                            const SizedBox(width: 8),
+                            Expanded(
+                              child: SizedBox(
+                                height: 40,
+                                child: TextButton(
+                                  onPressed: onTapConfirm,
+                                  style: TextButton.styleFrom(
+                                    foregroundColor: Colors.white,
+                                    backgroundColor: btnOkBackgroundColor ??
+                                        AppColor.primaryColor,
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(5),
+                                    ),
                                   ),
-                                ),
-                                child: CustomParagraph(
-                                  text: btnOk,
-                                  color: btnOkTextColor ?? Colors.white,
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.w500,
-                                  letterSpacing: -0.408,
-                                  textAlign: TextAlign.center,
+                                  child: CustomParagraph(
+                                    text: btnOk,
+                                    color: btnOkTextColor ?? Colors.white,
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.w500,
+                                    letterSpacing: -0.408,
+                                    textAlign: TextAlign.center,
+                                  ),
                                 ),
                               ),
                             ),
-                          ),
-                        ],
-                      )
-                    : SizedBox(
-                        width: double.infinity,
-                        height: 40,
-                        child: TextButton(
-                          onPressed: onTapConfirm,
-                          style: TextButton.styleFrom(
-                            foregroundColor: Colors.white,
-                            backgroundColor:
-                                btnOkBackgroundColor ?? AppColor.primaryColor,
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(5),
+                          ],
+                        )
+                      : SizedBox(
+                          width: double.infinity,
+                          height: 40,
+                          child: TextButton(
+                            onPressed: onTapConfirm,
+                            style: TextButton.styleFrom(
+                              foregroundColor: Colors.white,
+                              backgroundColor:
+                                  btnOkBackgroundColor ?? AppColor.primaryColor,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(5),
+                              ),
                             ),
-                          ),
-                          child: CustomParagraph(
-                            text: btnOk,
-                            color: btnOkTextColor ?? Colors.white,
-                            fontSize: 14,
-                            fontWeight: FontWeight.w500,
-                            letterSpacing: -0.408,
-                            textAlign: TextAlign.center,
+                            child: CustomParagraph(
+                              text: btnOk,
+                              color: btnOkTextColor ?? Colors.white,
+                              fontSize: 14,
+                              fontWeight: FontWeight.w500,
+                              letterSpacing: -0.408,
+                              textAlign: TextAlign.center,
+                            ),
                           ),
                         ),
-                      ),
-              ),
-            ],
+                ),
+              ],
+            ),
           ),
         );
       },
