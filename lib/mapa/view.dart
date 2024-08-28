@@ -318,6 +318,9 @@ class DashboardMapScreen extends GetView<DashboardMapController> {
                       border: InputBorder.none,
                     ),
                     style: paragraphStyle(color: Colors.black),
+                    onTap: () {
+                      controller.panelController.open();
+                    },
                     onChanged: (text) {
                       controller.fetchSuggestions();
                     },
