@@ -3,6 +3,7 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:google_directions_api/google_directions_api.dart';
 import 'package:luvpark_get/auth/authentication.dart';
 import 'package:luvpark_get/custom_widgets/alert_dialog.dart';
 import 'package:luvpark_get/functions/functions.dart';
@@ -40,7 +41,6 @@ class WalletController extends GetxController
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       getUserBalance();
     });
-    streamData();
   }
 
   void streamData() {
@@ -68,11 +68,10 @@ class WalletController extends GetxController
     fname.value =
         "${item['first_name'].toString()} ${item['last_name'].toString()}";
     Functions.getUserBalance(Get.context!, (dataBalance) async {
-      // print("item $item");
-
       if (!dataBalance[0]["has_net"]) {
         isLoading.value = false;
         isNetConn.value = false;
+        isAllowToSync = false;
         return;
       } else {
         userData.value = dataBalance[0]["items"];
@@ -82,12 +81,13 @@ class WalletController extends GetxController
   }
 
   Future<void> onRefresh() async {
+    if (isLoading.value) return;
     isLoading.value = true;
+    isNetConn.value = true;
     getUserBalance();
   }
 
   Future<void> applyFilter() async {
-    // print("yawa");
     FocusManager.instance.primaryFocus!.unfocus();
     if (fromDate.text.isEmpty || toDate.text.isEmpty) {
       return;
@@ -135,15 +135,13 @@ class WalletController extends GetxController
     final item = await Authentication().getUserData();
     String userId = jsonDecode(item!)['user_id'].toString();
     isLoading.value = true;
-    // print("yawaaa ${item}");
 
     String subApi =
         "${ApiKeys.gApiSubFolderGetTransactionLogs}?user_id=$userId&tran_date_from=${fromDate.text}&tran_date_to=${toDate.text}";
 
     HttpRequest(api: subApi).get().then((response) {
-      isAllowToSync = true;
-      // print(" ${subApi}");
       if (response == "No Internet") {
+        isAllowToSync = false;
         isLoading.value = false;
         isNetConn.value = false;
         CustomDialog().internetErrorDialog(Get.context!, () => Get.back());
@@ -152,9 +150,10 @@ class WalletController extends GetxController
       if (response == null) {
         isLoading.value = true;
         isNetConn.value = true;
+        isAllowToSync = false;
         CustomDialog().errorDialog(
           Get.context!,
-          "Error",
+          "luvpark",
           "Error while connecting to server, Please contact support.",
           () => Get.back(),
         );
@@ -164,18 +163,18 @@ class WalletController extends GetxController
       if (response["items"].isNotEmpty) {
         isLoading.value = false;
         isNetConn.value = true;
+        isAllowToSync = true;
         logs.value = response["items"];
-
-        // print("items ${response["items"]}");
+        streamData();
       } else {
         isLoading.value = false;
         isNetConn.value = true;
-        CustomDialog().errorDialog(
-          Get.context!,
-          "luvpark",
-          "No amenities found in this area.",
-          () => Get.back(),
-        );
+        isAllowToSync = false;
+        CustomDialog().customPopUp(
+            Get.context!, "luvpark", "No data found", "", "Okay",
+            showTwoButtons: false, onTapConfirm: () {
+          Get.back();
+        });
       }
     });
   }
