@@ -83,7 +83,6 @@ class LoginScreenController extends GetxController {
     String apiParam = ApiKeys.gApiLuvParkGetVehicleBrand;
 
     HttpRequest(api: apiParam).get().then((returnBrandData) async {
-      print("returnBrandData $returnBrandData");
       if (returnBrandData == "No Internet") {
         cb([
           {"has_net": false, "items": []}

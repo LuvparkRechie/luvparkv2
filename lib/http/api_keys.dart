@@ -230,7 +230,8 @@ class ApiKeys {
 
   //NEW BOOKING API added august 19
   static const gApiBooking = '/ords/$luvApi/token/luvpark/booking';
-  //https://gce81b2a8b40195-gccdb.adb.ap-singapore-1.oraclecloudapps.com/ords/luv/token/luvpark/booking
+  static const gApiPostSelfCheckIn =
+      '/ords/$parkSpaceApi/pm/checkInAdvancedParking';
 
   //REMOVED API
   // //Reserve payment key

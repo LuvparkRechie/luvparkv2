@@ -73,20 +73,21 @@ class DashboardMapScreen extends GetView<DashboardMapController> {
               )),
             );
           } else {
-            WidgetsBinding.instance.addPostFrameCallback((_) {
-              SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
-                statusBarColor: Colors.transparent,
-                statusBarBrightness: Brightness.light,
-                statusBarIconBrightness: Brightness.dark,
-              ));
-            });
-
             return PopScope(
               canPop: false,
               child: Scaffold(
-                extendBody: true,
                 extendBodyBehindAppBar: true,
                 key: controller.dashboardScaffoldKey,
+                appBar: AppBar(
+                  elevation: 0,
+                  backgroundColor: Colors.transparent,
+                  toolbarHeight: 0,
+                  systemOverlayStyle: const SystemUiOverlayStyle(
+                    statusBarColor: Colors.transparent,
+                    statusBarBrightness: Brightness.light,
+                    statusBarIconBrightness: Brightness.dark,
+                  ),
+                ),
                 drawer: const CustomDrawer(),
                 body: Column(
                   children: [
@@ -372,7 +373,7 @@ class DashboardMapScreen extends GetView<DashboardMapController> {
                   mapType: MapType.normal,
                   mapToolbarEnabled: false,
                   zoomControlsEnabled: false,
-                  myLocationEnabled: false,
+                  myLocationEnabled: true,
                   myLocationButtonEnabled: false,
                   compassEnabled: false,
                   buildingsEnabled: false,

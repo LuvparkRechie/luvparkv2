@@ -10,17 +10,15 @@ class SplashScreen extends GetView<SplashController> {
   @override
   Widget build(BuildContext context) {
     Get.put(LoginScreenController());
-    final SplashController ct = Get.put(SplashController());
-    final LoginScreenController ctl = Get.put(LoginScreenController());
     return Scaffold(
         backgroundColor: Colors.white,
         body: Obx(
-          () => !ctl.isInternetConnected.value
+          () => !controller.isNetConn.value
               ? NoInternetConnected(
-                  onTap: ct.determineInitialRoute,
+                  onTap: controller.determineInitialRoute,
                 )
               : ScaleTransition(
-                  scale: ct.animation,
+                  scale: controller.animation,
                   child: Center(
                     child: Hero(
                       tag: "logo",

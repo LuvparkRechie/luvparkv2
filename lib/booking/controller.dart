@@ -75,7 +75,7 @@ class BookingController extends GetxController
     super.onInit();
     _startInactivityTimer();
     _updateMaskFormatter("");
-
+    print("can checkIn ${parameters["canCheckIn"]}");
     int endNumber =
         int.parse(parameters["areaData"]["res_max_hours"].toString());
     numbersList.value = List.generate(
@@ -409,7 +409,6 @@ class BookingController extends GetxController
       HttpRequest(api: ApiKeys.gApiBooking, parameters: dynamicBookParam)
           .postBody()
           .then((objData) async {
-        print("objData $objData");
         if (objData == "No Internet") {
           isSubmitBooking.value = false;
           CustomDialog().internetErrorDialog(Get.context!, () {
@@ -455,8 +454,7 @@ class BookingController extends GetxController
           };
 
           if (parameters["canCheckIn"]) {
-            checkIn(objData["reservation_id"], objData["lp_ref_no"],
-                current.latitude, current.longitude, paramArgs);
+            checkIn(objData["reservation_id"], userId, paramArgs);
             return;
           } else {
             isSubmitBooking.value = false;
@@ -524,20 +522,15 @@ class BookingController extends GetxController
   }
 
   //Self checkin
-  Future<void> checkIn(ticketId, refNo, lat, long, args) async {
+  Future<void> checkIn(ticketId, lpId, args) async {
     dynamic chkInParam = {
-      "device_key": null,
-      "emp_id": null,
       "ticket_id": ticketId,
-      "longitude": long,
-      "latitude": lat,
-      "is_auto": "Y",
+      "luvpay_id": lpId,
     };
-
     print("chkInParam $chkInParam");
 
-    HttpRequest(api: ApiKeys.gApiLuvParkPutChkIn, parameters: chkInParam)
-        .put()
+    HttpRequest(api: ApiKeys.gApiPostSelfCheckIn, parameters: chkInParam)
+        .postBody()
         .then((returnData) async {
       print("returnData $returnData");
       if (returnData == "No Internet") {
@@ -555,41 +548,10 @@ class BookingController extends GetxController
 
         return;
       }
-
+      isSubmitBooking.value = false;
       if (returnData["success"] == 'Y') {
-        var otpData = {
-          "ticket_ref_no": returnData['ticket_ref_no'],
-        };
-        HttpRequest(api: ApiKeys.gApiLuvParkPutLPChkIn, parameters: otpData)
-            .put()
-            .then((returnData2) async {
-          if (returnData2 == "No Internet") {
-            isSubmitBooking.value = false;
-            CustomDialog().internetErrorDialog(Get.context!, () {
-              Get.back();
-            });
-            return;
-          }
-          if (returnData2 == null) {
-            isSubmitBooking.value = false;
-            CustomDialog().serverErrorDialog(Get.context!, () {
-              Get.back();
-            });
-            return;
-          }
-          isSubmitBooking.value = false;
-          if (returnData2["success"] == 'Y') {
-            Get.offNamed(Routes.bookingReceipt, arguments: args);
-            //Success
-          } else {
-            CustomDialog()
-                .errorDialog(Get.context!, "luvpark", returnData["msg"], () {
-              Get.back();
-            });
-          }
-        });
+        Get.offNamed(Routes.bookingReceipt, arguments: args);
       } else {
-        isSubmitBooking.value = false;
         CustomDialog().errorDialog(Get.context!, "luvpark", returnData["msg"],
             () {
           Get.back();

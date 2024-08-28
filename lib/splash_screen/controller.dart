@@ -11,6 +11,7 @@ class SplashController extends GetxController
     with GetSingleTickerProviderStateMixin {
   late AnimationController _controller;
   late Animation<double> animation;
+  RxBool isNetConn = true.obs;
 
   @override
   void onInit() {
@@ -25,6 +26,7 @@ class SplashController extends GetxController
   }
 
   Future<void> determineInitialRoute() async {
+    isNetConn.value = true;
     final data = await Authentication().getUserLogin();
 
     if (data != null) {
@@ -32,9 +34,10 @@ class SplashController extends GetxController
 
       lgCt.getAccountStatus(Get.context, data["mobile_no"], (obj) async {
         final items = obj[0]["items"];
-
-        print("items $items");
-
+        if (!obj[0]["has_net"]) {
+          isNetConn.value = false;
+          return;
+        }
         if (items.isEmpty) {
           return;
         }
@@ -62,7 +65,11 @@ class SplashController extends GetxController
               "pwd": uPass,
             };
             lgCt.postLogin(Get.context, postParam, (data) {
-              print("items post $data");
+              if (!data[0]["has_net"]) {
+                isNetConn.value = false;
+                return;
+              }
+              isNetConn.value = true;
               if (data[0]["items"].isNotEmpty) {
                 Get.toNamed(Routes.map);
               }

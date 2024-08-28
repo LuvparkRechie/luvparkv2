@@ -12,25 +12,41 @@ import 'package:luvpark_get/http/api_keys.dart';
 import 'package:luvpark_get/http/http_request.dart';
 import 'package:luvpark_get/routes/routes.dart';
 
-class ParkingDetailsController extends GetxController
-    with GetSingleTickerProviderStateMixin {
-  GoogleMapController? gMapController;
+class ParkingDetailsController extends GetxController {
   final dataNearest = Get.arguments;
-  var carsData = <Widget>[];
+  Rx<GoogleMapController?> googleMapController = Rx<GoogleMapController?>(null);
+
+  RxList<Widget> carsData = <Widget>[].obs;
   RxBool btnLoading = false.obs;
   RxBool isNetConnected = true.obs;
   RxBool isLoading = true.obs;
   RxBool isOpen = false.obs;
-  RxList amenData = <dynamic>[].obs;
-  RxList carsInfo = <dynamic>[].obs;
+  RxBool isMoreDetails = false.obs;
+  RxList<dynamic> amenData = <dynamic>[].obs;
+  RxList<dynamic> carsInfo = <dynamic>[].obs;
   RxList<Marker> markers = <Marker>[].obs;
+  RxList etaData = [].obs;
   Rx<Polyline> polyline = const Polyline(
     polylineId: PolylineId('dottedPolyLine'),
   ).obs;
-  LatLng center = const LatLng(0, 0);
-  LatLng destLoc = const LatLng(0, 0);
-  CameraPosition? intialPosition;
-  RxList vehicleTypes = <dynamic>[].obs;
+  Rx<LatLng> destLoc = const LatLng(0, 0).obs;
+  Rx<LatLng> currentLocation = const LatLng(0, 0).obs;
+  Rx<CameraPosition> initialPosition = const CameraPosition(
+    target: LatLng(0, 0),
+    zoom: 12.0, // Default zoom
+  ).obs;
+  RxList<dynamic> vehicleTypes = <dynamic>[].obs;
+  RxList<dynamic> vehicleRates = <dynamic>[].obs;
+  List iconAmen = [
+    {"code": "D", "icon": "dimension"},
+    {"code": "V", "icon": "covered_area"},
+    {"code": "C", "icon": "concrete"},
+    {"code": "T", "icon": "cctv"},
+    {"code": "G", "icon": "grass_area"},
+    {"code": "A", "icon": "asphalt"},
+    {"code": "S", "icon": "security"},
+    {"code": "P", "icon": "pwd"},
+  ];
 
   String finalSttime = "";
   String finalEndtime = "";
@@ -43,7 +59,8 @@ class ParkingDetailsController extends GetxController
     finalSttime = formatTime(dataNearest["start_time"]);
     finalEndtime = formatTime(dataNearest["end_time"]);
     isOpen.value = Functions.checkAvailability(finalSttime, finalEndtime);
-    destLoc = LatLng(dataNearest["pa_latitude"], dataNearest["pa_longitude"]);
+    destLoc.value =
+        LatLng(dataNearest["pa_latitude"], dataNearest["pa_longitude"]);
     refreshAmenData();
   }
 
@@ -54,50 +71,7 @@ class ParkingDetailsController extends GetxController
   Future<void> refreshAmenData() async {
     isNetConnected.value = true;
     isLoading.value = true;
-
-    getAmenities();
-  }
-
-  void onMapCreated(GoogleMapController controller) {
-    gMapController = controller;
-    DefaultAssetBundle.of(Get.context!)
-        .loadString('assets/custom_map_style/map_style.json')
-        .then((style) => controller.setMapStyle(style));
-  }
-
-  void buildBounds(LatLng currLoc, LatLng destLoc) {
-    LatLngBounds bounds = LatLngBounds(
-      southwest: LatLng(
-        currLoc.latitude < destLoc.latitude
-            ? currLoc.latitude
-            : destLoc.latitude,
-        currLoc.longitude < destLoc.longitude
-            ? currLoc.longitude
-            : destLoc.longitude,
-      ),
-      northeast: LatLng(
-        currLoc.latitude > destLoc.latitude
-            ? currLoc.latitude
-            : destLoc.latitude,
-        currLoc.longitude > destLoc.longitude
-            ? currLoc.longitude
-            : destLoc.longitude,
-      ),
-    );
-
-    center = LatLng(
-      (bounds.southwest.latitude + bounds.northeast.latitude) / 2,
-      (bounds.southwest.longitude + bounds.northeast.longitude) / 2,
-    );
-    intialPosition = CameraPosition(
-      target: center,
-      zoom: 12.0,
-    );
-
-    isNetConnected.value = true;
-    isLoading.value = false;
-
-    gMapController?.animateCamera(CameraUpdate.newLatLngBounds(bounds, 130));
+    await getAmenities();
   }
 
   Future<void> getAmenities() async {
@@ -125,8 +99,53 @@ class ParkingDetailsController extends GetxController
     }
 
     if (response["items"].isNotEmpty) {
-      amenData.value = response["items"];
-      fetchRoute();
+      List<dynamic> item = response["items"];
+      item = item.map((element) {
+        String icon = iconAmen
+            .where((e) {
+              return e["code"] == element["parking_amenity_code"];
+            })
+            .toList()[0]["icon"]
+            .toString();
+        element["icon"] = icon;
+
+        return element;
+      }).toList();
+
+      if (dataNearest["park_orientation"] != null &&
+          dataNearest["is_pwd"] == "N") {
+        item.insert(0, {
+          "zone_amenity_id": 0,
+          "zone_id": 0,
+          "parking_amenity_code": "D",
+          "parking_amenity_desc":
+              "${dataNearest["park_size"]} ${dataNearest["park_orientation"]}",
+          "icon": "dimension"
+        });
+      } else {
+        if (dataNearest["is_pwd"] == "Y") {
+          item.insert(0, {
+            "zone_amenity_id": 0,
+            "zone_id": 0,
+            "parking_amenity_code": "P",
+            "parking_amenity_desc": "PWD Parking Available",
+            "icon": "pwd"
+          });
+        }
+        if (dataNearest["park_orientation"] != null) {
+          item.insert(1, {
+            "zone_amenity_id": 0,
+            "zone_id": 0,
+            "parking_amenity_code": "D",
+            "parking_amenity_desc":
+                "${dataNearest["park_size"]} ${dataNearest["park_orientation"]}",
+            "icon": "dimension"
+          });
+        }
+      }
+
+      amenData.value = item;
+      getParkingRates();
     } else {
       isNetConnected.value = true;
       isLoading.value = false;
@@ -139,27 +158,60 @@ class ParkingDetailsController extends GetxController
     }
   }
 
+  Future<void> getParkingRates() async {
+    HttpRequest(
+            api:
+                '${ApiKeys.gApiSubFolderGetRates}?park_area_id=${dataNearest["park_area_id"]}')
+        .get()
+        .then((returnData) async {
+      if (returnData == "No Internet") {
+        isNetConnected.value = false;
+        isLoading.value = false;
+        CustomDialog().internetErrorDialog(Get.context!, () {
+          Get.back();
+        });
+        return;
+      }
+
+      if (returnData == null) {
+        isNetConnected.value = true;
+        isLoading.value = false;
+        CustomDialog().serverErrorDialog(Get.context!, () {
+          Get.back();
+        });
+        return;
+      }
+
+      if (returnData["items"].length > 0) {
+        List<dynamic> item = returnData["items"];
+        vehicleRates.value = item;
+
+        fetchRoute();
+      } else {
+        isNetConnected.value = true;
+        isLoading.value = false;
+        CustomDialog().errorDialog(Get.context!, "luvpark", returnData["msg"],
+            () {
+          Get.back();
+        });
+      }
+    });
+  }
+
   Future<void> fetchRoute() async {
-    Functions.getLocation(Get.context!, (location) async {
-      LatLng currentLocation = location;
+    await Functions.getLocation(Get.context!, (location) async {
+      currentLocation.value = location;
 
-      await Functions.getAddress(
-          currentLocation.latitude, currentLocation.longitude);
-
-      getCustomMarker([
-        {"marker": "my_marker", "loc": currentLocation},
-        {"marker": "dest_marker", "loc": destLoc}
+      await getCustomMarker([
+        {"marker": "my_marker", "loc": currentLocation.value},
+        {"marker": "dest_marker", "loc": destLoc.value}
       ]);
 
-      buildBounds(currentLocation, destLoc);
+      final estimatedData =
+          await Functions.fetchETA(currentLocation.value, destLoc.value);
+      etaData.value = estimatedData;
 
-      final estimatedData = await Functions.fetchETA(currentLocation, destLoc);
-      polyline.value = Polyline(
-        polylineId: const PolylineId('polylineId'),
-        color: Colors.blue,
-        width: 5,
-        points: estimatedData[0]['poly_line'],
-      );
+      isLoading.value = false;
     });
   }
 
@@ -194,11 +246,6 @@ class ParkingDetailsController extends GetxController
     markers.addAll(newMarkers);
   }
 
-  double getIconSize() {
-    double screenWidth = MediaQuery.of(Get.context!).size.width;
-    return screenWidth * 0.05;
-  }
-
   Widget printScreen(String imgName, Color color) {
     return Container(
       width: 120,
@@ -209,53 +256,6 @@ class ParkingDetailsController extends GetxController
         child: Image.asset("assets/images/$imgName.png", fit: BoxFit.contain),
       ),
     );
-  }
-
-//BUtton click
-  void onClickBooking() {
-    btnLoading.value = true;
-    if (dataNearest["is_allow_reserve"] == "N") {
-      btnLoading.value = false;
-      CustomDialog().errorDialog(
-          Get.context!, "LuvPark", "This area is not available at the moment.",
-          () {
-        Get.back();
-      });
-    } else {
-      Functions.getUserBalance(Get.context!, (dataBalance) async {
-        final userdata = dataBalance[0];
-        final items = userdata["items"];
-
-        if (userdata["success"]) {
-          if (double.parse(items[0]["amount_bal"].toString()) <
-              double.parse(items[0]["min_wallet_bal"].toString())) {
-            btnLoading.value = false;
-            CustomDialog().errorDialog(
-                Get.context!,
-                "Attention",
-                "Your balance is below the required minimum for this feature. "
-                    "Please ensure a minimum balance of ${items[0]["min_wallet_bal"]} tokens to access the requested service.",
-                () {
-              Get.back();
-            });
-            return;
-          } else {
-            Functions.computeDistanceResorChckIN(Get.context!, destLoc,
-                (success) {
-              btnLoading.value = false;
-              if (success["success"]) {
-                Get.toNamed(Routes.booking, arguments: {
-                  "currentLocation": success["location"],
-                  "areaData": dataNearest,
-                  "canCheckIn": success["can_checkIn"],
-                  "userData": items,
-                });
-              }
-            });
-          }
-        }
-      });
-    }
   }
 
   List<Map<String, String>> _parseVehicleTypes(String vhTpList) {
@@ -292,5 +292,60 @@ class ParkingDetailsController extends GetxController
       });
     }
     return parsedTypes;
+  }
+
+  void onClickBooking() {
+    btnLoading.value = true;
+    if (dataNearest["is_allow_reserve"] == "N") {
+      btnLoading.value = false;
+      CustomDialog().errorDialog(
+        Get.context!,
+        "LuvPark",
+        "This area is not available at the moment.",
+        () {
+          Get.back();
+        },
+      );
+    } else {
+      Functions.getUserBalance(Get.context!, (dataBalance) async {
+        final userdata = dataBalance[0];
+        final items = userdata["items"];
+
+        if (userdata["success"]) {
+          if (double.parse(items[0]["amount_bal"].toString()) <
+              double.parse(items[0]["min_wallet_bal"].toString())) {
+            btnLoading.value = false;
+            CustomDialog().errorDialog(
+              Get.context!,
+              "Attention",
+              "Your balance is below the required minimum for this feature. "
+                  "Please ensure a minimum balance of ${items[0]["min_wallet_bal"]} tokens to access the requested service.",
+              () {
+                Get.back();
+              },
+            );
+            return;
+          } else {
+            Functions.computeDistanceResorChckIN(Get.context!, destLoc.value,
+                (success) {
+              btnLoading.value = false;
+              if (success["success"]) {
+                Get.toNamed(Routes.booking, arguments: {
+                  "currentLocation": success["location"],
+                  "areaData": dataNearest,
+                  "canCheckIn": success["can_checkIn"],
+                  "userData": items,
+                });
+              }
+            });
+          }
+        }
+      });
+    }
+  }
+
+  void moreDetailsTap(bool isMore) async {
+    isMoreDetails.value = isMore;
+    update();
   }
 }
