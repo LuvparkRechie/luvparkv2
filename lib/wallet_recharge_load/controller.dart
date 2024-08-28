@@ -192,7 +192,7 @@ class WalletRechargeLoadController extends GetxController
         label: "Bank Payment",
       ),
       transition: Transition.zoom,
-      duration: const Duration(seconds: 1),
+      duration: const Duration(milliseconds: 200),
     );
   }
 
