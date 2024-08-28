@@ -1,9 +1,7 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:luvpark_get/custom_widgets/app_color.dart';
@@ -156,192 +154,192 @@ class ParkingDetails extends GetView<ParkingDetailsController> {
 
   Widget _buildDetails() {
     return Container(
-      padding: const EdgeInsets.all(20),
-      width: MediaQuery.of(Get.context!).size.width,
-      height: controller.isMoreDetails.value
-          ? MediaQuery.of(Get.context!).size.height * .70
-          : null,
-      clipBehavior: Clip.antiAlias,
-      decoration: const ShapeDecoration(
-        color: Colors.white,
-        shape: RoundedRectangleBorder(
-            side: BorderSide(width: 1, color: Color(0xFFDFE7EF)),
-            borderRadius: BorderRadius.vertical(top: Radius.circular(7))),
-        shadows: [
-          BoxShadow(
-            color: Color(0x0C000000),
-            blurRadius: 15,
-            offset: Offset(0, 5),
-            spreadRadius: 0,
-          )
-        ],
-      ),
-      child: controller.isMoreDetails.value
-          ? moreDetails()
-          : Column(
-              children: [
-                InkWell(
-                  onTap: () {
-                    Get.back();
-                  },
-                  child: Row(
-                    children: [
-                      Icon(
-                        Icons.chevron_left,
-                        size: 24,
-                        color: AppColor.primaryColor,
-                      ),
-                      const SizedBox(width: 3),
-                      Text(
-                        'Back',
-                        style: TextStyle(
-                          color: AppColor.primaryColor,
-                          fontSize: 16,
-                          fontFamily: 'Manrope',
-                          fontWeight: FontWeight.w600,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                Container(height: 20),
-                Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 10),
-                  child: Row(
-                    children: [
-                      Icon(CupertinoIcons.clock_fill,
-                          color: AppColor.primaryColor),
-                      Container(width: 10),
-                      Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            const CustomParagraph(
-                              text: "Worktime",
-                              maxlines: 1,
-                            ),
-                            CustomTitle(
-                              text:
-                                  "${controller.dataNearest["parking_schedule"]}",
-                              maxlines: 1,
-                            ),
-                          ],
-                        ),
-                      ),
-                      Container(width: 10),
-                      Container(
-                        width: 65,
-                        height: 26,
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(45),
-                          color: controller.isOpen.value
-                              ? const Color(0xFF7BB56C)
-                              : Colors.red,
-                        ),
-                        child: Center(
-                          child: CustomParagraph(
-                            text: controller.isOpen.value ? "Open" : "Close",
-                            fontSize: 14,
-                            color: Colors.white,
-                          ),
-                        ),
-                      )
-                    ],
-                  ),
-                ),
-                const Divider(),
-                Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 10),
-                  child: Row(
-                    children: [
-                      Container(
-                        width: 24,
-                        height: 24,
-                        decoration: BoxDecoration(
-                            color: AppColor.primaryColor,
-                            borderRadius: BorderRadius.circular(5)),
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 6, vertical: 4),
-                        child: const Center(
-                          child: CustomTitle(
-                            text: "P",
-                            color: Colors.white,
-                            fontSize: 16,
-                            fontWeight: FontWeight.w700,
-                          ),
-                        ),
-                      ),
-                      Container(width: 10),
-                      Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            const CustomParagraph(
-                              text: "Availability",
-                              fontSize: 14,
-                              maxlines: 1,
-                            ),
-                            RichText(
-                              text: TextSpan(
-                                children: [
-                                  TextSpan(
-                                    text:
-                                        "${controller.dataNearest["ps_vacant_count"]}",
-                                    style: GoogleFonts.manrope(
-                                      color: Colors.black,
-                                      fontSize: 14,
-                                      fontWeight: FontWeight.w600,
-                                    ),
-                                  ),
-                                  TextSpan(
-                                    text:
-                                        "/${controller.dataNearest["ps_total_count"]} slots available",
-                                    style: GoogleFonts.manrope(
-                                      color: AppColor.paragraphColor,
-                                      fontSize: 14,
-                                      fontWeight: FontWeight.w500,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                      InkWell(
-                        onTap: () {
-                          controller
-                              .moreDetailsTap(!controller.isMoreDetails.value);
-                        },
-                        child: Row(
-                          children: [
-                            CustomParagraph(
-                              text: "More details",
-                              color: AppColor.primaryColor,
-                            ),
-                            Icon(
-                              Icons.keyboard_arrow_right_outlined,
-                              color: AppColor.primaryColor,
-                            )
-                          ],
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                const Divider(),
-                Container(height: 20),
-                Obx(
-                  () => CustomButton(
-                    text: "Book now",
-                    loading: controller.btnLoading.value,
-                    onPressed: controller.onClickBooking,
-                  ),
-                ),
-                Container(height: 20),
-              ],
-            ),
-    );
+        height: MediaQuery.of(Get.context!).size.height * .60,
+        padding: const EdgeInsets.all(20),
+        width: MediaQuery.of(Get.context!).size.width,
+        clipBehavior: Clip.antiAlias,
+        decoration: const ShapeDecoration(
+          color: Colors.white,
+          shape: RoundedRectangleBorder(
+              side: BorderSide(width: 1, color: Color(0xFFDFE7EF)),
+              borderRadius: BorderRadius.vertical(top: Radius.circular(7))),
+          shadows: [
+            BoxShadow(
+              color: Color(0x0C000000),
+              blurRadius: 15,
+              offset: Offset(0, 5),
+              spreadRadius: 0,
+            )
+          ],
+        ),
+        child: moreDetails()
+        // controller.isMoreDetails.value
+        //     ? moreDetails()
+        //     : Column(
+        //         children: [
+        //           InkWell(
+        //             onTap: () {
+        //               Get.back();
+        //             },
+        //             child: Row(
+        //               children: [
+        //                 Icon(
+        //                   Icons.chevron_left,
+        //                   size: 24,
+        //                   color: AppColor.primaryColor,
+        //                 ),
+        //                 const SizedBox(width: 3),
+        //                 Text(
+        //                   'Back',
+        //                   style: TextStyle(
+        //                     color: AppColor.primaryColor,
+        //                     fontSize: 16,
+        //                     fontFamily: 'Manrope',
+        //                     fontWeight: FontWeight.w600,
+        //                   ),
+        //                 ),
+        //               ],
+        //             ),
+        //           ),
+        //           Container(height: 20),
+        //           Padding(
+        //             padding: const EdgeInsets.symmetric(vertical: 10),
+        //             child: Row(
+        //               children: [
+        //                 Icon(CupertinoIcons.clock_fill,
+        //                     color: AppColor.primaryColor),
+        //                 Container(width: 10),
+        //                 Expanded(
+        //                   child: Column(
+        //                     crossAxisAlignment: CrossAxisAlignment.start,
+        //                     children: [
+        //                       const CustomParagraph(
+        //                         text: "Worktime",
+        //                         maxlines: 1,
+        //                       ),
+        //                       CustomTitle(
+        //                         text:
+        //                             "${controller.dataNearest["parking_schedule"]}",
+        //                         maxlines: 1,
+        //                       ),
+        //                     ],
+        //                   ),
+        //                 ),
+        //                 Container(width: 10),
+        //                 Container(
+        //                   width: 65,
+        //                   height: 26,
+        //                   decoration: BoxDecoration(
+        //                     borderRadius: BorderRadius.circular(45),
+        //                     color: controller.isOpen.value
+        //                         ? const Color(0xFF7BB56C)
+        //                         : Colors.red,
+        //                   ),
+        //                   child: Center(
+        //                     child: CustomParagraph(
+        //                       text: controller.isOpen.value ? "Open" : "Close",
+        //                       fontSize: 14,
+        //                       color: Colors.white,
+        //                     ),
+        //                   ),
+        //                 )
+        //               ],
+        //             ),
+        //           ),
+        //           const Divider(),
+        //           Padding(
+        //             padding: const EdgeInsets.symmetric(vertical: 10),
+        //             child: Row(
+        //               children: [
+        //                 Container(
+        //                   width: 24,
+        //                   height: 24,
+        //                   decoration: BoxDecoration(
+        //                       color: AppColor.primaryColor,
+        //                       borderRadius: BorderRadius.circular(5)),
+        //                   padding: const EdgeInsets.symmetric(
+        //                       horizontal: 6, vertical: 4),
+        //                   child: const Center(
+        //                     child: CustomTitle(
+        //                       text: "P",
+        //                       color: Colors.white,
+        //                       fontSize: 16,
+        //                       fontWeight: FontWeight.w700,
+        //                     ),
+        //                   ),
+        //                 ),
+        //                 Container(width: 10),
+        //                 Expanded(
+        //                   child: Column(
+        //                     crossAxisAlignment: CrossAxisAlignment.start,
+        //                     children: [
+        //                       const CustomParagraph(
+        //                         text: "Availability",
+        //                         fontSize: 14,
+        //                         maxlines: 1,
+        //                       ),
+        //                       RichText(
+        //                         text: TextSpan(
+        //                           children: [
+        //                             TextSpan(
+        //                               text:
+        //                                   "${controller.dataNearest["ps_vacant_count"]}",
+        //                               style: GoogleFonts.manrope(
+        //                                 color: Colors.black,
+        //                                 fontSize: 14,
+        //                                 fontWeight: FontWeight.w600,
+        //                               ),
+        //                             ),
+        //                             TextSpan(
+        //                               text:
+        //                                   "/${controller.dataNearest["ps_total_count"]} slots available",
+        //                               style: GoogleFonts.manrope(
+        //                                 color: AppColor.paragraphColor,
+        //                                 fontSize: 14,
+        //                                 fontWeight: FontWeight.w500,
+        //                               ),
+        //                             ),
+        //                           ],
+        //                         ),
+        //                       ),
+        //                     ],
+        //                   ),
+        //                 ),
+        //                 InkWell(
+        //                   onTap: () {
+        //                     controller
+        //                         .moreDetailsTap(!controller.isMoreDetails.value);
+        //                   },
+        //                   child: Row(
+        //                     children: [
+        //                       CustomParagraph(
+        //                         text: "More details",
+        //                         color: AppColor.primaryColor,
+        //                       ),
+        //                       Icon(
+        //                         Icons.keyboard_arrow_right_outlined,
+        //                         color: AppColor.primaryColor,
+        //                       )
+        //                     ],
+        //                   ),
+        //                 ),
+        //               ],
+        //             ),
+        //           ),
+        //           const Divider(),
+        //           Container(height: 20),
+        //           Obx(
+        //             () => CustomButton(
+        //               text: "Book now",
+        //               loading: controller.btnLoading.value,
+        //               onPressed: controller.onClickBooking,
+        //             ),
+        //           ),
+        //           Container(height: 20),
+        //         ],
+        //       ),
+
+        );
   }
 
   Widget moreDetails() {
@@ -354,7 +352,7 @@ class ParkingDetails extends GetView<ParkingDetailsController> {
             Expanded(
               child: InkWell(
                 onTap: () {
-                  controller.moreDetailsTap(!controller.isMoreDetails.value);
+                  Get.back();
                 },
                 child: Row(
                   children: [
@@ -384,196 +382,225 @@ class ParkingDetails extends GetView<ParkingDetailsController> {
         ),
         Container(height: 20),
         Expanded(
-            child: SingleChildScrollView(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Row(
-                children: [
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        CustomTitle(
-                          text: controller.dataNearest["park_area_name"],
-                          fontSize: 20,
-                        ),
-                        CustomParagraph(
-                          text: controller.dataNearest["address"],
-                          fontWeight: FontWeight.w600,
-                          maxlines: 2,
-                        ),
-                      ],
-                    ),
-                  ),
-                  IconButton(
-                    onPressed: () {},
-                    icon: const Icon(
-                      Iconsax.heart,
-                      color: Colors.blueGrey,
-                    ),
-                  ),
-                ],
-              ),
-              Container(height: 15),
-              Text.rich(
-                TextSpan(
+          child: SingleChildScrollView(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
                   children: [
-                    TextSpan(
-                      text: controller.isOpen.value ? "Open" : "Close",
-                      style: paragraphStyle(
-                        color: controller.isOpen.value
-                            ? const Color(0xFF7BB56C)
-                            : Colors.red,
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          CustomTitle(
+                            text: controller.dataNearest["park_area_name"],
+                            fontSize: 20,
+                          ),
+                          CustomParagraph(
+                            text: controller.dataNearest["address"],
+                            fontWeight: FontWeight.w600,
+                            maxlines: 2,
+                          ),
+                        ],
                       ),
                     ),
-                    TextSpan(
-                      text:
-                          ' ● ${controller.dataNearest["parking_schedule"].toString().split("-")[0]} to ${controller.dataNearest["parking_schedule"].toString().split("-")[1]}  ●  ',
-                      style: paragraphStyle(),
-                    ),
-                    TextSpan(
-                      text:
-                          '${controller.dataNearest["ps_vacant_count"]} slots remaining',
-                      style: paragraphStyle(color: const Color(0xFFE03C20)),
+                    IconButton(
+                      onPressed: () {},
+                      icon: const Icon(
+                        Iconsax.heart,
+                        color: Colors.blueGrey,
+                      ),
                     ),
                   ],
                 ),
-              ),
-              Container(height: 15),
-              const CustomTitle(
-                text: "Available Vehicles",
-                color: Colors.black87,
-                fontWeight: FontWeight.w700,
-                fontSize: 16,
-              ),
-              Container(height: 15),
-              Obx(
-                () => SingleChildScrollView(
-                  scrollDirection: Axis.horizontal,
-                  child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: controller.vehicleTypes.map((type) {
-                      final color = Color(
-                          int.parse(type['color'].substring(1), radix: 16) +
-                              0xFF000000);
-
-                      return Padding(
-                        padding: const EdgeInsets.only(right: 8.0),
-                        child: Container(
-                          padding: const EdgeInsets.all(10),
-                          decoration: BoxDecoration(
-                            color: color.withOpacity(.2),
-                            borderRadius: BorderRadius.circular(5),
-                          ),
-                          child: Row(
-                            children: [
-                              SizedBox(
-                                width: 25,
-                                height: 25,
-                                child: Image(
-                                  image: AssetImage(
-                                      "assets/dashboard_icon/${type["icon"]}.png"),
-                                  color: color,
-                                ),
-                              ),
-                              const SizedBox(width: 8),
-                              CustomParagraph(
-                                text: '${type['name']} [ ${type['count']} ]',
-                                fontWeight: FontWeight.w700,
-                                color: color,
-                              )
-                            ],
-                          ),
-                        ),
-                      );
-                    }).toList(),
-                  ),
-                ),
-              ),
-              Container(height: 25),
-              const Divider(
-                height: 3,
-              ),
-              Container(height: 15),
-              const CustomTitle(
-                text: "Parking Amenities",
-                color: Colors.black87,
-                fontWeight: FontWeight.w700,
-                fontSize: 16,
-              ),
-              Container(height: 15),
-              SingleChildScrollView(
-                scrollDirection: Axis.horizontal,
-                child: Row(
-                  children: [
-                    for (int i = 0; i < controller.amenData.length; i++)
-                      _buildColumn(
-                          controller.amenData[i]["parking_amenity_desc"],
-                          controller.amenData[i]["icon"]),
-                  ],
-                ),
-              ),
-              Container(height: 20),
-              const CustomTitle(
-                text: "Parking Rates",
-                color: Colors.black87,
-                fontWeight: FontWeight.w700,
-                fontSize: 16,
-              ),
-              Container(height: 15),
-              for (int i = 0; i < controller.vehicleRates.length; i++)
-                Padding(
-                  padding: const EdgeInsets.only(bottom: 10),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
+                Container(height: 15),
+                Text.rich(
+                  TextSpan(
                     children: [
-                      CustomParagraph(
-                        text: controller.vehicleRates[i]["vehicle_type"],
-                        fontWeight: FontWeight.w600,
-                        color: Colors.black87,
+                      TextSpan(
+                        text: controller.isOpen.value ? "Open" : "Close",
+                        style: paragraphStyle(
+                          color: controller.isOpen.value
+                              ? const Color(0xFF7BB56C)
+                              : Colors.red,
+                        ),
                       ),
-                      Container(height: 10),
-                      Container(
-                        width: MediaQuery.of(Get.context!).size.width,
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 5, vertical: 15),
-                        decoration: ShapeDecoration(
-                          color: const Color(0xFFE2F0FF),
-                          shape: RoundedRectangleBorder(
-                            side: const BorderSide(
-                                width: 1, color: Color(0xFF7FB2EC)),
-                            borderRadius: BorderRadius.circular(5),
-                          ),
-                        ),
-                        child: SingleChildScrollView(
-                          scrollDirection: Axis.horizontal,
-                          child: Row(
-                            children: [
-                              _buildRatesContent(
-                                  controller.vehicleRates[i]["base_rate"]
-                                      .toString(),
-                                  "Base Rate"),
-                              _buildRatesContent(
-                                  controller.vehicleRates[i]["succeeding_rate"]
-                                      .toString(),
-                                  "Succeedig Rate"),
-                              _buildRatesContent(
-                                  controller.vehicleRates[i]
-                                          ["first_hr_penalty_rate"]
-                                      .toString(),
-                                  "Penalty Rate"),
-                            ],
-                          ),
-                        ),
+                      TextSpan(
+                        text:
+                            ' ● ${controller.dataNearest["parking_schedule"].toString().split("-")[0]} to ${controller.dataNearest["parking_schedule"].toString().split("-")[1]}  ●  ',
+                        style: paragraphStyle(),
+                      ),
+                      TextSpan(
+                        text:
+                            '${controller.dataNearest["ps_vacant_count"]} slots remaining',
+                        style: paragraphStyle(color: const Color(0xFFE03C20)),
                       ),
                     ],
                   ),
                 ),
-              Container(height: 15),
-            ],
+                Container(height: 15),
+                const CustomTitle(
+                  text: "Available Vehicles",
+                  color: Colors.black87,
+                  fontWeight: FontWeight.w700,
+                  fontSize: 16,
+                ),
+                Container(height: 15),
+                Obx(
+                  () => SingleChildScrollView(
+                    scrollDirection: Axis.horizontal,
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: controller.vehicleTypes.map((type) {
+                        final color = Color(
+                            int.parse(type['color'].substring(1), radix: 16) +
+                                0xFF000000);
+
+                        return Padding(
+                          padding: const EdgeInsets.only(right: 8.0),
+                          child: Container(
+                            padding: const EdgeInsets.all(10),
+                            decoration: BoxDecoration(
+                              color: color.withOpacity(.2),
+                              borderRadius: BorderRadius.circular(5),
+                            ),
+                            child: Row(
+                              children: [
+                                SizedBox(
+                                  width: 25,
+                                  height: 25,
+                                  child: Image(
+                                    image: AssetImage(
+                                        "assets/dashboard_icon/${type["icon"]}.png"),
+                                    color: color,
+                                  ),
+                                ),
+                                const SizedBox(width: 8),
+                                CustomParagraph(
+                                  text: '${type['name']} [ ${type['count']} ]',
+                                  fontWeight: FontWeight.w700,
+                                  color: color,
+                                )
+                              ],
+                            ),
+                          ),
+                        );
+                      }).toList(),
+                    ),
+                  ),
+                ),
+                Container(height: 25),
+                const Divider(
+                  height: 3,
+                ),
+                Container(height: 15),
+                const CustomTitle(
+                  text: "Parking Amenities",
+                  color: Colors.black87,
+                  fontWeight: FontWeight.w700,
+                  fontSize: 16,
+                ),
+                Container(height: 15),
+                SingleChildScrollView(
+                  scrollDirection: Axis.horizontal,
+                  child: Row(
+                    children: [
+                      for (int i = 0; i < controller.amenData.length; i++)
+                        _buildColumn(
+                            controller.amenData[i]["parking_amenity_desc"],
+                            controller.amenData[i]["icon"]),
+                    ],
+                  ),
+                ),
+                Container(height: 20),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    AnimatedCrossFade(
+                      firstChild: const SizedBox.shrink(),
+                      secondChild: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          const CustomTitle(
+                            text: "Parking Rates",
+                            color: Colors.black87,
+                            fontWeight: FontWeight.w700,
+                            fontSize: 16,
+                          ),
+                          Container(height: 15),
+                          for (int i = 0;
+                              i < controller.vehicleRates.length;
+                              i++)
+                            Padding(
+                              padding: const EdgeInsets.only(bottom: 10),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  CustomParagraph(
+                                    text: controller.vehicleRates[i]
+                                        ["vehicle_type"],
+                                    fontWeight: FontWeight.w600,
+                                    color: Colors.black87,
+                                  ),
+                                  Container(height: 10),
+                                  Container(
+                                    width:
+                                        MediaQuery.of(Get.context!).size.width,
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: 5, vertical: 15),
+                                    decoration: ShapeDecoration(
+                                      color: const Color(0xFFE2F0FF),
+                                      shape: RoundedRectangleBorder(
+                                        side: const BorderSide(
+                                            width: 1, color: Color(0xFF7FB2EC)),
+                                        borderRadius: BorderRadius.circular(5),
+                                      ),
+                                    ),
+                                    child: SingleChildScrollView(
+                                      scrollDirection: Axis.horizontal,
+                                      child: Row(
+                                        children: [
+                                          _buildRatesContent(
+                                              controller.vehicleRates[i]
+                                                      ["base_rate"]
+                                                  .toString(),
+                                              "Base Rate"),
+                                          _buildRatesContent(
+                                              controller.vehicleRates[i]
+                                                      ["succeeding_rate"]
+                                                  .toString(),
+                                              "Succeeding Rate"),
+                                          _buildRatesContent(
+                                              controller.vehicleRates[i]
+                                                      ["first_hr_penalty_rate"]
+                                                  .toString(),
+                                              "Penalty Rate"),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                        ],
+                      ),
+                      crossFadeState: CrossFadeState.showSecond,
+                      duration: const Duration(milliseconds: 300),
+                    ),
+                  ],
+                ),
+              ],
+            ),
           ),
-        ))
+        ),
+        Container(height: 20),
+        Obx(
+          () => CustomButton(
+            text: "Book now",
+            loading: controller.btnLoading.value,
+            onPressed: controller.onClickBooking,
+          ),
+        ),
       ],
     );
   }
@@ -589,13 +616,13 @@ class ParkingDetails extends GetView<ParkingDetailsController> {
             textAlign: TextAlign.center,
             color: const Color(0xFF2563EB),
             fontWeight: FontWeight.w700,
-            fontSize: 25,
+            fontSize: 20,
           ),
           CustomParagraph(
             text: name,
             textAlign: TextAlign.center,
             fontWeight: FontWeight.w700,
-            maxlines: 2,
+            maxlines: 1,
           ),
         ],
       ),

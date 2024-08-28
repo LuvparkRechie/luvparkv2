@@ -10,6 +10,9 @@ import 'package:http/http.dart' as http;
 import 'package:luvpark_get/auth/authentication.dart';
 import 'package:luvpark_get/custom_widgets/alert_dialog.dart';
 import 'package:luvpark_get/custom_widgets/app_color.dart';
+import 'package:luvpark_get/custom_widgets/custom_button.dart';
+import 'package:luvpark_get/custom_widgets/custom_text.dart';
+import 'package:luvpark_get/custom_widgets/showup_animation.dart';
 import 'package:luvpark_get/custom_widgets/variables.dart';
 import 'package:luvpark_get/functions/functions.dart';
 import 'package:luvpark_get/http/api_keys.dart';
@@ -147,7 +150,7 @@ class DashboardMapController extends GetxController
     isGetNearData.value = false;
   }
 
-  Future<void> onCameraIdle() async {
+  void onCameraIdle() async {
     mapPickerController.mapFinishedMoving!();
     String? address = await Functions.getAddress(
       initialCameraPosition!.target.latitude,
@@ -260,68 +263,10 @@ class DashboardMapController extends GetxController
         handleNoParkingFound();
         return;
       }
-      buildMarkers(returnData["items"]);
+
       handleData(returnData, uData, coordinates);
     } catch (e) {
       handleServerError();
-    }
-  }
-
-  Future<void> buildMarkers(data) async {
-    dataNearest.value = data;
-    int ctr = 0;
-
-    if (dataNearest.isNotEmpty) {
-      for (int i = 0; i < dataNearest.length; i++) {
-        ctr++;
-        var items = dataNearest[i];
-
-        final String isPwd = items["is_pwd"] ?? "N";
-        final String vehicleTypes = items["vehicle_types_list"];
-
-        String iconAsset;
-        if (isPwd == "Y") {
-          if (vehicleTypes.contains("Motorcycle") &&
-              vehicleTypes.contains("Trikes and Cars")) {
-            iconAsset =
-                'assets/dashboard_icon/cmp.png'; // Icon for both Motor and Cars with PWD indication
-          } else if (vehicleTypes.contains("Motorcycle")) {
-            iconAsset =
-                'assets/dashboard_icon/mp.png'; // Icon for Motorcycles with PWD indication
-          } else {
-            iconAsset =
-                'assets/dashboard_icon/cp.png'; // Default icon with PWD indication
-          }
-        } else {
-          if (vehicleTypes.contains("Motorcycle") &&
-              vehicleTypes.contains("Trikes and Cars")) {
-            iconAsset =
-                'assets/dashboard_icon/mc.png'; // Icon for both Motor and Cars
-          } else if (vehicleTypes.contains("Motorcycle")) {
-            iconAsset =
-                'assets/dashboard_icon/m.png'; // Icon for Motorcycles only
-          } else {
-            iconAsset = 'assets/dashboard_icon/c.png'; // Icon for Cars only
-          }
-        }
-
-        final Uint8List markerIcon =
-            await Variables.getBytesFromAsset(iconAsset, 0.7);
-
-        markers.add(
-          Marker(
-              // ignore: deprecated_member_use
-              icon: BitmapDescriptor.fromBytes(markerIcon),
-              markerId: MarkerId(ctr.toString()),
-              position: LatLng(double.parse(items["pa_latitude"].toString()),
-                  double.parse(items["pa_longitude"].toString())),
-              onTap: () {
-                print("marker tap ${ctr.toString()}");
-                isMarkerTapped.value = true;
-                mapPickerController.mapFinishedMoving;
-              }),
-        );
-      }
     }
   }
 
@@ -396,12 +341,76 @@ class DashboardMapController extends GetxController
                 200,
                 double.parse(index.toString()))),
       );
-
+      buildMarkers(returnData["items"]);
       netConnected.value = true;
       isLoadingMap.value = false;
+      bool isShowPopUp = await Authentication().getPopUpNearest();
+      if (dataNearest.isNotEmpty && !isShowPopUp) {
+        Future.delayed(const Duration(seconds: 1), () {
+          Authentication().setShowPopUpNearest(true);
+          showNearestSuggestDialog();
+        });
+      }
     }
 
     update();
+  }
+
+  Future<void> buildMarkers(data) async {
+    dataNearest.value = data;
+    int ctr = 0;
+
+    if (dataNearest.isNotEmpty) {
+      for (int i = 0; i < dataNearest.length; i++) {
+        ctr++;
+        var items = dataNearest[i];
+
+        final String isPwd = items["is_pwd"] ?? "N";
+        final String vehicleTypes = items["vehicle_types_list"];
+
+        String iconAsset;
+        if (isPwd == "Y") {
+          if (vehicleTypes.contains("Motorcycle") &&
+              vehicleTypes.contains("Trikes and Cars")) {
+            iconAsset =
+                'assets/dashboard_icon/cmp.png'; // Icon for both Motor and Cars with PWD indication
+          } else if (vehicleTypes.contains("Motorcycle")) {
+            iconAsset =
+                'assets/dashboard_icon/mp.png'; // Icon for Motorcycles with PWD indication
+          } else {
+            iconAsset =
+                'assets/dashboard_icon/cp.png'; // Default icon with PWD indication
+          }
+        } else {
+          if (vehicleTypes.contains("Motorcycle") &&
+              vehicleTypes.contains("Trikes and Cars")) {
+            iconAsset =
+                'assets/dashboard_icon/mc.png'; // Icon for both Motor and Cars
+          } else if (vehicleTypes.contains("Motorcycle")) {
+            iconAsset =
+                'assets/dashboard_icon/m.png'; // Icon for Motorcycles only
+          } else {
+            iconAsset = 'assets/dashboard_icon/c.png'; // Icon for Cars only
+          }
+        }
+
+        final Uint8List markerIcon =
+            await Variables.getBytesFromAsset(iconAsset, 0.7);
+
+        markers.add(
+          Marker(
+              // ignore: deprecated_member_use
+              icon: BitmapDescriptor.fromBytes(markerIcon),
+              markerId: MarkerId(ctr.toString()),
+              position: LatLng(double.parse(items["pa_latitude"].toString()),
+                  double.parse(items["pa_longitude"].toString())),
+              onTap: () {
+                isMarkerTapped.value = true;
+                mapPickerController.mapFinishedMoving;
+              }),
+        );
+      }
+    }
   }
 
   //SEARCH PLACE
@@ -440,6 +449,116 @@ class DashboardMapController extends GetxController
         Get.back();
       });
     }
+  }
+
+  void showNearestSuggestDialog() {
+    Get.defaultDialog(
+      title: "Nearby parking found",
+      titlePadding: const EdgeInsets.fromLTRB(15, 40, 15, 0),
+      contentPadding: const EdgeInsets.all(15),
+      titleStyle: titleStyle(fontSize: 20, fontWeight: FontWeight.w800),
+      content: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: <Widget>[
+          const CustomParagraph(
+            text: 'Here are the list of parking zone.',
+            textAlign: TextAlign.center,
+          ),
+          Container(height: 10),
+          SizedBox(
+            height: MediaQuery.of(Get.context!).size.height * .40,
+            child: StretchingOverscrollIndicator(
+              axisDirection: AxisDirection.down,
+              child: ListView.separated(
+                padding: EdgeInsets.zero,
+                separatorBuilder: (context, index) {
+                  return const SizedBox(height: 2);
+                },
+                itemCount: dataNearest.length > 5
+                    ? dataNearest.take(5).toList().length
+                    : dataNearest.length,
+                itemBuilder: (context, index) {
+                  String getDistanceString() {
+                    double kmDist = Variables.convertToMeters(
+                        dataNearest[index]["distance"].toString());
+                    if (kmDist >= 1000) {
+                      double distanceInKilometers = kmDist / 1000;
+                      return '${distanceInKilometers.round()} km';
+                    } else {
+                      return '${kmDist.round()} m';
+                    }
+                  }
+
+                  return ShowUpAnimation(
+                    delay: 5 * index,
+                    child: InkWell(
+                      onTap: () {
+                        Get.back();
+                        Get.toNamed(Routes.parkingDetails,
+                            arguments: dataNearest[index]);
+                      },
+                      child: Container(
+                        padding: const EdgeInsets.fromLTRB(0, 15, 15, 15),
+                        width: MediaQuery.of(context).size.width * .88,
+                        decoration: BoxDecoration(
+                          border: Border(
+                              bottom: BorderSide(
+                            color: Colors.grey.shade200,
+                          )),
+                        ),
+                        child: Row(
+                          children: [
+                            Container(
+                              height: 34,
+                              clipBehavior: Clip.antiAlias,
+                              decoration: const BoxDecoration(),
+                              child: const Image(
+                                image: AssetImage(
+                                    "assets/dashboard_icon/location_on.png"),
+                                fit: BoxFit.cover,
+                              ),
+                            ),
+                            Container(width: 10),
+                            Expanded(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  CustomTitle(
+                                    text: dataNearest[index]["park_area_name"],
+                                    fontSize: 16,
+                                    maxlines: 1,
+                                  ),
+                                  CustomParagraph(
+                                    text: dataNearest[index]["address"],
+                                    fontSize: 14,
+                                    maxlines: 2,
+                                    fontWeight: FontWeight.w600,
+                                  ),
+                                ],
+                              ),
+                            ),
+                            Container(width: 10),
+                            CustomLinkLabel(text: getDistanceString())
+                          ],
+                        ),
+                      ),
+                    ),
+                  );
+                },
+              ),
+            ),
+          )
+        ],
+      ),
+      confirm: CustomButton(
+          text: "More options",
+          onPressed: () {
+            Get.back();
+          }),
+      backgroundColor: Colors.white,
+      barrierDismissible: true,
+    );
   }
 
   //calculate coordinates

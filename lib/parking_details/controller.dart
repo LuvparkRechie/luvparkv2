@@ -22,6 +22,7 @@ class ParkingDetailsController extends GetxController {
   RxBool isLoading = true.obs;
   RxBool isOpen = false.obs;
   RxBool isMoreDetails = false.obs;
+  RxBool isHideAmen = true.obs;
   RxList<dynamic> amenData = <dynamic>[].obs;
   RxList<dynamic> carsInfo = <dynamic>[].obs;
   RxList<Marker> markers = <Marker>[].obs;
@@ -344,8 +345,8 @@ class ParkingDetailsController extends GetxController {
     }
   }
 
-  void moreDetailsTap(bool isMore) async {
-    isMoreDetails.value = isMore;
+  void onHideAmenities(bool isHide) {
+    isHideAmen.value = isHide;
     update();
   }
 }

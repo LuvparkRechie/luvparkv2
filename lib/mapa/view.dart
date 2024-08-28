@@ -393,38 +393,7 @@ class DashboardMapScreen extends GetView<DashboardMapController> {
                   },
                 ),
               ),
-              // Visibility(
-              //   visible: controller.isGetNearData.value,
-              //   child: Positioned(
-              //     left: MediaQuery.of(context).size.width / 6,
-              //     right: MediaQuery.of(context).size.width / 6,
-              //     top: (MediaQuery.of(context).size.height -
-              //             controller.minHeight.value) /
-              //         3,
-              //     child: Container(
-              //       clipBehavior: Clip.antiAlias,
-              //       padding:
-              //           const EdgeInsets.symmetric(vertical: 5, horizontal: 5),
-              //       decoration: ShapeDecoration(
-              //         color: const Color(0xFF0078FF),
-              //         shape: RoundedRectangleBorder(
-              //           borderRadius: BorderRadius.circular(40),
-              //         ),
-              //       ),
-              //       child: Center(
-              //         child: CustomParagraph(
-              //           text: controller.addressText.value,
-              //           color: Colors.white,
-              //           textAlign: TextAlign.center,
-              //           fontWeight: FontWeight.w600,
-              //           maxlines: 2,
-              //           fontSize: 12,
-              //         ),
-              //       ),
-              //     ),
-              //   ),
-              // ),
-              //Latest booking
+
               Visibility(
                 visible: controller.isGetNearData.value,
                 child: Positioned(
@@ -434,49 +403,52 @@ class DashboardMapScreen extends GetView<DashboardMapController> {
                   child: Row(
                     crossAxisAlignment: CrossAxisAlignment.end,
                     children: [
-                      Container(
-                        padding: const EdgeInsets.all(10),
-                        clipBehavior: Clip.antiAlias,
-                        decoration: ShapeDecoration(
-                          color: Colors.white,
-                          shape: RoundedRectangleBorder(
-                            side: const BorderSide(
-                                width: 1, color: Color(0xFFDFE7EF)),
-                            borderRadius: BorderRadius.circular(57),
-                          ),
-                          shadows: const [
-                            BoxShadow(
-                              color: Color(0x0C000000),
-                              blurRadius: 15,
-                              offset: Offset(0, 5),
-                              spreadRadius: 0,
-                            )
-                          ],
-                        ),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Container(
-                              width: 24,
-                              height: 24,
-                              clipBehavior: Clip.antiAlias,
-                              decoration: const BoxDecoration(),
-                              child: const Image(
-                                image:
-                                    AssetImage("assets/dashboard_icon/car.png"),
-                                fit: BoxFit.contain,
-                              ),
+                      InkWell(
+                        onTap: () {},
+                        child: Container(
+                          padding: const EdgeInsets.all(10),
+                          clipBehavior: Clip.antiAlias,
+                          decoration: ShapeDecoration(
+                            color: Colors.white,
+                            shape: RoundedRectangleBorder(
+                              side: const BorderSide(
+                                  width: 1, color: Color(0xFFDFE7EF)),
+                              borderRadius: BorderRadius.circular(57),
                             ),
-                            Container(width: 5),
-                            const CustomTitle(
-                                text: "Land Cruiser", fontSize: 14),
-                            Container(width: 5),
-                            CustomLinkLabel(
-                              text: "YKB-7635",
-                              fontSize: 14,
-                              color: AppColor.primaryColor,
-                            )
-                          ],
+                            shadows: const [
+                              BoxShadow(
+                                color: Color(0x0C000000),
+                                blurRadius: 15,
+                                offset: Offset(0, 5),
+                                spreadRadius: 0,
+                              )
+                            ],
+                          ),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Container(
+                                width: 24,
+                                height: 24,
+                                clipBehavior: Clip.antiAlias,
+                                decoration: const BoxDecoration(),
+                                child: const Image(
+                                  image: AssetImage(
+                                      "assets/dashboard_icon/car.png"),
+                                  fit: BoxFit.contain,
+                                ),
+                              ),
+                              Container(width: 5),
+                              const CustomTitle(
+                                  text: "Land Cruiser", fontSize: 14),
+                              Container(width: 5),
+                              CustomLinkLabel(
+                                text: "YKB-7635",
+                                fontSize: 14,
+                                color: AppColor.primaryColor,
+                              )
+                            ],
+                          ),
                         ),
                       ),
                       Expanded(child: Container()),
@@ -713,6 +685,39 @@ class DashboardMapScreen extends GetView<DashboardMapController> {
           ),
           Expanded(
             child: _panelContent(),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class PopUpNearestDialog extends GetView<DashboardMapController> {
+  const PopUpNearestDialog({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Center(
+      child: Wrap(
+        children: [
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 15),
+            child: Container(
+              clipBehavior: Clip.none,
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(7),
+              ),
+              child: Column(
+                children: [
+                  CustomTitle(text: "Nearby parking found"),
+                  Container(height: 10),
+                  CustomParagraph(
+                      text:
+                          "Here's the nearby parking found in your current position"),
+                ],
+              ),
+            ),
           ),
         ],
       ),

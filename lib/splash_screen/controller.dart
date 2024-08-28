@@ -78,6 +78,7 @@ class SplashController extends GetxController
         }
       });
     } else {
+      Authentication().setShowPopUpNearest(false);
       Timer(const Duration(seconds: 3), () {
         Get.toNamed(Routes.onboarding);
       });

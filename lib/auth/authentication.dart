@@ -114,4 +114,18 @@ class Authentication {
     int userId = jsonDecode(item!)["user_id"];
     return userId;
   }
+
+  //SET SHOW POPUP NEAEST
+  Future<void> setShowPopUpNearest(bool isShow) async {
+    final prefs = await SharedPreferences.getInstance();
+    prefs.setBool('isShowPopUp', isShow);
+  }
+
+  Future<bool> getPopUpNearest() async {
+    final prefs = await SharedPreferences.getInstance();
+
+    bool? isShow = prefs.getBool("isShowPopUp");
+
+    return isShow!;
+  }
 }
