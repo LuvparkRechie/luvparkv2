@@ -338,7 +338,6 @@ class CustomDrawer extends GetView<DashboardMapController> {
           if (controller.userProfile == null ||
               controller.userProfile['first_name'] == null)
             Container(
-              height: 720,
               color: Colors.black.withOpacity(0.5),
               child: Center(
                 child: GestureDetector(
@@ -367,6 +366,71 @@ class CustomDrawer extends GetView<DashboardMapController> {
                     ),
                   ),
                 ),
+              ),
+            ),
+          if (controller.userProfile == null ||
+              controller.userProfile['first_name'] == null)
+            Padding(
+              padding: const EdgeInsets.only(bottom: 35, left: 60, right: 60),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  SizedBox(
+                    width: 200,
+                    child: TextButton(
+                      onPressed: () {
+                        CustomDialog().confirmationDialog(
+                            context,
+                            "Logout",
+                            "Are you sure you want to logout?",
+                            "No",
+                            "Yes", () {
+                          Get.back();
+                        }, () async {
+                          Get.back();
+                          CustomDialog().loadingDialog(context);
+                          await Future.delayed(const Duration(seconds: 3));
+                          final userLogin =
+                              await Authentication().getUserLogin();
+                          List userData = [userLogin];
+                          userData = userData.map((e) {
+                            e["is_login"] = "N";
+                            return e;
+                          }).toList();
+
+                          await Authentication()
+                              .setLogin(jsonEncode(userData[0]));
+                          Get.back();
+                          Get.offAllNamed(Routes.splash);
+                        });
+                      },
+                      style: ButtonStyle(
+                        backgroundColor: MaterialStateProperty.all<Color>(
+                          const Color(0xFFBD2424),
+                        ),
+                        shape:
+                            MaterialStateProperty.all<RoundedRectangleBorder>(
+                          RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(58.0),
+                          ),
+                        ),
+                        padding: MaterialStateProperty.all<EdgeInsets>(
+                          const EdgeInsets.symmetric(horizontal: 20.0),
+                        ),
+                      ),
+                      child: const CustomTitle(
+                        text: "Log out",
+                        fontSize: 14,
+                        //color: Color(0xFFBD2424),
+                        color: Colors.white,
+                        fontStyle: FontStyle.normal,
+                        fontWeight: FontWeight.w700,
+                        textAlign: TextAlign.center,
+                        letterSpacing: -0.408,
+                      ),
+                    ),
+                  ),
+                ],
               ),
             ),
         ],
