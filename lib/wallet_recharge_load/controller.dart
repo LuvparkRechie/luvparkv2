@@ -36,9 +36,10 @@ class WalletRechargeLoadController extends GetxController
   final GlobalKey<FormState> page1Key = GlobalKey<FormState>();
   RxString pageUrl = "".obs;
   TextEditingController rname = TextEditingController();
-  RxInt? selectedBankTracker;
-  // Nullable integer
-  Rxn<int> selectedBankType = Rxn<int>();
+
+// Nullable integer uniform code
+  Rxn<int> selectedBankTracker = Rxn<int>(null);
+  Rxn<int> selectedBankType = Rxn<int>(null);
 
   final String tokenAmount =
       Get.arguments; // from wallet recharge screen tokenAmount
@@ -69,44 +70,52 @@ class WalletRechargeLoadController extends GetxController
     var userData = await Authentication().getUserData();
     var item = jsonDecode(userData!);
     mobNum.text = item['mobile_no'].toString().substring(2);
-    _onSearchChanged(mobNum.text, true);
+    onSearchChanged(mobNum.text, true);
   }
 
-  Future<void> getBankUrl(bankCode, int ind) async {
+  Future<void> getBankUrl(String bankCode, int ind) async {
     String subApi = "${ApiKeys.gApiSubFolderGetUbDetails}?code=$bankCode";
-
     CustomDialog().loadingDialog(Get.context!);
-    HttpRequest(api: subApi).get().then((objData) {
+
+    try {
+      var objData = await HttpRequest(api: subApi).get();
       if (objData == "No Internet") {
-        isSelectedPartner.value = false;
-        selectedBankType;
-        selectedBankTracker;
-
-        Get.back();
-        CustomDialog().errorDialog(Get.context!, "Error",
-            "Please check your internet connection and try again.", () {
-          Get.back();
-        });
+        handleNoInternet();
         return;
       }
-      if (objData == null || objData["items"].length == 0) {
-        Get.back();
 
-        isSelectedPartner.value = false;
-        isLoadingPage.value = false;
-        selectedBankType;
-        selectedBankTracker = null;
-
-        CustomDialog().errorDialog(Get.context!, "Error",
-            "Error while connecting to server, Please try again.", () {
-          Get.back();
-        });
-
+      if (objData == null || objData["items"].isEmpty) {
+        handleServerError();
         return;
-      } else {
-        getBankData(objData["items"][0]["app_id"],
-            objData["items"][0]["page_url"], ind);
       }
+
+      await getBankData(
+          objData["items"][0]["app_id"], objData["items"][0]["page_url"], ind);
+    } catch (e) {
+      handleServerError();
+    }
+  }
+
+  void handleNoInternet() {
+    isSelectedPartner.value = false;
+    selectedBankType.value = null;
+    selectedBankTracker.value = null;
+    Get.back();
+    CustomDialog().errorDialog(Get.context!, "luvpark",
+        "Please check your internet connection and try again.", () {
+      Get.back();
+    });
+  }
+
+  void handleServerError() {
+    isSelectedPartner.value = false;
+    isLoadingPage.value = false;
+    selectedBankType.value = null;
+    selectedBankTracker.value = null;
+    Get.back();
+    CustomDialog().errorDialog(Get.context!, "luvpark",
+        "Error while connecting to server, Please try again.", () {
+      Get.back();
     });
   }
 
@@ -116,11 +125,11 @@ class WalletRechargeLoadController extends GetxController
     HttpRequest(api: bankParamApi).get().then((objData) {
       if (objData == "No Internet") {
         isSelectedPartner.value = false;
-        selectedBankType;
-        selectedBankTracker;
+        selectedBankType.value = null;
+        selectedBankTracker.value = null;
 
         Get.back();
-        CustomDialog().errorDialog(Get.context!, "Error",
+        CustomDialog().errorDialog(Get.context!, "luvpark",
             "Please check your internet connection and try again.", () {
           Get.back();
         });
@@ -131,10 +140,10 @@ class WalletRechargeLoadController extends GetxController
 
         isSelectedPartner.value = false;
         isLoadingPage.value = false;
-        selectedBankType;
-        selectedBankTracker = null;
+        selectedBankType.value = null;
+        selectedBankTracker.value = null;
 
-        CustomDialog().errorDialog(Get.context!, "Error",
+        CustomDialog().errorDialog(Get.context!, "luvpark",
             "Error while connecting to server, Please try again.", () {
           Get.back();
         });
@@ -150,11 +159,17 @@ class WalletRechargeLoadController extends GetxController
         }
 
         isLoadingPage.value = false;
-        selectedBankType = ind;
-        selectedBankTracker = ind;
+
+        selectedBankType.value = ind;
+        selectedBankTracker.value = ind;
         isSelectedPartner.value = true;
-        aesKeys = dataObj["AES_KEY"];
+        aesKeys.value = dataObj["AES_KEY"];
         pageUrl.value = Uri.decodeFull(url);
+        if (!isValidNumber.value) {
+          isActiveBtn.value = false;
+        } else {
+          isActiveBtn.value = true;
+        }
       }
     });
   }
@@ -171,23 +186,21 @@ class WalletRechargeLoadController extends GetxController
 
     hash.value = Uri.encodeComponent(output);
 
-    // ignore: use_build_context_synchronously
-
-    // ignore: use_build_context_synchronously
-    Get.to(Get.context!,
-        arguments: PageTransition(
-          type: PageTransitionType.scale,
-          duration: const Duration(seconds: 1),
-          alignment: Alignment.centerLeft,
-          child: WebviewPage(urlDirect: "$pageUrl$hash", label: "Bank Payment"),
-        ));
+    Get.to(
+      () => WebviewPage(
+        urlDirect: "${pageUrl.value}${hash.value}",
+        label: "Bank Payment",
+      ),
+      transition: Transition.zoom,
+      duration: const Duration(seconds: 1),
+    );
   }
 
   Future<void> generateBank() async {}
 
-  void onPay() async {
-    var uData = await Authentication().getUserData();
-    var item = jsonDecode(uData!);
+  Future<void> onPay() async {
+    final item = await Authentication().getUserData2();
+
     if (page1Key.currentState!.validate()) {
       FocusManager.instance.primaryFocus!.unfocus();
       if (!isActiveBtn.value) {
@@ -245,15 +258,17 @@ class WalletRechargeLoadController extends GetxController
                 {"Id": "3", "Name": "TNX_HK", "Val": returnPost["hash-key"]}
               ]
             };
-            Get.back();
 
-            testUBUriPage(json.encode(plainText), aesKeys);
+            // Get.back();
+            // print("ReturnP $returnPost");
+            testUBUriPage(json.encode(plainText),
+                aesKeys.value); // Use .value for aesKeys
+
             if (Navigator.canPop(Get.context!)) {
               Get.back();
             }
           } else {
             Get.back();
-
             CustomDialog().errorDialog(Get.context!, "Error", returnPost['msg'],
                 () {
               Get.back();
@@ -264,7 +279,8 @@ class WalletRechargeLoadController extends GetxController
     }
   }
 
-  _onSearchChanged(mobile, isFirst) {
+  Future<void> onSearchChanged(mobile, isFirst) async {
+    isActiveBtn.value = false;
     if (_debounce?.isActive ?? false) _debounce?.cancel();
     if (mobile.toString().length < 10) {
       return;
@@ -278,11 +294,13 @@ class WalletRechargeLoadController extends GetxController
 
     _debounce = Timer(duration, () {
       CustomDialog().loadingDialog(Get.context!);
+
       HttpRequest(
               api:
                   "${ApiKeys.gApiSubFolderGetUserInfo}?mobile_no=63${mobile.toString().replaceAll(" ", '')}")
           .get()
           .then((objData) {
+        FocusScope.of(Get.context!).unfocus();
         if (objData == "No Internet") {
           isValidNumber.value = false;
           rname.text = "";
@@ -290,7 +308,7 @@ class WalletRechargeLoadController extends GetxController
           userName.text = "";
 
           Get.back();
-          CustomDialog().errorDialog(Get.context!, "Error",
+          CustomDialog().errorDialog(Get.context!, "luvpark",
               "Please check your internet connection and try again.", () {
             Get.back();
             if (Navigator.canPop(Get.context!)) {
@@ -302,13 +320,12 @@ class WalletRechargeLoadController extends GetxController
         if (objData == null) {
           Get.back();
 
-          isActiveBtn.value = false;
           isValidNumber.value = false;
           rname.text = "";
           fullName.value = "";
           userName.text = "";
 
-          CustomDialog().errorDialog(Get.context!, "Error",
+          CustomDialog().errorDialog(Get.context!, "luvpark",
               "Error while connecting to server, Please try again.", () {
             Get.back();
           });
@@ -317,14 +334,13 @@ class WalletRechargeLoadController extends GetxController
         if (objData["items"].length == 0) {
           Get.back();
 
-          isActiveBtn.value = false;
           userDataInfo = null;
           rname.text = "";
           userName.text = "";
           fullName.value = "";
           isValidNumber.value = false;
 
-          CustomDialog().errorDialog(Get.context!, "Error",
+          CustomDialog().errorDialog(Get.context!, "luvpark",
               "Sorry, we're unable to find your account.", () {
             //  onChangeText();
             Get.back();
@@ -333,7 +349,11 @@ class WalletRechargeLoadController extends GetxController
         } else {
           Get.back();
 
-          isActiveBtn.value = true;
+          if (!isSelectedPartner.value) {
+            isActiveBtn.value = false;
+          } else {
+            isActiveBtn.value = true;
+          }
           userDataInfo = objData["items"][0];
           isValidNumber.value = true;
           String originalFullName = userDataInfo["first_name"].toString();

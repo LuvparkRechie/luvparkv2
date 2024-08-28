@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:luvpark_get/custom_widgets/app_color.dart';
 import 'package:luvpark_get/custom_widgets/custom_appbar.dart';
-import 'package:luvpark_get/custom_widgets/custom_body.dart';
 import 'package:luvpark_get/custom_widgets/custom_button.dart';
 import 'package:luvpark_get/custom_widgets/custom_text.dart';
 
@@ -131,8 +130,9 @@ class WalletRechargeLoadScreen extends GetView<WalletRechargeLoadController> {
                           controller: controller.mobNum,
                           inputFormatters: [Variables.maskFormatter],
                           onChange: (value) {
-                            controller.isActiveBtn = false.obs;
-                            controller.getData();
+                            controller.isActiveBtn.value = true;
+                            controller.onSearchChanged(
+                                value.replaceAll(" ", ""), false);
                           },
                         ),
                         SizedBox(height: 10),
@@ -156,16 +156,17 @@ class WalletRechargeLoadScreen extends GetView<WalletRechargeLoadController> {
                   height: 20,
                 ),
                 if (MediaQuery.of(context).viewInsets.bottom == 0) //hide button
-                  CustomButton(
-                    text: "Pay Now",
-                    btnColor: controller.isActiveBtn == false ||
-                            controller.isSelectedPartner == false
-                        ? AppColor.primaryColor.withOpacity(.7)
-                        : AppColor.primaryColor,
-                    onPressed: () {
-                      controller.onPay();
-                    },
-                  ),
+                  Obx(() => CustomButton(
+                        text: "Pay Now",
+                        btnColor: !controller.isActiveBtn.value
+                            ? AppColor.primaryColor.withOpacity(.7)
+                            : AppColor.primaryColor,
+                        onPressed: !controller.isActiveBtn.value
+                            ? () {}
+                            : () {
+                                controller.onPay();
+                              },
+                      )),
               ],
             ),
           ),
