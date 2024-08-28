@@ -60,8 +60,7 @@ class Functions {
             cb([
               {"has_net": false, "success": false, "items": []}
             ]);
-            CustomDialog().errorDialog(context, "Error",
-                "Please check your internet connection and try again.", () {
+            CustomDialog().internetErrorDialog(context, () {
               Get.back();
             });
             return;

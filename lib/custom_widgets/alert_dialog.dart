@@ -210,8 +210,8 @@ class CustomDialog {
     BuildContext context,
     String title,
     String paragraph,
-    String btnNot,
-    String btnOk, {
+    String? btnNot,
+    String? btnOk, {
     VoidCallback? onTapClose,
     VoidCallback? onTapConfirm,
     Color? btnNotBackgroundColor,
@@ -291,7 +291,7 @@ class CustomDialog {
                                     ),
                                   ),
                                   child: CustomParagraph(
-                                    text: btnNot,
+                                    text: btnNot!,
                                     color: btnNotTextColor ?? Colors.white,
                                     fontSize: 14,
                                     fontWeight: FontWeight.w500,
@@ -316,7 +316,7 @@ class CustomDialog {
                                     ),
                                   ),
                                   child: CustomParagraph(
-                                    text: btnOk,
+                                    text: btnOk!,
                                     color: btnOkTextColor ?? Colors.white,
                                     fontSize: 14,
                                     fontWeight: FontWeight.w500,
@@ -342,7 +342,7 @@ class CustomDialog {
                               ),
                             ),
                             child: CustomParagraph(
-                              text: btnOk,
+                              text: btnOk!,
                               color: btnOkTextColor ?? Colors.white,
                               fontSize: 14,
                               fontWeight: FontWeight.w500,
