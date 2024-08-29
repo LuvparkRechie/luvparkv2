@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:luvpark_get/custom_widgets/app_color.dart';
 import 'package:luvpark_get/custom_widgets/custom_button.dart';
@@ -29,31 +30,29 @@ class MyOnboardingPage extends StatelessWidget {
         padding: const EdgeInsets.fromLTRB(15, 40, 15, 0),
         decoration: const BoxDecoration(
             color: Colors.white,
-            borderRadius: BorderRadius.all(Radius.circular(10))),
+            borderRadius: BorderRadius.only(
+                topRight: Radius.circular(30), topLeft: Radius.circular(30))),
         child: GetBuilder<OnboardingController>(builder: (ctxt) {
           return Column(
             children: [
               const Image(
                 image: AssetImage("assets/images/onboardluvpark.png"),
-                width: 180,
+                width: 189,
                 fit: BoxFit.contain,
               ),
               SizedBox(
                 height: MediaQuery.of(context).size.height * .50,
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 20),
-                  child: PageView(
-                    controller: controller.pageController,
-                    onPageChanged: (value) {
-                      controller.onPageChanged(value);
-                    },
-                    children: List.generate(
-                      controller.sliderData.length,
-                      (index) => _buildPage(
-                        controller.sliderData[index]["title"],
-                        controller.sliderData[index]["subTitle"],
-                        controller.sliderData[index]["icon"],
-                      ),
+                child: PageView(
+                  controller: controller.pageController,
+                  onPageChanged: (value) {
+                    controller.onPageChanged(value);
+                  },
+                  children: List.generate(
+                    controller.sliderData.length,
+                    (index) => _buildPage(
+                      controller.sliderData[index]["title"],
+                      controller.sliderData[index]["subTitle"],
+                      controller.sliderData[index]["icon"],
                     ),
                   ),
                 ),
@@ -130,6 +129,8 @@ class MyOnboardingPage extends StatelessWidget {
           child: CustomTitle(
             text: title,
             maxlines: 1,
+            fontSize: 20,
+            fontWeight: FontWeight.w800,
             textAlign: TextAlign.center,
           ),
         ),
