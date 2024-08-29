@@ -3,166 +3,497 @@ import 'package:luvpark_get/custom_widgets/app_color.dart';
 import 'package:luvpark_get/custom_widgets/custom_text.dart';
 
 class CustomDialog {
-  void internetErrorDialog(BuildContext context, VoidCallback onTap) {
+  void internetErrorDialog(
+    BuildContext context,
+    VoidCallback onTapConfirm,
+  ) {
     showDialog(
-        barrierDismissible: false,
-        context: context,
-        builder: (BuildContext context) {
-          return AlertDialog(
-            title: const CustomTitle(
-              text: "Error",
-              fontSize: 16,
-              fontWeight: FontWeight.bold,
+      barrierDismissible: false,
+      context: context,
+      builder: (BuildContext context) {
+        return PopScope(
+          canPop: false,
+          child: AlertDialog(
+            contentPadding: EdgeInsets.zero,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(16.0),
             ),
-            content: const CustomParagraph(
-                text: "Please check your internet connection and try again."),
-            actions: <Widget>[
-              TextButton(
-                child: Text(
-                  "Close",
-                  style: paragraphStyle(color: AppColor.primaryColor),
-                ),
-                onPressed: () {
-                  onTap();
-                },
-              ),
-            ],
-          );
-        });
-  }
-
-  void serverErrorDialog(BuildContext context, VoidCallback onTap) {
-    showDialog(
-        barrierDismissible: false,
-        context: context,
-        builder: (BuildContext context) {
-          return AlertDialog(
-            title: const CustomTitle(
-              text: "Error",
-              fontSize: 16,
-              fontWeight: FontWeight.bold,
-            ),
-            content: const CustomParagraph(
-                text: "Error while connecting to server, Please try again."),
-            actions: <Widget>[
-              TextButton(
-                child: Text(
-                  "Close",
-                  style: paragraphStyle(color: AppColor.primaryColor),
-                ),
-                onPressed: () {
-                  onTap();
-                },
-              ),
-            ],
-          );
-        });
-  }
-
-  void errorDialog(BuildContext context, String title, String paragraph,
-      VoidCallback onTap) {
-    showDialog(
-        barrierDismissible: false,
-        context: context,
-        builder: (BuildContext context) {
-          return AlertDialog(
-            title: CustomTitle(
-              text: title,
-              fontSize: 16,
-              fontWeight: FontWeight.bold,
-            ),
-            content: CustomParagraph(text: paragraph),
-            actions: <Widget>[
-              TextButton(
-                child: Text(
-                  "Close",
-                  style: paragraphStyle(color: AppColor.primaryColor),
-                ),
-                onPressed: () {
-                  onTap();
-                },
-              ),
-            ],
-          );
-        });
-  }
-
-  void successDialog(BuildContext context, String title, String paragraph,
-      String btnName, VoidCallback onTap) {
-    showDialog(
-        useSafeArea: true,
-        barrierDismissible: false,
-        context: context,
-        builder: (BuildContext context) {
-          return PopScope(
-            canPop: false,
-            child: AlertDialog(
-              title: CustomTitle(
-                text: title,
-                fontSize: 16,
-                fontWeight: FontWeight.bold,
-                wordspacing: 4,
-              ),
-              content: CustomParagraph(text: paragraph),
-              actions: <Widget>[
-                TextButton(
-                  child: Text(
-                    btnName,
-                    style: paragraphStyle(color: AppColor.primaryColor),
+            content: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: <Widget>[
+                Container(
+                  decoration: const BoxDecoration(
+                    borderRadius:
+                        BorderRadius.vertical(top: Radius.circular(16.0)),
                   ),
-                  onPressed: () {
-                    onTap();
-                  },
+                  clipBehavior: Clip.hardEdge,
+                  child: Image.asset(
+                    'assets/images/pu_nointernet.png', // Use the static image name
+                    fit: BoxFit.cover,
+                    height: 100,
+                    width: double.infinity,
+                  ),
+                ),
+                // Title
+                const Padding(
+                  padding: EdgeInsets.all(16.0),
+                  child: CustomTitle(
+                    text: "No Internet",
+                    fontSize: 16,
+                    textAlign: TextAlign.center,
+                    letterSpacing: -0.408,
+                  ),
+                ),
+                // Paragraph
+                const Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 16.0),
+                  child: CustomParagraph(
+                    text:
+                        "Please check your internet connection and try again.",
+                    fontWeight: FontWeight.normal,
+                    fontSize: 14,
+                    color: Colors.black54,
+                    textAlign: TextAlign.center,
+                    letterSpacing: -0.408,
+                  ),
+                ),
+                // Single Button
+                Padding(
+                  padding: const EdgeInsets.only(
+                      top: 25, right: 15, left: 15, bottom: 16),
+                  child: SizedBox(
+                    width: double.infinity,
+                    height: 40,
+                    child: TextButton(
+                      onPressed: onTapConfirm,
+                      style: TextButton.styleFrom(
+                        foregroundColor: Colors.white,
+                        backgroundColor: AppColor.primaryColor,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(5),
+                        ),
+                      ),
+                      child: const CustomParagraph(
+                        text: "Close",
+                        color: Colors.white,
+                        fontSize: 14,
+                        fontWeight: FontWeight.w500,
+                        letterSpacing: -0.408,
+                        textAlign: TextAlign.center,
+                      ),
+                    ),
+                  ),
                 ),
               ],
             ),
-          );
-        });
+          ),
+        );
+      },
+    );
+  }
+
+  void serverErrorDialog(
+    BuildContext context,
+    VoidCallback onTapConfirm,
+  ) {
+    showDialog(
+      barrierDismissible: false,
+      context: context,
+      builder: (BuildContext context) {
+        return PopScope(
+          canPop: false,
+          child: AlertDialog(
+            contentPadding: EdgeInsets.zero,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(16.0),
+            ),
+            content: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: <Widget>[
+                Container(
+                  decoration: const BoxDecoration(
+                    borderRadius:
+                        BorderRadius.vertical(top: Radius.circular(16.0)),
+                  ),
+                  clipBehavior: Clip.hardEdge,
+                  child: Image.asset(
+                    'assets/images/pu_servererror.png', // Use the static image name
+                    fit: BoxFit.cover,
+                    height: 100,
+                    width: double.infinity,
+                  ),
+                ),
+                // Title
+                const Padding(
+                  padding: EdgeInsets.all(16.0),
+                  child: CustomTitle(
+                    text: "Server Error",
+                    fontSize: 16,
+                    textAlign: TextAlign.center,
+                    letterSpacing: -0.408,
+                  ),
+                ),
+                // Paragraph
+                const Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 16.0),
+                  child: CustomParagraph(
+                    text: "Error while connecting to server, Please try again.",
+                    fontWeight: FontWeight.normal,
+                    fontSize: 14,
+                    color: Colors.black54,
+                    textAlign: TextAlign.center,
+                    letterSpacing: -0.408,
+                  ),
+                ),
+                // Single Button
+                Padding(
+                  padding: const EdgeInsets.only(
+                      top: 25, right: 15, left: 15, bottom: 16),
+                  child: SizedBox(
+                    width: double.infinity,
+                    height: 40,
+                    child: TextButton(
+                      onPressed: onTapConfirm,
+                      style: TextButton.styleFrom(
+                        foregroundColor: Colors.white,
+                        backgroundColor: AppColor.primaryColor,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(5),
+                        ),
+                      ),
+                      child: const CustomParagraph(
+                        text: "Close",
+                        color: Colors.white,
+                        fontSize: 14,
+                        fontWeight: FontWeight.w500,
+                        letterSpacing: -0.408,
+                        textAlign: TextAlign.center,
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  void errorDialog(
+    BuildContext context,
+    String title,
+    String paragraph,
+    VoidCallback onTapConfirm, {
+    Color? btnOkBackgroundColor,
+    Color? btnOkTextColor,
+  }) {
+    showDialog(
+      barrierDismissible: false,
+      context: context,
+      builder: (BuildContext context) {
+        return PopScope(
+          canPop: false,
+          child: AlertDialog(
+            contentPadding: EdgeInsets.zero,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(16.0),
+            ),
+            content: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: <Widget>[
+                Container(
+                  decoration: const BoxDecoration(
+                    borderRadius:
+                        BorderRadius.vertical(top: Radius.circular(16.0)),
+                  ),
+                  clipBehavior: Clip.hardEdge,
+                  child: Image.asset(
+                    'assets/images/pu_confirmation.png', // Use the static image name
+                    fit: BoxFit.cover,
+                    height: 100,
+                    width: double.infinity,
+                  ),
+                ),
+                // Title
+                Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: CustomTitle(
+                    text: title,
+                    fontSize: 16,
+                    textAlign: TextAlign.center,
+                    letterSpacing: -0.408,
+                  ),
+                ),
+                // Paragraph
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                  child: CustomParagraph(
+                    text: paragraph,
+                    fontWeight: FontWeight.normal,
+                    fontSize: 14,
+                    color: Colors.black54,
+                    textAlign: TextAlign.center,
+                    letterSpacing: -0.408,
+                  ),
+                ),
+                // Single Button
+                Padding(
+                  padding: const EdgeInsets.only(
+                      top: 25, right: 15, left: 15, bottom: 16),
+                  child: SizedBox(
+                    width: double.infinity,
+                    height: 40,
+                    child: TextButton(
+                      onPressed: onTapConfirm,
+                      style: TextButton.styleFrom(
+                        foregroundColor: Colors.white,
+                        backgroundColor:
+                            btnOkBackgroundColor ?? AppColor.primaryColor,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(5),
+                        ),
+                      ),
+                      child: CustomParagraph(
+                        text: "Close",
+                        color: btnOkTextColor ?? Colors.white,
+                        fontSize: 14,
+                        fontWeight: FontWeight.w500,
+                        letterSpacing: -0.408,
+                        textAlign: TextAlign.center,
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  void successDialog(
+    BuildContext context,
+    String title,
+    String paragraph,
+    String btnOk,
+    VoidCallback onTapConfirm, {
+    Color? btnOkBackgroundColor,
+    Color? btnOkTextColor,
+  }) {
+    showDialog(
+      barrierDismissible: false,
+      context: context,
+      builder: (BuildContext context) {
+        return PopScope(
+          canPop: false,
+          child: AlertDialog(
+            contentPadding: EdgeInsets.zero,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(16.0),
+            ),
+            content: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: <Widget>[
+                Container(
+                  decoration: const BoxDecoration(
+                    borderRadius:
+                        BorderRadius.vertical(top: Radius.circular(16.0)),
+                  ),
+                  clipBehavior: Clip.hardEdge,
+                  child: Image.asset(
+                    'assets/images/pu_success.png', // Use the static image name
+                    fit: BoxFit.cover,
+                    height: 100,
+                    width: double.infinity,
+                  ),
+                ),
+                // Title
+                Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: CustomTitle(
+                    text: title,
+                    fontSize: 16,
+                    textAlign: TextAlign.center,
+                    letterSpacing: -0.408,
+                  ),
+                ),
+                // Paragraph
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                  child: CustomParagraph(
+                    text: paragraph,
+                    fontWeight: FontWeight.normal,
+                    fontSize: 14,
+                    color: Colors.black54,
+                    textAlign: TextAlign.center,
+                    letterSpacing: -0.408,
+                  ),
+                ),
+                // Single Button
+                Padding(
+                  padding: const EdgeInsets.only(
+                      top: 25, right: 15, left: 15, bottom: 16),
+                  child: SizedBox(
+                    width: double.infinity,
+                    height: 40,
+                    child: TextButton(
+                      onPressed: onTapConfirm,
+                      style: TextButton.styleFrom(
+                        foregroundColor: Colors.white,
+                        backgroundColor:
+                            btnOkBackgroundColor ?? AppColor.primaryColor,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(5),
+                        ),
+                      ),
+                      child: CustomParagraph(
+                        text: btnOk,
+                        color: btnOkTextColor ?? Colors.white,
+                        fontSize: 14,
+                        fontWeight: FontWeight.w500,
+                        letterSpacing: -0.408,
+                        textAlign: TextAlign.center,
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
   }
 
   void confirmationDialog(
     BuildContext context,
     String title,
     String paragraph,
-    String btnNot,
     String btnOk,
-    VoidCallback onTapClose,
+    String btnNot,
     VoidCallback onTapConfirm,
-  ) {
+    VoidCallback onTapClose, {
+    Color? btnNotBackgroundColor,
+    Color? btnOkBackgroundColor,
+    Color? btnNotTextColor,
+    Color? btnOkTextColor,
+  }) {
     showDialog(
-        barrierDismissible: false,
-        context: context,
-        builder: (BuildContext context) {
-          return AlertDialog(
-            title: CustomTitle(
-              text: title,
-              fontSize: 16,
-              fontWeight: FontWeight.bold,
-              wordspacing: 4,
+      barrierDismissible: false,
+      context: context,
+      builder: (BuildContext context) {
+        return PopScope(
+          canPop: false,
+          child: AlertDialog(
+            contentPadding: EdgeInsets.zero,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(16.0),
             ),
-            content: CustomParagraph(text: paragraph),
-            actions: <Widget>[
-              TextButton(
-                child: Text(
-                  btnNot,
-                  style: paragraphStyle(color: AppColor.primaryColor),
+            content: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: <Widget>[
+                Container(
+                  decoration: const BoxDecoration(
+                    borderRadius:
+                        BorderRadius.vertical(top: Radius.circular(16.0)),
+                  ),
+                  clipBehavior: Clip.hardEdge,
+                  child: Image.asset(
+                    'assets/images/pu_confirmation.png', // Use the static image name
+                    fit: BoxFit.cover,
+                    height: 100,
+                    width: double.infinity,
+                  ),
                 ),
-                onPressed: () {
-                  onTapClose();
-                },
-              ),
-              TextButton(
-                child: Text(
-                  btnOk,
-                  style: paragraphStyle(color: AppColor.primaryColor),
+                // Title
+                Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: CustomTitle(
+                    text: title,
+                    fontSize: 16,
+                    textAlign: TextAlign.center,
+                    letterSpacing: -0.408,
+                  ),
                 ),
-                onPressed: () {
-                  onTapConfirm();
-                },
-              ),
-            ],
-          );
-        });
+                // Paragraph
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                  child: CustomParagraph(
+                    text: paragraph,
+                    fontWeight: FontWeight.normal,
+                    fontSize: 14,
+                    color: Colors.black54,
+                    textAlign: TextAlign.center,
+                    letterSpacing: -0.408,
+                  ),
+                ),
+                // Buttons
+                Padding(
+                  padding: const EdgeInsets.only(
+                      top: 25, right: 15, left: 15, bottom: 16),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: <Widget>[
+                      Expanded(
+                        child: SizedBox(
+                          height: 40,
+                          child: TextButton(
+                            onPressed: onTapConfirm,
+                            style: TextButton.styleFrom(
+                              foregroundColor: Colors.white,
+                              backgroundColor: btnNotBackgroundColor ??
+                                  AppColor.primaryColor,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(5),
+                              ),
+                            ),
+                            child: CustomParagraph(
+                              text: btnOk,
+                              color: btnNotTextColor ?? Colors.white,
+                              fontSize: 14,
+                              fontWeight: FontWeight.w500,
+                              letterSpacing: -0.408,
+                              textAlign: TextAlign.center,
+                            ),
+                          ),
+                        ),
+                      ),
+                      const SizedBox(width: 8),
+                      Expanded(
+                        child: SizedBox(
+                          height: 40,
+                          child: TextButton(
+                            onPressed: onTapClose,
+                            style: TextButton.styleFrom(
+                              foregroundColor: Colors.white,
+                              backgroundColor:
+                                  btnOkBackgroundColor ?? AppColor.primaryColor,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(5),
+                              ),
+                            ),
+                            child: CustomParagraph(
+                              text: btnNot,
+                              color: btnOkTextColor ?? Colors.white,
+                              fontSize: 14,
+                              fontWeight: FontWeight.w500,
+                              letterSpacing: -0.408,
+                              textAlign: TextAlign.center,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
   }
 
   void loadingDialog(
@@ -241,6 +572,7 @@ class CustomDialog {
                         BorderRadius.vertical(top: Radius.circular(16.0)),
                   ),
                   clipBehavior: Clip.hardEdge,
+                  //choices for image name:
                   //pu_confirmaiton
                   //pu_nointernet
                   //pu_servererror
