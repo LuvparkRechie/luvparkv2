@@ -1,13 +1,10 @@
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:luvpark_get/custom_widgets/app_color.dart';
 import 'package:luvpark_get/custom_widgets/custom_button.dart';
 import 'package:luvpark_get/custom_widgets/custom_text.dart';
 import 'package:luvpark_get/onboarding/controller.dart';
-
-import '../custom_widgets/custom_body.dart';
 import '../routes/routes.dart';
 
 class MyOnboardingPage extends StatelessWidget {
@@ -16,13 +13,31 @@ class MyOnboardingPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final OnboardingController controller = Get.put(OnboardingController());
-    return CustomScaffold(
-      bodyColor: Colors.white,
-      children: Padding(
-        padding: const EdgeInsets.fromLTRB(15, 38, 15, 10),
+    return Scaffold(
+      backgroundColor: AppColor.primaryColor,
+      appBar: AppBar(
+        leading: null,
+        elevation: 0,
+        toolbarHeight: 0,
+        systemOverlayStyle: SystemUiOverlayStyle(
+          statusBarColor: AppColor.primaryColor,
+          statusBarBrightness: Brightness.light,
+          statusBarIconBrightness: Brightness.light,
+        ),
+      ),
+      body: Container(
+        padding: const EdgeInsets.fromLTRB(15, 15, 15, 0),
+        decoration: const BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.all(Radius.circular(10))),
         child: GetBuilder<OnboardingController>(builder: (ctxt) {
           return Column(
             children: [
+              Image(
+                image: const AssetImage("assets/images/onboardluvpark.png"),
+                width: MediaQuery.of(Get.context!).size.width / 2,
+                fit: BoxFit.contain,
+              ),
               SizedBox(
                 height: MediaQuery.of(context).size.height * .62,
                 child: Padding(
@@ -73,39 +88,20 @@ class MyOnboardingPage extends StatelessWidget {
                       height: 20,
                     ),
                     CustomButton(
-                      text: "Get started",
+                      text: "Log in",
+                      onPressed: () {
+                        Get.toNamed(Routes.login);
+                      },
+                    ),
+                    Container(height: 10),
+                    CustomButton(
+                      bordercolor: AppColor.primaryColor,
+                      btnColor: Colors.white,
+                      textColor: AppColor.primaryColor,
+                      text: "Create Account",
                       onPressed: () {
                         Get.toNamed(Routes.landing);
                       },
-                    ),
-                    Container(height: 20),
-                    Center(
-                      child: RichText(
-                        text: TextSpan(
-                          children: [
-                            TextSpan(
-                              text: "Already a Luvpark user?",
-                              style: GoogleFonts.manrope(
-                                fontSize: 14,
-                                color: AppColor.linkLabel,
-                                fontWeight: FontWeight.w700,
-                              ),
-                            ),
-                            TextSpan(
-                              text: " Log In",
-                              style: GoogleFonts.manrope(
-                                fontSize: 14,
-                                color: AppColor.primaryColor,
-                                fontWeight: FontWeight.bold,
-                              ),
-                              recognizer: TapGestureRecognizer()
-                                ..onTap = () async {
-                                  Get.toNamed(Routes.login);
-                                },
-                            ),
-                          ],
-                        ),
-                      ),
                     ),
                   ],
                 ),
@@ -124,7 +120,9 @@ class MyOnboardingPage extends StatelessWidget {
           child: SizedBox(
             child: Image(
               image: AssetImage("assets/images/$image.png"),
-              fit: BoxFit.fill,
+              width: MediaQuery.of(Get.context!).size.width * .80,
+              fit: BoxFit.contain,
+              filterQuality: FilterQuality.high,
             ),
           ),
         ),

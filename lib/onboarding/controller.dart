@@ -6,28 +6,28 @@ class OnboardingController extends GetxController {
   PageController pageController = PageController();
   RxList<Map<String, dynamic>> sliderData = RxList([
     {
-      "title": "Discover the closest parking area",
+      "title": "Need parking?",
       "subTitle":
-          "Need parking? Our app finds nearby spots in real-time based on your destination and location.",
-      "icon": "find_parking",
+          "LuvPark finds nearby spots in real-time based on your destination and location.",
+      "icon": "onboard1",
     },
     {
-      "title": "Book Parking",
+      "title": "Easy booking",
       "subTitle":
-          "No more driving around in circles! Once you find a spot you like, you can book it right from our app.",
-      "icon": "lporn",
+          "Book your parking spot with ease using LuvPark’s state-of-the-art parking system.",
+      "icon": "onboard2",
     },
     {
-      "title": "Park",
+      "title": "Pick & Park",
       "subTitle":
-          "Luvpark seamlessly integrates with Google Maps, enabling you to easily obtain directions and distance from your current location to your chosen parking spot, ensuring a smooth driving experience.",
-      "icon": "lporn",
+          "Discover the perfect parking spot with LuvPark—tailored just for you!",
+      "icon": "onboard3",
     },
     {
-      "title": "Find my Vehicle",
+      "title": "Locate your car",
       "subTitle":
-          "Need help finding where you parked your vehicle? Worry no more – Luvpark has you covered. Our app can pinpoint your parked car from your current location by utilizing your active parking transaction.",
-      "icon": "lporn",
+          "Lost track of your car? We make it easy with our state of the art real-time tracking.",
+      "icon": "onboard4",
     }
   ]);
 
