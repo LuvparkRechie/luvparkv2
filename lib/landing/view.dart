@@ -27,10 +27,10 @@ class LandingScreen extends StatelessWidget {
             padding: const EdgeInsets.symmetric(horizontal: 15),
             child: InkWell(
               onTap: () {
-                Get.back();
+                Get.offAllNamed(Routes.login);
               },
               child: Container(
-                width: 87,
+                width: 100,
                 height: 38,
                 padding: const EdgeInsets.only(
                     top: 7, left: 5, right: 16, bottom: 7),
@@ -59,7 +59,7 @@ class LandingScreen extends StatelessWidget {
                     Container(width: 5),
                     const Center(
                       child: Text(
-                        'Back',
+                        'Log in',
                         textAlign: TextAlign.center,
                         style: TextStyle(
                           color: Color(0xBF131313),

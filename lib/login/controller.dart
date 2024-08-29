@@ -57,7 +57,7 @@ class LoginScreenController extends GetxController {
       }
       if (objData == null) {
         isInternetConnected.value = false;
-        CustomDialog().errorDialog(context, "Error",
+        CustomDialog().errorDialog(context, "luvpark",
             "Error while connecting to server, Please try again.", () {
           Get.offAndToNamed(Routes.onboarding);
         });
@@ -66,8 +66,9 @@ class LoginScreenController extends GetxController {
       }
       if (objData["items"].isEmpty) {
         isInternetConnected.value = true;
-        CustomDialog().errorDialog(context, "Error", "Invalid account.", () {
+        CustomDialog().errorDialog(context, "luvpark", "Invalid account.", () {
           Get.offAndToNamed(Routes.login);
+          Get.back();
         });
         return;
       } else {
@@ -126,7 +127,7 @@ class LoginScreenController extends GetxController {
             return;
           }
           if (returnPost == null) {
-            CustomDialog().errorDialog(context, "Error",
+            CustomDialog().errorDialog(context, "luvpark",
                 "Error while connecting to server, Please try again.", () {
               Get.back();
               cb([
@@ -136,7 +137,8 @@ class LoginScreenController extends GetxController {
             return;
           }
           if (returnPost["success"] == "N") {
-            CustomDialog().errorDialog(context, "Error", returnPost["msg"], () {
+            CustomDialog().errorDialog(context, "luvpark", returnPost["msg"],
+                () {
               Get.back();
               cb([
                 {"has_net": true, "items": []}
@@ -159,7 +161,7 @@ class LoginScreenController extends GetxController {
                 return;
               }
               if (objData == null) {
-                CustomDialog().errorDialog(context, "Error",
+                CustomDialog().errorDialog(context, "luvpark",
                     "Error while connecting to server, Please try again.", () {
                   Get.back();
                   cb([
@@ -170,7 +172,7 @@ class LoginScreenController extends GetxController {
               } else {
                 if (objData["items"].length == 0) {
                   CustomDialog().errorDialog(
-                      context, "Error", objData["items"]["msg"], () {
+                      context, "luvpark", objData["items"]["msg"], () {
                     Get.back();
                     cb([
                       {"has_net": true, "items": []}
