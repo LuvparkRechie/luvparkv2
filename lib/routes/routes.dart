@@ -38,4 +38,5 @@ class Routes {
   static const forgotVerifiedAcct = "/forgot_vefified_acct";
   static const createNewPass = "/create_password";
   static const walletrechargeloadpayment = "/wallet_recharge_load_payment";
+  static const transaction_history = "/transaction_history";
 }

@@ -6,6 +6,8 @@ import 'package:luvpark_get/forgot_password/utils/forgot_otp/index.dart';
 import 'package:luvpark_get/forgot_password/utils/forgot_verified_acc/index.dart';
 import 'package:luvpark_get/profile/index.dart';
 import 'package:luvpark_get/rate_booking/index.dart';
+import 'package:luvpark_get/transaction_history/bindings.dart';
+import 'package:luvpark_get/transaction_history/view.dart';
 import 'package:luvpark_get/wallet_qr/index.dart';
 import 'package:luvpark_get/wallet_recharge/index.dart';
 import 'package:luvpark_get/wallet_recharge_load/index.dart';
@@ -216,6 +218,11 @@ class AppPages {
       name: Routes.walletrechargeloadpayment,
       page: () => const WalletRechargeLoadPaymentScreen(),
       binding: WalletRechargeLoadPaymentBinding(),
+    ),
+    GetPage(
+      name: Routes.transaction_history,
+      page: () => const TransactionHistory(),
+      binding: TransactionHistoryBinding(),
     ),
   ];
 }
