@@ -219,6 +219,7 @@ class CustomDialog {
     Color? btnNotTextColor,
     Color? btnOkTextColor,
     bool showTwoButtons = true,
+    required String imageName, // Add this parameter for the dynamic image name
   }) {
     showDialog(
       barrierDismissible: false,
@@ -240,8 +241,12 @@ class CustomDialog {
                         BorderRadius.vertical(top: Radius.circular(16.0)),
                   ),
                   clipBehavior: Clip.hardEdge,
+                  //pu_confirmaiton
+                  //pu_nointernet
+                  //pu_servererror
+                  //pu_success
                   child: Image.asset(
-                    'assets/images/errorbackground.png',
+                    'assets/images/$imageName.png', // Use the dynamic image name here
                     fit: BoxFit.cover,
                     height: 100,
                     width: double.infinity,

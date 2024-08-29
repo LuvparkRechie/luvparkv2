@@ -8,7 +8,6 @@ import 'package:luvpark_get/custom_widgets/custom_appbar.dart';
 import 'package:luvpark_get/custom_widgets/custom_text.dart';
 import 'package:luvpark_get/routes/routes.dart';
 import 'package:luvpark_get/security_Settings/controller.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class Security extends GetView<SecuritySettingsController> {
   const Security({super.key});
@@ -181,6 +180,7 @@ class Security extends GetView<SecuritySettingsController> {
                   "Deleting your account will result in the loss of all your data. You'll be redirected to the account deletion page where you'll receive an SMS containing an OTP code. Our support team will then reach out to you promptly.",
                   "I changed my mind",
                   "Delete my account",
+                  imageName: 'pu_confirmation',
                   btnNotBackgroundColor: Colors.transparent,
                   btnNotTextColor: Colors.red,
                   onTapClose: () {
@@ -194,9 +194,10 @@ class Security extends GetView<SecuritySettingsController> {
                       "Your account deletion request is now in progress. You'll get a text once it's processed.",
                       "",
                       "Okay",
+                      imageName: 'pu_confirmation',
                       showTwoButtons: false,
                       onTapConfirm: () {
-                        //Get.back();
+                        Get.back();
                       },
                     );
                   },

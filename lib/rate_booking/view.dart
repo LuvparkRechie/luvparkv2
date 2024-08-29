@@ -63,7 +63,7 @@ class RateBooking extends GetView<RateBookingController> {
                     ),
                     const SizedBox(height: 10),
                     Center(
-                      child: Container(
+                      child: SizedBox(
                         height: 60,
                         width: 500,
                         child: RiveAnimation.asset(

@@ -172,7 +172,7 @@ class WalletController extends GetxController
         isAllowToSync = false;
         CustomDialog().customPopUp(
             Get.context!, "luvpark", "No data found", "", "Okay",
-            showTwoButtons: false, onTapConfirm: () {
+            imageName: 'pu_', showTwoButtons: false, onTapConfirm: () {
           Get.back();
         });
       }
