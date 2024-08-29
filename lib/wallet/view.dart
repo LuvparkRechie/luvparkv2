@@ -348,8 +348,7 @@ class WalletScreen extends GetView<WalletController> {
                                                         EdgeInsets.zero,
                                                     leading: SvgPicture.asset(
                                                       fit: BoxFit.cover,
-                                                      "assets/images/${controller.logs[index]["tran_desc"] == 'Share a token' ? 'wallet_sharetoken' : controller.logs[index]["tran_desc"] == 'Received token' ? 'wallet_receivetoken' : 'wallet_payparking'}.svg",
-                                                      height: 50,
+                                                      "assets/images/${controller.logs[index][" "] == 'Share a token' ? 'wallet_sharetoken' : controller.logs[index]["tran_desc"] == 'Received token' ? 'wallet_receivetoken' : 'wallet_payparking'}.svg",
                                                     ),
                                                     title: CustomTitle(
                                                       text:
