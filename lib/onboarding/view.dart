@@ -26,20 +26,20 @@ class MyOnboardingPage extends StatelessWidget {
         ),
       ),
       body: Container(
-        padding: const EdgeInsets.fromLTRB(15, 15, 15, 0),
+        padding: const EdgeInsets.fromLTRB(15, 40, 15, 0),
         decoration: const BoxDecoration(
             color: Colors.white,
             borderRadius: BorderRadius.all(Radius.circular(10))),
         child: GetBuilder<OnboardingController>(builder: (ctxt) {
           return Column(
             children: [
-              Image(
+              const Image(
                 image: const AssetImage("assets/images/onboardluvpark.png"),
-                width: MediaQuery.of(Get.context!).size.width / 2,
+                width: 180,
                 fit: BoxFit.contain,
               ),
               SizedBox(
-                height: MediaQuery.of(context).size.height * .62,
+                height: MediaQuery.of(context).size.height * .50,
                 child: Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 20),
                   child: PageView(
