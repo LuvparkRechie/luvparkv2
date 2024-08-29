@@ -10,6 +10,7 @@ import 'package:iconsax/iconsax.dart';
 import 'package:intl/intl.dart';
 import 'package:luvpark_get/custom_widgets/custom_appbar.dart';
 import 'package:luvpark_get/custom_widgets/custom_text.dart';
+import 'package:luvpark_get/custom_widgets/no_data_found.dart';
 import 'package:luvpark_get/custom_widgets/no_internet.dart';
 import 'package:luvpark_get/custom_widgets/page_loader.dart';
 import 'package:luvpark_get/custom_widgets/park_shimmer.dart';
@@ -322,69 +323,81 @@ class WalletScreen extends GetView<WalletController> {
                               Expanded(
                                 child: controller.isLoading.value
                                     ? const ParkShimmer()
-                                    : ListView.separated(
-                                        // controller: scrollController,
-                                        padding: EdgeInsets.zero,
-                                        itemCount: controller.logs.length,
-                                        itemBuilder: (context, index) {
-                                          return GestureDetector(
-                                            onTap: () {
-                                              showModalBottomSheet(
-                                                backgroundColor:
-                                                    Colors.transparent,
-                                                context: context,
-                                                builder: (context) =>
-                                                    TransactionDetails(
-                                                  index: index,
-                                                  data: controller.logs,
-                                                ),
+                                    : controller.logs.isEmpty
+                                        ? NoDataFound()
+                                        : ListView.separated(
+                                            // controller: scrollController,
+                                            padding: EdgeInsets.zero,
+                                            itemCount: controller.logs.length,
+                                            itemBuilder: (context, index) {
+                                              return GestureDetector(
+                                                onTap: () {
+                                                  showModalBottomSheet(
+                                                    backgroundColor:
+                                                        Colors.transparent,
+                                                    context: context,
+                                                    builder: (context) =>
+                                                        TransactionDetails(
+                                                      index: index,
+                                                      data: controller.logs,
+                                                    ),
+                                                  );
+                                                },
+                                                child: ListTile(
+                                                    contentPadding:
+                                                        EdgeInsets.zero,
+                                                    leading: SvgPicture.asset(
+                                                      fit: BoxFit.cover,
+                                                      "assets/images/${controller.logs[index]["tran_desc"] == 'Share a token' ? 'wallet_sharetoken' : controller.logs[index]["tran_desc"] == 'Received token' ? 'wallet_receivetoken' : 'wallet_payparking'}.svg",
+                                                      height: 50,
+                                                    ),
+                                                    title: CustomTitle(
+                                                      text:
+                                                          controller.logs[index]
+                                                              ["tran_desc"],
+                                                      fontSize: 14,
+                                                      fontWeight:
+                                                          FontWeight.w600,
+                                                    ),
+                                                    subtitle: CustomParagraph(
+                                                      text: DateFormat(
+                                                              'MMM d, yyyy h:mm a')
+                                                          .format(DateTime
+                                                              .parse(controller
+                                                                          .logs[
+                                                                      index][
+                                                                  "tran_date"])),
+                                                      fontSize: 12,
+                                                    ),
+                                                    trailing: CustomTitle(
+                                                      text:
+                                                          controller.logs[index]
+                                                              ["amount"],
+                                                      fontSize: 14,
+                                                      fontWeight:
+                                                          FontWeight.w600,
+                                                      color: (controller.logs[
+                                                                          index]
+                                                                      [
+                                                                      "tran_desc"] ==
+                                                                  'Share a token' ||
+                                                              controller.logs[
+                                                                          index]
+                                                                      [
+                                                                      "tran_desc"] ==
+                                                                  'Received token')
+                                                          ? Color(0xFF0078FF)
+                                                          : Color(0xFFBD2424),
+                                                    )),
                                               );
                                             },
-                                            child: ListTile(
-                                                contentPadding: EdgeInsets.zero,
-                                                leading: SvgPicture.asset(
-                                                  fit: BoxFit.cover,
-                                                  "assets/images/${controller.logs[index]["tran_desc"] == 'Share a token' ? 'wallet_sharetoken' : controller.logs[index]["tran_desc"] == 'Received token' ? 'wallet_receivetoken' : 'wallet_payparking'}.svg",
-                                                  height: 50,
-                                                ),
-                                                title: CustomTitle(
-                                                  text: controller.logs[index]
-                                                      ["tran_desc"],
-                                                  fontSize: 14,
-                                                  fontWeight: FontWeight.w600,
-                                                ),
-                                                subtitle: CustomParagraph(
-                                                  text: DateFormat(
-                                                          'MMM d, yyyy h:mm a')
-                                                      .format(DateTime.parse(
-                                                          controller.logs[index]
-                                                              ["tran_date"])),
-                                                  fontSize: 12,
-                                                ),
-                                                trailing: CustomTitle(
-                                                  text: controller.logs[index]
-                                                      ["amount"],
-                                                  fontSize: 14,
-                                                  fontWeight: FontWeight.w600,
-                                                  color: (controller.logs[index]
-                                                                  [
-                                                                  "tran_desc"] ==
-                                                              'Share a token' ||
-                                                          controller.logs[index]
-                                                                  [
-                                                                  "tran_desc"] ==
-                                                              'Received token')
-                                                      ? Color(0xFF0078FF)
-                                                      : Color(0xFFBD2424),
-                                                )),
-                                          );
-                                        },
-                                        separatorBuilder: (context, index) =>
-                                            const Divider(
-                                          endIndent: 1,
-                                          height: 1,
-                                        ),
-                                      ),
+                                            separatorBuilder:
+                                                (context, index) =>
+                                                    const Divider(
+                                              endIndent: 1,
+                                              height: 1,
+                                            ),
+                                          ),
                               ),
                               Container(height: 5),
                             ],

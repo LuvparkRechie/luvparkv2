@@ -144,6 +144,7 @@ class WalletController extends GetxController
         isAllowToSync = false;
         isLoading.value = false;
         isNetConn.value = false;
+        logs.value = [];
         CustomDialog().internetErrorDialog(Get.context!, () => Get.back());
         return;
       }
@@ -151,6 +152,7 @@ class WalletController extends GetxController
         isLoading.value = true;
         isNetConn.value = true;
         isAllowToSync = false;
+        logs.value = [];
         CustomDialog().errorDialog(
           Get.context!,
           "luvpark",
@@ -170,11 +172,7 @@ class WalletController extends GetxController
         isLoading.value = false;
         isNetConn.value = true;
         isAllowToSync = false;
-        CustomDialog().customPopUp(
-            Get.context!, "luvpark", "No data found", "", "Okay",
-            imageName: 'pu_', showTwoButtons: false, onTapConfirm: () {
-          Get.back();
-        });
+        logs.value = [];
       }
     });
   }
