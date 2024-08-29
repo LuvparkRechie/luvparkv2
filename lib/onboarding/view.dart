@@ -34,7 +34,7 @@ class MyOnboardingPage extends StatelessWidget {
           return Column(
             children: [
               const Image(
-                image: const AssetImage("assets/images/onboardluvpark.png"),
+                image: AssetImage("assets/images/onboardluvpark.png"),
                 width: 180,
                 fit: BoxFit.contain,
               ),
