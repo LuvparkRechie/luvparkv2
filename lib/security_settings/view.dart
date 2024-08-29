@@ -194,7 +194,7 @@ class Security extends GetView<SecuritySettingsController> {
                       "Your account deletion request is now in progress. You'll get a text once it's processed.",
                       "",
                       "Okay",
-                      imageName: 'pu_success',
+                      imageName: 'pu_confirmation',
                       showTwoButtons: false,
                       onTapConfirm: () {
                         Get.back();
