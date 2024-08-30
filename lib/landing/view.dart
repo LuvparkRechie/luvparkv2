@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:luvpark_get/custom_widgets/app_color.dart';
-import 'package:luvpark_get/custom_widgets/custom_body.dart';
 import 'package:luvpark_get/custom_widgets/custom_button.dart';
 import 'package:luvpark_get/custom_widgets/custom_text.dart';
 import 'package:luvpark_get/landing/controller.dart';
@@ -15,14 +15,18 @@ class LandingScreen extends StatelessWidget {
     final LandingController controllers = Get.put(LandingController());
     return PopScope(
       canPop: false,
-      child: CustomScaffold(
-        bodyColor: Colors.white,
+      child: Scaffold(
         appBar: AppBar(
           elevation: 0,
-          toolbarHeight: 24,
-          backgroundColor: Colors.white,
+          toolbarHeight: 0,
+          backgroundColor: AppColor.primaryColor,
+          systemOverlayStyle: SystemUiOverlayStyle(
+            statusBarColor: AppColor.primaryColor,
+            statusBarBrightness: Brightness.light,
+            statusBarIconBrightness: Brightness.light,
+          ),
         ),
-        children: Column(
+        body: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Expanded(

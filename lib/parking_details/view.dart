@@ -5,6 +5,7 @@ import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:luvpark_get/custom_widgets/app_color.dart';
+import 'package:luvpark_get/custom_widgets/custom_appbar.dart';
 import 'package:luvpark_get/custom_widgets/custom_button.dart';
 import 'package:luvpark_get/custom_widgets/custom_text.dart';
 import 'package:luvpark_get/custom_widgets/no_internet.dart';
@@ -15,139 +16,146 @@ class ParkingDetails extends GetView<ParkingDetailsController> {
   const ParkingDetails({super.key});
   @override
   Widget build(BuildContext context) {
-    return PopScope(
-      canPop: true,
-      child: Scaffold(
-        extendBodyBehindAppBar: true,
-        appBar: AppBar(
-          elevation: 0,
-          backgroundColor: Colors.transparent,
-          toolbarHeight: 0,
-          systemOverlayStyle: const SystemUiOverlayStyle(
-            statusBarColor: Colors.transparent,
-            statusBarBrightness: Brightness.light,
-            statusBarIconBrightness: Brightness.dark,
-          ),
-        ),
-        body: Obx(() => !controller.isNetConnected.value
-            ? NoInternetConnected(
-                onTap: controller.refreshAmenData,
-              )
-            : controller.isLoading.value
-                ? Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      SizedBox(
-                        width: MediaQuery.of(context).size.width * .80,
-                        height: MediaQuery.of(context).size.width * .80,
-                        child: const Image(
-                          image: AssetImage(
-                              "assets/area_details/create_route.png"),
-                          fit: BoxFit.cover,
-                        ),
-                      ),
-                      const CustomTitle(text: "Creating route please wait..."),
-                      Container(height: 10),
-                      SizedBox(
-                        child: Center(
-                          child: CircularProgressIndicator(
-                            color: Colors.grey.shade400,
-                            backgroundColor: Colors.grey.shade200,
+    return Obx(
+      () => PopScope(
+        canPop: !controller.btnLoading.value,
+        child: Scaffold(
+          extendBodyBehindAppBar: true,
+          appBar: !controller.isNetConnected.value
+              ? const CustomAppbar()
+              : AppBar(
+                  elevation: 0,
+                  backgroundColor: Colors.transparent,
+                  toolbarHeight: 0,
+                  systemOverlayStyle: const SystemUiOverlayStyle(
+                    statusBarColor: Colors.transparent,
+                    statusBarBrightness: Brightness.light,
+                    statusBarIconBrightness: Brightness.dark,
+                  ),
+                ),
+          body: !controller.isNetConnected.value
+              ? NoInternetConnected(
+                  onTap: controller.refreshAmenData,
+                )
+              : controller.isLoading.value
+                  ? Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        SizedBox(
+                          width: MediaQuery.of(context).size.width * .80,
+                          height: MediaQuery.of(context).size.width * .80,
+                          child: const Image(
+                            image: AssetImage(
+                                "assets/area_details/create_route.png"),
+                            fit: BoxFit.cover,
                           ),
                         ),
-                      )
-                    ],
-                  )
-                : GetBuilder<ParkingDetailsController>(
-                    init: ParkingDetailsController(),
-                    builder: (controller) {
-                      LatLng destLocation = LatLng(
-                          controller.dataNearest["pa_latitude"],
-                          controller.dataNearest["pa_longitude"]);
-                      LatLngBounds bounds = LatLngBounds(
-                        southwest: LatLng(
-                          controller.currentLocation.value.latitude <
-                                  destLocation.latitude
-                              ? controller.currentLocation.value.latitude
-                              : destLocation.latitude,
-                          controller.currentLocation.value.longitude <
-                                  destLocation.longitude
-                              ? controller.currentLocation.value.longitude
-                              : destLocation.longitude,
-                        ),
-                        northeast: LatLng(
-                          controller.currentLocation.value.latitude >
-                                  destLocation.latitude
-                              ? controller.currentLocation.value.latitude
-                              : destLocation.latitude,
-                          controller.currentLocation.value.longitude >
-                                  destLocation.longitude
-                              ? controller.currentLocation.value.longitude
-                              : destLocation.longitude,
-                        ),
-                      );
-
-                      LatLng center = LatLng(
-                        (bounds.southwest.latitude +
-                                bounds.northeast.latitude) /
-                            2,
-                        (bounds.southwest.longitude +
-                                bounds.northeast.longitude) /
-                            2,
-                      );
-                      controller.polyline.value = Polyline(
-                        polylineId: const PolylineId('polylineId'),
-                        color: Colors.blue,
-                        width: 5,
-                        points: controller.etaData[0]['poly_line'],
-                      );
-                      return Column(
-                        children: [
-                          Expanded(
-                            child: GoogleMap(
-                              mapType: MapType.normal,
-                              onMapCreated: (GoogleMapController mapCtlr) {
-                                controller.googleMapController.value = mapCtlr;
-                                DefaultAssetBundle.of(context)
-                                    .loadString(
-                                        'assets/custom_map_style/map_style.json')
-                                    .then((String style) {
-                                  mapCtlr.setMapStyle(style);
-                                });
-
-                                controller.googleMapController.value!
-                                    .animateCamera(CameraUpdate.newLatLngBounds(
-                                  bounds,
-                                  80, // Adjust padding as needed
-                                ));
-                              },
-                              initialCameraPosition: CameraPosition(
-                                target: center,
-                              ),
-                              zoomGesturesEnabled: true,
-                              mapToolbarEnabled: false,
-                              zoomControlsEnabled: false,
-                              myLocationEnabled: true,
-                              myLocationButtonEnabled: false,
-                              compassEnabled: false,
-                              buildingsEnabled: false,
-                              tiltGesturesEnabled: true,
-                              markers: Set<Marker>.of(controller.markers),
-                              polylines: <Polyline>{
-                                Polyline(
-                                  polylineId: const PolylineId('polylineId'),
-                                  color: Colors.blue,
-                                  width: 5,
-                                  points: controller.etaData[0]['poly_line'],
-                                ),
-                              },
+                        const CustomTitle(
+                            text: "Creating route please wait..."),
+                        Container(height: 10),
+                        SizedBox(
+                          child: Center(
+                            child: CircularProgressIndicator(
+                              color: Colors.grey.shade400,
+                              backgroundColor: Colors.grey.shade200,
                             ),
                           ),
-                          _buildDetails()
-                        ],
-                      );
-                    },
-                  )),
+                        )
+                      ],
+                    )
+                  : GetBuilder<ParkingDetailsController>(
+                      init: ParkingDetailsController(),
+                      builder: (controller) {
+                        LatLng destLocation = LatLng(
+                            controller.dataNearest["pa_latitude"],
+                            controller.dataNearest["pa_longitude"]);
+                        LatLngBounds bounds = LatLngBounds(
+                          southwest: LatLng(
+                            controller.currentLocation.value.latitude <
+                                    destLocation.latitude
+                                ? controller.currentLocation.value.latitude
+                                : destLocation.latitude,
+                            controller.currentLocation.value.longitude <
+                                    destLocation.longitude
+                                ? controller.currentLocation.value.longitude
+                                : destLocation.longitude,
+                          ),
+                          northeast: LatLng(
+                            controller.currentLocation.value.latitude >
+                                    destLocation.latitude
+                                ? controller.currentLocation.value.latitude
+                                : destLocation.latitude,
+                            controller.currentLocation.value.longitude >
+                                    destLocation.longitude
+                                ? controller.currentLocation.value.longitude
+                                : destLocation.longitude,
+                          ),
+                        );
+
+                        LatLng center = LatLng(
+                          (bounds.southwest.latitude +
+                                  bounds.northeast.latitude) /
+                              2,
+                          (bounds.southwest.longitude +
+                                  bounds.northeast.longitude) /
+                              2,
+                        );
+                        controller.polyline.value = Polyline(
+                          polylineId: const PolylineId('polylineId'),
+                          color: Colors.blue,
+                          width: 5,
+                          points: controller.etaData[0]['poly_line'],
+                        );
+                        return Column(
+                          children: [
+                            Expanded(
+                              child: GoogleMap(
+                                mapType: MapType.normal,
+                                onMapCreated: (GoogleMapController mapCtlr) {
+                                  controller.googleMapController.value =
+                                      mapCtlr;
+                                  DefaultAssetBundle.of(context)
+                                      .loadString(
+                                          'assets/custom_map_style/map_style.json')
+                                      .then((String style) {
+                                    mapCtlr.setMapStyle(style);
+                                  });
+
+                                  controller.googleMapController.value!
+                                      .animateCamera(
+                                          CameraUpdate.newLatLngBounds(
+                                    bounds,
+                                    80, // Adjust padding as needed
+                                  ));
+                                },
+                                initialCameraPosition: CameraPosition(
+                                  target: center,
+                                ),
+                                zoomGesturesEnabled: true,
+                                mapToolbarEnabled: false,
+                                zoomControlsEnabled: false,
+                                myLocationEnabled: true,
+                                myLocationButtonEnabled: false,
+                                compassEnabled: false,
+                                buildingsEnabled: false,
+                                tiltGesturesEnabled: true,
+                                markers: Set<Marker>.of(controller.markers),
+                                polylines: <Polyline>{
+                                  Polyline(
+                                    polylineId: const PolylineId('polylineId'),
+                                    color: Colors.blue,
+                                    width: 5,
+                                    points: controller.etaData[0]['poly_line'],
+                                  ),
+                                },
+                              ),
+                            ),
+                            _buildDetails()
+                          ],
+                        );
+                      },
+                    ),
+        ),
       ),
     );
   }
@@ -172,174 +180,7 @@ class ParkingDetails extends GetView<ParkingDetailsController> {
             )
           ],
         ),
-        child: moreDetails()
-        // controller.isMoreDetails.value
-        //     ? moreDetails()
-        //     : Column(
-        //         children: [
-        //           InkWell(
-        //             onTap: () {
-        //               Get.back();
-        //             },
-        //             child: Row(
-        //               children: [
-        //                 Icon(
-        //                   Icons.chevron_left,
-        //                   size: 24,
-        //                   color: AppColor.primaryColor,
-        //                 ),
-        //                 const SizedBox(width: 3),
-        //                 Text(
-        //                   'Back',
-        //                   style: TextStyle(
-        //                     color: AppColor.primaryColor,
-        //                     fontSize: 16,
-        //                     fontFamily: 'Manrope',
-        //                     fontWeight: FontWeight.w600,
-        //                   ),
-        //                 ),
-        //               ],
-        //             ),
-        //           ),
-        //           Container(height: 20),
-        //           Padding(
-        //             padding: const EdgeInsets.symmetric(vertical: 10),
-        //             child: Row(
-        //               children: [
-        //                 Icon(CupertinoIcons.clock_fill,
-        //                     color: AppColor.primaryColor),
-        //                 Container(width: 10),
-        //                 Expanded(
-        //                   child: Column(
-        //                     crossAxisAlignment: CrossAxisAlignment.start,
-        //                     children: [
-        //                       const CustomParagraph(
-        //                         text: "Worktime",
-        //                         maxlines: 1,
-        //                       ),
-        //                       CustomTitle(
-        //                         text:
-        //                             "${controller.dataNearest["parking_schedule"]}",
-        //                         maxlines: 1,
-        //                       ),
-        //                     ],
-        //                   ),
-        //                 ),
-        //                 Container(width: 10),
-        //                 Container(
-        //                   width: 65,
-        //                   height: 26,
-        //                   decoration: BoxDecoration(
-        //                     borderRadius: BorderRadius.circular(45),
-        //                     color: controller.isOpen.value
-        //                         ? const Color(0xFF7BB56C)
-        //                         : Colors.red,
-        //                   ),
-        //                   child: Center(
-        //                     child: CustomParagraph(
-        //                       text: controller.isOpen.value ? "Open" : "Close",
-        //                       fontSize: 14,
-        //                       color: Colors.white,
-        //                     ),
-        //                   ),
-        //                 )
-        //               ],
-        //             ),
-        //           ),
-        //           const Divider(),
-        //           Padding(
-        //             padding: const EdgeInsets.symmetric(vertical: 10),
-        //             child: Row(
-        //               children: [
-        //                 Container(
-        //                   width: 24,
-        //                   height: 24,
-        //                   decoration: BoxDecoration(
-        //                       color: AppColor.primaryColor,
-        //                       borderRadius: BorderRadius.circular(5)),
-        //                   padding: const EdgeInsets.symmetric(
-        //                       horizontal: 6, vertical: 4),
-        //                   child: const Center(
-        //                     child: CustomTitle(
-        //                       text: "P",
-        //                       color: Colors.white,
-        //                       fontSize: 16,
-        //                       fontWeight: FontWeight.w700,
-        //                     ),
-        //                   ),
-        //                 ),
-        //                 Container(width: 10),
-        //                 Expanded(
-        //                   child: Column(
-        //                     crossAxisAlignment: CrossAxisAlignment.start,
-        //                     children: [
-        //                       const CustomParagraph(
-        //                         text: "Availability",
-        //                         fontSize: 14,
-        //                         maxlines: 1,
-        //                       ),
-        //                       RichText(
-        //                         text: TextSpan(
-        //                           children: [
-        //                             TextSpan(
-        //                               text:
-        //                                   "${controller.dataNearest["ps_vacant_count"]}",
-        //                               style: GoogleFonts.manrope(
-        //                                 color: Colors.black,
-        //                                 fontSize: 14,
-        //                                 fontWeight: FontWeight.w600,
-        //                               ),
-        //                             ),
-        //                             TextSpan(
-        //                               text:
-        //                                   "/${controller.dataNearest["ps_total_count"]} slots available",
-        //                               style: GoogleFonts.manrope(
-        //                                 color: AppColor.paragraphColor,
-        //                                 fontSize: 14,
-        //                                 fontWeight: FontWeight.w500,
-        //                               ),
-        //                             ),
-        //                           ],
-        //                         ),
-        //                       ),
-        //                     ],
-        //                   ),
-        //                 ),
-        //                 InkWell(
-        //                   onTap: () {
-        //                     controller
-        //                         .moreDetailsTap(!controller.isMoreDetails.value);
-        //                   },
-        //                   child: Row(
-        //                     children: [
-        //                       CustomParagraph(
-        //                         text: "More details",
-        //                         color: AppColor.primaryColor,
-        //                       ),
-        //                       Icon(
-        //                         Icons.keyboard_arrow_right_outlined,
-        //                         color: AppColor.primaryColor,
-        //                       )
-        //                     ],
-        //                   ),
-        //                 ),
-        //               ],
-        //             ),
-        //           ),
-        //           const Divider(),
-        //           Container(height: 20),
-        //           Obx(
-        //             () => CustomButton(
-        //               text: "Book now",
-        //               loading: controller.btnLoading.value,
-        //               onPressed: controller.onClickBooking,
-        //             ),
-        //           ),
-        //           Container(height: 20),
-        //         ],
-        //       ),
-
-        );
+        child: moreDetails());
   }
 
   Widget moreDetails() {
@@ -351,9 +192,11 @@ class ParkingDetails extends GetView<ParkingDetailsController> {
           children: [
             Expanded(
               child: InkWell(
-                onTap: () {
-                  Get.back();
-                },
+                onTap: controller.btnLoading.value
+                    ? () {}
+                    : () {
+                        Get.back();
+                      },
                 child: Row(
                   children: [
                     Icon(

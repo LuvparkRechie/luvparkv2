@@ -573,7 +573,7 @@ class Functions {
             if (hasInternet) {
               final estimatedData = await Functions.fetchETA(
                   LatLng(ll.latitude, ll.longitude), dest);
-              print("estimatedData() ${estimatedData}");
+
               if (estimatedData[0]["error"] == "No Internet") {
                 cb({"success": false});
 
@@ -591,7 +591,6 @@ class Functions {
                 const HttpRequest(api: ApiKeys.gApiLuvParkGetComputeDistance)
                     .get()
                     .then((returnData) async {
-                  print("returnData $returnData");
                   if (returnData == "No Internet") {
                     cb({"success": false});
                     CustomDialog().internetErrorDialog(context, () {

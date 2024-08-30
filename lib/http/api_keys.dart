@@ -60,6 +60,8 @@ class ApiKeys {
 //replaced with
   static const gApiSubFolderGetReservations =
       '/ords/$parkSpaceApi/pm/getAdvancedParking';
+  static const gApiSubFolderGetActiveParking =
+      '/ords/$parkSpaceApi/pm/getAdvancedParkingLogs';
 
 //Login API
 //Get user data

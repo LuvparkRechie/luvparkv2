@@ -111,8 +111,13 @@ class Authentication {
   //GET USER ID
   Future<int> getUserId() async {
     final item = await Authentication().getUserData();
-    int userId = jsonDecode(item!)["user_id"];
-    return userId;
+    if (item == null) {
+      return 0;
+    } else {
+      int userId = jsonDecode(item)["user_id"];
+
+      return userId;
+    }
   }
 
   //SET SHOW POPUP NEAEST
@@ -127,5 +132,22 @@ class Authentication {
     bool? isShow = prefs.getBool("isShowPopUp");
 
     return isShow!;
+  }
+
+  //SET LAST BOOKING AREA_ID
+  Future<void> setLastBooking(data) async {
+    final prefs = await SharedPreferences.getInstance();
+    prefs.setString('last_booking', data);
+  }
+
+  Future<dynamic> getLastBooking() async {
+    final prefs = await SharedPreferences.getInstance();
+
+    String? data = prefs.getString('last_booking');
+
+    if (data == null) {
+      return "";
+    }
+    return jsonDecode(data);
   }
 }

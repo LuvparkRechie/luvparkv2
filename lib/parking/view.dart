@@ -16,8 +16,6 @@ class ParkingScreen extends GetView<ParkingController> {
 
   @override
   Widget build(BuildContext context) {
-    // final ParkingController ct = Get.put(ParkingController());
-
     return DefaultTabController(
       length: 3,
       child: Scaffold(
@@ -75,7 +73,9 @@ class ParkingScreen extends GetView<ParkingController> {
                                 }
                                 controller.onTabTapped(0);
                               },
-                              child: Container(
+                              child: AnimatedContainer(
+                                duration: const Duration(milliseconds: 200),
+                                curve: Curves.easeOut,
                                 padding: const EdgeInsets.all(10),
                                 decoration: controller.currentPage.value != 0
                                     ? decor2()
@@ -110,7 +110,9 @@ class ParkingScreen extends GetView<ParkingController> {
                                 }
                                 controller.onTabTapped(1);
                               },
-                              child: Container(
+                              child: AnimatedContainer(
+                                duration: const Duration(milliseconds: 200),
+                                curve: Curves.easeOut,
                                 padding: const EdgeInsets.all(10),
                                 decoration: controller.currentPage.value != 1
                                     ? decor2()

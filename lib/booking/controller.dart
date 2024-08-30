@@ -73,9 +73,9 @@ class BookingController extends GetxController
   @override
   void onInit() {
     super.onInit();
+
     _startInactivityTimer();
     _updateMaskFormatter("");
-    print("can checkIn ${parameters["canCheckIn"]}");
     int endNumber =
         int.parse(parameters["areaData"]["res_max_hours"].toString());
     numbersList.value = List.generate(
@@ -452,7 +452,12 @@ class BookingController extends GetxController
             'status': "B",
             'paramsCalc': bookingParams[0]
           };
-
+          Map<String, dynamic> lastBookingData = {
+            "plate_no": selectedVh[0]["vehicle_plate_no"].toString(),
+            "brand_name": selectedVh[0]["vehicle_brand_name"].toString(),
+            "park_area_id": parameters["areaData"]["park_area_id"].toString(),
+          };
+          Authentication().setLastBooking(jsonEncode(lastBookingData));
           if (parameters["canCheckIn"]) {
             checkIn(objData["reservation_id"], userId, paramArgs);
             return;
@@ -527,12 +532,10 @@ class BookingController extends GetxController
       "ticket_id": ticketId,
       "luvpay_id": lpId,
     };
-    print("chkInParam $chkInParam");
 
     HttpRequest(api: ApiKeys.gApiPostSelfCheckIn, parameters: chkInParam)
         .postBody()
         .then((returnData) async {
-      print("returnData $returnData");
       if (returnData == "No Internet") {
         isSubmitBooking.value = false;
         CustomDialog().internetErrorDialog(Get.context!, () {

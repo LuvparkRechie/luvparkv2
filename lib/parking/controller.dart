@@ -80,7 +80,7 @@ class ParkingController extends GetxController
     isLoading.value = true; // Start loading
     Functions.getUserBalance(Get.context!, (userData) async {
       if (!userData[0]["has_net"]) {
-        isLoading.value = false; // End loading
+        isLoading.value = false;
         CustomDialog().errorDialog(Get.context!, "Error",
             "Please check your internet connection and try again.", () {
           Get.back();
@@ -90,7 +90,8 @@ class ParkingController extends GetxController
       final id = userData[0]["items"][0]["user_id"];
       try {
         final returnData = await HttpRequest(
-                api: "${ApiKeys.gApiSubFolderGetReservations}?luvpay_id=$id")
+                api:
+                    "${currentPage.value == 1 ? ApiKeys.gApiSubFolderGetActiveParking : ApiKeys.gApiSubFolderGetReservations}?luvpay_id=$id")
             .get();
         print("returnData $returnData");
         if (returnData == "No Internet") {

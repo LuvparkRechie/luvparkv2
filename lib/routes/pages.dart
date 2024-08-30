@@ -22,7 +22,6 @@ import '../forgot_password/utils/create_new/index.dart';
 import '../forgot_password/utils/forgot_otp/utils/forgot_pass_success.dart';
 import '../landing/index.dart';
 import '../login/index.dart';
-import '../main.dart';
 import '../mapa/index.dart';
 import '../mapa/utils/index.dart';
 import '../onboarding/index.dart';
@@ -72,10 +71,6 @@ class AppPages {
       binding: OtpBinding(),
     ),
 
-    GetPage(
-      name: Routes.loading,
-      page: () => const LoadingPage(),
-    ),
     GetPage(
       name: Routes.activate,
       page: () => const ActivateAccount(),

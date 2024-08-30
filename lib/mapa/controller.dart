@@ -66,6 +66,11 @@ class DashboardMapController extends GetxController
   //Panel variables
   RxDouble headerHeight = 0.0.obs;
   RxDouble minHeight = 0.0.obs;
+  //Last Booking variables
+  RxBool hasLastBooking = false.obs;
+  RxString plateNo = "".obs;
+  RxString brandName = "".obs;
+
   @override
   void onInit() {
     super.onInit();
@@ -87,7 +92,7 @@ class DashboardMapController extends GetxController
       parent: animationController,
       curve: Curves.easeInOut,
     ));
-
+    getLastBooking();
     getUserData(false);
   }
 
@@ -95,6 +100,82 @@ class DashboardMapController extends GetxController
   void dispose() {
     super.dispose();
     gMapController!.dispose();
+  }
+
+  //Get last available booking
+  Future<void> getLastBooking() async {
+    dynamic data = await Authentication().getLastBooking();
+    if (data.isEmpty || data == null) {
+      hasLastBooking.value = false;
+    } else {
+      hasLastBooking.value = true;
+      plateNo.value = data["plate_no"];
+      brandName.value = data["brand_name"];
+    }
+  }
+
+  //Book now
+  Future<void> bookNow() async {
+    CustomDialog().loadingDialog(Get.context!);
+    final data = await Authentication().getLastBooking();
+
+    List lastBooking = dataNearest;
+    lastBooking = lastBooking.where((e) {
+      return int.parse(e["park_area_id"].toString()) ==
+          int.parse(data["park_area_id"].toString());
+    }).toList();
+
+    LatLng destLoc =
+        LatLng(lastBooking[0]["pa_latitude"], lastBooking[0]["pa_longitude"]);
+    if (lastBooking[0]["is_allow_reserve"] == "N") {
+      Get.back();
+      CustomDialog().errorDialog(
+        Get.context!,
+        "LuvPark",
+        "This area is not available at the moment.",
+        () {
+          Get.back();
+        },
+      );
+      return;
+    }
+
+    Functions.getUserBalance(Get.context!, (dataBalance) async {
+      final userdata = dataBalance[0];
+      final items = userdata["items"];
+
+      if (userdata["success"]) {
+        if (double.parse(items[0]["amount_bal"].toString()) <
+            double.parse(items[0]["min_wallet_bal"].toString())) {
+          Get.back();
+          CustomDialog().errorDialog(
+            Get.context!,
+            "Attention",
+            "Your balance is below the required minimum for this feature. "
+                "Please ensure a minimum balance of ${items[0]["min_wallet_bal"]} tokens to access the requested service.",
+            () {
+              Get.back();
+            },
+          );
+          return;
+        } else {
+          Functions.computeDistanceResorChckIN(Get.context!, destLoc,
+              (success) {
+            Get.back();
+            if (success["success"]) {
+              Get.toNamed(Routes.booking, arguments: {
+                "currentLocation": success["location"],
+                "areaData": lastBooking[0],
+                "canCheckIn": success["can_checkIn"],
+                "userData": items,
+              });
+            }
+          });
+        }
+      } else {
+        Get.back();
+      }
+    });
   }
 
   //get curr location
@@ -146,8 +227,10 @@ class DashboardMapController extends GetxController
   }
 
   void onCameraMoveStarted() {
+    if (isMarkerTapped.value) return;
     mapPickerController.mapMoving!();
     isGetNearData.value = false;
+    print("on onCameraMoveStarted");
   }
 
   void onCameraIdle() async {
@@ -162,7 +245,7 @@ class DashboardMapController extends GetxController
     initialCameraPosition = CameraPosition(
       target: LatLng(initialCameraPosition!.target.latitude,
           initialCameraPosition!.target.longitude),
-      zoom: 17,
+      zoom: 14,
       tilt: 0,
       bearing: 0,
     );
@@ -182,13 +265,8 @@ class DashboardMapController extends GetxController
               200,
               double.parse(index.toString()))),
     );
+    if (isMarkerTapped.value) return;
     isGetNearData.value = true;
-  }
-
-  void onCameraMove(CameraPosition cameraPosition) {
-    if (!isMarkerTapped.value) {
-      initialCameraPosition = cameraPosition;
-    }
   }
 
   void animateCamera() {
@@ -198,7 +276,7 @@ class DashboardMapController extends GetxController
           CameraPosition(
               target: LatLng(initialCameraPosition!.target.latitude,
                   initialCameraPosition!.target.longitude),
-              zoom: 17),
+              zoom: 14),
         ),
       );
     }
@@ -313,7 +391,7 @@ class DashboardMapController extends GetxController
         double.parse(uData[0]["min_wallet_bal"].toString())) {
       initialCameraPosition = CameraPosition(
         target: coordinates,
-        zoom: uData.isEmpty ? 14 : 17,
+        zoom: uData.isEmpty ? 14 : 14,
         tilt: 0,
         bearing: 0,
       );
@@ -356,6 +434,76 @@ class DashboardMapController extends GetxController
     update();
   }
 
+  String _getIconAssetForPwd(String parkingTypeCode, String vehicleTypes) {
+    switch (parkingTypeCode) {
+      case "S":
+        if (vehicleTypes.contains("Motorcycle") &&
+            vehicleTypes.contains("Trikes and Cars")) {
+          return 'assets/dashboard_icon/street/cmp_street.png';
+        } else if (vehicleTypes.contains("Motorcycle")) {
+          return 'assets/dashboard_icon/street/motor_pwd_street.png';
+        } else {
+          return 'assets/dashboard_icon/street/car_pwd_street.png';
+        }
+      case "P":
+        if (vehicleTypes.contains("Motorcycle") &&
+            vehicleTypes.contains("Trikes and Cars")) {
+          return 'assets/dashboard_icon/private/cmp_private.png';
+        } else if (vehicleTypes.contains("Motorcycle")) {
+          return 'assets/dashboard_icon/private/motor_pwd_private.png';
+        } else {
+          return 'assets/dashboard_icon/private/car_pwd_private.png';
+        }
+      case "C":
+        if (vehicleTypes.contains("Motorcycle") &&
+            vehicleTypes.contains("Trikes and Cars")) {
+          return 'assets/dashboard_icon/commercial/cmp_commercial.png';
+        } else if (vehicleTypes.contains("Motorcycle")) {
+          return 'assets/dashboard_icon/commercial/motor_pwd_commercial.png';
+        } else {
+          return 'assets/dashboard_icon/commercial/car_pwd_commercial.png';
+        }
+      default:
+        return 'assets/dashboard_icon/valet/valet.png';
+    }
+  }
+
+  String _getIconAssetForNonPwd(String parkingTypeCode, String vehicleTypes) {
+    switch (parkingTypeCode) {
+      case "S":
+        if (vehicleTypes.contains("Motorcycle") &&
+            vehicleTypes.contains("Trikes and Cars")) {
+          return 'assets/dashboard_icon/street/car_motor_street.png';
+        } else if (vehicleTypes.contains("Motorcycle")) {
+          return 'assets/dashboard_icon/street/motor_street.png';
+        } else {
+          return 'assets/dashboard_icon/street/car_street.png';
+        }
+      case "P":
+        if (vehicleTypes.contains("Motorcycle") &&
+            vehicleTypes.contains("Trikes and Cars")) {
+          return 'assets/dashboard_icon/private/car_motor_private.png';
+        } else if (vehicleTypes.contains("Motorcycle")) {
+          return 'assets/dashboard_icon/private/motor_private.png';
+        } else {
+          return 'assets/dashboard_icon/private/car_private.png';
+        }
+      case "C":
+        if (vehicleTypes.contains("Motorcycle") &&
+            vehicleTypes.contains("Trikes and Cars")) {
+          return 'assets/dashboard_icon/commercial/car_motor_commercial.png';
+        } else if (vehicleTypes.contains("Motorcycle")) {
+          return 'assets/dashboard_icon/commercial/motor_commercial.png';
+        } else {
+          return 'assets/dashboard_icon/commercial/car_commercial.png';
+        }
+      case "V":
+        return 'assets/dashboard_icon/valet/valet.png'; // Valet
+      default:
+        return 'assets/dashboard_icon/default.png'; // Fallback icon
+    }
+  }
+
   Future<void> buildMarkers(data) async {
     dataNearest.value = data;
     int ctr = 0;
@@ -369,44 +517,29 @@ class DashboardMapController extends GetxController
         final String vehicleTypes = items["vehicle_types_list"];
 
         String iconAsset;
+        // Determine the iconAsset based on parking type and PWD status
         if (isPwd == "Y") {
-          if (vehicleTypes.contains("Motorcycle") &&
-              vehicleTypes.contains("Trikes and Cars")) {
-            iconAsset =
-                'assets/dashboard_icon/cmp.png'; // Icon for both Motor and Cars with PWD indication
-          } else if (vehicleTypes.contains("Motorcycle")) {
-            iconAsset =
-                'assets/dashboard_icon/mp.png'; // Icon for Motorcycles with PWD indication
-          } else {
-            iconAsset =
-                'assets/dashboard_icon/cp.png'; // Default icon with PWD indication
-          }
+          iconAsset =
+              _getIconAssetForPwd(items["parking_type_code"], vehicleTypes);
         } else {
-          if (vehicleTypes.contains("Motorcycle") &&
-              vehicleTypes.contains("Trikes and Cars")) {
-            iconAsset =
-                'assets/dashboard_icon/mc.png'; // Icon for both Motor and Cars
-          } else if (vehicleTypes.contains("Motorcycle")) {
-            iconAsset =
-                'assets/dashboard_icon/m.png'; // Icon for Motorcycles only
-          } else {
-            iconAsset = 'assets/dashboard_icon/c.png'; // Icon for Cars only
-          }
+          iconAsset =
+              _getIconAssetForNonPwd(items["parking_type_code"], vehicleTypes);
         }
 
         final Uint8List markerIcon =
-            await Variables.getBytesFromAsset(iconAsset, 0.7);
+            await Variables.getBytesFromAsset(iconAsset, 0.5);
 
         markers.add(
           Marker(
+              // ignore: deprecated_member_use
+              infoWindow: InfoWindow(title: items["park_area_name"]),
               // ignore: deprecated_member_use
               icon: BitmapDescriptor.fromBytes(markerIcon),
               markerId: MarkerId(ctr.toString()),
               position: LatLng(double.parse(items["pa_latitude"].toString()),
                   double.parse(items["pa_longitude"].toString())),
               onTap: () {
-                isMarkerTapped.value = true;
-                mapPickerController.mapFinishedMoving;
+                onMarkerTapped();
               }),
         );
       }
@@ -631,5 +764,17 @@ class DashboardMapController extends GetxController
         ),
       ),
     );
+  }
+
+  //onMarker tapped
+  void onMarkerTapped() {
+    isMarkerTapped.value = true;
+    isGetNearData.value = false;
+    mapPickerController.mapFinishedMoving!();
+  }
+
+  void closeMarkerDialog() {
+    isMarkerTapped.value = false;
+    isGetNearData.value = true;
   }
 }

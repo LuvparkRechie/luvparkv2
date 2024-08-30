@@ -311,7 +311,7 @@ class ParkingDetailsController extends GetxController {
       Functions.getUserBalance(Get.context!, (dataBalance) async {
         final userdata = dataBalance[0];
         final items = userdata["items"];
-
+        btnLoading.value = false;
         if (userdata["success"]) {
           if (double.parse(items[0]["amount_bal"].toString()) <
               double.parse(items[0]["min_wallet_bal"].toString())) {

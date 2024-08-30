@@ -10,8 +10,8 @@ import 'package:flutter_image_compress/flutter_image_compress.dart';
 import 'package:intl/intl.dart';
 import 'package:luvpark_get/custom_widgets/app_color.dart';
 import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
-import 'package:screenshot/screenshot.dart';
 import 'package:pointycastle/export.dart' as crypto;
+import 'package:screenshot/screenshot.dart';
 
 BuildContext? ctxt;
 
@@ -27,6 +27,7 @@ class Variables {
   static String locSharing = 'location_sharing_table';
   static String notifTable = 'notification_table';
   static String shareLocTable = 'share_location_table';
+  static String lastBooking = 'booking_table';
   //static void Timer? backgroundTimer
   static final emailRegex = RegExp(
     r'^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$',
@@ -451,7 +452,7 @@ class Variables {
     return formattedDate;
   }
 
-  static String formatDistance(double distance) {
+  static String formatDistance(dynamic distance) {
     if (distance < 1000) {
       // Assume distance is in meters
       return '${distance.toStringAsFixed(2)} meters';

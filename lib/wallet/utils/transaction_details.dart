@@ -5,7 +5,6 @@ import 'package:flutter/services.dart';
 import 'package:flutter_multi_formatter/formatters/formatter_utils.dart';
 import 'package:flutter_svg/svg.dart';
 
-import '../../custom_widgets/app_color.dart';
 import '../../custom_widgets/custom_button.dart';
 import '../../custom_widgets/custom_separator.dart';
 import '../../custom_widgets/custom_text.dart';

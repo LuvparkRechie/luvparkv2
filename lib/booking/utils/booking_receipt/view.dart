@@ -31,20 +31,22 @@ class BookingReceipt extends GetView<BookingReceiptController> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColor.bodyColor,
-      appBar: AppBar(
-        toolbarHeight: 0,
-        elevation: 0,
-        backgroundColor: AppColor.primaryColor,
-        systemOverlayStyle: SystemUiOverlayStyle(
-          statusBarColor: AppColor.primaryColor,
-          statusBarBrightness: Brightness.dark,
-          statusBarIconBrightness: Brightness.light,
-        ),
+      appBar: CustomAppbar(
+        bgColor: AppColor.primaryColor,
+        title: "Parking Details",
+        textColor: Colors.white,
+        titleColor: Colors.white,
+        onTap: () {
+          if (controller.parameters["status"] == "B") {
+            Get.offAllNamed(Routes.map);
+            return;
+          }
+          Get.back();
+        },
       ),
       body: SafeArea(
         child: Column(
           children: [
-            _buildHeader(),
             Expanded(
               child: LayoutBuilder(
                 builder: (context, constraints) {
@@ -125,7 +127,38 @@ class BookingReceipt extends GetView<BookingReceiptController> {
                                                 top: 5,
                                                 child: Center(
                                                   child: IconButton(
-                                                    onPressed: () {},
+                                                    onPressed: () async {
+                                                      CustomDialog()
+                                                          .loadingDialog(
+                                                              context);
+                                                      String mapUrl = "";
+
+                                                      String dest =
+                                                          "${controller.parameters["lat"]},${controller.parameters["long"]}";
+                                                      if (Platform.isIOS) {
+                                                        mapUrl =
+                                                            'https://maps.apple.com/?daddr=$dest';
+                                                      } else {
+                                                        mapUrl =
+                                                            'https://www.google.com/maps/search/?api=1&query=$dest';
+                                                      }
+                                                      Future.delayed(
+                                                          const Duration(
+                                                              seconds: 2),
+                                                          () async {
+                                                        Get.back();
+                                                        if (await canLaunchUrl(
+                                                            Uri.parse(
+                                                                mapUrl))) {
+                                                          await launchUrl(
+                                                              Uri.parse(mapUrl),
+                                                              mode: LaunchMode
+                                                                  .externalApplication);
+                                                        } else {
+                                                          throw 'Something went wrong while opening map. Pleaase report problem';
+                                                        }
+                                                      });
+                                                    },
                                                     icon: SvgPicture.asset(
                                                       "assets/dashboard_icon/direction_map.svg",
                                                       width: 34,
@@ -280,22 +313,6 @@ class BookingReceipt extends GetView<BookingReceiptController> {
           ],
         ),
       ),
-    );
-  }
-
-  Widget _buildHeader() {
-    return CustomAppbar(
-      bgColor: AppColor.primaryColor,
-      title: "Parking Details",
-      textColor: Colors.white,
-      titleColor: Colors.white,
-      onTap: () {
-        if (controller.parameters["status"] == "B") {
-          Get.offAllNamed(Routes.map);
-          return;
-        }
-        Get.back();
-      },
     );
   }
 

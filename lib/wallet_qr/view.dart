@@ -2,6 +2,7 @@
 
 import 'dart:convert';
 import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -11,6 +12,7 @@ import 'package:luvpark_get/custom_widgets/custom_text.dart';
 import 'package:luvpark_get/custom_widgets/no_internet.dart';
 import 'package:luvpark_get/custom_widgets/page_loader.dart';
 import 'package:qr_flutter/qr_flutter.dart';
+
 import '../custom_widgets/app_color.dart';
 import 'controller.dart';
 
@@ -28,6 +30,7 @@ class QrWallet extends GetView<QrWalletController> {
                     controller.currentPage.value == 0 ? "Payment" : "Receive",
                 bgColor: AppColor.primaryColor,
                 titleColor: Colors.white,
+                textColor: Colors.white,
               ),
               Container(
                 color: AppColor.primaryColor,

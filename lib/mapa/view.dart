@@ -5,6 +5,7 @@ import 'package:flutter_multi_formatter/formatters/formatter_utils.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:iconsax/iconsax.dart';
 import 'package:luvpark_get/custom_widgets/app_color.dart';
 import 'package:luvpark_get/custom_widgets/custom_body.dart';
 import 'package:luvpark_get/custom_widgets/custom_text.dart';
@@ -95,7 +96,7 @@ class DashboardMapScreen extends GetView<DashboardMapController> {
                     Visibility(
                       visible: controller.isGetNearData.value,
                       child: FadeInUp(
-                        duration: const Duration(milliseconds: 200),
+                        duration: const Duration(milliseconds: 100),
                         child: SlidingUpPanel(
                           maxHeight: MediaQuery.of(Get.context!)
                                       .viewInsets
@@ -387,7 +388,6 @@ class DashboardMapScreen extends GetView<DashboardMapController> {
                   circles: {controller.circle},
                   onMapCreated: controller.onMapCreated,
                   onCameraMoveStarted: controller.onCameraMoveStarted,
-                  onCameraMove: controller.onCameraMove,
                   onCameraIdle: () async {
                     controller.onCameraIdle();
                   },
@@ -403,51 +403,57 @@ class DashboardMapScreen extends GetView<DashboardMapController> {
                   child: Row(
                     crossAxisAlignment: CrossAxisAlignment.end,
                     children: [
-                      InkWell(
-                        onTap: () {},
-                        child: Container(
-                          padding: const EdgeInsets.all(10),
-                          clipBehavior: Clip.antiAlias,
-                          decoration: ShapeDecoration(
-                            color: Colors.white,
-                            shape: RoundedRectangleBorder(
-                              side: const BorderSide(
-                                  width: 1, color: Color(0xFFDFE7EF)),
-                              borderRadius: BorderRadius.circular(57),
-                            ),
-                            shadows: const [
-                              BoxShadow(
-                                color: Color(0x0C000000),
-                                blurRadius: 15,
-                                offset: Offset(0, 5),
-                                spreadRadius: 0,
-                              )
-                            ],
-                          ),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Container(
-                                width: 24,
-                                height: 24,
-                                clipBehavior: Clip.antiAlias,
-                                decoration: const BoxDecoration(),
-                                child: const Image(
-                                  image: AssetImage(
-                                      "assets/dashboard_icon/car.png"),
-                                  fit: BoxFit.contain,
-                                ),
+                      Visibility(
+                        // visible: controller.hasLastBooking.value,
+                        child: InkWell(
+                          onTap: controller.bookNow,
+                          child: Container(
+                            padding: const EdgeInsets.all(10),
+                            clipBehavior: Clip.antiAlias,
+                            decoration: ShapeDecoration(
+                              color: Colors.white,
+                              shape: RoundedRectangleBorder(
+                                side: const BorderSide(
+                                    width: 1, color: Color(0xFFDFE7EF)),
+                                borderRadius: BorderRadius.circular(57),
                               ),
-                              Container(width: 5),
-                              const CustomTitle(
-                                  text: "Land Cruiser", fontSize: 14),
-                              Container(width: 5),
-                              CustomLinkLabel(
-                                text: "YKB-7635",
-                                fontSize: 14,
-                                color: AppColor.primaryColor,
-                              )
-                            ],
+                              shadows: const [
+                                BoxShadow(
+                                  color: Color(0x0C000000),
+                                  blurRadius: 15,
+                                  offset: Offset(0, 5),
+                                  spreadRadius: 0,
+                                )
+                              ],
+                            ),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Container(
+                                  width: 24,
+                                  height: 24,
+                                  clipBehavior: Clip.antiAlias,
+                                  decoration: const BoxDecoration(),
+                                  child: const Image(
+                                    image: AssetImage(
+                                        "assets/dashboard_icon/car.png"),
+                                    fit: BoxFit.contain,
+                                  ),
+                                ),
+                                Container(width: 5),
+                                Obx(
+                                  () => CustomTitle(
+                                      text: controller.brandName.value,
+                                      fontSize: 14),
+                                ),
+                                Container(width: 5),
+                                Obx(() => CustomLinkLabel(
+                                      text: controller.plateNo.value,
+                                      fontSize: 14,
+                                      color: AppColor.primaryColor,
+                                    ))
+                              ],
+                            ),
                           ),
                         ),
                       ),
@@ -547,10 +553,9 @@ class DashboardMapScreen extends GetView<DashboardMapController> {
                             height: 32,
                           ),
                         ),
-                        Container(width: 8),
+                        Container(width: 5),
                         Expanded(
                           child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               const CustomParagraph(
@@ -563,14 +568,13 @@ class DashboardMapScreen extends GetView<DashboardMapController> {
                                             ["amount_bal"]
                                         .toString()),
                                     maxlines: 1,
-                                    fontSize: 18,
                                     letterSpacing: -0.41,
                                     fontWeight: FontWeight.w900,
                                   ))
                             ],
                           ),
                         ),
-                        Container(width: 8),
+                        Container(width: 5),
                         Icon(
                           Icons.chevron_right_outlined,
                           color: AppColor.secondaryColor,
@@ -615,6 +619,27 @@ class DashboardMapScreen extends GetView<DashboardMapController> {
                       controller.dashboardScaffoldKey.currentState
                           ?.openDrawer();
                     },
+                  ),
+                ),
+              ),
+              //Display when marker tapped
+              Visibility(
+                visible: controller.isMarkerTapped.value,
+                child: Positioned(
+                  bottom: 30,
+                  right: 15,
+                  left: 15,
+                  child: Container(
+                    height: 200,
+                    width: MediaQuery.of(context).size.width,
+                    color: Colors.white,
+                    child: Column(
+                      children: [
+                        IconButton(
+                            onPressed: controller.closeMarkerDialog,
+                            icon: Icon(Iconsax.close_circle))
+                      ],
+                    ),
                   ),
                 ),
               ),
