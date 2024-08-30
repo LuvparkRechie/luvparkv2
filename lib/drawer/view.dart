@@ -133,11 +133,14 @@ class CustomDrawer extends GetView<DashboardMapController> {
               ),
             ],
           ),
-          // Content Below the Background Image
           Expanded(
             child: ListView(
-              padding: const EdgeInsets.only(left: 15, right: 15, top: 25),
+              padding: const EdgeInsets.only(
+                left: 15,
+                right: 15,
+              ),
               children: <Widget>[
+                const SizedBox(height: 20),
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 15.0),
                   child: CustomTitle(
@@ -183,7 +186,7 @@ class CustomDrawer extends GetView<DashboardMapController> {
                     Get.toNamed(Routes.wallet);
                   },
                 ),
-                Container(height: 22),
+                Divider(color: Colors.grey[350]),
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 15.0),
                   child: CustomTitle(
@@ -273,19 +276,15 @@ class CustomDrawer extends GetView<DashboardMapController> {
               ],
             ),
           ),
+          Divider(color: Colors.grey[350]),
           Padding(
             padding: const EdgeInsets.only(
               bottom: 35,
               left: 60,
               right: 60,
             ),
-            child: Container(
+            child: SizedBox(
               width: double.infinity,
-              decoration: BoxDecoration(
-                border: Border(
-                  top: BorderSide(color: Colors.grey[300]!, width: 1.0),
-                ),
-              ),
               child: Padding(
                 padding: const EdgeInsets.only(top: 15),
                 child: TextButton(

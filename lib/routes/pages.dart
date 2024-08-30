@@ -4,6 +4,7 @@ import 'package:luvpark_get/change_password/index.dart';
 import 'package:luvpark_get/faq/index.dart';
 import 'package:luvpark_get/forgot_password/utils/forgot_otp/index.dart';
 import 'package:luvpark_get/forgot_password/utils/forgot_verified_acc/index.dart';
+import 'package:luvpark_get/my_account/index.dart';
 import 'package:luvpark_get/profile/index.dart';
 import 'package:luvpark_get/rate_booking/index.dart';
 import 'package:luvpark_get/transaction_history/bindings.dart';
@@ -218,6 +219,11 @@ class AppPages {
       name: Routes.transaction_history,
       page: () => const TransactionHistory(),
       binding: TransactionHistoryBinding(),
+    ),
+    GetPage(
+      name: Routes.myaccount,
+      page: () => const MyAccount(),
+      binding: MyAccountBinding(),
     ),
   ];
 }
