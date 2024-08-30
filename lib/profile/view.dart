@@ -229,7 +229,7 @@ class Profile extends GetView<ProfileScreenController> {
                               trailing: const Icon(Icons.chevron_right_sharp,
                                   color: Color(0xFF1C1C1E)),
                               onTap: () {
-                                Get.toNamed(Routes.security);
+                                Get.toNamed(Routes.transaction_history);
                               },
                             ),
                             const Divider(),

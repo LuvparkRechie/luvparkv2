@@ -36,7 +36,7 @@ class WalletController extends GetxController
     DateTime timeNow = DateTime.now();
     toDate.text = timeNow.toString().split(" ")[0];
     fromDate.text =
-        timeNow.subtract(const Duration(days: 29)).toString().split(" ")[0];
+        timeNow.subtract(const Duration(days: 1)).toString().split(" ")[0];
     _dataController = StreamController<void>();
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       getUserBalance();
