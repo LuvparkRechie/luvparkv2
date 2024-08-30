@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:luvpark_get/auth/authentication.dart';
@@ -19,20 +20,16 @@ class CustomDrawer extends GetView<DashboardMapController> {
     return Drawer(
       child: Column(
         children: [
-          // Stack to layer the background image and profile info
           Stack(
             children: [
-              // Background Image
               SizedBox(
-                height: 296, // Height of the background image
-                width: double.infinity, // Expand to full width
+                height: 296,
+                width: double.infinity,
                 child: Image.asset(
                   "assets/images/profile_bg.png",
-                  fit: BoxFit
-                      .cover, // Ensure image covers the width and respects height
+                  fit: BoxFit.cover,
                 ),
               ),
-              // Profile Information on top of the image
               Positioned(
                 top: 20,
                 left: 0,
@@ -141,19 +138,20 @@ class CustomDrawer extends GetView<DashboardMapController> {
             child: ListView(
               padding: const EdgeInsets.only(left: 15, right: 15, top: 25),
               children: <Widget>[
-                const Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 15.0),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 15.0),
                   child: CustomTitle(
-                    text: "My Account",
+                    text: "My Account".toUpperCase(),
                     fontSize: 14,
                     fontStyle: FontStyle.normal,
                     letterSpacing: -0.408,
                     fontWeight: FontWeight.w700,
-                    color: Color(0xFFA1A1A9),
+                    color: const Color(0xFF616161),
                   ),
                 ),
                 ListTile(
-                  leading: const Icon(Icons.person, color: Color(0xFF1C1C1E)),
+                  leading:
+                      SvgPicture.asset('assets/drawer_icon/drawer_parking.svg'),
                   title: const CustomTitle(
                     text: "My Parking",
                     fontSize: 14,
@@ -162,14 +160,15 @@ class CustomDrawer extends GetView<DashboardMapController> {
                     letterSpacing: -0.408,
                     color: Color(0xFF1C1C1E),
                   ),
-                  trailing: const Icon(Icons.chevron_right_sharp,
-                      color: Color(0xFF1C1C1E)),
+                  trailing: Icon(Icons.chevron_right_sharp,
+                      color: AppColor.primaryColor),
                   onTap: () {
                     Get.offAndToNamed(Routes.parking);
                   },
                 ),
                 ListTile(
-                  leading: const Icon(Icons.wallet, color: Color(0xFF1C1C1E)),
+                  leading:
+                      SvgPicture.asset('assets/drawer_icon/drawer_wallet.svg'),
                   title: const CustomTitle(
                     text: "Wallet",
                     fontSize: 14,
@@ -178,26 +177,27 @@ class CustomDrawer extends GetView<DashboardMapController> {
                     letterSpacing: -0.408,
                     color: Color(0xFF1C1C1E),
                   ),
-                  trailing: const Icon(Icons.chevron_right_sharp,
-                      color: Color(0xFF1C1C1E)),
+                  trailing: Icon(Icons.chevron_right_sharp,
+                      color: AppColor.primaryColor),
                   onTap: () {
                     Get.toNamed(Routes.wallet);
                   },
                 ),
                 Container(height: 22),
-                const Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 15.0),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 15.0),
                   child: CustomTitle(
-                    text: "Help and Support",
+                    text: "Help and Support".toUpperCase(),
                     fontSize: 14,
                     fontStyle: FontStyle.normal,
                     letterSpacing: -0.408,
                     fontWeight: FontWeight.w700,
-                    color: Color(0xFFA1A1A9),
+                    color: const Color(0xFF616161),
                   ),
                 ),
                 ListTile(
-                  leading: const Icon(Iconsax.car5, color: Color(0xFF1C1C1E)),
+                  leading: SvgPicture.asset(
+                      'assets/drawer_icon/drawer_settings.svg'),
                   title: const CustomTitle(
                     text: "About Us",
                     fontSize: 14,
@@ -206,15 +206,15 @@ class CustomDrawer extends GetView<DashboardMapController> {
                     letterSpacing: -0.408,
                     color: Color(0xFF1C1C1E),
                   ),
-                  trailing: const Icon(Icons.chevron_right_sharp,
-                      color: Color(0xFF1C1C1E)),
+                  trailing: Icon(Icons.chevron_right_sharp,
+                      color: AppColor.primaryColor),
                   onTap: () {
                     Get.offAndToNamed(Routes.aboutus);
                   },
                 ),
                 ListTile(
-                  leading: const Icon(Iconsax.message_question5,
-                      color: Color(0xFF1C1C1E)),
+                  leading:
+                      SvgPicture.asset('assets/drawer_icon/drawer_faq.svg'),
                   title: const CustomTitle(
                     text: "FAQs",
                     fontSize: 14,
@@ -223,15 +223,15 @@ class CustomDrawer extends GetView<DashboardMapController> {
                     letterSpacing: -0.408,
                     color: Color(0xFF1C1C1E),
                   ),
-                  trailing: const Icon(Icons.chevron_right_sharp,
-                      color: Color(0xFF1C1C1E)),
+                  trailing: Icon(Icons.chevron_right_sharp,
+                      color: AppColor.primaryColor),
                   onTap: () {
                     Get.offAndToNamed(Routes.faqpage);
                   },
                 ),
                 ListTile(
                   leading:
-                      const Icon(Iconsax.note_15, color: Color(0xFF1C1C1E)),
+                      SvgPicture.asset('assets/drawer_icon/drawer_tou.svg'),
                   title: const CustomTitle(
                     text: "Terms of Use",
                     fontSize: 14,
@@ -240,8 +240,8 @@ class CustomDrawer extends GetView<DashboardMapController> {
                     letterSpacing: -0.408,
                     color: Color(0xFF1C1C1E),
                   ),
-                  trailing: const Icon(Icons.chevron_right_sharp,
-                      color: Color(0xFF1C1C1E)),
+                  trailing: Icon(Icons.chevron_right_sharp,
+                      color: AppColor.primaryColor),
                   onTap: () {
                     Get.to(const WebviewPage(
                       urlDirect: "https://luvpark.ph/terms-of-use/",
@@ -251,8 +251,7 @@ class CustomDrawer extends GetView<DashboardMapController> {
                   },
                 ),
                 ListTile(
-                  leading:
-                      const Icon(Iconsax.note_15, color: Color(0xFF1C1C1E)),
+                  leading: SvgPicture.asset('assets/drawer_icon/drawer_pp.svg'),
                   title: const CustomTitle(
                     text: "Privacy Policy",
                     fontSize: 14,
@@ -261,8 +260,8 @@ class CustomDrawer extends GetView<DashboardMapController> {
                     letterSpacing: -0.408,
                     color: Color(0xFF1C1C1E),
                   ),
-                  trailing: const Icon(Icons.chevron_right_sharp,
-                      color: Color(0xFF1C1C1E)),
+                  trailing: Icon(Icons.chevron_right_sharp,
+                      color: AppColor.primaryColor),
                   onTap: () {
                     Get.to(const WebviewPage(
                       urlDirect: "https://luvpark.ph/privacy-policy/",
