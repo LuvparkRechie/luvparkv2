@@ -86,7 +86,7 @@ class RegistrationPage extends GetView<RegistrationController> {
                               const CustomParagraph(
                                   textAlign: TextAlign.center,
                                   text:
-                                      "Please complete all input fields to create\nyour account"),
+                                      "Earn free vouchers for a limited time once you create an account today"),
                               const VerticalHeight(height: 30),
                               Align(
                                 alignment: Alignment.centerLeft,
@@ -135,112 +135,113 @@ class RegistrationPage extends GetView<RegistrationController> {
                                   },
                                 ),
                               ),
-
                               Container(height: 10),
-                              // Obx(
-                              //   () => Container(
-                              //     clipBehavior: Clip.antiAlias,
-                              //     decoration: ShapeDecoration(
-                              //       shape: RoundedRectangleBorder(
-                              //         side: BorderSide(
-                              //           width: 1,
-                              //           color: Colors.black
-                              //               .withOpacity(0.05999999865889549),
-                              //         ),
-                              //         borderRadius: BorderRadius.circular(16),
-                              //       ),
-                              //     ),
-                              //     child: Padding(
-                              //       padding: const EdgeInsets.fromLTRB(
-                              //           12, 15, 11, 18),
-                              //       child: Column(
-                              //         crossAxisAlignment:
-                              //             CrossAxisAlignment.start,
-                              //         children: [
-                              //           const CustomTitle(
-                              //             text: "Password Strength",
-                              //             fontSize: 16,
-                              //             fontWeight: FontWeight.bold,
-                              //             letterSpacing: -.1,
-                              //             wordspacing: 2,
-                              //           ),
-                              //           Container(
-                              //             height: 15,
-                              //           ),
-                              //           Row(
-                              //             children: [
-                              //               PasswordStrengthIndicator(
-                              //                 strength: 1,
-                              //                 currentStrength:
-                              //                     controller.passStrength.value,
-                              //               ),
-                              //               Container(
-                              //                 width: 5,
-                              //               ),
-                              //               PasswordStrengthIndicator(
-                              //                 strength: 2,
-                              //                 currentStrength:
-                              //                     controller.passStrength.value,
-                              //               ),
-                              //               Container(
-                              //                 width: 5,
-                              //               ),
-                              //               PasswordStrengthIndicator(
-                              //                 strength: 3,
-                              //                 currentStrength:
-                              //                     controller.passStrength.value,
-                              //               ),
-                              //               Container(
-                              //                 width: 5,
-                              //               ),
-                              //               PasswordStrengthIndicator(
-                              //                 strength: 4,
-                              //                 currentStrength:
-                              //                     controller.passStrength.value,
-                              //               ),
-                              //             ],
-                              //           ),
-                              //           Container(
-                              //             height: 15,
-                              //           ),
-                              //           if (Variables.getPasswordStrengthText(
-                              //                   controller.passStrength.value)
-                              //               .isNotEmpty)
-                              //             Row(
-                              //               children: [
-                              //                 Icon(
-                              //                   Icons.shield_moon,
-                              //                   color: Variables
-                              //                       .getColorForPasswordStrength(
-                              //                           controller.passStrength.value),
-                              //                   size: 18,
-                              //                 ),
-                              //                 Container(
-                              //                   width: 6,
-                              //                 ),
-                              //                 CustomParagraph(
-                              //                   text: Variables
-                              //                       .getPasswordStrengthText(
-                              //                           controller.passStrength.value),
-                              //                   color: Variables
-                              //                       .getColorForPasswordStrength(
-                              //                           controller.passStrength.value),
-                              //                 ),
-                              //               ],
-                              //             ),
-                              //           Container(
-                              //             height: 10,
-                              //           ),
-                              //           const CustomParagraph(
-                              //             text:
-                              //                 "The password should have a minimum of 8 characters, including at least one uppercase letter and a number.",
-                              //           ),
-                              //         ],
-                              //       ),
-                              //     ),
-                              //   ),
-                              // ),
-
+                              Obx(
+                                () => Container(
+                                  clipBehavior: Clip.antiAlias,
+                                  decoration: ShapeDecoration(
+                                    shape: RoundedRectangleBorder(
+                                      side: BorderSide(
+                                        width: 1,
+                                        color: Colors.black
+                                            .withOpacity(0.05999999865889549),
+                                      ),
+                                      borderRadius: BorderRadius.circular(16),
+                                    ),
+                                  ),
+                                  child: Padding(
+                                    padding: const EdgeInsets.fromLTRB(
+                                        12, 15, 11, 18),
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        const CustomTitle(
+                                          text: "Password Strength",
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.bold,
+                                          letterSpacing: -.1,
+                                          wordspacing: 2,
+                                        ),
+                                        Container(
+                                          height: 15,
+                                        ),
+                                        Row(
+                                          children: [
+                                            PasswordStrengthIndicator(
+                                              strength: 1,
+                                              currentStrength:
+                                                  controller.passStrength.value,
+                                            ),
+                                            Container(
+                                              width: 5,
+                                            ),
+                                            PasswordStrengthIndicator(
+                                              strength: 2,
+                                              currentStrength:
+                                                  controller.passStrength.value,
+                                            ),
+                                            Container(
+                                              width: 5,
+                                            ),
+                                            PasswordStrengthIndicator(
+                                              strength: 3,
+                                              currentStrength:
+                                                  controller.passStrength.value,
+                                            ),
+                                            Container(
+                                              width: 5,
+                                            ),
+                                            PasswordStrengthIndicator(
+                                              strength: 4,
+                                              currentStrength:
+                                                  controller.passStrength.value,
+                                            ),
+                                          ],
+                                        ),
+                                        Container(
+                                          height: 15,
+                                        ),
+                                        if (Variables.getPasswordStrengthText(
+                                                controller.passStrength.value)
+                                            .isNotEmpty)
+                                          Row(
+                                            children: [
+                                              Icon(
+                                                Icons.shield_moon,
+                                                color: Variables
+                                                    .getColorForPasswordStrength(
+                                                        controller.passStrength
+                                                            .value),
+                                                size: 18,
+                                              ),
+                                              Container(
+                                                width: 6,
+                                              ),
+                                              CustomParagraph(
+                                                text: Variables
+                                                    .getPasswordStrengthText(
+                                                        controller.passStrength
+                                                            .value),
+                                                color: Variables
+                                                    .getColorForPasswordStrength(
+                                                        controller.passStrength
+                                                            .value),
+                                              ),
+                                            ],
+                                          ),
+                                        Container(
+                                          height: 10,
+                                        ),
+                                        const CustomParagraph(
+                                          text:
+                                              "The password should have a minimum of 8 characters, including at least one uppercase letter and a number.",
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                              ),
                               const SizedBox(height: 10.0),
                               CustomButton(
                                 text: "Submit",

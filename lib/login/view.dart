@@ -44,7 +44,7 @@ class LoginScreen extends GetView<LoginScreenController> {
                 borderRadius: BorderRadius.only(
                     topRight: Radius.circular(30),
                     topLeft: Radius.circular(30))),
-            padding: const EdgeInsets.fromLTRB(15, 30, 15, 0),
+            padding: const EdgeInsets.fromLTRB(15, 0, 15, 0),
             child: Form(
               key: controller.formKeyLogin,
               child: StretchingOverscrollIndicator(
@@ -55,6 +55,7 @@ class LoginScreen extends GetView<LoginScreenController> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
+                        Container(height: 30),
                         const Image(
                           image: AssetImage("assets/images/onboardluvpark.png"),
                           width: 189,
@@ -93,9 +94,10 @@ class LoginScreen extends GetView<LoginScreenController> {
                             wordspacing: 4,
                           ),
                         ),
-                        CustomTextField(
+                        CustomMobileNumber(
                           labelText: "10 digit mobile number",
                           controller: controller.mobileNumber,
+                          inputFormatters: [Variables.maskFormatter],
                         ),
                         // const VerticalHeight(height: 5),
                         const Align(
