@@ -53,7 +53,7 @@ class RegistrationPage extends GetView<RegistrationController> {
                   child: SingleChildScrollView(
                     child: GetBuilder<RegistrationController>(builder: (ctxt) {
                       return Padding(
-                        padding: const EdgeInsets.fromLTRB(15, 30, 15, 20),
+                        padding: const EdgeInsets.fromLTRB(15, 0, 15, 20),
                         child: Form(
                           key: controller.formKeyRegister,
                           child: Column(

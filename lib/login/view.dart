@@ -55,15 +55,16 @@ class LoginScreen extends GetView<LoginScreenController> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
-                        Container(height: 30),
+                        // Container(height: 30),
                         const Image(
                           image: AssetImage("assets/images/onboardluvpark.png"),
                           width: 189,
                           fit: BoxFit.contain,
                         ),
                         Image(
-                          image: const AssetImage("assets/images/onboard5.png"),
-                          width: MediaQuery.of(Get.context!).size.width * .80,
+                          image: const AssetImage(
+                              "assets/images/onboardlogin.png"),
+                          width: MediaQuery.of(Get.context!).size.width * .70,
                           fit: BoxFit.contain,
                           filterQuality: FilterQuality.high,
                         ),
@@ -81,8 +82,7 @@ class LoginScreen extends GetView<LoginScreenController> {
                           padding: EdgeInsets.symmetric(horizontal: 20),
                           child: CustomParagraph(
                               textAlign: TextAlign.center,
-                              text:
-                                  "Please enter your mobile number and password to login"),
+                              text: "Enter your mobile number to log in"),
                         ),
                         VerticalHeight(height: 30),
                         const Align(
