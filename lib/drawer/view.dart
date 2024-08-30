@@ -1,4 +1,5 @@
 import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:iconsax/iconsax.dart';
@@ -18,18 +19,49 @@ class CustomDrawer extends GetView<DashboardMapController> {
     return Drawer(
       child: Column(
         children: [
-          // DrawerHeader with user profile
-          DrawerHeader(
-            padding: EdgeInsets.zero,
-            child: Column(
-              mainAxisSize: MainAxisSize.min, // Adjust based on content
-              children: [
-                Padding(
-                  padding: const EdgeInsets.only(top: 20),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      CircleAvatar(
+          // Stack to layer the background image and profile info
+          Stack(
+            children: [
+              // Background Image
+              SizedBox(
+                height: 296, // Height of the background image
+                width: double.infinity, // Expand to full width
+                child: Image.asset(
+                  "assets/images/profile_bg.png",
+                  fit: BoxFit
+                      .cover, // Ensure image covers the width and respects height
+                ),
+              ),
+              // Profile Information on top of the image
+              Positioned(
+                top: 20,
+                left: 0,
+                right: 0,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Container(height: 10),
+                    const Padding(
+                      padding: EdgeInsets.only(right: 15),
+                      child: SizedBox(
+                        height: 56,
+                        width: double.infinity,
+                        child: Image(
+                          image: AssetImage("assets/images/luvpark.png"),
+                          color: Colors.white,
+                        ),
+                      ),
+                    ),
+                    Container(
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        border: Border.all(
+                          color: Colors.white,
+                          width: 2.0,
+                        ),
+                      ),
+                      child: CircleAvatar(
                         radius: 44.5,
                         backgroundColor: Colors.white,
                         backgroundImage: controller.userProfile != null &&
@@ -41,69 +73,73 @@ class CustomDrawer extends GetView<DashboardMapController> {
                             : null,
                         child: controller.userProfile == null ||
                                 controller.userProfile['image_base64'] == null
-                            ? const Icon(Icons.person,
-                                size: 44, color: Colors.blueAccent)
+                            ? const Icon(
+                                Icons.person,
+                                size: 44,
+                                color: Colors.blueAccent,
+                              )
                             : null,
                       ),
-                    ],
-                  ),
-                ),
-                const SizedBox(height: 10),
-                controller.userProfile != null &&
-                        controller.userProfile['first_name'] != null
-                    ? CustomTitle(
-                        text:
-                            '${controller.userProfile['first_name']} ${controller.userProfile['last_name']}',
-                        color: Colors.black,
-                        fontSize: 18,
-                        fontStyle: FontStyle.normal,
-                        textAlign: TextAlign.center,
-                        fontWeight: FontWeight.w700,
-                        letterSpacing: -0.408,
-                      )
-                    : const CustomTitle(
-                        text: "Not Verified",
-                        color: Colors.black,
-                        fontSize: 18,
-                        fontWeight: FontWeight.w700,
-                        fontStyle: FontStyle.normal,
-                        textAlign: TextAlign.center,
-                        letterSpacing: -0.408,
+                    ),
+                    Container(height: 10),
+                    controller.userProfile != null &&
+                            controller.userProfile['first_name'] != null
+                        ? CustomTitle(
+                            text:
+                                '${controller.userProfile['first_name']} ${controller.userProfile['last_name']}',
+                            color: Colors.white,
+                            fontSize: 18,
+                            fontStyle: FontStyle.normal,
+                            textAlign: TextAlign.center,
+                            fontWeight: FontWeight.w700,
+                            letterSpacing: -0.408,
+                          )
+                        : Container(
+                            color: Colors.transparent,
+                            width: double.infinity,
+                            child: const CustomTitle(
+                              text: "Not Verified",
+                              color: Colors.white,
+                              fontSize: 18,
+                              fontWeight: FontWeight.w700,
+                              fontStyle: FontStyle.normal,
+                              textAlign: TextAlign.center,
+                              letterSpacing: -0.408,
+                            ),
+                          ),
+                    Container(height: 10),
+                    OutlinedButton(
+                      onPressed: () {
+                        Get.offAndToNamed(Routes.profile);
+                      },
+                      style: OutlinedButton.styleFrom(
+                        backgroundColor: Colors.transparent,
+                        side: const BorderSide(color: Colors.white, width: 1.0),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(58.0),
+                        ),
+                        padding: const EdgeInsets.symmetric(horizontal: 20.0),
                       ),
-                const SizedBox(height: 10),
-                TextButton(
-                  onPressed: () {
-                    Get.offAndToNamed(Routes.profile);
-                  },
-                  style: ButtonStyle(
-                    backgroundColor: MaterialStateProperty.all<Color>(
-                      const Color(0xFFEDEFF3),
-                    ),
-                    shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                      RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(58.0),
+                      child: const CustomTitle(
+                        text: "My Profile and Settings",
+                        fontSize: 14,
+                        fontStyle: FontStyle.normal,
+                        fontWeight: FontWeight.w700,
+                        textAlign: TextAlign.center,
+                        letterSpacing: -0.408,
+                        color: Colors.white,
                       ),
                     ),
-                    padding: MaterialStateProperty.all<EdgeInsets>(
-                      const EdgeInsets.symmetric(horizontal: 20.0),
-                    ),
-                  ),
-                  child: const CustomTitle(
-                    text: "My Profile and Settings",
-                    fontSize: 14,
-                    fontStyle: FontStyle.normal,
-                    fontWeight: FontWeight.w700,
-                    textAlign: TextAlign.center,
-                    letterSpacing: -0.408,
-                  ),
+                    Container(height: 10),
+                  ],
                 ),
-              ],
-            ),
+              ),
+            ],
           ),
-          // Content below DrawerHeader
+          // Content Below the Background Image
           Expanded(
             child: ListView(
-              padding: EdgeInsets.zero,
+              padding: const EdgeInsets.only(left: 15, right: 15, top: 25),
               children: <Widget>[
                 const Padding(
                   padding: EdgeInsets.symmetric(horizontal: 15.0),
@@ -148,7 +184,7 @@ class CustomDrawer extends GetView<DashboardMapController> {
                     Get.toNamed(Routes.wallet);
                   },
                 ),
-                const SizedBox(height: 22),
+                Container(height: 22),
                 const Padding(
                   padding: EdgeInsets.symmetric(horizontal: 15.0),
                   child: CustomTitle(
@@ -194,10 +230,8 @@ class CustomDrawer extends GetView<DashboardMapController> {
                   },
                 ),
                 ListTile(
-                  leading: const Icon(
-                    Iconsax.note_15,
-                    color: Color(0xFF1C1C1E),
-                  ),
+                  leading:
+                      const Icon(Iconsax.note_15, color: Color(0xFF1C1C1E)),
                   title: const CustomTitle(
                     text: "Terms of Use",
                     fontSize: 14,
@@ -217,10 +251,8 @@ class CustomDrawer extends GetView<DashboardMapController> {
                   },
                 ),
                 ListTile(
-                  leading: const Icon(
-                    Iconsax.note_15,
-                    color: Color(0xFF1C1C1E),
-                  ),
+                  leading:
+                      const Icon(Iconsax.note_15, color: Color(0xFF1C1C1E)),
                   title: const CustomTitle(
                     text: "Privacy Policy",
                     fontSize: 14,
@@ -242,66 +274,78 @@ class CustomDrawer extends GetView<DashboardMapController> {
               ],
             ),
           ),
-          // Log out button
           Padding(
-            padding: const EdgeInsets.only(bottom: 35, left: 60, right: 60),
-            child: SizedBox(
-              width: 200,
-              child: TextButton(
-                onPressed: () {
-                  CustomDialog().customPopUp(
-                    context,
-                    'Logout?',
-                    'Are you sure you want to logout',
-                    'Yes, log out',
-                    'Cancel',
-                    imageName: 'pu_confirmation',
-                    btnNotBackgroundColor: AppColor.primaryColor,
-                    btnNotTextColor: Colors.white,
-                    btnOkTextColor: AppColor.primaryColor,
-                    btnOkBackgroundColor: Colors.transparent,
-                    onTapConfirm: () async {
-                      Get.back();
-                    },
-                    onTapClose: () async {
-                      Get.back();
-                      CustomDialog().loadingDialog(context);
-                      await Future.delayed(const Duration(seconds: 3));
-                      final userLogin = await Authentication().getUserLogin();
-                      List userData = [userLogin];
-                      userData = userData.map((e) {
-                        e["is_login"] = "N";
-                        return e;
-                      }).toList();
+            padding: const EdgeInsets.only(
+              bottom: 35,
+              left: 60,
+              right: 60,
+            ),
+            child: Container(
+              width: double.infinity,
+              decoration: BoxDecoration(
+                border: Border(
+                  top: BorderSide(color: Colors.grey[300]!, width: 1.0),
+                ),
+              ),
+              child: Padding(
+                padding: const EdgeInsets.only(top: 15),
+                child: TextButton(
+                  onPressed: () {
+                    CustomDialog().customPopUp(
+                      context,
+                      'Logout?',
+                      'Are you sure you want to logout',
+                      'Yes, log out',
+                      'Cancel',
+                      imageName: 'pu_confirmation',
+                      btnNotBackgroundColor: AppColor.primaryColor,
+                      btnNotTextColor: Colors.white,
+                      btnOkTextColor: AppColor.primaryColor,
+                      btnOkBackgroundColor: Colors.transparent,
+                      onTapConfirm: () async {
+                        Get.back();
+                      },
+                      onTapClose: () async {
+                        Get.back();
+                        CustomDialog().loadingDialog(context);
+                        await Future.delayed(const Duration(seconds: 3));
+                        final userLogin = await Authentication().getUserLogin();
+                        List userData = [userLogin];
+                        userData = userData.map((e) {
+                          e["is_login"] = "N";
+                          return e;
+                        }).toList();
 
-                      await Authentication().setLogin(jsonEncode(userData[0]));
-                      Get.back();
-                      Get.offAllNamed(Routes.splash);
-                    },
-                    showTwoButtons: true,
-                  );
-                },
-                style: ButtonStyle(
-                  backgroundColor: MaterialStateProperty.all<Color>(
-                    const Color(0xFFBD2424).withOpacity(0.12),
-                  ),
-                  shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                    RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(58.0),
+                        await Authentication()
+                            .setLogin(jsonEncode(userData[0]));
+                        Get.back();
+                        Get.offAllNamed(Routes.splash);
+                      },
+                      showTwoButtons: true,
+                    );
+                  },
+                  style: ButtonStyle(
+                    backgroundColor: MaterialStateProperty.all<Color>(
+                      const Color(0xFFBD2424).withOpacity(0.12),
+                    ),
+                    shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                      RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(58.0),
+                      ),
+                    ),
+                    padding: MaterialStateProperty.all<EdgeInsets>(
+                      const EdgeInsets.symmetric(horizontal: 20.0),
                     ),
                   ),
-                  padding: MaterialStateProperty.all<EdgeInsets>(
-                    const EdgeInsets.symmetric(horizontal: 20.0),
+                  child: const CustomTitle(
+                    text: "Log out",
+                    fontSize: 14,
+                    color: Color(0xFFBD2424),
+                    fontStyle: FontStyle.normal,
+                    fontWeight: FontWeight.w700,
+                    textAlign: TextAlign.center,
+                    letterSpacing: -0.408,
                   ),
-                ),
-                child: const CustomTitle(
-                  text: "Log out",
-                  fontSize: 14,
-                  color: Color(0xFFBD2424),
-                  fontStyle: FontStyle.normal,
-                  fontWeight: FontWeight.w700,
-                  textAlign: TextAlign.center,
-                  letterSpacing: -0.408,
                 ),
               ),
             ),
