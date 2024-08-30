@@ -27,87 +27,95 @@ class MyOnboardingPage extends StatelessWidget {
         ),
       ),
       body: Container(
-        padding: const EdgeInsets.fromLTRB(15, 40, 15, 0),
         decoration: const BoxDecoration(
             color: Colors.white,
             borderRadius: BorderRadius.only(
                 topRight: Radius.circular(30), topLeft: Radius.circular(30))),
-        child: GetBuilder<OnboardingController>(builder: (ctxt) {
-          return Column(
-            children: [
-              const Image(
-                image: AssetImage("assets/images/onboardluvpark.png"),
-                width: 189,
-                fit: BoxFit.contain,
-              ),
-              SizedBox(
-                height: MediaQuery.of(context).size.height * .50,
-                child: PageView(
-                  controller: controller.pageController,
-                  onPageChanged: (value) {
-                    controller.onPageChanged(value);
-                  },
-                  children: List.generate(
-                    controller.sliderData.length,
-                    (index) => _buildPage(
-                      controller.sliderData[index]["title"],
-                      controller.sliderData[index]["subTitle"],
-                      controller.sliderData[index]["icon"],
-                    ),
-                  ),
+        child: Padding(
+          padding: const EdgeInsets.fromLTRB(15, 40, 15, 0),
+          child: GetBuilder<OnboardingController>(builder: (ctxt) {
+            return Column(
+              children: [
+                const Image(
+                  image: AssetImage("assets/images/onboardluvpark.png"),
+                  width: 189,
+                  fit: BoxFit.contain,
                 ),
-              ),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Container(
-                      height: 20,
-                    ),
-                    SizedBox(
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
+                StretchingOverscrollIndicator(
+                  axisDirection: AxisDirection.right,
+                  child: SizedBox(
+                    height: MediaQuery.of(context).size.height * .50,
+                    child: ScrollConfiguration(
+                      behavior: ScrollBehavior().copyWith(overscroll: false),
+                      child: PageView(
+                        controller: controller.pageController,
+                        onPageChanged: (value) {
+                          controller.onPageChanged(value);
+                        },
                         children: List.generate(
                           controller.sliderData.length,
-                          (index) => Container(
-                            width: 10,
-                            height: 10,
-                            margin: const EdgeInsets.symmetric(horizontal: 2),
-                            decoration: BoxDecoration(
-                              shape: BoxShape.circle,
-                              color: controller.currentPage.value == index
-                                  ? AppColor.primaryColor
-                                  : const Color(0xFFD9D9D9),
-                            ),
+                          (index) => _buildPage(
+                            controller.sliderData[index]["title"],
+                            controller.sliderData[index]["subTitle"],
+                            controller.sliderData[index]["icon"],
                           ),
                         ),
                       ),
                     ),
-                    Container(
-                      height: 20,
-                    ),
-                    CustomButton(
-                      text: "Log in",
-                      onPressed: () {
-                        Get.toNamed(Routes.login);
-                      },
-                    ),
-                    Container(height: 10),
-                    CustomButton(
-                      bordercolor: AppColor.primaryColor,
-                      btnColor: Colors.white,
-                      textColor: AppColor.primaryColor,
-                      text: "Create Account",
-                      onPressed: () {
-                        Get.toNamed(Routes.landing);
-                      },
-                    ),
-                  ],
+                  ),
                 ),
-              ),
-            ],
-          );
-        }),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Container(
+                        height: 20,
+                      ),
+                      SizedBox(
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: List.generate(
+                            controller.sliderData.length,
+                            (index) => Container(
+                              width: 10,
+                              height: 10,
+                              margin: const EdgeInsets.symmetric(horizontal: 2),
+                              decoration: BoxDecoration(
+                                shape: BoxShape.circle,
+                                color: controller.currentPage.value == index
+                                    ? AppColor.primaryColor
+                                    : const Color(0xFFD9D9D9),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                      Container(
+                        height: 20,
+                      ),
+                      CustomButton(
+                        text: "Log in",
+                        onPressed: () {
+                          Get.toNamed(Routes.login);
+                        },
+                      ),
+                      Container(height: 10),
+                      CustomButton(
+                        bordercolor: AppColor.primaryColor,
+                        btnColor: Colors.white,
+                        textColor: AppColor.primaryColor,
+                        text: "Create Account",
+                        onPressed: () {
+                          Get.toNamed(Routes.landing);
+                        },
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            );
+          }),
+        ),
       ),
     );
   }

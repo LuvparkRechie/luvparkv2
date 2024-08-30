@@ -67,8 +67,7 @@ class LoginScreenController extends GetxController {
       if (objData["items"].isEmpty) {
         isInternetConnected.value = true;
         CustomDialog().errorDialog(context, "luvpark", "Invalid account.", () {
-          Get.offAndToNamed(Routes.login);
-          Get.back();
+          Get.offAllNamed(Routes.login);
         });
         return;
       } else {

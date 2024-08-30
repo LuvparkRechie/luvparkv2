@@ -1,3 +1,5 @@
+// ignore_for_file: prefer_const_constructors
+
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -13,13 +15,11 @@ import 'package:luvpark_get/custom_widgets/vertical_height.dart';
 import 'package:luvpark_get/login/controller.dart';
 import 'package:luvpark_get/routes/routes.dart';
 
-class LoginScreen extends StatelessWidget {
+class LoginScreen extends GetView<LoginScreenController> {
   const LoginScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final LoginScreenController ct = Get.put(LoginScreenController());
-
     return PopScope(
       canPop: false,
       child: Scaffold(
@@ -34,21 +34,25 @@ class LoginScreen extends StatelessWidget {
           ),
         ),
         body: Container(
+          width: double.infinity,
           color: AppColor.primaryColor,
           child: Container(
+            width: double.infinity,
             height: MediaQuery.of(context).size.height,
             decoration: const BoxDecoration(
                 color: Colors.white,
                 borderRadius: BorderRadius.only(
                     topRight: Radius.circular(30),
                     topLeft: Radius.circular(30))),
-            padding: const EdgeInsets.fromLTRB(15, 30, 15, 20),
+            padding: const EdgeInsets.fromLTRB(15, 30, 15, 0),
             child: Form(
-              key: ct.formKeyLogin,
+              key: controller.formKeyLogin,
               child: StretchingOverscrollIndicator(
                 axisDirection: AxisDirection.down,
-                child: SingleChildScrollView(
-                  child: Column(
+                child: ScrollConfiguration(
+                  behavior: const ScrollBehavior().copyWith(overscroll: false),
+                  child: SingleChildScrollView(
+                    child: Column(
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
                         const Image(
@@ -73,13 +77,13 @@ class LoginScreen extends StatelessWidget {
                         ),
                         Container(height: 10),
                         const Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 20),
-                          child: const CustomParagraph(
+                          padding: EdgeInsets.symmetric(horizontal: 20),
+                          child: CustomParagraph(
                               textAlign: TextAlign.center,
                               text:
                                   "Please enter your mobile number and password to login"),
                         ),
-                        const VerticalHeight(height: 30),
+                        VerticalHeight(height: 30),
                         const Align(
                           alignment: Alignment.centerLeft,
                           child: CustomTitle(
@@ -89,12 +93,11 @@ class LoginScreen extends StatelessWidget {
                             wordspacing: 4,
                           ),
                         ),
-                        CustomMobileNumber(
+                        CustomTextField(
                           labelText: "10 digit mobile number",
-                          controller: ct.mobileNumber,
-                          inputFormatters: [Variables.maskFormatter],
+                          controller: controller.mobileNumber,
                         ),
-                        const VerticalHeight(height: 5),
+                        // const VerticalHeight(height: 5),
                         const Align(
                           alignment: Alignment.centerLeft,
                           child: CustomTitle(
@@ -108,21 +111,29 @@ class LoginScreen extends StatelessWidget {
                           () => CustomTextField(
                             title: "Password",
                             labelText: "Enter your password",
-                            controller: ct.password,
-                            isObscure: !ct.isShowPass.value,
-                            suffixIcon: ct.isShowPass.value
+                            controller: controller.password,
+                            isObscure: !controller.isShowPass.value,
+                            suffixIcon: controller.isShowPass.value
                                 ? Icons.visibility_off
                                 : Icons.visibility,
                             onIconTap: () {
-                              ct.visibilityChanged(!ct.isShowPass.value);
+                              controller.visibilityChanged(
+                                  !controller.isShowPass.value);
                             },
                           ),
                         ),
                         Align(
                             alignment: Alignment.centerRight,
-                            child: CustomParagraph(
-                                color: AppColor.primaryColor,
-                                text: "Forgot password")),
+                            child: InkWell(
+                              onTap: () {
+                                Get.toNamed(Routes.forgotPass);
+                              },
+                              child: CustomParagraph(
+                                  fontSize: 14,
+                                  color: AppColor.primaryColor,
+                                  fontWeight: FontWeight.bold,
+                                  text: "Forgot password"),
+                            )),
                         const SizedBox(
                           height: 20,
                         ),
@@ -130,38 +141,43 @@ class LoginScreen extends StatelessWidget {
                           Column(
                             children: [
                               Obx(() => CustomButton(
-                                  loading: ct.isLoading.value,
+                                  loading: controller.isLoading.value,
                                   text: "Log in",
                                   onPressed: () {
                                     FocusScope.of(context)
                                         .requestFocus(FocusNode());
-                                    if (ct.isLoading.value) return;
-                                    ct.toggleLoading(!ct.isLoading.value);
+                                    if (controller.isLoading.value) return;
+                                    controller.toggleLoading(
+                                        !controller.isLoading.value);
 
-                                    if (ct.mobileNumber.text.isEmpty) {
-                                      ct.toggleLoading(!ct.isLoading.value);
+                                    if (controller.mobileNumber.text.isEmpty) {
+                                      controller.toggleLoading(
+                                          !controller.isLoading.value);
                                       CustomDialog().snackbarDialog(context,
                                           "Mobile number is empty", Colors.red);
                                       return;
                                     }
-                                    if (ct.password.text.isEmpty) {
-                                      ct.toggleLoading(!ct.isLoading.value);
+                                    if (controller.password.text.isEmpty) {
+                                      controller.toggleLoading(
+                                          !controller.isLoading.value);
                                       CustomDialog().snackbarDialog(context,
                                           "Password is empty", Colors.red);
                                       return;
                                     }
-                                    ct.getAccountStatus(context,
-                                        "63${ct.mobileNumber.text.toString().replaceAll(" ", "")}",
+                                    controller.getAccountStatus(context,
+                                        "63${controller.mobileNumber.text.toString().replaceAll(" ", "")}",
                                         (obj) {
                                       final items = obj[0]["items"];
 
                                       if (items.isEmpty) {
-                                        ct.toggleLoading(!ct.isLoading.value);
+                                        controller.toggleLoading(
+                                            !controller.isLoading.value);
                                         return;
                                       }
 
                                       if (items[0]["is_active"] == "N") {
-                                        ct.toggleLoading(!ct.isLoading.value);
+                                        controller.toggleLoading(
+                                            !controller.isLoading.value);
                                         CustomDialog().confirmationDialog(
                                             context,
                                             "Information",
@@ -175,13 +191,14 @@ class LoginScreen extends StatelessWidget {
                                       } else {
                                         Map<String, dynamic> postParam = {
                                           "mobile_no":
-                                              "63${ct.mobileNumber.text.toString().replaceAll(" ", "")}",
-                                          "pwd": ct.password.text,
+                                              "63${controller.mobileNumber.text.toString().replaceAll(" ", "")}",
+                                          "pwd": controller.password.text,
                                         };
 
-                                        ct.postLogin(context, postParam,
+                                        controller.postLogin(context, postParam,
                                             (data) {
-                                          ct.toggleLoading(!ct.isLoading.value);
+                                          controller.toggleLoading(
+                                              !controller.isLoading.value);
 
                                           if (data[0]["items"].isNotEmpty) {
                                             Get.offAndToNamed(Routes.map);
@@ -223,7 +240,12 @@ class LoginScreen extends StatelessWidget {
                               ),
                             ],
                           ),
-                      ]),
+                        Container(
+                          height: 20,
+                        ),
+                      ],
+                    ),
+                  ),
                 ),
               ),
             ),

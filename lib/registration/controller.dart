@@ -116,6 +116,7 @@ class RegistrationController extends GetxController
 
   @override
   void onClose() {
+    formKeyRegister.currentState!.reset();
     super.onClose();
   }
 

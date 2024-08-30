@@ -6,6 +6,8 @@ import 'package:luvpark_get/custom_widgets/custom_button.dart';
 import 'package:luvpark_get/custom_widgets/custom_text.dart';
 import 'package:luvpark_get/terms/controller.dart';
 
+import '../routes/routes.dart';
+
 class TermsOfUse extends StatelessWidget {
   const TermsOfUse({super.key});
 
@@ -13,6 +15,7 @@ class TermsOfUse extends StatelessWidget {
   Widget build(BuildContext context) {
     final TermsOfUseController controllers = Get.put(TermsOfUseController());
     return CustomScaffold(
+      canPop: false,
       appBar: AppBar(
         elevation: 1,
         backgroundColor: Colors.white,
@@ -24,7 +27,7 @@ class TermsOfUse extends StatelessWidget {
         leading: IconButton(
           padding: EdgeInsets.zero,
           onPressed: () {
-            Get.back();
+            Get.offAllNamed(Routes.landing);
           },
           icon: const Icon(
             Icons.chevron_left,
@@ -118,7 +121,9 @@ class TermsOfUse extends StatelessWidget {
                       btnColor: controllers.isAgree.value
                           ? AppColor.primaryColor
                           : Colors.grey,
-                      onPressed: () {}),
+                      onPressed: () {
+                        Get.offAllNamed(Routes.registration);
+                      }),
                 ],
               ),
             ),
