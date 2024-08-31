@@ -5,9 +5,9 @@ import 'package:flutter_multi_formatter/formatters/formatter_utils.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:iconsax/iconsax.dart';
 import 'package:luvpark_get/custom_widgets/app_color.dart';
 import 'package:luvpark_get/custom_widgets/custom_body.dart';
+import 'package:luvpark_get/custom_widgets/custom_button.dart';
 import 'package:luvpark_get/custom_widgets/custom_text.dart';
 import 'package:luvpark_get/custom_widgets/variables.dart';
 import 'package:luvpark_get/drawer/view.dart';
@@ -404,7 +404,7 @@ class DashboardMapScreen extends GetView<DashboardMapController> {
                     crossAxisAlignment: CrossAxisAlignment.end,
                     children: [
                       Visibility(
-                        // visible: controller.hasLastBooking.value,
+                        visible: controller.hasLastBooking.value,
                         child: InkWell(
                           onTap: controller.bookNow,
                           child: Container(
@@ -626,20 +626,150 @@ class DashboardMapScreen extends GetView<DashboardMapController> {
               Visibility(
                 visible: controller.isMarkerTapped.value,
                 child: Positioned(
-                  bottom: 30,
+                  bottom: 40,
                   right: 15,
                   left: 15,
                   child: Container(
-                    height: 200,
                     width: MediaQuery.of(context).size.width,
-                    color: Colors.white,
-                    child: Column(
-                      children: [
-                        IconButton(
-                            onPressed: controller.closeMarkerDialog,
-                            icon: Icon(Iconsax.close_circle))
+                    clipBehavior: Clip.antiAlias,
+                    decoration: ShapeDecoration(
+                      color: Colors.white,
+                      shape: RoundedRectangleBorder(
+                        side: const BorderSide(
+                            width: 1, color: Color(0xFFDFE7EF)),
+                        borderRadius: BorderRadius.circular(15),
+                      ),
+                      shadows: const [
+                        BoxShadow(
+                          color: Color(0x0C000000),
+                          blurRadius: 15,
+                          offset: Offset(2, 5),
+                          spreadRadius: 5,
+                        )
                       ],
                     ),
+                    child: Padding(
+                        padding: const EdgeInsets.all(15.0),
+                        child: GetBuilder<DashboardMapController>(
+                            builder: (context) {
+                          String formatTime(String time) {
+                            return "${time.substring(0, 2)}:${time.substring(2)}";
+                          }
+
+                          String finalSttime = formatTime(
+                              controller.dialogData[0]["start_time"]);
+                          String finalEndtime =
+                              formatTime(controller.dialogData[0]["end_time"]);
+                          bool isOpen = Functions.checkAvailability(
+                              finalSttime, finalEndtime);
+
+                          return Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              InkWell(
+                                onTap: controller.closeMarkerDialog,
+                                child: Row(
+                                  children: [
+                                    Icon(
+                                      Icons.chevron_left,
+                                      color: AppColor.paragraphColor,
+                                    ),
+                                    const CustomParagraph(
+                                      text: "Back",
+                                      fontWeight: FontWeight.w600,
+                                      fontSize: 16,
+                                    )
+                                  ],
+                                ),
+                              ),
+                              Container(height: 22),
+                              Row(
+                                children: [
+                                  Expanded(
+                                    child: CustomTitle(
+                                      text: controller.dialogData[0]
+                                          ["park_area_name"],
+                                      maxlines: 1,
+                                    ),
+                                  ),
+                                  CustomParagraph(
+                                    text: Variables.gagi(
+                                        Variables.convertToMeters(
+                                      controller.dialogData[0]["distance"]
+                                          .toString(),
+                                    )),
+                                    color: AppColor.primaryColor,
+                                    fontWeight: FontWeight.w600,
+                                  )
+                                ],
+                              ),
+                              Container(height: 5),
+                              CustomParagraph(
+                                text: controller.dialogData[0]["address"],
+                                maxlines: 2,
+                              ),
+                              Container(height: 10),
+                              Text.rich(
+                                TextSpan(
+                                  children: [
+                                    TextSpan(
+                                      text: isOpen ? "Open" : "Close",
+                                      style: paragraphStyle(
+                                        color: isOpen
+                                            ? const Color(0xFF7BB56C)
+                                            : Colors.red,
+                                      ),
+                                    ),
+                                    TextSpan(
+                                      text:
+                                          '  ●  ${controller.dialogData[0]["parking_schedule"].toString().split("-")[0]} to ${controller.dialogData[0]["parking_schedule"].toString().split("-")[1]}   ●   ',
+                                      style: paragraphStyle(),
+                                    ),
+                                    TextSpan(
+                                      text:
+                                          '${controller.dialogData[0]["ps_vacant_count"]} slots left',
+                                      style: paragraphStyle(
+                                          color: const Color(0xFFE03C20)),
+                                    ),
+                                  ],
+                                ),
+                                overflow: TextOverflow
+                                    .ellipsis, // Ensures that if the text is too long, it will be truncated with an ellipsis
+                                maxLines: 1,
+                              ),
+                              Container(height: 15),
+                              const Divider(),
+                              Container(height: 15),
+                              Row(
+                                children: [
+                                  Expanded(
+                                    child: CustomButton(
+                                      text: "Book Now",
+                                      onPressed: () {
+                                        controller.bookMarkerNow(
+                                            controller.dialogData);
+                                      },
+                                    ),
+                                  ),
+                                  Container(width: 10),
+                                  Expanded(
+                                    child: CustomButton(
+                                      btnColor: Colors.white,
+                                      bordercolor: AppColor.primaryColor,
+                                      textColor: AppColor.primaryColor,
+                                      text: "Parking details",
+                                      onPressed: () {
+                                        Get.toNamed(Routes.parkingDetails,
+                                            arguments:
+                                                controller.dialogData[0]);
+                                      },
+                                    ),
+                                  ),
+                                ],
+                              )
+                            ],
+                          );
+                        })),
                   ),
                 ),
               ),

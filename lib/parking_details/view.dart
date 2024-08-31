@@ -219,8 +219,12 @@ class ParkingDetails extends GetView<ParkingDetailsController> {
               ),
             ),
             CustomParagraph(
-                text: Variables.formatDistance(
-                    controller.dataNearest["distance"]))
+              text: Variables.gagi(
+                Variables.convertToMeters(
+                  controller.dataNearest["distance"].toString(),
+                ),
+              ),
+            )
           ],
         ),
         Container(height: 20),
