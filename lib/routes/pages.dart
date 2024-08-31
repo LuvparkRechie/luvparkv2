@@ -7,8 +7,6 @@ import 'package:luvpark_get/forgot_password/utils/forgot_verified_acc/index.dart
 import 'package:luvpark_get/my_account/index.dart';
 import 'package:luvpark_get/profile/index.dart';
 import 'package:luvpark_get/rate_booking/index.dart';
-import 'package:luvpark_get/transaction_history/bindings.dart';
-import 'package:luvpark_get/transaction_history/view.dart';
 import 'package:luvpark_get/wallet_qr/index.dart';
 import 'package:luvpark_get/wallet_recharge/index.dart';
 import 'package:luvpark_get/wallet_recharge_load/index.dart';
@@ -25,6 +23,8 @@ import '../landing/index.dart';
 import '../login/index.dart';
 import '../mapa/index.dart';
 import '../mapa/utils/index.dart';
+import '../my_vehicles/index.dart';
+import '../my_vehicles/utils/add_vehicle.dart';
 import '../onboarding/index.dart';
 import '../parking/index.dart';
 import '../parking_areas/index.dart';
@@ -220,6 +220,16 @@ class AppPages {
       name: Routes.myaccount,
       page: () => const MyAccount(),
       binding: MyAccountBinding(),
+    ),
+
+    GetPage(
+      name: Routes.myVehicles,
+      page: () => const MyVehicles(),
+      binding: MyVehiclesBinding(),
+    ),
+    GetPage(
+      name: Routes.addVehicle,
+      page: () => const AddVehicles(),
     ),
   ];
 }

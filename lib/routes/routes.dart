@@ -38,6 +38,8 @@ class Routes {
   static const forgotVerifiedAcct = "/forgot_vefified_acct";
   static const createNewPass = "/create_password";
   static const walletrechargeloadpayment = "/wallet_recharge_load_payment";
+  static const myVehicles = "/my_vehicles";
+  static const addVehicle = "/add_vehicle";
 
   static const myaccount = "/myaccount";
 }
