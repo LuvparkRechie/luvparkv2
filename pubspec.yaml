@@ -16,7 +16,7 @@ publish_to: "none" # Remove this line if you wish to publish to pub.dev
 # https://developer.apple.com/library/archive/documentation/General/Reference/InfoPlistKeyReference/Articles/CoreFoundationKeys.html
 # In Windows, build-name is used as the major, minor, and patch parts
 # of the product and file versions while build-number is used as the build suffix.
-version: 1.0.0+1
+version: 1.24.40+41
 
 environment:
   sdk: ">=3.2.6 <4.0.0"
@@ -64,7 +64,7 @@ dependencies:
   device_apps: ^2.2.0
   external_app_launcher: ^3.1.0
   gallery_saver: ^2.3.2
-  screenshot: ^3.0.0
+  screenshot: ^2.1.0
   encrypted_shared_preferences: ^3.0.1
   location_geocoder: ^1.0.5
   geocoding: ^2.1.0
@@ -121,6 +121,8 @@ dependencies:
   loader_overlay: ^4.0.1
   speech_to_text: ^6.6.0
   sliding_up_panel2: ^3.3.0+1
+  provider: ^6.1.2
+  image_picker: ^1.0.8
 
 dev_dependencies:
   flutter_test:
@@ -146,9 +148,15 @@ flutter:
   # To add assets to your application, add an assets section, like this:
   # assets:
   assets:
+    - .env
     - assets/images/
     - assets/dashboard_icon/
+    - assets/dashboard_icon/commercial/
+    - assets/dashboard_icon/private/
+    - assets/dashboard_icon/street/
+    - assets/dashboard_icon/valet/
     - assets/area_details/
+    - assets/drawer_icon/ 
     - assets/custom_map_style/map_style.json
 
   # An image asset can refer to one or more resolution-specific "variants", see
