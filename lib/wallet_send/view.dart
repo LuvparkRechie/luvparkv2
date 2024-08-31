@@ -38,7 +38,7 @@ class WalletSend extends GetView<WalletSendController> {
               onTap: () {
                 Get.back();
               },
-              title: "Share",
+              title: "Send",
             ),
             Form(
               key: controller.formKeySend,

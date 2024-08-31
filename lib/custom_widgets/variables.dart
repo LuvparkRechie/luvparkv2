@@ -360,6 +360,7 @@ class Variables {
     markerBeytes = isOval
         // ignore: use_build_context_synchronously
         ? await createOvalImage(context, base64Encode(pngBytes), size)
+        // ignore: use_build_context_synchronously
         : await getMarkerIcon(context, base64Encode(pngBytes), size);
 
     return markerBeytes;
@@ -453,13 +454,26 @@ class Variables {
   }
 
   static String formatDistance(dynamic distance) {
+    print("distance ${distance < 1000}");
     if (distance < 1000) {
       // Assume distance is in meters
       return '${distance.toStringAsFixed(2)} meters';
     } else {
       // Assume distance is in kilometers
       double distanceInMeters = distance * 1000;
-      return '${distanceInMeters.toStringAsFixed(2)} meters';
+      return '${distanceInMeters.toStringAsFixed(2)} km';
+    }
+  }
+
+  static String gagi(dynamic distance) {
+    if (distance < 1000) {
+      // Assume distance is in meters
+      return '${distance.toStringAsFixed(2)} meters';
+    } else {
+      // Assume distance is in kilometers
+      double distanceKm = double.parse(distance.toString()) / 1000;
+
+      return '${distanceKm.toStringAsFixed(2)} km';
     }
   }
 

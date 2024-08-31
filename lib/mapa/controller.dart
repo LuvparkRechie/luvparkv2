@@ -39,6 +39,7 @@ class DashboardMapController extends GetxController
   RxList<Marker> markers = <Marker>[].obs;
   RxList<dynamic> userBal = <dynamic>[].obs;
   RxList<dynamic> dataNearest = [].obs;
+  RxList<dynamic> dialogData = [].obs;
   //drawerdata
   var userProfile;
   Circle circle = const Circle(circleId: CircleId('dottedCircle'));
@@ -114,7 +115,7 @@ class DashboardMapController extends GetxController
     }
   }
 
-  //Book now
+  //Book now last booking
   Future<void> bookNow() async {
     CustomDialog().loadingDialog(Get.context!);
     final data = await Authentication().getLastBooking();
@@ -178,6 +179,62 @@ class DashboardMapController extends GetxController
     });
   }
 
+  //Book marker dialog
+  Future<void> bookMarkerNow(data) async {
+    CustomDialog().loadingDialog(Get.context!);
+
+    LatLng destLoc = LatLng(data[0]["pa_latitude"], data[0]["pa_longitude"]);
+    if (data[0]["is_allow_reserve"] == "N") {
+      Get.back();
+      CustomDialog().errorDialog(
+        Get.context!,
+        "LuvPark",
+        "This area is not available at the moment.",
+        () {
+          Get.back();
+        },
+      );
+      return;
+    }
+
+    Functions.getUserBalance(Get.context!, (dataBalance) async {
+      final userdata = dataBalance[0];
+      final items = userdata["items"];
+
+      if (userdata["success"]) {
+        if (double.parse(items[0]["amount_bal"].toString()) <
+            double.parse(items[0]["min_wallet_bal"].toString())) {
+          Get.back();
+          CustomDialog().errorDialog(
+            Get.context!,
+            "Attention",
+            "Your balance is below the required minimum for this feature. "
+                "Please ensure a minimum balance of ${items[0]["min_wallet_bal"]} tokens to access the requested service.",
+            () {
+              Get.back();
+            },
+          );
+          return;
+        } else {
+          Functions.computeDistanceResorChckIN(Get.context!, destLoc,
+              (success) {
+            Get.back();
+            if (success["success"]) {
+              Get.toNamed(Routes.booking, arguments: {
+                "currentLocation": success["location"],
+                "areaData": data[0],
+                "canCheckIn": success["can_checkIn"],
+                "userData": items,
+              });
+            }
+          });
+        }
+      } else {
+        Get.back();
+      }
+    });
+  }
+
   //get curr location
   Future<void> getCurrentLoc() async {
     ddRadius = "10";
@@ -220,10 +277,6 @@ class DashboardMapController extends GetxController
     });
     gMapController = controller;
     animateCamera();
-  }
-
-  void onTap(bool connected) {
-    netConnected.value = connected;
   }
 
   void onCameraMoveStarted() {
@@ -539,7 +592,8 @@ class DashboardMapController extends GetxController
               position: LatLng(double.parse(items["pa_latitude"].toString()),
                   double.parse(items["pa_longitude"].toString())),
               onTap: () {
-                onMarkerTapped();
+                dialogData.clear();
+                onMarkerTapped(items);
               }),
         );
       }
@@ -767,10 +821,15 @@ class DashboardMapController extends GetxController
   }
 
   //onMarker tapped
-  void onMarkerTapped() {
+  void onMarkerTapped(data) {
+    dialogData.add(data);
+    print("data $dialogData");
     isMarkerTapped.value = true;
     isGetNearData.value = false;
+
     mapPickerController.mapFinishedMoving!();
+
+    update();
   }
 
   void closeMarkerDialog() {

@@ -371,10 +371,10 @@ class CustomDialog {
     BuildContext context,
     String title,
     String paragraph,
-    String btnOk,
     String btnNot,
-    VoidCallback onTapConfirm,
-    VoidCallback onTapClose, {
+    String btnOk,
+    VoidCallback onTapClose,
+    VoidCallback onTapConfirm, {
     Color? btnNotBackgroundColor,
     Color? btnOkBackgroundColor,
     Color? btnNotTextColor,
@@ -440,18 +440,18 @@ class CustomDialog {
                         child: SizedBox(
                           height: 40,
                           child: TextButton(
-                            onPressed: onTapConfirm,
+                            onPressed: onTapClose,
                             style: TextButton.styleFrom(
                               foregroundColor: Colors.white,
-                              backgroundColor: btnNotBackgroundColor ??
-                                  AppColor.primaryColor,
+                              backgroundColor:
+                                  btnOkBackgroundColor ?? AppColor.primaryColor,
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(5),
                               ),
                             ),
                             child: CustomParagraph(
-                              text: btnOk,
-                              color: btnNotTextColor ?? Colors.white,
+                              text: btnNot,
+                              color: btnOkTextColor ?? Colors.white,
                               fontSize: 14,
                               fontWeight: FontWeight.w500,
                               letterSpacing: -0.408,
@@ -465,18 +465,18 @@ class CustomDialog {
                         child: SizedBox(
                           height: 40,
                           child: TextButton(
-                            onPressed: onTapClose,
+                            onPressed: onTapConfirm,
                             style: TextButton.styleFrom(
                               foregroundColor: Colors.white,
-                              backgroundColor:
-                                  btnOkBackgroundColor ?? AppColor.primaryColor,
+                              backgroundColor: btnNotBackgroundColor ??
+                                  AppColor.primaryColor,
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(5),
                               ),
                             ),
                             child: CustomParagraph(
-                              text: btnNot,
-                              color: btnOkTextColor ?? Colors.white,
+                              text: btnOk,
+                              color: btnNotTextColor ?? Colors.white,
                               fontSize: 14,
                               fontWeight: FontWeight.w500,
                               letterSpacing: -0.408,

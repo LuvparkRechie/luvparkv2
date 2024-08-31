@@ -112,7 +112,7 @@ class BookingReceiptController extends GetxController
             "ps_ref_no": parameters["refno"],
             "luvpark_amount": items[0]["amount_bal"]
           };
-
+          print("paramHours $paramHours");
           HttpRequest(
                   api: ApiKeys.gApiSubFolderPutExtend, parameters: paramHours)
               .put()

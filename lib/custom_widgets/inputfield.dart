@@ -81,15 +81,17 @@ class CustomInputField extends StatelessWidget {
 
 class CustomDropdown extends StatefulWidget {
   final String? ddValue;
-  final List ddData;
+  final List? ddData; // Updated type to be more specific
   final String labelText;
-  final ValueChanged<String> onChange;
+  final FormFieldValidator<String>? validator;
+  final ValueChanged<String?> onChange; // Change to handle nullable values
 
   const CustomDropdown({
     super.key,
     required this.labelText,
     required this.ddData,
     required this.onChange,
+    this.validator,
     this.ddValue,
   });
 
@@ -100,14 +102,10 @@ class CustomDropdown extends StatefulWidget {
 class _CustomDropdownState extends State<CustomDropdown> {
   final numericRegex = RegExp(r'[0-9]');
   final upperCaseRegex = RegExp(r'[A-Z]');
-  @override
-  void initState() {
-    super.initState();
-  }
 
   @override
   Widget build(BuildContext context) {
-    return DropdownButtonFormField<String>(
+    return DropdownButtonFormField<String?>(
       dropdownColor: Colors.white,
       decoration: InputDecoration(
         hintText: widget.labelText,
@@ -140,27 +138,23 @@ class _CustomDropdownState extends State<CustomDropdown> {
         ),
       ),
       style: paragraphStyle(color: Colors.black),
-      value: null,
+      value: widget.ddValue,
       isExpanded: true,
       onChanged: (String? newValue) {
-        widget.onChange(newValue!);
+        widget.onChange(newValue); // Pass the nullable value directly
       },
-      validator: (value) {
-        if (value == null || value.isEmpty) {
-          return 'Please select a ${widget.labelText}';
-        }
-        return null;
-      },
-      items: widget.ddData.map((item) {
-        return DropdownMenuItem<String>(
-            value: item['value'].toString(),
-            child: AutoSizeText(
-              item['text'],
-              style: paragraphStyle(color: Colors.black),
-              overflow: TextOverflow.ellipsis,
-              maxFontSize: 15,
-              maxLines: 2,
-            ));
+      validator: widget.validator,
+      items: widget.ddData!.map((item) {
+        return DropdownMenuItem<String?>(
+          value: item['value'].toString(),
+          child: AutoSizeText(
+            item['text']!.toString(),
+            style: paragraphStyle(color: Colors.black),
+            overflow: TextOverflow.ellipsis,
+            maxFontSize: 15,
+            maxLines: 2,
+          ),
+        );
       }).toList(),
     );
   }

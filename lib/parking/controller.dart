@@ -93,7 +93,7 @@ class ParkingController extends GetxController
                 api:
                     "${currentPage.value == 1 ? ApiKeys.gApiSubFolderGetActiveParking : ApiKeys.gApiSubFolderGetReservations}?luvpay_id=$id")
             .get();
-        print("returnData $returnData");
+
         if (returnData == "No Internet") {
           isLoading.value = false; // End loading
           isAllowToSync = false;
