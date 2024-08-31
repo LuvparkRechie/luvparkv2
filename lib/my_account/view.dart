@@ -14,20 +14,18 @@ class MyAccount extends GetView<MyAccountScreenController> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      extendBodyBehindAppBar: true,
-      backgroundColor: AppColor.bodyColor,
-      appBar: PreferredSize(
-        preferredSize: const Size.fromHeight(236),
-        child: Obx(() {
-          // Check if userProfile is not null and has the necessary keys
-          final userProfile = controller.userProfile;
-          return AppBar(
+    return Obx(
+      () => Scaffold(
+        extendBodyBehindAppBar: true,
+        backgroundColor: AppColor.bodyColor,
+        appBar: PreferredSize(
+          preferredSize: const Size.fromHeight(236),
+          child: AppBar(
             elevation: 0,
             actions: [
               IconButton(
                 onPressed: () {
-                  // Handle more actions here
+                  controller.getUserData();
                 },
                 icon: const Icon(Iconsax.more, size: 20),
               ),
@@ -103,13 +101,13 @@ class MyAccount extends GetView<MyAccountScreenController> {
                             child: CircleAvatar(
                               radius: 44.5,
                               backgroundColor: Colors.white,
-                              backgroundImage: userProfile['image_base64'] !=
-                                      null
+                              backgroundImage: controller
+                                      .myprofile.value.isNotEmpty
                                   ? MemoryImage(
-                                      base64Decode(userProfile['image_base64']),
+                                      base64Decode(controller.myprofile.value),
                                     )
                                   : null,
-                              child: userProfile['image_base64'] == null
+                              child: controller.myprofile.value.isEmpty
                                   ? const Icon(Icons.person,
                                       size: 44, color: Colors.blueAccent)
                                   : null,
@@ -133,10 +131,10 @@ class MyAccount extends GetView<MyAccountScreenController> {
                         ],
                       ),
                       const SizedBox(height: 10),
-                      userProfile['first_name'] != null
+                      controller.userData[0]['first_name'] != null
                           ? CustomTitle(
                               text:
-                                  '${userProfile['first_name']} ${userProfile['last_name']}',
+                                  '${controller.userData[0]['first_name']} ${controller.userData[0]['last_name']}',
                               color: Colors.white,
                               fontSize: 18,
                               fontStyle: FontStyle.normal,
@@ -158,11 +156,11 @@ class MyAccount extends GetView<MyAccountScreenController> {
                 ),
               ],
             ),
-          );
-        }),
-      ),
-      body: const Stack(
-        children: [],
+          ),
+        ),
+        body: const Center(
+            // Add content here for the body
+            ),
       ),
     );
   }
