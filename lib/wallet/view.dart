@@ -1,4 +1,4 @@
-// ignore_for_file: prefer_const_constructorss, prefer_const_constructors
+// ignore_for_file: prefer_const_constructorss, prefer_const_constructors, prefer_const_literals_to_create_immutables
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
@@ -22,6 +22,8 @@ import 'package:luvpark_get/web_view/webview.dart';
 
 import '../auth/authentication.dart';
 import '../custom_widgets/alert_dialog.dart';
+import '../transaction_history/index.dart';
+import 'utils/transaction_history/index.dart';
 
 class WalletScreen extends GetView<WalletController> {
   const WalletScreen({super.key});
@@ -297,7 +299,7 @@ class WalletScreen extends GetView<WalletController> {
                                     ]),
                               ),
                               SizedBox(
-                                height: 10,
+                                height: 20,
                               ),
                               // Divider(),
                               Row(
@@ -305,17 +307,23 @@ class WalletScreen extends GetView<WalletController> {
                                     MainAxisAlignment.spaceBetween,
                                 children: [
                                   CustomTitle(
-                                    text: "Recent Activity",
+                                    text: "Activities Today",
                                     fontWeight: FontWeight.w600,
                                   ),
-                                  IconButton(
-                                    onPressed: () {
-                                      Get.bottomSheet(
-                                          WalletTransactionFilter());
+                                  // IconButton(
+                                  //   onPressed: controller.getFilteredLogs,
+                                  //   icon: SvgPicture.asset(
+                                  //     "assets/images/wallet_filter.svg",
+                                  //     height: 19,
+                                  //   ),
+                                  // )
+                                  InkWell(
+                                    onTap: () {
+                                      Get.to(TransactionHistory());
                                     },
-                                    icon: SvgPicture.asset(
-                                      "assets/images/wallet_filter.svg",
-                                      height: 19,
+                                    child: CustomTitle(
+                                      text: "See all",
+                                      color: Colors.blue,
                                     ),
                                   )
                                 ],

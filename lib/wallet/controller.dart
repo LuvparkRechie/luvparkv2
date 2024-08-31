@@ -3,12 +3,13 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:google_directions_api/google_directions_api.dart';
 import 'package:luvpark_get/auth/authentication.dart';
 import 'package:luvpark_get/custom_widgets/alert_dialog.dart';
 import 'package:luvpark_get/functions/functions.dart';
 import 'package:luvpark_get/http/api_keys.dart';
 import 'package:luvpark_get/http/http_request.dart';
+import 'package:luvpark_get/wallet/utils/transaction_details_page.dart';
+import 'package:luvpark_get/wallet/utils/transaction_history/index.dart';
 
 class WalletController extends GetxController
     with GetSingleTickerProviderStateMixin {
@@ -18,11 +19,11 @@ class WalletController extends GetxController
   RxBool isLoading = true.obs;
   RxBool isNetConn = true.obs;
   bool isAllowToSync = true;
-
   RxList logs = [].obs;
   RxList userData = [].obs;
   var userImage;
   RxString fname = "".obs;
+  RxList filterLogs = [].obs;
 
   //FILTER VARIABLES
   final GlobalKey<FormState> formKeyFilter = GlobalKey<FormState>();
@@ -32,7 +33,6 @@ class WalletController extends GetxController
   @override
   void onInit() {
     super.onInit();
-
     DateTime timeNow = DateTime.now();
     toDate.text = timeNow.toString().split(" ")[0];
     fromDate.text =
@@ -131,6 +131,7 @@ class WalletController extends GetxController
     }
   }
 
+//Get logs | transaction Page
   Future<void> getLogs() async {
     final item = await Authentication().getUserData();
     String userId = jsonDecode(item!)['user_id'].toString();
@@ -166,7 +167,17 @@ class WalletController extends GetxController
         isLoading.value = false;
         isNetConn.value = true;
         isAllowToSync = true;
-        logs.value = response["items"];
+
+        DateTime today = DateTime.now().toUtc();
+        String todayString = today.toIso8601String().substring(0, 10);
+
+        List filteredTransactions = response["items"].where((transaction) {
+          String transactionDate = transaction['tran_date'].substring(0, 10);
+
+          return transactionDate == todayString;
+        }).toList();
+
+        logs.value = filteredTransactions;
         streamData();
       } else {
         isLoading.value = false;
@@ -176,6 +187,8 @@ class WalletController extends GetxController
       }
     });
   }
+
+
 
   @override
   void onClose() {
