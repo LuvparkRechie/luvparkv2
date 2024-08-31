@@ -26,7 +26,7 @@ class Profile extends GetView<ProfileScreenController> {
     return Obx(
       () => Scaffold(
         backgroundColor: AppColor.bodyColor,
-        appBar: const CustomAppbar(title: "My Profile"),
+        appBar: const CustomAppbar(title: "My Account"),
         body: !controller.isNetConn.value
             ? const NoInternetConnected()
             : controller.isLoading.value
@@ -201,7 +201,7 @@ class Profile extends GetView<ProfileScreenController> {
                               leading: const Icon(Iconsax.personalcard,
                                   color: Color(0xFF1C1C1E)),
                               title: const CustomTitle(
-                                text: "My Account",
+                                text: "My Profile",
                                 fontSize: 14,
                                 fontStyle: FontStyle.normal,
                                 fontWeight: FontWeight.w700,
@@ -211,25 +211,7 @@ class Profile extends GetView<ProfileScreenController> {
                               trailing: const Icon(Icons.chevron_right_sharp,
                                   color: Color(0xFF1C1C1E)),
                               onTap: () {
-                                //Get.toNamed();
-                              },
-                            ),
-                            const Divider(),
-                            ListTile(
-                              leading: const Icon(Iconsax.note,
-                                  color: Color(0xFF1C1C1E)),
-                              title: const CustomTitle(
-                                text: "Transaction History",
-                                fontSize: 14,
-                                fontStyle: FontStyle.normal,
-                                fontWeight: FontWeight.w700,
-                                letterSpacing: -0.408,
-                                color: Color(0xFF1C1C1E),
-                              ),
-                              trailing: const Icon(Icons.chevron_right_sharp,
-                                  color: Color(0xFF1C1C1E)),
-                              onTap: () {
-                                Get.toNamed(Routes.transaction_history);
+                                Get.toNamed(Routes.myaccount);
                               },
                             ),
                             const Divider(),

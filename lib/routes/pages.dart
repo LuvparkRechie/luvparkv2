@@ -215,11 +215,7 @@ class AppPages {
       page: () => const WalletRechargeLoadPaymentScreen(),
       binding: WalletRechargeLoadPaymentBinding(),
     ),
-    GetPage(
-      name: Routes.transaction_history,
-      page: () => const TransactionHistory(),
-      binding: TransactionHistoryBinding(),
-    ),
+
     GetPage(
       name: Routes.myaccount,
       page: () => const MyAccount(),
