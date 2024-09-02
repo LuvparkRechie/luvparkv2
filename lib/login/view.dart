@@ -83,31 +83,31 @@ class LoginScreen extends GetView<LoginScreenController> {
                               textAlign: TextAlign.center,
                               text: "Enter your mobile number to log in"),
                         ),
-                        VerticalHeight(height: 30),
-                        const Align(
-                          alignment: Alignment.centerLeft,
-                          child: CustomTitle(
-                            text: "Mobile Number",
-                            fontWeight: FontWeight.bold,
-                            letterSpacing: -.1,
-                            wordspacing: 4,
-                          ),
-                        ),
+                        VerticalHeight(height: 10),
+                        // const Align(
+                        //   alignment: Alignment.centerLeft,
+                        //   child: CustomTitle(
+                        //     text: "Mobile Number",
+                        //     fontWeight: FontWeight.bold,
+                        //     letterSpacing: -.1,
+                        //     wordspacing: 4,
+                        //   ),
+                        // ),
                         CustomMobileNumber(
                           labelText: "10 digit mobile number",
                           controller: controller.mobileNumber,
                           inputFormatters: [Variables.maskFormatter],
                         ),
                         // const VerticalHeight(height: 5),
-                        const Align(
-                          alignment: Alignment.centerLeft,
-                          child: CustomTitle(
-                            text: "Password",
-                            fontWeight: FontWeight.bold,
-                            letterSpacing: -.1,
-                            wordspacing: 2,
-                          ),
-                        ),
+                        // const Align(
+                        //   alignment: Alignment.centerLeft,
+                        //   child: CustomTitle(
+                        //     text: "Password",
+                        //     fontWeight: FontWeight.bold,
+                        //     letterSpacing: -.1,
+                        //     wordspacing: 2,
+                        //   ),
+                        // ),
                         Obx(
                           () => CustomTextField(
                             title: "Password",
@@ -126,9 +126,11 @@ class LoginScreen extends GetView<LoginScreenController> {
                         Align(
                             alignment: Alignment.centerRight,
                             child: InkWell(
-                              onTap: () {
-                                Get.toNamed(Routes.forgotPass);
-                              },
+                              onTap: controller.isLoading.value
+                                  ? () {}
+                                  : () {
+                                      Get.toNamed(Routes.forgotPass);
+                                    },
                               child: CustomParagraph(
                                   fontSize: 14,
                                   color: AppColor.primaryColor,
@@ -226,14 +228,15 @@ class LoginScreen extends GetView<LoginScreenController> {
                                           fontWeight: FontWeight.w800,
                                         ),
                                         recognizer: TapGestureRecognizer()
-                                          ..onTap = () async {
-                                            Get.toNamed(Routes.landing);
-                                          },
+                                          ..onTap = controller.isLoading.value
+                                              ? () {}
+                                              : () async {
+                                                  Get.toNamed(Routes.landing);
+                                                },
                                       ),
                                     ],
                                   ),
-                                  overflow: TextOverflow
-                                      .ellipsis, // Ensures that if the text is too long, it will be truncated with an ellipsis
+                                  overflow: TextOverflow.ellipsis,
                                   maxLines: 1,
                                 ),
                               ),

@@ -23,7 +23,12 @@ class ChangePassword extends GetView<ChangePasswordController> {
     ));
     return Scaffold(
       backgroundColor: AppColor.bodyColor,
-      appBar: const CustomAppbar(),
+      appBar: CustomAppbar(
+        onTap: () {
+          controller.resetFields();
+          Get.back();
+        },
+      ),
       body: Padding(
           padding: const EdgeInsets.all(15.0),
           child: Obx(
@@ -49,13 +54,6 @@ class ChangePassword extends GetView<ChangePasswordController> {
                             "Your new password must be different from previous used passwords.",
                       ),
                       const VerticalHeight(height: 30),
-                      const CustomTitle(
-                        text: "Old Password",
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold,
-                        letterSpacing: -.1,
-                        wordspacing: 2,
-                      ),
                       CustomTextField(
                         title: "Password",
                         labelText: "Enter your old password",
@@ -76,16 +74,9 @@ class ChangePassword extends GetView<ChangePasswordController> {
                         },
                       ),
                       const VerticalHeight(height: 10),
-                      const CustomTitle(
-                        text: "New Password",
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold,
-                        letterSpacing: -.1,
-                        wordspacing: 2,
-                      ),
                       CustomTextField(
                         title: "Password",
-                        labelText: "Confirm your new password",
+                        labelText: "Create your new password",
                         controller: controller.newPassword,
                         isObscure: !controller.isShowNewPass.value,
                         suffixIcon: !controller.isShowNewPass.value
@@ -101,6 +92,35 @@ class ChangePassword extends GetView<ChangePasswordController> {
                         validator: (txtValue) {
                           if (txtValue == null || txtValue.isEmpty) {
                             return "Field is required";
+                          }
+                          return null;
+                        },
+                      ),
+                      const VerticalHeight(height: 10),
+                      CustomTextField(
+                        title: "Password",
+                        labelText: "Confirm your new password",
+                        controller: controller.newConfirmPassword,
+                        isObscure: !controller.isShowNewPassConfirm.value,
+                        suffixIcon: !controller.isShowNewPassConfirm.value
+                            ? Icons.visibility_off
+                            : Icons.visibility,
+                        onChange: (value) {
+                          controller.onPasswordConfirmChanged(value);
+                        },
+                        onIconTap: () {
+                          controller.onToggleConfirmNewPass(
+                              !controller.isShowNewPassConfirm.value);
+                        },
+                        validator: (txtValue) {
+                          if (txtValue == null || txtValue.isEmpty) {
+                            return "Field is required";
+                          }
+                          if (txtValue != controller.newPassword.text) {
+                            return "New passwords do not match";
+                          }
+                          if (txtValue == controller.oldPassword.text) {
+                            return "New password cannot be the same as the old password";
                           }
                           return null;
                         },
@@ -206,12 +226,7 @@ class ChangePassword extends GetView<ChangePasswordController> {
                       ),
                       const VerticalHeight(height: 30),
                       CustomButton(
-                          text: "Create password",
-                          onPressed: () {
-                            FocusScope.of(context).requestFocus(FocusNode());
-                            if (controller.formKeyChangePass.currentState!
-                                .validate()) {}
-                          })
+                          text: "Submit", onPressed: controller.onSubmit)
                     ],
                   ),
                 ),
