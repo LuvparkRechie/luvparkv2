@@ -104,7 +104,7 @@ class WalletSendController extends GetxController
     Map<String, dynamic> parameters = {
       "mobile_no": item["mobile_no"],
     };
-    print(parameters);
+
     HttpRequest(
             api: ApiKeys.gApiSubFolderPostReqOtpShare, parameters: parameters)
         .post()

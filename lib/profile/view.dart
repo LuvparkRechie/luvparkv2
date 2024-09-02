@@ -32,15 +32,12 @@ class Profile extends GetView<ProfileScreenController> {
                         child: CircleAvatar(
                           radius: 44.5,
                           backgroundColor: Colors.white,
-                          backgroundImage: controller.userProfile != null &&
-                                  controller.userProfile['image_base64'] != null
+                          backgroundImage: controller.myProfilePic.isNotEmpty
                               ? MemoryImage(
-                                  base64Decode(
-                                      controller.userProfile['image_base64']),
+                                  base64Decode(controller.myProfilePic.value),
                                 )
                               : null,
-                          child: controller.userProfile == null ||
-                                  controller.userProfile['image_base64'] == null
+                          child: controller.myProfilePic.value.isEmpty
                               ? const Icon(Icons.person,
                                   size: 44, color: Colors.blueAccent)
                               : null,

@@ -62,15 +62,12 @@ class CustomDrawer extends GetView<DashboardMapController> {
                       child: CircleAvatar(
                         radius: 44.5,
                         backgroundColor: Colors.white,
-                        backgroundImage: controller.userProfile != null &&
-                                controller.userProfile['image_base64'] != null
+                        backgroundImage: controller.myProfPic.isNotEmpty
                             ? MemoryImage(
-                                base64Decode(
-                                    controller.userProfile['image_base64']),
+                                base64Decode(controller.myProfPic.value),
                               )
                             : null,
-                        child: controller.userProfile == null ||
-                                controller.userProfile['image_base64'] == null
+                        child: controller.myProfPic.isEmpty
                             ? const Icon(
                                 Icons.person,
                                 size: 44,

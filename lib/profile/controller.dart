@@ -11,6 +11,7 @@ class ProfileScreenController extends GetxController
   var userProfile;
   RxList userData = [].obs;
   RxString myName = "".obs;
+  RxString myProfilePic = "".obs;
   RxBool isLoading = true.obs;
   RxBool isNetConn = true.obs;
   @override
@@ -39,7 +40,10 @@ class ProfileScreenController extends GetxController
     isNetConn.value = true;
     String? userData = await Authentication().getUserData();
     final item = await Authentication().getUserData2();
+    final profPic = await Authentication().getUserProfilePic();
+
     userProfile = item;
+    myProfilePic.value = profPic;
     if (jsonDecode(userData!)["first_name"] == null) {
       myName.value = "";
     } else {

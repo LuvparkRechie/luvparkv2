@@ -44,6 +44,7 @@ class DashboardMapController extends GetxController
   var userProfile;
   Circle circle = const Circle(circleId: CircleId('dottedCircle'));
   RxList suggestions = [].obs;
+  RxString myProfPic = "".obs;
   Polyline polyline = const Polyline(
     polylineId: PolylineId('dottedPolyLine'),
   );
@@ -340,6 +341,10 @@ class DashboardMapController extends GetxController
     isLoadingMap.value = true;
     String? userData = await Authentication().getUserData();
     final item = await Authentication().getUserData2();
+    final profPic = await Authentication().getUserProfilePic();
+
+    userProfile = item;
+    myProfPic.value = profPic;
 
     userProfile = item;
     if (jsonDecode(userData!)["first_name"] == null) {

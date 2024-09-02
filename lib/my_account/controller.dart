@@ -1,4 +1,10 @@
+import 'dart:convert';
+import 'dart:io';
+
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:luvpark_get/auth/authentication.dart';
 import 'package:luvpark_get/custom_widgets/alert_dialog.dart';
 import 'package:luvpark_get/custom_widgets/variables.dart';
@@ -6,9 +12,19 @@ import 'package:luvpark_get/http/api_keys.dart';
 import 'package:luvpark_get/http/http_request.dart';
 import 'package:luvpark_get/routes/routes.dart';
 
+enum AppState {
+  free,
+  picked,
+  cropped,
+}
+
 class MyAccountScreenController extends GetxController
     with GetSingleTickerProviderStateMixin {
   MyAccountScreenController();
+  final ImagePicker _picker = ImagePicker();
+  String? imageBase64;
+  AppState? state;
+  File? imageFile;
   RxList regionData = [].obs;
   RxList userData = [].obs;
   RxString myName = "".obs;
@@ -19,7 +35,6 @@ class MyAccountScreenController extends GetxController
   RxBool isLoading = true.obs;
   RxBool isNetConn = true.obs;
   @override
-  // ignore: unnecessary_overrides
   void onInit() {
     super.onInit();
     getUserData();
@@ -31,12 +46,11 @@ class MyAccountScreenController extends GetxController
 
     myprofile.value = profilepic;
     userData.add(data);
-
     civilStatus.value = Variables.civilStatusData.where((element) {
       return element["value"] == userData[0]['civil_status'];
     }).toList()[0]["status"];
     gender.value = userData[0]['gender'] == "F" ? "Female" : "Male";
-    print("userData $userData");
+
     if (userData[0]['first_name'] != null) {
       if (userData[0]['region_id'] == null) {
         province.value = "No province provided";
@@ -116,5 +130,119 @@ class MyAccountScreenController extends GetxController
         Get.back();
       });
     }
+  }
+
+  void showBottomSheetCamera() {
+    showCupertinoModalPopup(
+        context: Get.context!,
+        builder: (BuildContext cont) {
+          return CupertinoActionSheet(
+            actions: [
+              CupertinoActionSheetAction(
+                onPressed: () {
+                  Get.back();
+                  takePhoto(ImageSource.camera);
+                },
+                child: const Text('Use Camera'),
+              ),
+              CupertinoActionSheetAction(
+                onPressed: () {
+                  Get.back();
+                  takePhoto(ImageSource.gallery);
+                },
+                child: const Text('Upload from files'),
+              ),
+            ],
+            cancelButton: CupertinoActionSheetAction(
+              onPressed: () {
+                Get.back();
+              },
+              child: const Text('Cancel', style: TextStyle(color: Colors.red)),
+            ),
+          );
+        });
+  }
+
+  void takePhoto(ImageSource source) async {
+    final pickedFile = await _picker.pickImage(
+      source: source,
+      imageQuality: 25,
+      maxHeight: 480,
+      maxWidth: 640,
+    );
+
+    imageFile = pickedFile != null ? File(pickedFile.path) : null;
+
+    if (imageFile != null) {
+      state = AppState.picked;
+      imageFile!.readAsBytes().then((data) {
+        imageBase64 = base64.encode(data);
+        submitProfilePic();
+      });
+    } else {
+      imageBase64 = null;
+    }
+  }
+
+  void submitProfilePic() async {
+    CustomDialog().loadingDialog(Get.context!);
+    final myData = await Authentication().getUserData2();
+
+    Map<String, dynamic> parameters = {
+      "mobile_no": myData["mobile_no"],
+      "last_name": myData["last_name"],
+      "first_name": myData["first_name"],
+      "middle_name": myData["middle_name"],
+      "birthday": myData["birthday"].toString() == 'null'
+          ? ''
+          : myData["birthday"].toString().split("T")[0],
+      "gender": myData["gender"],
+      "civil_status": myData["civil_status"],
+      "address1": myData["address1"],
+      "address2": myData["address2"],
+      "brgy_id": myData["brgy_id"] ?? "",
+      "city_id": myData["city_id"] ?? "",
+      "province_id": myData["province_id"] ?? "",
+      "region_id": myData["region_id"] ?? "",
+      "zip_code": myData["zip_code"] ?? "",
+      "email": myData["email"],
+      "secq_id1": myData["secq_id1"] ?? "",
+      "secq_id2": myData["secq_id2"] ?? "",
+      "secq_id3": myData["secq_id3"] ?? "",
+      "seca1": myData["seca1"],
+      "seca2": myData["seca2"],
+      "seca3": myData["seca3"],
+      "image_base64": imageBase64!.toString(),
+    };
+
+    HttpRequest(api: ApiKeys.gApiSubFolderPutUpdateProf, parameters: parameters)
+        .put()
+        .then((res) async {
+      Get.back();
+      if (res == "No Internet") {
+        CustomDialog().internetErrorDialog(Get.context!, () {
+          Get.back();
+        });
+        return;
+      }
+      if (res == null) {
+        CustomDialog().serverErrorDialog(Get.context!, () {
+          Get.back();
+        });
+        return;
+      } else {
+        if (res["success"] == "Y") {
+          myprofile.value = imageBase64!;
+          Authentication().setProfilePic(jsonEncode(imageBase64!));
+          getUserData();
+        } else {
+          CustomDialog().errorDialog(Get.context!, "luvpark", res["msg"], () {
+            Get.back();
+          });
+
+          return;
+        }
+      }
+    });
   }
 }

@@ -119,7 +119,7 @@ class MyAccount extends GetView<MyAccountScreenController> {
                                 top: 10,
                                 child: GestureDetector(
                                   onTap: () {
-                                    // Handle the image change logic here
+                                    controller.showBottomSheetCamera();
                                   },
                                   child: SvgPicture.asset(
                                     'assets/drawer_icon/editpicture.svg',

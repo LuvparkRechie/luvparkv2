@@ -6,6 +6,7 @@ import 'package:luvpark_get/forgot_password/utils/forgot_otp/index.dart';
 import 'package:luvpark_get/forgot_password/utils/forgot_verified_acc/index.dart';
 import 'package:luvpark_get/my_account/index.dart';
 import 'package:luvpark_get/my_account/utils/index.dart';
+import 'package:luvpark_get/my_account/utils/otp_update/index.dart';
 import 'package:luvpark_get/profile/index.dart';
 import 'package:luvpark_get/rate_booking/index.dart';
 import 'package:luvpark_get/wallet_qr/index.dart';
@@ -230,6 +231,11 @@ class AppPages {
       name: Routes.updProfile,
       page: () => const UpdateProfile(),
       binding: UpdateProfileBinding(),
+    ),
+    GetPage(
+      name: Routes.otpUpdProfile,
+      page: () => const OtpUpdate(),
+      binding: OtpUpdateBinding(),
     ),
   ];
 }
