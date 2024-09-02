@@ -277,8 +277,7 @@ class _CustomDropdownState extends State<CustomDropdown> {
           focusNode: focusNode,
           decoration: InputDecoration(
             floatingLabelStyle: TextStyle(
-              color: AppColor.primaryColor,
-            ),
+                color: AppColor.primaryColor, fontWeight: FontWeight.w600),
             contentPadding:
                 const EdgeInsets.symmetric(vertical: 10, horizontal: 12),
             filled: true,
