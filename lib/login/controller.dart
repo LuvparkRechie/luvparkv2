@@ -179,6 +179,8 @@ class LoginScreenController extends GetxController {
                   });
                   return;
                 } else {
+                  mobileNumber.clear();
+                  password.clear();
                   var items = objData["items"][0];
 
                   Map<String, dynamic> parameters = {
@@ -213,6 +215,8 @@ class LoginScreenController extends GetxController {
   void onInit() {
     mobileNumber = TextEditingController();
     password = TextEditingController();
+
+    print("sulod sa login");
     super.onInit();
   }
 
