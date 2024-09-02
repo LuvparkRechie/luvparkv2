@@ -332,9 +332,11 @@ class RegistrationPage extends GetView<RegistrationController> {
                                           fontWeight: FontWeight.w800,
                                         ),
                                         recognizer: TapGestureRecognizer()
-                                          ..onTap = () async {
-                                            Get.toNamed(Routes.login);
-                                          },
+                                          ..onTap = controller.isLoading.value
+                                              ? () {}
+                                              : () async {
+                                                  Get.toNamed(Routes.login);
+                                                },
                                       ),
                                     ],
                                   ),
