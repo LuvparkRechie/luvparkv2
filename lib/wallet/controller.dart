@@ -8,8 +8,6 @@ import 'package:luvpark_get/custom_widgets/alert_dialog.dart';
 import 'package:luvpark_get/functions/functions.dart';
 import 'package:luvpark_get/http/api_keys.dart';
 import 'package:luvpark_get/http/http_request.dart';
-import 'package:luvpark_get/wallet/utils/transaction_details_page.dart';
-import 'package:luvpark_get/wallet/utils/transaction_history/index.dart';
 
 class WalletController extends GetxController
     with GetSingleTickerProviderStateMixin {
@@ -142,6 +140,8 @@ class WalletController extends GetxController
 
     HttpRequest(api: subApi).get().then((response) {
       if (response == "No Internet") {
+        _dataController.close();
+        dataSubscription.cancel();
         isAllowToSync = false;
         isLoading.value = false;
         isNetConn.value = false;
@@ -150,6 +150,8 @@ class WalletController extends GetxController
         return;
       }
       if (response == null) {
+        _dataController.close();
+        dataSubscription.cancel();
         isLoading.value = true;
         isNetConn.value = true;
         isAllowToSync = false;
@@ -170,9 +172,10 @@ class WalletController extends GetxController
 
         DateTime today = DateTime.now().toUtc();
         String todayString = today.toIso8601String().substring(0, 10);
-
+        // print(response["items"]);
         List filteredTransactions = response["items"].where((transaction) {
-          String transactionDate = transaction['tran_date'].substring(0, 10);
+          String transactionDate =
+              transaction['tran_date'].toString().split("T")[0];
 
           return transactionDate == todayString;
         }).toList();
@@ -180,6 +183,8 @@ class WalletController extends GetxController
         logs.value = filteredTransactions;
         streamData();
       } else {
+        _dataController.close();
+        dataSubscription.cancel();
         isLoading.value = false;
         isNetConn.value = true;
         isAllowToSync = false;
@@ -187,8 +192,6 @@ class WalletController extends GetxController
       }
     });
   }
-
-
 
   @override
   void onClose() {

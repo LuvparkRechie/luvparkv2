@@ -124,9 +124,8 @@ class WalletRechargeLoadScreen extends GetView<WalletRechargeLoadController> {
                         const SizedBox(
                           height: 10,
                         ),
-                        CustomTitle(text: "Recipient Number"),
                         CustomMobileNumber(
-                          labelText: "Mobile No",
+                          labelText: "Recipient Number",
                           controller: controller.mobNum,
                           inputFormatters: [Variables.maskFormatter],
                           onChange: (value) {
@@ -136,17 +135,15 @@ class WalletRechargeLoadScreen extends GetView<WalletRechargeLoadController> {
                           },
                         ),
                         SizedBox(height: 10),
-                        CustomTitle(text: "Recipient Name"),
                         CustomTextField(
                           isReadOnly: true,
                           controller: controller.rname,
                           labelText: "Recipient Name",
                         ),
-                        CustomTitle(text: "Amount"),
                         CustomTextField(
                           isReadOnly: true,
                           controller: controller.amountController,
-                          labelText: controller.tokenAmount,
+                          labelText: "Amount",
                         ),
                       ],
                     ),

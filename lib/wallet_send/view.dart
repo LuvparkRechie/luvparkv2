@@ -100,10 +100,6 @@ class WalletSend extends GetView<WalletSendController> {
                         SizedBox(
                           height: 20,
                         ),
-                        CustomTitle(
-                          text: "Recipient",
-                          color: Colors.black,
-                        ),
                         CustomMobileNumber(
                           onChange: (text) {
                             controller.onTextChange();
@@ -111,7 +107,7 @@ class WalletSend extends GetView<WalletSendController> {
                           controller: controller.recipient,
                           inputFormatters: [Variables.maskFormatter],
                           keyboardType: TextInputType.number,
-                          labelText: "Mobile Number",
+                          labelText: "Recipient's Mobile Number",
                           validator: (value) {
                             if (value == null || value.isEmpty) {
                               return "Mobile number is required";
@@ -124,12 +120,8 @@ class WalletSend extends GetView<WalletSendController> {
                             return null;
                           },
                         ),
-                        CustomTitle(
-                          text: "Amount",
-                          color: Colors.black,
-                        ),
                         CustomTextField(
-                          labelText: "0.00",
+                          labelText: "Amount",
                           controller: controller.tokenAmount,
                           keyboardType: TextInputType.number,
                           inputFormatters: [
@@ -168,17 +160,13 @@ class WalletSend extends GetView<WalletSendController> {
                             return null;
                           },
                         ),
-                        CustomTitle(
-                          text: "Note",
-                          color: Colors.black,
-                        ),
                         CustomTextField(
                           inputFormatters: [
                             LengthLimitingTextInputFormatter(
                               90,
                             ),
                           ],
-                          labelText: "Optional",
+                          labelText: "Note",
                           controller: controller.message,
                         ),
                         for (int i = 0;
