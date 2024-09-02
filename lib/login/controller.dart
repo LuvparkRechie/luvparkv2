@@ -179,6 +179,7 @@ class LoginScreenController extends GetxController {
                   });
                   return;
                 } else {
+                  //refresh the login aft logout
                   mobileNumber.clear();
                   password.clear();
                   var items = objData["items"][0];
