@@ -79,16 +79,20 @@ class _CustomTextFieldState extends State<CustomTextField> {
               widget.textAlign != null ? widget.textAlign! : TextAlign.left,
           focusNode: focusNode,
           decoration: InputDecoration(
+            floatingLabelStyle: TextStyle(
+              color: AppColor.primaryColor,
+            ),
             contentPadding:
                 const EdgeInsets.symmetric(vertical: 10, horizontal: 12),
             filled: true,
             focusedBorder: OutlineInputBorder(
-                borderSide: BorderSide(color: AppColor.primaryColor)),
-            fillColor: Colors.grey.shade200,
+                borderRadius: BorderRadius.circular(7.0),
+                borderSide: BorderSide.none),
             border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(7.0),
                 borderSide: BorderSide.none),
             labelStyle: paragraphStyle(fontWeight: FontWeight.w600),
+            labelText: widget.labelText,
             suffixIcon: widget.suffixIcon != null
                 ? InkWell(
                     onTap: () {
@@ -105,11 +109,6 @@ class _CustomTextFieldState extends State<CustomTextField> {
                     child: widget.prefixIcon,
                   )
                 : null,
-            hintText: widget.labelText == "seca1" ||
-                    widget.labelText == "seca2" ||
-                    widget.labelText == "seca3"
-                ? "Answer"
-                : widget.labelText,
           ),
           style: paragraphStyle(color: Colors.black),
           onChanged: (value) {
@@ -170,16 +169,20 @@ class _CustomMobileNumberState extends State<CustomMobileNumber> {
         enabled: widget.isEnabled,
         keyboardType: TextInputType.number,
         decoration: InputDecoration(
+          floatingLabelStyle: TextStyle(
+            color: AppColor.primaryColor,
+          ),
           contentPadding:
               const EdgeInsets.symmetric(vertical: 10, horizontal: 12),
           filled: true,
-          fillColor: Colors.grey.shade200,
-          hintText: widget.labelText,
           focusedBorder: OutlineInputBorder(
-              borderSide: BorderSide(color: AppColor.primaryColor)),
+              borderRadius: BorderRadius.circular(7.0),
+              borderSide: BorderSide.none),
           border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(7.0),
               borderSide: BorderSide.none),
+          labelStyle: paragraphStyle(fontWeight: FontWeight.w600),
+          labelText: widget.labelText,
           prefixIcon: Container(
             decoration: const BoxDecoration(
               borderRadius: BorderRadius.only(
@@ -241,11 +244,13 @@ class CustomDropdown extends StatefulWidget {
   final String labelText;
   final ValueChanged<String>? onChange;
   final Function? onTap;
+  final FormFieldValidator<String>? validator;
   const CustomDropdown(
       {super.key,
       required this.labelText,
       required this.ddData,
       this.onChange,
+      this.validator,
       required this.ddValue,
       this.onTap});
 
@@ -271,32 +276,34 @@ class _CustomDropdownState extends State<CustomDropdown> {
           dropdownColor: Colors.white,
           focusNode: focusNode,
           decoration: InputDecoration(
-            hintText: widget.labelText,
+            floatingLabelStyle: TextStyle(
+              color: AppColor.primaryColor,
+            ),
             contentPadding:
                 const EdgeInsets.symmetric(vertical: 10, horizontal: 12),
             filled: true,
             focusedBorder: OutlineInputBorder(
-                borderSide: BorderSide(color: AppColor.primaryColor)),
-            fillColor: Colors.grey.shade200,
+                borderRadius: BorderRadius.circular(7.0),
+                borderSide: BorderSide.none),
             border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(7.0),
                 borderSide: BorderSide.none),
             labelStyle: paragraphStyle(fontWeight: FontWeight.w600),
+            labelText: widget.labelText,
           ),
+          style: paragraphStyle(color: Colors.black),
           value: widget.ddValue,
           isExpanded: true,
           onChanged: (value) {
             widget.onChange!(value!);
           },
+          validator: widget.validator,
           items: widget.ddData.map((item) {
             return DropdownMenuItem(
                 value: item['value'].toString(),
                 child: AutoSizeText(
                   item['text'],
-                  style: GoogleFonts.varela(
-                    color: Colors.black,
-                    fontWeight: FontWeight.normal,
-                  ),
+                  style: paragraphStyle(color: Colors.black),
                   overflow: TextOverflow.ellipsis,
                   maxFontSize: 15,
                   maxLines: 2,
