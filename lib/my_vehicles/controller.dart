@@ -24,8 +24,8 @@ enum AppState {
 class MyVehiclesController extends GetxController {
   MyVehiclesController();
   final GlobalKey<FormState> formVehicleReg = GlobalKey<FormState>();
-  final TextEditingController plateNo = TextEditingController();
-  final TextEditingController vehicleBrand = TextEditingController();
+  TextEditingController plateNo = TextEditingController();
+  TextEditingController vehicleBrand = TextEditingController();
   final ImagePicker picker = ImagePicker();
   RxString orImageBase64 = "".obs;
   RxString crImageBase64 = "".obs;
@@ -40,7 +40,7 @@ class MyVehiclesController extends GetxController {
   RxList vehicleData = [].obs;
   RxList vehicleDdData = [].obs;
   RxList vehicleBrandData = [].obs;
-  String hintTextLabel = "Plate No.";
+  RxString hintTextLabel = "Plate No".obs;
   final Map<String, RegExp> _filter = {
     'A': RegExp(r'[A-Za-z0-9]'),
     '#': RegExp(r'[A-Za-z0-9]')
@@ -50,7 +50,7 @@ class MyVehiclesController extends GetxController {
   @override
   void onInit() {
     super.onInit();
-
+    hintTextLabel.value = "Plate No";
     _updateMaskFormatter("");
     getMyVehicle();
   }
@@ -142,7 +142,13 @@ class MyVehiclesController extends GetxController {
         vehicleDdData.value = [];
         orImageBase64.value = "";
         crImageBase64.value = "";
+        ddVhType = null;
+        ddVhBrand.value = null;
+        plateNo.clear();
+        vehicleBrand.clear();
+
         vehicleBrandData.value = [];
+
         for (var items in returnData["items"]) {
           vehicleDdData.add({
             "value": items["value"].toString(),
@@ -204,7 +210,7 @@ class MyVehiclesController extends GetxController {
   }
 
   void _updateMaskFormatter(mask) {
-    hintTextLabel = mask ?? "Plate No.";
+    hintTextLabel.value = mask ?? "Plate No.";
     maskFormatter.value = MaskTextInputFormatter(
       mask: mask,
       filter: _filter,

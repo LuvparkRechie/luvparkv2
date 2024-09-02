@@ -6,6 +6,7 @@ import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:intl/intl.dart';
 import 'package:luvpark_get/auth/authentication.dart';
+import 'package:luvpark_get/booking/utils/success_dialog.dart';
 import 'package:luvpark_get/custom_widgets/alert_dialog.dart';
 import 'package:luvpark_get/custom_widgets/variables.dart';
 import 'package:luvpark_get/functions/functions.dart';
@@ -464,7 +465,8 @@ class BookingController extends GetxController
             return;
           } else {
             isSubmitBooking.value = false;
-            Get.offAndToNamed(Routes.bookingReceipt, arguments: paramArgs);
+            // Get.offAndToNamed(Routes.bookingReceipt, arguments: paramArgs);
+            Get.to(BookingDialog(data: [paramArgs]));
 
             return;
           }

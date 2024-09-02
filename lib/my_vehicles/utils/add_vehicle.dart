@@ -9,7 +9,7 @@ import 'package:luvpark_get/custom_widgets/custom_button.dart';
 import 'package:luvpark_get/custom_widgets/custom_text.dart';
 import 'package:luvpark_get/my_vehicles/controller.dart';
 
-import '../../custom_widgets/inputfield.dart';
+import '../../custom_widgets/custom_textfield.dart';
 
 class AddVehicles extends GetView<MyVehiclesController> {
   const AddVehicles({super.key});
@@ -35,10 +35,8 @@ class AddVehicles extends GetView<MyVehiclesController> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Container(height: 30),
-                    const CustomTitle(text: "Vehicle type"),
-                    Container(height: 10),
                     CustomDropdown(
-                      labelText: "Select vehicle type",
+                      labelText: "Vehicle type",
                       ddData: controller.vehicleDdData,
                       ddValue: controller.ddVhType,
                       onChange: (String? newValue) {
@@ -51,13 +49,10 @@ class AddVehicles extends GetView<MyVehiclesController> {
                         return null;
                       },
                     ),
-                    Container(height: 10),
-                    const CustomTitle(text: "Vehicle brand"),
-                    Container(height: 10),
                     controller.isLoadingAddVh.value
                         ? const CircularProgressIndicator()
                         : CustomDropdown(
-                            labelText: "Select brand",
+                            labelText: "Vehicle brand",
                             // ignore: invalid_use_of_protected_member
                             ddData: controller.vehicleBrandData.value,
                             ddValue: controller.ddVhBrand.value,
@@ -71,17 +66,16 @@ class AddVehicles extends GetView<MyVehiclesController> {
                               return null;
                             },
                           ),
-                    Container(height: 10),
-                    const CustomTitle(text: "Plate No"),
-                    Container(height: 10),
-                    CustomInputField(
-                      label: controller.hintTextLabel,
+                    CustomTextField(
+                      labelText: controller.hintTextLabel.value.isEmpty
+                          ? "Plate No"
+                          : controller.hintTextLabel.value,
                       inputFormatters: [
                         if (controller.maskFormatter.value != null)
                           controller.maskFormatter.value!
                       ],
                       controller: controller.plateNo,
-                      onChanged: (value) {
+                      onChange: (value) {
                         // Convert value to uppercase and handle text length restriction
                         final newValue = value.toUpperCase();
                         if (newValue.length > 15) {

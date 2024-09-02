@@ -8,6 +8,7 @@ import 'package:luvpark_get/custom_widgets/custom_text.dart';
 import 'package:luvpark_get/custom_widgets/no_data_found.dart';
 import 'package:luvpark_get/custom_widgets/park_shimmer.dart';
 import 'package:luvpark_get/custom_widgets/variables.dart';
+import 'package:luvpark_get/routes/routes.dart';
 
 import 'controller.dart';
 
@@ -25,6 +26,13 @@ class ParkingScreen extends GetView<ParkingController> {
           titleColor: Colors.white,
           textColor: Colors.white,
           elevation: 0,
+          onTap: () {
+            if (controller.parameter == null) {
+              Get.back();
+            } else {
+              Get.offAndToNamed(Routes.map);
+            }
+          },
         ),
         body: Obx(
           () => Column(

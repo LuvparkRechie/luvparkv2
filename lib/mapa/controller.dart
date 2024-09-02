@@ -311,12 +311,16 @@ class DashboardMapController extends GetxController
         PatternItem.gap(20),
       ],
       points: List<LatLng>.generate(
-          360,
-          (index) => calculateNewCoordinates(
-              initialCameraPosition!.target.latitude,
-              initialCameraPosition!.target.longitude,
-              200,
-              double.parse(index.toString()))),
+        360,
+        (index) => calculateNewCoordinates(
+          initialCameraPosition!.target.latitude,
+          initialCameraPosition!.target.longitude,
+          200,
+          double.parse(
+            index.toString(),
+          ),
+        ),
+      ),
     );
     if (isMarkerTapped.value) return;
     isGetNearData.value = true;

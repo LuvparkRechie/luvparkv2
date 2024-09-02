@@ -11,6 +11,7 @@ import 'package:luvpark_get/routes/routes.dart';
 
 class ParkingController extends GetxController
     with GetSingleTickerProviderStateMixin {
+  bool? parameter = Get.arguments;
   late TabController tabController;
   TextEditingController searchCtrl = TextEditingController();
   late StreamController<void> _dataController;

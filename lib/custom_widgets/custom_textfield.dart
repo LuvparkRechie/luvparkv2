@@ -8,7 +8,7 @@ import 'package:luvpark_get/custom_widgets/app_color.dart';
 import 'package:luvpark_get/custom_widgets/custom_text.dart';
 
 class CustomTextField extends StatefulWidget {
-  final String labelText;
+  final String? labelText;
   final bool? isReadOnly, isFilled;
   final Widget? prefix;
   final bool isObscure;
@@ -33,7 +33,7 @@ class CustomTextField extends StatefulWidget {
   const CustomTextField(
       {super.key,
       this.title,
-      required this.labelText,
+      this.labelText,
       required this.controller,
       this.fontweight,
       this.fontsize = 14,

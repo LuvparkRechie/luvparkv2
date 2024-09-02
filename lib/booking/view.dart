@@ -12,7 +12,7 @@ import 'package:luvpark_get/custom_widgets/app_color.dart';
 import 'package:luvpark_get/custom_widgets/custom_appbar.dart';
 import 'package:luvpark_get/custom_widgets/custom_button.dart';
 import 'package:luvpark_get/custom_widgets/custom_text.dart';
-import 'package:luvpark_get/custom_widgets/inputfield.dart';
+import 'package:luvpark_get/custom_widgets/custom_textfield.dart';
 import 'package:luvpark_get/custom_widgets/no_data_found.dart';
 import 'package:luvpark_get/custom_widgets/no_internet.dart';
 import 'package:luvpark_get/custom_widgets/variables.dart';
@@ -1071,8 +1071,8 @@ class BookingDuration extends GetView<BookingController> {
                               color: Colors.grey,
                             )),
                       ),
-                      CustomInputField(
-                        label: "Input number of hours",
+                      CustomTextField(
+                        labelText: "Input number of hours",
                         controller: controller.noHours,
                         inputFormatters: <TextInputFormatter>[
                           FilteringTextInputFormatter.allow(
@@ -1082,7 +1082,7 @@ class BookingDuration extends GetView<BookingController> {
                             ? TextInputType.number
                             : const TextInputType.numberWithOptions(
                                 signed: true, decimal: false),
-                        onChanged: (value) {
+                        onChange: (value) {
                           controller.noHours.text =
                               value.replaceAll(RegExp(r'[^a-zA-Z0-9]'), '');
                           controller.inpDisplay.text =
@@ -1277,8 +1277,8 @@ class VehicleOption extends GetView<BookingController> {
                                                 text:
                                                     "What's your plate number?"),
                                             Container(height: 10),
-                                            CustomInputField(
-                                              label: "Plate No.",
+                                            CustomTextField(
+                                              labelText: "Plate No.",
                                               controller: controller.plateNo,
                                               textCapitalization:
                                                   TextCapitalization.characters,
