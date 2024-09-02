@@ -17,21 +17,20 @@ class OtpScreen extends GetView<OtpController> {
   const OtpScreen({super.key});
   @override
   Widget build(BuildContext context) {
-    final OtpController ct = Get.put(OtpController());
-
     PinTheme getDefaultPinTheme() {
       return PinTheme(
         width: 50,
         height: 50,
         textStyle: TextStyle(
           fontSize: 24,
-          color: ct.isOtpValid.value ? AppColor.primaryColor : Colors.red,
+          color:
+              controller.isOtpValid.value ? AppColor.primaryColor : Colors.red,
         ),
         decoration: BoxDecoration(
           border: Border.all(
-              color: ct.inputPin.isEmpty
+              color: controller.inputPin.isEmpty
                   ? AppColor.borderColor
-                  : ct.isOtpValid.value
+                  : controller.isOtpValid.value
                       ? AppColor.primaryColor
                       : Colors.red,
               width: 2),
@@ -95,7 +94,8 @@ class OtpScreen extends GetView<OtpController> {
                                 ),
                                 children: <TextSpan>[
                                   TextSpan(
-                                    text: " +${ct.paramArgs[0]["mobile_no"]}",
+                                    text:
+                                        " +${controller.paramArgs[0]["mobile_no"]}",
                                     style: GoogleFonts.inter(
                                       fontWeight: FontWeight.w600,
                                       color: AppColor.primaryColor,
@@ -116,7 +116,7 @@ class OtpScreen extends GetView<OtpController> {
                     textDirection: TextDirection.ltr,
                     child: Pinput(
                       length: 6,
-                      controller: ct.pinController,
+                      controller: controller.pinController,
                       androidSmsAutofillMethod:
                           AndroidSmsAutofillMethod.smsUserConsentApi,
                       listenForMultipleSmsOnAndroid: true,
@@ -124,14 +124,14 @@ class OtpScreen extends GetView<OtpController> {
                       hapticFeedbackType: HapticFeedbackType.lightImpact,
                       onCompleted: (pin) {
                         if (pin.length == 6) {
-                          ct.onInputChanged(pin);
+                          controller.onInputChanged(pin);
                         }
                       },
                       onChanged: (value) {
                         if (value.isEmpty) {
-                          ct.onInputChanged(value);
+                          controller.onInputChanged(value);
                         } else {
-                          ct.onInputChanged(value);
+                          controller.onInputChanged(value);
                         }
                       },
                       cursor: Column(
@@ -157,7 +157,7 @@ class OtpScreen extends GetView<OtpController> {
                               borderRadius: BorderRadius.circular(5),
                               color: AppColor.bodyColor,
                               border: Border.all(
-                                  color: ct.isOtpValid.value
+                                  color: controller.isOtpValid.value
                                       ? AppColor.primaryColor
                                       : Colors.red,
                                   width: 2),
@@ -169,11 +169,14 @@ class OtpScreen extends GetView<OtpController> {
                 const VerticalHeight(height: 30),
                 Obx(
                   () => CustomButton(
-                    loading: ct.isLoading.value,
+                    loading: controller.isLoading.value,
                     text: "Verify",
                     onPressed: () {
-                      if (ct.isLoading.value) return;
-                      ct.onVerify();
+                      if (controller.isLoading.value) {
+                        controller.onVerify();
+                        return;
+                      }
+                      controller.onVerify();
                     },
                   ),
                 ),
@@ -193,23 +196,25 @@ class OtpScreen extends GetView<OtpController> {
                 Obx(
                   () => InkWell(
                     onTap: () {
-                      if (ct.minutes.value <= 2) {
-                        ct.restartTimer();
+                      if (controller.minutes.value <= 2) {
+                        controller.restartTimer();
                       }
                     },
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         CustomLinkLabel(
-                          text: ct.minutes.value != 0 || ct.seconds.value != 0
+                          text: controller.minutes.value != 0 ||
+                                  controller.seconds.value != 0
                               ? "Resend OTP in"
                               : "I didn't get a code",
                           fontSize: 14,
                         ),
-                        if (ct.minutes.value != 0 || ct.seconds.value != 0)
+                        if (controller.minutes.value != 0 ||
+                            controller.seconds.value != 0)
                           CustomLinkLabel(
                             text:
-                                "(${ct.minutes.value}:${ct.seconds.value < 10 ? "0" : ""}${ct.seconds.value})",
+                                "(${controller.minutes.value}:${controller.seconds.value < 10 ? "0" : ""}${controller.seconds.value})",
                           ),
                       ],
                     ),

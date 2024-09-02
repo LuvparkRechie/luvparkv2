@@ -124,65 +124,74 @@ class OtpController extends GetxController
   }
 
   void onVerify() {
-    isLoading.value = true;
-    if (paramArgs[0]['otp'] == int.parse(inputPin.value)) {
-      var otpData = {
-        "mobile_no": paramArgs[0]["mobile_no"],
-        "reg_type": "VERIFY",
-        "otp": int.parse(inputPin.value)
-      };
-
-      HttpRequest(api: ApiKeys.gApiSubFolderPutOTP, parameters: otpData)
-          .put()
-          .then((returnData) async {
-        if (returnData == "No Internet") {
-          isLoading.value = false;
-          CustomDialog().internetErrorDialog(Get.context!, () {
-            Get.back();
-          });
-          return;
-        }
-        if (returnData == null) {
-          isLoading.value = false;
-          CustomDialog().serverErrorDialog(Get.context!, () {
-            Get.back();
-          });
-          return;
-        }
-        if (returnData["success"] == 'Y') {
-          final LoginScreenController lct = Get.put(LoginScreenController());
-          timer!.cancel();
-
-          Map<String, dynamic> postParam = {
-            "mobile_no": paramArgs[0]["mobile_no"],
-            "pwd": paramArgs[0]["new_pass"],
-          };
-
-          lct.postLogin(Get.context, postParam, (data) {
-            isLoading.value = false;
-            if (data[0]["items"].isNotEmpty) {
-              FocusManager.instance.primaryFocus?.unfocus();
-              Navigator.of(Get.context!).pushReplacement(
-                MaterialPageRoute(
-                  builder: (context) => const SuccessRegistration(),
-                ),
-              );
-            }
-          });
-        } else {
-          isLoading.value = false;
-          CustomDialog().errorDialog(Get.context!, "luvpark", returnData["msg"],
-              () {
-            Get.back();
-          });
-        }
+    if (inputPin.value.length != 6) {
+      CustomDialog().errorDialog(
+          Get.context!, "luvpark", "Please complete the 6-digits OTP", () {
+        isLoading.value = false;
+        Get.back();
       });
-    } else {
+      return;
+    }
+    if (paramArgs[0]['otp'] != int.parse(inputPin.value)) {
       isLoading.value = false;
       CustomDialog().errorDialog(
           Get.context!, "luvpark", "Invalid OTP code. Please try again.", () {
         Get.back();
       });
+      return;
     }
+
+    isLoading.value = true;
+
+    var otpData = {
+      "mobile_no": paramArgs[0]["mobile_no"],
+      "reg_type": "VERIFY",
+      "otp": int.parse(inputPin.value)
+    };
+    HttpRequest(api: ApiKeys.gApiSubFolderPutOTP, parameters: otpData)
+        .put()
+        .then((returnData) async {
+      if (returnData == "No Internet") {
+        isLoading.value = false;
+        CustomDialog().internetErrorDialog(Get.context!, () {
+          Get.back();
+        });
+        return;
+      }
+      if (returnData == null) {
+        isLoading.value = false;
+        CustomDialog().serverErrorDialog(Get.context!, () {
+          Get.back();
+        });
+        return;
+      }
+      if (returnData["success"] == 'Y') {
+        final LoginScreenController lct = Get.put(LoginScreenController());
+        timer!.cancel();
+
+        Map<String, dynamic> postParam = {
+          "mobile_no": paramArgs[0]["mobile_no"],
+          "pwd": paramArgs[0]["new_pass"],
+        };
+
+        lct.postLogin(Get.context, postParam, (data) {
+          isLoading.value = false;
+          if (data[0]["items"].isNotEmpty) {
+            FocusManager.instance.primaryFocus?.unfocus();
+            Navigator.of(Get.context!).pushReplacement(
+              MaterialPageRoute(
+                builder: (context) => const SuccessRegistration(),
+              ),
+            );
+          }
+        });
+      } else {
+        isLoading.value = false;
+        CustomDialog().errorDialog(Get.context!, "luvpark", returnData["msg"],
+            () {
+          Get.back();
+        });
+      }
+    });
   }
 }
