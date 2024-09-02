@@ -4,7 +4,6 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:luvpark_get/custom_widgets/alert_dialog.dart';
 import 'package:luvpark_get/custom_widgets/app_color.dart';
 import 'package:luvpark_get/custom_widgets/custom_button.dart';
@@ -55,16 +54,16 @@ class LoginScreen extends GetView<LoginScreenController> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
-                        // Container(height: 30),
+                        Container(height: 20),
                         const Image(
                           image: AssetImage("assets/images/onboardluvpark.png"),
-                          width: 189,
+                          width: 100,
                           fit: BoxFit.contain,
                         ),
                         Image(
                           image: const AssetImage(
                               "assets/images/onboardlogin.png"),
-                          width: MediaQuery.of(Get.context!).size.width * .70,
+                          width: MediaQuery.of(Get.context!).size.width * .55,
                           fit: BoxFit.contain,
                           filterQuality: FilterQuality.high,
                         ),
@@ -133,7 +132,7 @@ class LoginScreen extends GetView<LoginScreenController> {
                               child: CustomParagraph(
                                   fontSize: 14,
                                   color: AppColor.primaryColor,
-                                  fontWeight: FontWeight.bold,
+                                  fontWeight: FontWeight.w800,
                                   text: "Forgot password"),
                             )),
                         const SizedBox(
@@ -209,27 +208,22 @@ class LoginScreen extends GetView<LoginScreenController> {
                                       }
                                     });
                                   })),
-                              Container(
-                                height: 20,
-                              ),
+                              Container(height: 20),
                               Center(
-                                child: RichText(
-                                  text: TextSpan(
+                                child: Text.rich(
+                                  TextSpan(
                                     children: [
                                       TextSpan(
-                                        text: "Don't have an account?",
-                                        style: GoogleFonts.manrope(
-                                          fontSize: 14,
-                                          color: AppColor.linkLabel,
-                                          fontWeight: FontWeight.w700,
-                                        ),
+                                        text: "New to luvpark? ",
+                                        style: paragraphStyle(
+                                            color: Colors.black,
+                                            fontWeight: FontWeight.w800),
                                       ),
                                       TextSpan(
-                                        text: " Register",
-                                        style: GoogleFonts.manrope(
-                                          fontSize: 14,
+                                        text: 'Create Account',
+                                        style: paragraphStyle(
                                           color: AppColor.primaryColor,
-                                          fontWeight: FontWeight.bold,
+                                          fontWeight: FontWeight.w800,
                                         ),
                                         recognizer: TapGestureRecognizer()
                                           ..onTap = () async {
@@ -238,6 +232,9 @@ class LoginScreen extends GetView<LoginScreenController> {
                                       ),
                                     ],
                                   ),
+                                  overflow: TextOverflow
+                                      .ellipsis, // Ensures that if the text is too long, it will be truncated with an ellipsis
+                                  maxLines: 1,
                                 ),
                               ),
                             ],

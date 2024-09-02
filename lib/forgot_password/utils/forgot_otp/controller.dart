@@ -250,13 +250,12 @@ class ForgotPassOtpController extends GetxController {
       "otp": paramArgs[0]["otp"].toString(),
       "new_pwd": paramArgs[0]["new_pass"],
     };
-    print("parameters $parameters");
+
     HttpRequest(
             api: ApiKeys.gApiSubFolderPostPutGetResetPass,
             parameters: parameters)
         .put()
         .then((retvalue) {
-      print("retvalue $retvalue");
       if (retvalue == "No Internet") {
         Get.back();
         CustomDialog().errorDialog(Get.context!, "Error",

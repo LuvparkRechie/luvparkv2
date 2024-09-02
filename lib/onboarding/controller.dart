@@ -23,12 +23,6 @@ class OnboardingController extends GetxController {
           "Discover the perfect parking spot with luvpark—tailored just for you!",
       "icon": "onboard3",
     },
-    {
-      "title": "Locate your car",
-      "subTitle":
-          "Lost track of your car? We make it easy with our state of the art real-time tracking.",
-      "icon": "onboard4",
-    }
   ]);
 
   void onPageChanged(int index) {

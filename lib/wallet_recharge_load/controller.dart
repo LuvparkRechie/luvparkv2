@@ -6,7 +6,6 @@ import 'package:get/get.dart';
 import 'package:luvpark_get/custom_widgets/alert_dialog.dart';
 import 'package:luvpark_get/http/http_request.dart';
 import 'package:luvpark_get/web_view/webview.dart';
-import 'package:page_transition/page_transition.dart';
 
 import '../auth/authentication.dart';
 import '../custom_widgets/variables.dart';
@@ -260,7 +259,7 @@ class WalletRechargeLoadController extends GetxController
             };
 
             // Get.back();
-            // print("ReturnP $returnPost");
+
             testUBUriPage(json.encode(plainText),
                 aesKeys.value); // Use .value for aesKeys
 

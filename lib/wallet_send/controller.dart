@@ -71,7 +71,6 @@ class WalletSendController extends GetxController
     HttpRequest(
       api: params,
     ).get().then((returnData) async {
-      // print("object $returnData");
       if (returnData == "No Internet") {
         Get.back();
         CustomDialog().internetErrorDialog(Get.context!, () {
@@ -111,7 +110,6 @@ class WalletSendController extends GetxController
         .post()
         .then(
       (retvalue) {
-        // print("params $parameters");
         if (retvalue == "No Internet") {
           Get.back();
           CustomDialog().internetErrorDialog(Get.context!, () {
@@ -136,7 +134,7 @@ class WalletSendController extends GetxController
                 "to_mobile_no": "63${recipient.text.replaceAll(" ", "")}"
               }
             ];
-            // print("print otp data$otpData");
+
             Get.toNamed(
               Routes.sendOtp,
               arguments: otpData,
@@ -175,7 +173,6 @@ class WalletSendController extends GetxController
     String subApi = "${ApiKeys.gApiSubFolderGetBalance}?user_id=$userId";
 
     HttpRequest(api: subApi).get().then((response) {
-      // print("object $response");
       if (response == "No Internet") {
         isLoading.value = false;
         isInternetConn.value = false;
@@ -198,8 +195,6 @@ class WalletSendController extends GetxController
         isLoading.value = false;
         isInternetConn.value = true;
         logs.value = response["items"];
-
-        // print("items ${response["items"]}");
       } else {
         isLoading.value = false;
         isInternetConn.value = true;

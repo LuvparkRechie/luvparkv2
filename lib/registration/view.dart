@@ -4,7 +4,6 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:luvpark_get/auth/authentication.dart';
 import 'package:luvpark_get/custom_widgets/alert_dialog.dart';
 import 'package:luvpark_get/custom_widgets/custom_button.dart';
@@ -59,17 +58,18 @@ class RegistrationPage extends GetView<RegistrationController> {
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.center,
                             children: [
+                              Container(height: 20),
                               Image(
                                 image: AssetImage(
                                     "assets/images/onboardluvpark.png"),
-                                width: 189,
+                                width: 100,
                                 fit: BoxFit.contain,
                               ),
                               Image(
                                 image: const AssetImage(
                                     "assets/images/onboard5.png"),
                                 width: MediaQuery.of(Get.context!).size.width *
-                                    .80,
+                                    .55,
                                 fit: BoxFit.contain,
                                 filterQuality: FilterQuality.high,
                               ),
@@ -84,9 +84,10 @@ class RegistrationPage extends GetView<RegistrationController> {
                               ),
                               Container(height: 10),
                               const CustomParagraph(
-                                  textAlign: TextAlign.center,
-                                  text:
-                                      "Earn free vouchers for a limited time once you create an account today"),
+                                textAlign: TextAlign.center,
+                                text:
+                                    "Create an account to connect, explore,\n and enjoy all we offer.",
+                              ),
                               const VerticalHeight(height: 30),
                               Align(
                                 alignment: Alignment.centerLeft,
@@ -315,23 +316,20 @@ class RegistrationPage extends GetView<RegistrationController> {
                                 height: 20,
                               ),
                               Center(
-                                child: RichText(
-                                  text: TextSpan(
+                                child: Text.rich(
+                                  TextSpan(
                                     children: [
                                       TextSpan(
-                                        text: "Already a Luvpark user?",
-                                        style: GoogleFonts.manrope(
-                                          fontSize: 14,
-                                          color: AppColor.linkLabel,
-                                          fontWeight: FontWeight.w700,
-                                        ),
+                                        text: "Already a luvpark user? ",
+                                        style: paragraphStyle(
+                                            color: Colors.black,
+                                            fontWeight: FontWeight.w800),
                                       ),
                                       TextSpan(
-                                        text: " Log in",
-                                        style: GoogleFonts.manrope(
-                                          fontSize: 14,
+                                        text: 'Login',
+                                        style: paragraphStyle(
                                           color: AppColor.primaryColor,
-                                          fontWeight: FontWeight.bold,
+                                          fontWeight: FontWeight.w800,
                                         ),
                                         recognizer: TapGestureRecognizer()
                                           ..onTap = () async {
@@ -340,7 +338,13 @@ class RegistrationPage extends GetView<RegistrationController> {
                                       ),
                                     ],
                                   ),
+                                  overflow: TextOverflow
+                                      .ellipsis, // Ensures that if the text is too long, it will be truncated with an ellipsis
+                                  maxLines: 1,
                                 ),
+                              ),
+                              Container(
+                                height: 30,
                               ),
                             ],
                           ),

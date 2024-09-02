@@ -5,8 +5,8 @@ import 'package:luvpark_get/custom_widgets/custom_text.dart';
 class NoDataFound extends StatelessWidget {
   final double? size;
   final Function? onTap;
-  final String? textText;
-  const NoDataFound({super.key, this.size, this.onTap, this.textText});
+  final String? text;
+  const NoDataFound({super.key, this.size, this.onTap, this.text});
 
   @override
   Widget build(BuildContext context) {
@@ -30,7 +30,7 @@ class NoDataFound extends StatelessWidget {
               height: 10,
             ),
             CustomParagraph(
-              text: textText ?? "No data found",
+              text: text ?? "No data found",
               fontWeight: FontWeight.w500,
               textAlign: TextAlign.center,
             ),

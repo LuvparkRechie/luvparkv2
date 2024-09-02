@@ -11,7 +11,7 @@ Future<void> backgroundFunc() async {
 
   Timer.periodic(const Duration(seconds: 10), (timer) async {
     var akongId = await Authentication().getUserId();
-    print("akongId $akongId");
+
     if (akongId == 0) return;
     await getParkingTrans(counter);
 
@@ -23,7 +23,7 @@ class MainController extends GetxController {
   @override
   void onInit() {
     super.onInit();
-    print("main controller");
+
     backgroundFunc();
   }
 }

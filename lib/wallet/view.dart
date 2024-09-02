@@ -16,13 +16,11 @@ import 'package:luvpark_get/custom_widgets/page_loader.dart';
 import 'package:luvpark_get/custom_widgets/park_shimmer.dart';
 import 'package:luvpark_get/routes/routes.dart';
 import 'package:luvpark_get/wallet/controller.dart';
-import 'package:luvpark_get/wallet/utils/filter_screen.dart';
 import 'package:luvpark_get/wallet/utils/transaction_details.dart';
 import 'package:luvpark_get/web_view/webview.dart';
 
 import '../auth/authentication.dart';
 import '../custom_widgets/alert_dialog.dart';
-import '../transaction_history/index.dart';
 import 'utils/transaction_history/index.dart';
 
 class WalletScreen extends GetView<WalletController> {
@@ -190,7 +188,7 @@ class WalletScreen extends GetView<WalletController> {
                                           final item = await Authentication()
                                               .getUserData2();
                                           String? fname = item["first_name"];
-                                          // print("fnameee $fname");
+
                                           if (fname == null) {
                                             // ignore: use_build_context_synchronously
                                             CustomDialog().errorDialog(

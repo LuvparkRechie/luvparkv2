@@ -572,11 +572,6 @@ class CustomDialog {
                         BorderRadius.vertical(top: Radius.circular(16.0)),
                   ),
                   clipBehavior: Clip.hardEdge,
-                  //choices for image name:
-                  //pu_confirmaiton
-                  //pu_nointernet
-                  //pu_servererror
-                  //pu_success
                   child: Image.asset(
                     'assets/images/$imageName.png', // Use the dynamic image name here
                     fit: BoxFit.cover,

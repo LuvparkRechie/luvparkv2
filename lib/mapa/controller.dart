@@ -283,7 +283,6 @@ class DashboardMapController extends GetxController
     if (isMarkerTapped.value) return;
     mapPickerController.mapMoving!();
     isGetNearData.value = false;
-    print("on onCameraMoveStarted");
   }
 
   void onCameraIdle() async {
@@ -823,7 +822,7 @@ class DashboardMapController extends GetxController
   //onMarker tapped
   void onMarkerTapped(data) {
     dialogData.add(data);
-    print("data $dialogData");
+
     isMarkerTapped.value = true;
     isGetNearData.value = false;
 

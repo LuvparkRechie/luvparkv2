@@ -1,7 +1,6 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_multi_formatter/formatters/formatter_utils.dart';
 import 'package:get/get.dart';
 import 'package:iconsax/iconsax.dart';
@@ -18,11 +17,6 @@ class Profile extends GetView<ProfileScreenController> {
 
   @override
   Widget build(BuildContext context) {
-    SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
-      statusBarColor: Colors.transparent,
-      statusBarBrightness: Brightness.light,
-      statusBarIconBrightness: Brightness.dark,
-    ));
     return Obx(
       () => Scaffold(
         backgroundColor: AppColor.bodyColor,

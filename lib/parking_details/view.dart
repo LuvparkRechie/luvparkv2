@@ -279,7 +279,7 @@ class ParkingDetails extends GetView<ParkingDetailsController> {
                       ),
                       TextSpan(
                         text:
-                            '${controller.dataNearest["ps_vacant_count"]} slots remaining',
+                            '${int.parse(controller.dataNearest["ps_vacant_count"].toString())} ${int.parse(controller.dataNearest["ps_vacant_count"].toString()) > 1 ? "Slots" : "Slot"} remaining',
                         style: paragraphStyle(color: const Color(0xFFE03C20)),
                       ),
                     ],

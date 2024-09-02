@@ -40,6 +40,6 @@ class Routes {
   static const walletrechargeloadpayment = "/wallet_recharge_load_payment";
   static const myVehicles = "/my_vehicles";
   static const addVehicle = "/add_vehicle";
-
   static const myaccount = "/myaccount";
+  static const updProfile = "/update_profile";
 }

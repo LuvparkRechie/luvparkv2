@@ -457,7 +457,7 @@ class BookingController extends GetxController
             "brand_name": selectedVh[0]["vehicle_brand_name"].toString(),
             "park_area_id": parameters["areaData"]["park_area_id"].toString(),
           };
-          print("paramArgs $paramArgs");
+
           Authentication().setLastBooking(jsonEncode(lastBookingData));
           if (parameters["canCheckIn"]) {
             checkIn(objData["reservation_id"], userId, paramArgs);

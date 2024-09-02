@@ -672,12 +672,13 @@ class DashboardMapScreen extends GetView<DashboardMapController> {
                                   children: [
                                     Icon(
                                       Icons.chevron_left,
-                                      color: AppColor.paragraphColor,
+                                      color: AppColor.primaryColor,
                                     ),
-                                    const CustomParagraph(
+                                    CustomParagraph(
                                       text: "Back",
                                       fontWeight: FontWeight.w600,
                                       fontSize: 16,
+                                      color: AppColor.primaryColor,
                                     )
                                   ],
                                 ),
@@ -687,6 +688,8 @@ class DashboardMapScreen extends GetView<DashboardMapController> {
                                 children: [
                                   Expanded(
                                     child: CustomTitle(
+                                      fontSize: 18,
+                                      fontWeight: FontWeight.w800,
                                       text: controller.dialogData[0]
                                           ["park_area_name"],
                                       maxlines: 1,
@@ -694,12 +697,13 @@ class DashboardMapScreen extends GetView<DashboardMapController> {
                                   ),
                                   CustomParagraph(
                                     text: Variables.gagi(
-                                        Variables.convertToMeters(
-                                      controller.dialogData[0]["distance"]
-                                          .toString(),
-                                    )),
+                                      Variables.convertToMeters(
+                                        controller.dialogData[0]["distance"]
+                                            .toString(),
+                                      ),
+                                    ),
                                     color: AppColor.primaryColor,
-                                    fontWeight: FontWeight.w600,
+                                    fontWeight: FontWeight.w700,
                                   )
                                 ],
                               ),
@@ -707,6 +711,7 @@ class DashboardMapScreen extends GetView<DashboardMapController> {
                               CustomParagraph(
                                 text: controller.dialogData[0]["address"],
                                 maxlines: 2,
+                                fontWeight: FontWeight.w600,
                               ),
                               Container(height: 10),
                               Text.rich(
@@ -727,7 +732,7 @@ class DashboardMapScreen extends GetView<DashboardMapController> {
                                     ),
                                     TextSpan(
                                       text:
-                                          '${controller.dialogData[0]["ps_vacant_count"]} slots left',
+                                          '${controller.dialogData[0]["ps_vacant_count"]} ${controller.dialogData[0]["ps_vacant_count"] > 1 ? "Slots" : "Slot"} left',
                                       style: paragraphStyle(
                                           color: const Color(0xFFE03C20)),
                                     ),

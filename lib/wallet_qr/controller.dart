@@ -170,7 +170,6 @@ class QrWalletController extends GetxController
   }
 
   Future<void> shareQr() async {
-    // print("currentPage.value ${currentPage.value}");
     CustomDialog().loadingDialog(Get.context!);
     final directory = (await getApplicationDocumentsDirectory()).path;
     Uint8List bytes = await ScreenshotController().captureFromWidget(

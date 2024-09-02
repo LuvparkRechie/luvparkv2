@@ -65,7 +65,7 @@ class _CustomTextFieldState extends State<CustomTextField> {
   @override
   Widget build(BuildContext context) {
     return Padding(
-        padding: const EdgeInsets.only(top: 10.0, bottom: 20),
+        padding: const EdgeInsets.only(top: 10.0, bottom: 10),
         child: TextFormField(
           textCapitalization: widget.textCapitalization,
           obscureText: widget.isObscure,
@@ -84,7 +84,7 @@ class _CustomTextFieldState extends State<CustomTextField> {
             filled: true,
             focusedBorder: OutlineInputBorder(
                 borderSide: BorderSide(color: AppColor.primaryColor)),
-            fillColor: const Color(0xFFF0F6FF),
+            fillColor: Colors.grey.shade200,
             border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(7.0),
                 borderSide: BorderSide.none),
@@ -111,11 +111,7 @@ class _CustomTextFieldState extends State<CustomTextField> {
                 ? "Answer"
                 : widget.labelText,
           ),
-          style: GoogleFonts.manrope(
-            color: Colors.black,
-            fontWeight: FontWeight.w500,
-            fontSize: 14,
-          ),
+          style: paragraphStyle(color: Colors.black),
           onChanged: (value) {
             widget.onChange!(value);
           },
@@ -177,7 +173,7 @@ class _CustomMobileNumberState extends State<CustomMobileNumber> {
           contentPadding:
               const EdgeInsets.symmetric(vertical: 10, horizontal: 12),
           filled: true,
-          fillColor: const Color(0xFFF0F6FF),
+          fillColor: Colors.grey.shade200,
           hintText: widget.labelText,
           focusedBorder: OutlineInputBorder(
               borderSide: BorderSide(color: AppColor.primaryColor)),
@@ -215,11 +211,7 @@ class _CustomMobileNumberState extends State<CustomMobileNumber> {
             ),
           ),
         ),
-        style: GoogleFonts.manrope(
-          color: Colors.black,
-          fontWeight: FontWeight.w500,
-          fontSize: 14,
-        ),
+        style: paragraphStyle(color: Colors.black),
         onChanged: widget.onChange,
         onTap: widget.isEnabled ? widget.onTap : null,
         validator: widget.validator ??
@@ -244,7 +236,7 @@ class _CustomMobileNumberState extends State<CustomMobileNumber> {
 }
 
 class CustomDropdown extends StatefulWidget {
-  final String ddValue;
+  final String? ddValue;
   final List ddData;
   final String labelText;
   final ValueChanged<String>? onChange;
@@ -264,6 +256,7 @@ class CustomDropdown extends StatefulWidget {
 class _CustomDropdownState extends State<CustomDropdown> {
   final numericRegex = RegExp(r'[0-9]');
   final upperCaseRegex = RegExp(r'[A-Z]');
+  FocusNode focusNode = FocusNode();
   @override
   void initState() {
     super.initState();
@@ -276,52 +269,24 @@ class _CustomDropdownState extends State<CustomDropdown> {
       child: IntrinsicHeight(
         child: DropdownButtonFormField(
           dropdownColor: Colors.white,
+          focusNode: focusNode,
           decoration: InputDecoration(
-            // filled: true,
-            // fillColor: Colors.white,
-            hintText: "",
-            hintStyle: Platform.isAndroid
-                ? GoogleFonts.dmSans(
-                    fontWeight: FontWeight.w600,
-                    color: const Color(0xFF9C9C9C),
-                    fontSize: 16,
-                  )
-                : const TextStyle(
-                    fontWeight: FontWeight.w600,
-                    color: Color(0xFF9C9C9C),
-                    fontSize: 16,
-                    fontFamily: "SFProTextReg",
-                  ),
-
-            contentPadding: const EdgeInsets.all(10),
-            focusedBorder: const OutlineInputBorder(
-              borderRadius: BorderRadius.all(Radius.circular(7)),
-              borderSide: BorderSide(color: Colors.blue),
-            ),
-            border: const OutlineInputBorder(
-              borderRadius: BorderRadius.all(Radius.circular(7)),
-              borderSide: BorderSide(color: Colors.blue),
-            ),
-            enabledBorder: const OutlineInputBorder(
-              borderRadius: BorderRadius.all(Radius.circular(7)),
-              borderSide: BorderSide(color: Color.fromARGB(255, 223, 223, 223)),
-            ),
+            hintText: widget.labelText,
+            contentPadding:
+                const EdgeInsets.symmetric(vertical: 10, horizontal: 12),
+            filled: true,
+            focusedBorder: OutlineInputBorder(
+                borderSide: BorderSide(color: AppColor.primaryColor)),
+            fillColor: Colors.grey.shade200,
+            border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(7.0),
+                borderSide: BorderSide.none),
+            labelStyle: paragraphStyle(fontWeight: FontWeight.w600),
           ),
           value: widget.ddValue,
           isExpanded: true,
-          onChanged: (String? newValue) {
-            setState(() {
-              // ddProvice = newValue!;
-
-              // ddCity = null;
-              // ddBrgy = null;
-              // getProvinceData(
-              //     int.parse(newValue.toString()), gApiSubFolderGetCity);
-              // provinceName = provinceData.where((element) {
-              //   return int.parse(element["value"].toString()) ==
-              //       int.parse(ddProvice.toString());
-              // }).toList()[0]["province"];
-            });
+          onChanged: (value) {
+            widget.onChange!(value!);
           },
           items: widget.ddData.map((item) {
             return DropdownMenuItem(

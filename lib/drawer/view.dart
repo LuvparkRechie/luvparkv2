@@ -11,6 +11,8 @@ import 'package:luvpark_get/mapa/controller.dart';
 import 'package:luvpark_get/routes/routes.dart';
 import 'package:luvpark_get/web_view/webview.dart';
 
+import '../custom_widgets/variables.dart';
+
 class CustomDrawer extends GetView<DashboardMapController> {
   const CustomDrawer({super.key});
 
@@ -294,11 +296,7 @@ class CustomDrawer extends GetView<DashboardMapController> {
           ),
           Divider(color: Colors.grey[350]),
           Padding(
-            padding: const EdgeInsets.only(
-              bottom: 35,
-              left: 60,
-              right: 60,
-            ),
+            padding: const EdgeInsets.symmetric(horizontal: 20),
             child: SizedBox(
               width: double.infinity,
               child: Padding(
@@ -309,17 +307,17 @@ class CustomDrawer extends GetView<DashboardMapController> {
                       context,
                       'Logout?',
                       'Are you sure you want to logout',
-                      'Yes, log out',
                       'Cancel',
+                      'Yes, log out',
                       imageName: 'pu_confirmation',
                       btnNotBackgroundColor: AppColor.primaryColor,
                       btnNotTextColor: Colors.white,
                       btnOkTextColor: AppColor.primaryColor,
                       btnOkBackgroundColor: Colors.transparent,
-                      onTapConfirm: () async {
+                      onTapClose: () async {
                         Get.back();
                       },
-                      onTapClose: () async {
+                      onTapConfirm: () async {
                         Get.back();
                         CustomDialog().loadingDialog(context);
                         await Future.delayed(const Duration(seconds: 3));
@@ -364,6 +362,16 @@ class CustomDrawer extends GetView<DashboardMapController> {
               ),
             ),
           ),
+          Center(
+            child: CustomParagraph(
+              text: 'V${Variables.version}',
+              color: const Color(0xFF9C9C9C),
+              fontSize: 10,
+              fontWeight: FontWeight.w600,
+              height: 0,
+            ),
+          ),
+          Container(height: 20),
         ],
       ),
     );

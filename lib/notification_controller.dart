@@ -333,7 +333,6 @@ Future<void> updateLocation(LatLng position) async {
 
 Future<void> getParkingTrans(int ctr) async {
   var akongId = await Authentication().getUserId();
-  print("akongId $akongId");
 
   HttpRequest(
     api:

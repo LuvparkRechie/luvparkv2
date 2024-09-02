@@ -7,6 +7,7 @@ import 'package:luvpark_get/functions/functions.dart';
 class ProfileScreenController extends GetxController
     with GetSingleTickerProviderStateMixin {
   ProfileScreenController();
+  // ignore: prefer_typing_uninitialized_variables
   var userProfile;
   RxList userData = [].obs;
   RxString myName = "".obs;

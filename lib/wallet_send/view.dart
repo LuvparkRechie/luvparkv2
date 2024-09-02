@@ -208,9 +208,9 @@ class WalletSend extends GetView<WalletSendController> {
                                   final item =
                                       await Authentication().getUserLogin();
 
-                                  // print("datasa ${item["mobile_no"]}");
                                   if (item["mobile_no"].toString() ==
                                       "63${controller.recipient.text.replaceAll(" ", "")}") {
+                                    // ignore: use_build_context_synchronously
                                     CustomDialog().snackbarDialog(
                                         context,
                                         "Please use another number.",

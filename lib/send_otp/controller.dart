@@ -121,7 +121,7 @@ class SendOtpController extends GetxController {
 
   Future<void> verifyOtp() async {
     int userId = await Authentication().getUserId();
-    // print("$userId");
+
     CustomDialog().loadingDialog(Get.context!);
     Map<String, dynamic> parameters = {
       "user_id": userId.toString(),
@@ -129,7 +129,6 @@ class SendOtpController extends GetxController {
       "amount": paramArgs[0]["amount"].toString().replaceAll(",", ""),
       "to_msg": paramArgs[0]["to_msg"],
     };
-    // print("object1$parameters");
 
     HttpRequest(api: ApiKeys.gApiSubFolderPutShareLuv, parameters: parameters)
         .put()
@@ -181,7 +180,6 @@ class SendOtpController extends GetxController {
   }
 
   void onVerify() {
-    // print("paramArgs $paramArgs");
     if (isLoading.value) return;
     if (inputPin.isEmpty) return;
     if ((int.parse(inputPin.toString()) !=

@@ -175,11 +175,13 @@ class BookingPage extends GetView<BookingController> {
                                                   CrossAxisAlignment.center,
                                               children: [
                                                 CustomTitle(
-                                                  text: Variables.formatDistance(
-                                                          controller.parameters[
-                                                                  "areaData"]
-                                                              ["distance"])
-                                                      .toString(),
+                                                  text: Variables.gagi(
+                                                      Variables.convertToMeters(
+                                                    controller
+                                                        .parameters["areaData"]
+                                                            ["distance"]
+                                                        .toString(),
+                                                  )),
                                                   color: Colors.white,
                                                   fontSize: 14,
                                                   letterSpacing: -0.41,
@@ -582,220 +584,220 @@ class BookingPage extends GetView<BookingController> {
                                         Container(
                                           height: 10,
                                         ),
-                                        GestureDetector(
-                                          onTap: () {
-                                            controller.toggleRewardChecked(
-                                                !controller
-                                                    .isRewardchecked.value);
-                                          },
-                                          child: Container(
-                                            padding: const EdgeInsets.symmetric(
-                                                vertical: 15),
-                                            width: MediaQuery.of(context)
-                                                .size
-                                                .width,
-                                            decoration: BoxDecoration(
-                                              borderRadius:
-                                                  BorderRadius.circular(7),
-                                              color: Colors.white,
-                                              boxShadow: [
-                                                BoxShadow(
-                                                  color: Colors.black
-                                                      .withOpacity(0.1),
-                                                  spreadRadius: 1,
-                                                  blurRadius: 4,
-                                                  offset: const Offset(0, 2),
-                                                ),
-                                              ],
-                                              border: Border.all(
-                                                color: Colors.black
-                                                    .withOpacity(0.2),
-                                                width: 1,
-                                              ),
-                                            ),
-                                            child: Padding(
-                                              padding: const EdgeInsets.only(
-                                                left: 20.0,
-                                                right: 20,
-                                              ),
-                                              child: Column(
-                                                children: [
-                                                  Row(
-                                                    children: [
-                                                      Icon(
-                                                        controller
-                                                                .isRewardchecked
-                                                                .value
-                                                            ? Icons
-                                                                .check_circle_outline
-                                                            : Icons
-                                                                .circle_outlined,
-                                                        color: controller
-                                                                .isRewardchecked
-                                                                .value
-                                                            ? AppColor
-                                                                .primaryColor
-                                                            : Colors.grey,
-                                                      ),
-                                                      Container(width: 5),
-                                                      const Expanded(
-                                                        child: CustomTitle(
-                                                          text:
-                                                              "Use Reward Points",
-                                                          fontSize: 14,
-                                                          letterSpacing: -0.41,
-                                                          textAlign:
-                                                              TextAlign.left,
-                                                        ),
-                                                      ),
-                                                      Container(width: 5),
-                                                      if (controller
-                                                          .isRewardchecked
-                                                          .value)
-                                                        GestureDetector(
-                                                          onTap: controller
-                                                              .showRewardDialog,
-                                                          child: Icon(
-                                                            Icons.edit_note,
-                                                            color: AppColor
-                                                                .primaryColor,
-                                                          ),
-                                                        )
-                                                    ],
-                                                  ),
-                                                  if (controller
-                                                      .isRewardchecked.value)
-                                                    Padding(
-                                                      padding:
-                                                          const EdgeInsets.all(
-                                                              10),
-                                                      child: Column(
-                                                        children: [
-                                                          const Divider(
-                                                            color: Colors.grey,
-                                                          ),
-                                                          Row(
-                                                            mainAxisAlignment:
-                                                                MainAxisAlignment
-                                                                    .spaceBetween,
-                                                            children: [
-                                                              const CustomParagraph(
-                                                                  fontWeight:
-                                                                      FontWeight
-                                                                          .w400,
-                                                                  text:
-                                                                      ' Reward Points :',
-                                                                  letterSpacing:
-                                                                      -0.41),
-                                                              Padding(
-                                                                padding:
-                                                                    const EdgeInsets
-                                                                        .only(
-                                                                        right:
-                                                                            20),
-                                                                child:
-                                                                    CustomParagraph(
-                                                                  text: () {
-                                                                    try {
-                                                                      double
-                                                                          points =
-                                                                          double.parse(controller
-                                                                              .rewardsCon
-                                                                              .text);
-                                                                      return points
-                                                                          .toStringAsFixed(
-                                                                              2); // Formats the number to 2 decimal places
-                                                                    } catch (e) {
-                                                                      return '0.00'; // Handle parsing error
-                                                                    }
-                                                                  }(),
-                                                                  color: AppColor
-                                                                      .primaryColor,
-                                                                ),
-                                                              ),
-                                                            ],
-                                                          ),
-                                                          Container(height: 5),
-                                                          Row(
-                                                            mainAxisAlignment:
-                                                                MainAxisAlignment
-                                                                    .spaceBetween,
-                                                            children: [
-                                                              const CustomParagraph(
-                                                                fontWeight:
-                                                                    FontWeight
-                                                                        .w400,
-                                                                text:
-                                                                    ' Token :',
-                                                                letterSpacing:
-                                                                    -0.41,
-                                                              ),
-                                                              Padding(
-                                                                padding:
-                                                                    const EdgeInsets
-                                                                        .only(
-                                                                        right:
-                                                                            20),
-                                                                child:
-                                                                    CustomParagraph(
-                                                                  // text: subtractedToken
-                                                                  //             .toStringAsFixed(
-                                                                  //                 2) ==
-                                                                  //         "0.00"
-                                                                  //     ? toCurrencyString(
-                                                                  //         totalAmount)
-                                                                  //     : subtractedToken
-                                                                  //         .toStringAsFixed(
-                                                                  //             2),
-                                                                  text:
-                                                                      "Subtracted token",
-                                                                  color: AppColor
-                                                                      .primaryColor,
-                                                                ),
-                                                              ),
-                                                            ],
-                                                          ),
-                                                          Container(height: 10),
-                                                          Row(
-                                                            mainAxisAlignment:
-                                                                MainAxisAlignment
-                                                                    .spaceBetween,
-                                                            children: [
-                                                              const CustomParagraph(
-                                                                  text:
-                                                                      ' total ',
-                                                                  letterSpacing:
-                                                                      -0.41),
-                                                              Padding(
-                                                                padding:
-                                                                    const EdgeInsets
-                                                                        .only(
-                                                                        right:
-                                                                            20),
-                                                                child:
-                                                                    CustomParagraph(
-                                                                  // text: toCurrencyString(
-                                                                  //     totalAmount),
+                                        // GestureDetector(
+                                        //   onTap: () {
+                                        //     controller.toggleRewardChecked(
+                                        //         !controller
+                                        //             .isRewardchecked.value);
+                                        //   },
+                                        //   child: Container(
+                                        //     padding: const EdgeInsets.symmetric(
+                                        //         vertical: 15),
+                                        //     width: MediaQuery.of(context)
+                                        //         .size
+                                        //         .width,
+                                        //     decoration: BoxDecoration(
+                                        //       borderRadius:
+                                        //           BorderRadius.circular(7),
+                                        //       color: Colors.white,
+                                        //       boxShadow: [
+                                        //         BoxShadow(
+                                        //           color: Colors.black
+                                        //               .withOpacity(0.1),
+                                        //           spreadRadius: 1,
+                                        //           blurRadius: 4,
+                                        //           offset: const Offset(0, 2),
+                                        //         ),
+                                        //       ],
+                                        //       border: Border.all(
+                                        //         color: Colors.black
+                                        //             .withOpacity(0.2),
+                                        //         width: 1,
+                                        //       ),
+                                        //     ),
+                                        //     child: Padding(
+                                        //       padding: const EdgeInsets.only(
+                                        //         left: 20.0,
+                                        //         right: 20,
+                                        //       ),
+                                        //       child: Column(
+                                        //         children: [
+                                        //           Row(
+                                        //             children: [
+                                        //               Icon(
+                                        //                 controller
+                                        //                         .isRewardchecked
+                                        //                         .value
+                                        //                     ? Icons
+                                        //                         .check_circle_outline
+                                        //                     : Icons
+                                        //                         .circle_outlined,
+                                        //                 color: controller
+                                        //                         .isRewardchecked
+                                        //                         .value
+                                        //                     ? AppColor
+                                        //                         .primaryColor
+                                        //                     : Colors.grey,
+                                        //               ),
+                                        //               Container(width: 5),
+                                        //               const Expanded(
+                                        //                 child: CustomTitle(
+                                        //                   text:
+                                        //                       "Use Reward Points",
+                                        //                   fontSize: 14,
+                                        //                   letterSpacing: -0.41,
+                                        //                   textAlign:
+                                        //                       TextAlign.left,
+                                        //                 ),
+                                        //               ),
+                                        //               Container(width: 5),
+                                        //               if (controller
+                                        //                   .isRewardchecked
+                                        //                   .value)
+                                        //                 GestureDetector(
+                                        //                   onTap: controller
+                                        //                       .showRewardDialog,
+                                        //                   child: Icon(
+                                        //                     Icons.edit_note,
+                                        //                     color: AppColor
+                                        //                         .primaryColor,
+                                        //                   ),
+                                        //                 )
+                                        //             ],
+                                        //           ),
+                                        //           if (controller
+                                        //               .isRewardchecked.value)
+                                        //             Padding(
+                                        //               padding:
+                                        //                   const EdgeInsets.all(
+                                        //                       10),
+                                        //               child: Column(
+                                        //                 children: [
+                                        //                   const Divider(
+                                        //                     color: Colors.grey,
+                                        //                   ),
+                                        //                   Row(
+                                        //                     mainAxisAlignment:
+                                        //                         MainAxisAlignment
+                                        //                             .spaceBetween,
+                                        //                     children: [
+                                        //                       const CustomParagraph(
+                                        //                           fontWeight:
+                                        //                               FontWeight
+                                        //                                   .w400,
+                                        //                           text:
+                                        //                               ' Reward Points :',
+                                        //                           letterSpacing:
+                                        //                               -0.41),
+                                        //                       Padding(
+                                        //                         padding:
+                                        //                             const EdgeInsets
+                                        //                                 .only(
+                                        //                                 right:
+                                        //                                     20),
+                                        //                         child:
+                                        //                             CustomParagraph(
+                                        //                           text: () {
+                                        //                             try {
+                                        //                               double
+                                        //                                   points =
+                                        //                                   double.parse(controller
+                                        //                                       .rewardsCon
+                                        //                                       .text);
+                                        //                               return points
+                                        //                                   .toStringAsFixed(
+                                        //                                       2); // Formats the number to 2 decimal places
+                                        //                             } catch (e) {
+                                        //                               return '0.00'; // Handle parsing error
+                                        //                             }
+                                        //                           }(),
+                                        //                           color: AppColor
+                                        //                               .primaryColor,
+                                        //                         ),
+                                        //                       ),
+                                        //                     ],
+                                        //                   ),
+                                        //                   Container(height: 5),
+                                        //                   Row(
+                                        //                     mainAxisAlignment:
+                                        //                         MainAxisAlignment
+                                        //                             .spaceBetween,
+                                        //                     children: [
+                                        //                       const CustomParagraph(
+                                        //                         fontWeight:
+                                        //                             FontWeight
+                                        //                                 .w400,
+                                        //                         text:
+                                        //                             ' Token :',
+                                        //                         letterSpacing:
+                                        //                             -0.41,
+                                        //                       ),
+                                        //                       Padding(
+                                        //                         padding:
+                                        //                             const EdgeInsets
+                                        //                                 .only(
+                                        //                                 right:
+                                        //                                     20),
+                                        //                         child:
+                                        //                             CustomParagraph(
+                                        //                           // text: subtractedToken
+                                        //                           //             .toStringAsFixed(
+                                        //                           //                 2) ==
+                                        //                           //         "0.00"
+                                        //                           //     ? toCurrencyString(
+                                        //                           //         totalAmount)
+                                        //                           //     : subtractedToken
+                                        //                           //         .toStringAsFixed(
+                                        //                           //             2),
+                                        //                           text:
+                                        //                               "Subtracted token",
+                                        //                           color: AppColor
+                                        //                               .primaryColor,
+                                        //                         ),
+                                        //                       ),
+                                        //                     ],
+                                        //                   ),
+                                        //                   Container(height: 10),
+                                        //                   Row(
+                                        //                     mainAxisAlignment:
+                                        //                         MainAxisAlignment
+                                        //                             .spaceBetween,
+                                        //                     children: [
+                                        //                       const CustomParagraph(
+                                        //                           text:
+                                        //                               ' total ',
+                                        //                           letterSpacing:
+                                        //                               -0.41),
+                                        //                       Padding(
+                                        //                         padding:
+                                        //                             const EdgeInsets
+                                        //                                 .only(
+                                        //                                 right:
+                                        //                                     20),
+                                        //                         child:
+                                        //                             CustomParagraph(
+                                        //                           // text: toCurrencyString(
+                                        //                           //     totalAmount),
 
-                                                                  text:
-                                                                      "Total amount",
-                                                                  color: AppColor
-                                                                      .primaryColor,
-                                                                ),
-                                                              ),
-                                                            ],
-                                                          )
-                                                        ],
-                                                      ),
-                                                    ),
-                                                ],
-                                              ),
-                                            ),
-                                          ),
-                                        ),
-                                        Container(
-                                          height: 5,
-                                        ),
+                                        //                           text:
+                                        //                               "Total amount",
+                                        //                           color: AppColor
+                                        //                               .primaryColor,
+                                        //                         ),
+                                        //                       ),
+                                        //                     ],
+                                        //                   )
+                                        //                 ],
+                                        //               ),
+                                        //             ),
+                                        //         ],
+                                        //       ),
+                                        //     ),
+                                        //   ),
+                                        // ),
+                                        // Container(
+                                        //   height: 5,
+                                        // ),
                                         GestureDetector(
                                           onTap: () {
                                             controller.toggleExtendChecked(
