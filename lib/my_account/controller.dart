@@ -36,7 +36,7 @@ class MyAccountScreenController extends GetxController
       return element["value"] == userData[0]['civil_status'];
     }).toList()[0]["status"];
     gender.value = userData[0]['gender'] == "F" ? "Female" : "Male";
-
+    print("userData $userData");
     if (userData[0]['first_name'] != null) {
       if (userData[0]['region_id'] == null) {
         province.value = "No province provided";
@@ -103,7 +103,10 @@ class MyAccountScreenController extends GetxController
     }
     if (returnData["items"].isNotEmpty) {
       isNetConn.value = true;
-      province.value = returnData["items"][0]["text"];
+
+      province.value = returnData["items"].where((element) {
+        return element["value"] == userData[0]["province_id"];
+      }).toList()[0]["text"];
 
       return;
     } else {
