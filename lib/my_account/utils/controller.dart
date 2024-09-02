@@ -79,15 +79,17 @@ class UpdateProfileController extends GetxController {
   void onInit() {
     pageController = PageController();
     super.onInit();
-    getSuffixes();
-    for (dynamic datas in parameters) {
-      regionData.add(
-        {"text": datas["region_name"], "value": datas["region_id"]},
-      );
-    }
-    for (dynamic item in Variables.civilStatusData) {
-      civilData.add({"text": item["status"], "value": item["value"]});
-    }
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      getSuffixes();
+      for (dynamic datas in parameters) {
+        regionData.add(
+          {"text": datas["region_name"], "value": datas["region_id"]},
+        );
+      }
+      for (dynamic item in Variables.civilStatusData) {
+        civilData.add({"text": item["status"], "value": item["value"]});
+      }
+    });
   }
 
   @override

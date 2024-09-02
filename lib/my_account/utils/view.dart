@@ -18,7 +18,7 @@ class UpdateProfile extends GetView<UpdateProfileController> {
   Widget build(BuildContext context) {
     return Obx(
       () => controller.isLoading.value
-          ? const PageLoader()
+          ? const Scaffold(body: PageLoader())
           : Scaffold(
               appBar: CustomAppbar(
                 title:
