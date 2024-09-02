@@ -84,30 +84,11 @@ class LoginScreen extends GetView<LoginScreenController> {
                               text: "Enter your mobile number to log in"),
                         ),
                         VerticalHeight(height: 10),
-                        // const Align(
-                        //   alignment: Alignment.centerLeft,
-                        //   child: CustomTitle(
-                        //     text: "Mobile Number",
-                        //     fontWeight: FontWeight.bold,
-                        //     letterSpacing: -.1,
-                        //     wordspacing: 4,
-                        //   ),
-                        // ),
                         CustomMobileNumber(
                           labelText: "10 digit mobile number",
                           controller: controller.mobileNumber,
                           inputFormatters: [Variables.maskFormatter],
                         ),
-                        // const VerticalHeight(height: 5),
-                        // const Align(
-                        //   alignment: Alignment.centerLeft,
-                        //   child: CustomTitle(
-                        //     text: "Password",
-                        //     fontWeight: FontWeight.bold,
-                        //     letterSpacing: -.1,
-                        //     wordspacing: 2,
-                        //   ),
-                        // ),
                         Obx(
                           () => CustomTextField(
                             title: "Password",

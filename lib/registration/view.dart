@@ -89,16 +89,6 @@ class RegistrationPage extends GetView<RegistrationController> {
                                     "Create an account to connect, explore,\n and enjoy all we offer.",
                               ),
                               const VerticalHeight(height: 30),
-                              Align(
-                                alignment: Alignment.centerLeft,
-                                child: const CustomTitle(
-                                  text: "Mobile Number",
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.bold,
-                                  letterSpacing: -.1,
-                                  wordspacing: 4,
-                                ),
-                              ),
                               CustomMobileNumber(
                                 labelText: "10 digit mobile number",
                                 controller: controller.mobileNumber,
@@ -108,16 +98,6 @@ class RegistrationPage extends GetView<RegistrationController> {
                                 },
                               ),
                               const VerticalHeight(height: 5),
-                              Align(
-                                alignment: Alignment.centerLeft,
-                                child: const CustomTitle(
-                                  text: "Password",
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.bold,
-                                  letterSpacing: -.1,
-                                  wordspacing: 2,
-                                ),
-                              ),
                               Obx(
                                 () => CustomTextField(
                                   title: "Password",
