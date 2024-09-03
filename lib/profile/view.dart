@@ -173,51 +173,52 @@ class Profile extends GetView<ProfileScreenController> {
                               borderRadius: BorderRadius.circular(15),
                             ),
                           ),
-                          child: ListView(
-                            shrinkWrap: true,
+                          child: Padding(
                             padding: const EdgeInsets.all(10.0),
-                            children: <Widget>[
-                              ListTile(
-                                leading: Icon(
-                                  Iconsax.personalcard,
-                                  color: AppColor.primaryColor,
+                            child: Column(
+                              children: <Widget>[
+                                ListTile(
+                                  leading: Icon(
+                                    Iconsax.personalcard,
+                                    color: AppColor.primaryColor,
+                                  ),
+                                  title: const CustomTitle(
+                                    text: "My Account",
+                                    fontSize: 14,
+                                    fontStyle: FontStyle.normal,
+                                    fontWeight: FontWeight.w700,
+                                    letterSpacing: -0.408,
+                                    color: Color(0xFF1C1C1E),
+                                  ),
+                                  trailing: Icon(Icons.chevron_right_sharp,
+                                      color: AppColor.primaryColor),
+                                  onTap: () {
+                                    Get.toNamed(Routes.myaccount);
+                                  },
                                 ),
-                                title: const CustomTitle(
-                                  text: "My Account",
-                                  fontSize: 14,
-                                  fontStyle: FontStyle.normal,
-                                  fontWeight: FontWeight.w700,
-                                  letterSpacing: -0.408,
-                                  color: Color(0xFF1C1C1E),
+                                const Divider(),
+                                ListTile(
+                                  leading: Icon(
+                                    Iconsax.setting_2,
+                                    color: AppColor.primaryColor,
+                                  ),
+                                  title: const CustomTitle(
+                                    text: "Security Settings",
+                                    fontSize: 14,
+                                    fontStyle: FontStyle.normal,
+                                    fontWeight: FontWeight.w700,
+                                    letterSpacing: -0.408,
+                                    color: Color(0xFF1C1C1E),
+                                  ),
+                                  trailing: Icon(Icons.chevron_right_sharp,
+                                      color: AppColor.primaryColor),
+                                  onTap: () {
+                                    Get.toNamed(Routes.security);
+                                  },
                                 ),
-                                trailing: Icon(Icons.chevron_right_sharp,
-                                    color: AppColor.primaryColor),
-                                onTap: () {
-                                  Get.toNamed(Routes.myaccount);
-                                },
-                              ),
-                              const Divider(),
-                              ListTile(
-                                leading: Icon(
-                                  Iconsax.setting_2,
-                                  color: AppColor.primaryColor,
-                                ),
-                                title: const CustomTitle(
-                                  text: "Security Settings",
-                                  fontSize: 14,
-                                  fontStyle: FontStyle.normal,
-                                  fontWeight: FontWeight.w700,
-                                  letterSpacing: -0.408,
-                                  color: Color(0xFF1C1C1E),
-                                ),
-                                trailing: Icon(Icons.chevron_right_sharp,
-                                    color: AppColor.primaryColor),
-                                onTap: () {
-                                  Get.toNamed(Routes.security);
-                                },
-                              ),
-                              // Add more ListTiles here if needed
-                            ],
+                                // Add more ListTiles here if needed
+                              ],
+                            ),
                           ),
                         ),
                       ),
