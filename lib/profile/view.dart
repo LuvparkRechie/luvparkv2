@@ -1,234 +1,240 @@
 import 'dart:convert';
-
 import 'package:flutter/material.dart';
-import 'package:flutter_multi_formatter/formatters/formatter_utils.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:luvpark_get/custom_widgets/app_color.dart';
-import 'package:luvpark_get/custom_widgets/custom_appbar.dart';
 import 'package:luvpark_get/custom_widgets/custom_text.dart';
-import 'package:luvpark_get/custom_widgets/no_internet.dart';
 import 'package:luvpark_get/custom_widgets/page_loader.dart';
-import 'package:luvpark_get/profile/index.dart';
+import 'package:luvpark_get/profile/controller.dart';
 import 'package:luvpark_get/routes/routes.dart';
+import 'package:iconify_flutter/iconify_flutter.dart';
 
 class Profile extends GetView<ProfileScreenController> {
-  const Profile({super.key});
+  const Profile({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Obx(
       () => Scaffold(
-        backgroundColor: AppColor.bodyColor,
-        appBar: const CustomAppbar(title: "My Account"),
-        body: !controller.isNetConn.value
-            ? const NoInternetConnected()
-            : controller.isLoading.value
-                ? const PageLoader()
-                : Column(
+        extendBodyBehindAppBar: true,
+        appBar: AppBar(
+          elevation: 0,
+          backgroundColor: Colors.transparent,
+          toolbarHeight: 0,
+          systemOverlayStyle: const SystemUiOverlayStyle(
+            statusBarColor: Colors.transparent,
+            statusBarBrightness: Brightness.light,
+            statusBarIconBrightness: Brightness.light,
+          ),
+        ),
+        body: controller.isLoading.value
+            ? const PageLoader()
+            : Stack(
+                alignment: Alignment.center,
+                children: [
+                  Column(
                     children: [
-                      const SizedBox(height: 20),
-                      Center(
-                        child: CircleAvatar(
-                          radius: 44.5,
-                          backgroundColor: Colors.white,
-                          backgroundImage: controller.myProfilePic.isNotEmpty
-                              ? MemoryImage(
-                                  base64Decode(controller.myProfilePic.value),
-                                )
-                              : null,
-                          child: controller.myProfilePic.value.isEmpty
-                              ? const Icon(Icons.person,
-                                  size: 44, color: Colors.blueAccent)
-                              : null,
-                        ),
-                      ),
-                      const SizedBox(height: 10),
-                      controller.userProfile != null &&
-                              controller.userProfile['first_name'] != null
-                          ? CustomTitle(
-                              text:
-                                  '${controller.userProfile['first_name']} ${controller.userProfile['last_name']}',
-                              color: Colors.black,
-                              fontSize: 18,
-                              fontStyle: FontStyle.normal,
-                              textAlign: TextAlign.center,
-                              fontWeight: FontWeight.w700,
-                              letterSpacing: -0.408,
-                            )
-                          : Container(
-                              color: AppColor.primaryColor,
-                              width: double.infinity,
-                              padding: const EdgeInsets.all(16.0),
-                              // child: const Text(
-                              //   'Update your Account',
-                              //   style: TextStyle(
-                              //     color: Colors.white,
-                              //     fontSize: 16,
-                              //     fontWeight: FontWeight.w700,
-                              //   ),
-                              //   textAlign: TextAlign.center,
-                              // ),
-                              child: const CustomTitle(
-                                text: "Update your Account",
-                                color: Colors.white,
-                                fontSize: 16,
-                                fontWeight: FontWeight.w700,
-                                textAlign: TextAlign.center,
-                                letterSpacing: -0.408,
-                              ),
-                            ),
-                      const SizedBox(height: 10),
-                      if (controller.userProfile != null &&
-                          controller.userProfile['first_name'] != null)
-                        Container(
-                          padding: const EdgeInsets.fromLTRB(15, 20, 15, 15),
-                          height: 140,
-                          width: MediaQuery.of(context).size.width,
-                          decoration: const BoxDecoration(
-                            image: DecorationImage(
-                                image:
-                                    AssetImage("assets/images/wallet_bg.png"),
-                                fit: BoxFit.fill),
+                      Container(
+                        width: MediaQuery.of(context).size.width,
+                        padding: const EdgeInsets.all(15),
+                        decoration: const BoxDecoration(
+                          image: DecorationImage(
+                            fit: BoxFit.cover,
+                            image: AssetImage("assets/images/profile_bg.png"),
                           ),
-                          child: Row(
+                        ),
+                        child: SafeArea(
+                          child: Stack(
                             children: [
-                              Expanded(
-                                flex: 2,
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    const CustomTitle(
-                                      text: "Invite Friends",
-                                      color: Colors.white,
-                                      fontStyle: FontStyle.normal,
-                                      fontWeight: FontWeight.w700,
-                                      letterSpacing: -0.408,
-                                    ),
-                                    const SizedBox(height: 5),
-                                    RichText(
-                                      text: const TextSpan(
-                                        children: [
-                                          TextSpan(
-                                            text:
-                                                "Invite your friends for easier booking experiences and get ",
-                                            style: TextStyle(
-                                              color: Colors.white60,
-                                              fontStyle: FontStyle.normal,
-                                              letterSpacing: -0.408,
+                              Column(
+                                children: [
+                                  Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      InkWell(
+                                        onTap: () {
+                                          Get.back();
+                                        },
+                                        child: const Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.start,
+                                          children: [
+                                            Icon(
+                                              Icons.chevron_left,
+                                              color: Colors.white,
                                             ),
-                                          ),
-                                          TextSpan(
-                                            text: "reward points",
-                                            style: TextStyle(
+                                            CustomParagraph(
+                                              text: "Back",
+                                              fontSize: 14,
                                               color: Colors.white,
                                               fontWeight: FontWeight.w700,
-                                              fontStyle: FontStyle.normal,
-                                              letterSpacing: -0.408,
-                                            ),
-                                          ),
-                                          TextSpan(
-                                            text: " each",
-                                            style: TextStyle(
-                                              color: Colors.white60,
-                                              fontStyle: FontStyle.normal,
-                                              letterSpacing: -0.408,
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                    Padding(
-                                      padding: const EdgeInsets.only(top: 14),
-                                      child: Text.rich(
-                                        TextSpan(
-                                          children: [
-                                            TextSpan(
-                                              text: 'Reward Points: ',
-                                              style: paragraphStyle(
-                                                color: const Color(0xFFF4FAFF),
-                                                fontWeight: FontWeight.w600,
-                                                letterSpacing: -0.408,
-                                                fontSize: 12,
-                                              ),
-                                            ),
-                                            TextSpan(
-                                              text: toCurrencyString(controller
-                                                  .userData[0]["points_bal"]
-                                                  .toString()),
-                                              style: paragraphStyle(
-                                                color: const Color(0xFFF4FAFF),
-                                                fontWeight: FontWeight.w600,
-                                                letterSpacing: -0.408,
-                                                fontSize: 12,
-                                              ),
                                             ),
                                           ],
                                         ),
                                       ),
+                                      const CustomTitle(
+                                        text: "My Account",
+                                        color: Colors.white,
+                                        fontSize: 20,
+                                      ),
+                                      const Padding(
+                                        padding: EdgeInsets.only(right: 10),
+                                        child: Icon(
+                                          Icons.more_vert,
+                                          color: Colors.white,
+                                        ),
+                                      )
+                                    ],
+                                  ),
+                                  const SizedBox(height: 120),
+                                ],
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                      Expanded(
+                        child: Container(
+                          width: MediaQuery.of(context).size.width,
+                          padding: const EdgeInsets.symmetric(horizontal: 25),
+                          color: AppColor.bodyColor,
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Container(height: 50),
+                              controller.userData.isNotEmpty &&
+                                      controller.userData[0]['first_name'] !=
+                                          null
+                                  ? Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: [
+                                        CustomTitle(
+                                          text:
+                                              '${controller.userData[0]['first_name']} ${controller.userData[0]['last_name']}',
+                                          color: Colors.black,
+                                          fontSize: 18,
+                                          fontStyle: FontStyle.normal,
+                                          textAlign: TextAlign.center,
+                                          fontWeight: FontWeight.w700,
+                                          letterSpacing: -0.408,
+                                        ),
+                                        Container(width: 5),
+                                        Icon(
+                                          Icons.verified,
+                                          color: AppColor.primaryColor,
+                                        )
+                                      ],
+                                    )
+                                  : const Center(
+                                      child: CustomTitle(
+                                        text: "Not Verified",
+                                        color: Colors.black,
+                                        fontSize: 18,
+                                        fontWeight: FontWeight.w700,
+                                        fontStyle: FontStyle.normal,
+                                        textAlign: TextAlign.center,
+                                        letterSpacing: -0.408,
+                                      ),
                                     ),
-                                  ],
+                              Center(
+                                child: CustomParagraph(
+                                  text:
+                                      "+${controller.userData[0]['mobile_no']}",
+                                  color: Colors.black,
+                                  fontWeight: FontWeight.w500,
+                                  textAlign: TextAlign.center,
                                 ),
                               ),
-                              const Expanded(
-                                flex: 1,
-                                child: Center(
-                                  child: Icon(
-                                    Iconsax.user_add,
-                                    color: Colors.white,
-                                    size: 42,
+                              Container(height: 10),
+                              Container(
+                                decoration: BoxDecoration(
+                                  color: Colors.white,
+                                  border: Border.all(
+                                    color: Colors.white38,
+                                    width: 1.0,
                                   ),
+                                  borderRadius: BorderRadius.circular(15.0),
+                                ),
+                                child: ListView(
+                                  shrinkWrap: true,
+                                  padding: const EdgeInsets.all(10.0),
+                                  children: <Widget>[
+                                    ListTile(
+                                      leading: Icon(
+                                        Iconsax.personalcard,
+                                        color: AppColor.primaryColor,
+                                      ),
+                                      title: const CustomTitle(
+                                        text: "My Account",
+                                        fontSize: 14,
+                                        fontStyle: FontStyle.normal,
+                                        fontWeight: FontWeight.w700,
+                                        letterSpacing: -0.408,
+                                        color: Color(0xFF1C1C1E),
+                                      ),
+                                      trailing: Icon(Icons.chevron_right_sharp,
+                                          color: AppColor.primaryColor),
+                                      onTap: () {
+                                        Get.toNamed(Routes.myaccount);
+                                      },
+                                    ),
+                                    ListTile(
+                                      leading: Icon(
+                                        Iconsax.security,
+                                        color: AppColor.primaryColor,
+                                      ),
+                                      title: const CustomTitle(
+                                        text: "Security Settings",
+                                        fontSize: 14,
+                                        fontStyle: FontStyle.normal,
+                                        fontWeight: FontWeight.w700,
+                                        letterSpacing: -0.408,
+                                        color: Color(0xFF1C1C1E),
+                                      ),
+                                      trailing: Icon(Icons.chevron_right_sharp,
+                                          color: AppColor.primaryColor),
+                                      onTap: () {
+                                        Get.toNamed(Routes.security);
+                                      },
+                                    ),
+                                    // Add more ListTiles here if needed
+                                  ],
                                 ),
                               ),
                             ],
                           ),
                         ),
-                      Container(height: 20),
-                      Expanded(
-                        child: ListView(
-                          padding: EdgeInsets.zero,
-                          children: [
-                            ListTile(
-                              leading: const Icon(Iconsax.personalcard,
-                                  color: Color(0xFF1C1C1E)),
-                              title: const CustomTitle(
-                                text: "My Profile",
-                                fontSize: 14,
-                                fontStyle: FontStyle.normal,
-                                fontWeight: FontWeight.w700,
-                                letterSpacing: -0.408,
-                                color: Color(0xFF1C1C1E),
-                              ),
-                              trailing: const Icon(Icons.chevron_right_sharp,
-                                  color: Color(0xFF1C1C1E)),
-                              onTap: () {
-                                Get.toNamed(Routes.myaccount);
-                              },
-                            ),
-                            const Divider(),
-                            ListTile(
-                              leading: const Icon(Iconsax.shield_tick,
-                                  color: Color(0xFF1C1C1E)),
-                              title: const CustomTitle(
-                                text: "Security Settings",
-                                fontSize: 14,
-                                fontStyle: FontStyle.normal,
-                                fontWeight: FontWeight.w700,
-                                letterSpacing: -0.408,
-                                color: Color(0xFF1C1C1E),
-                              ),
-                              trailing: const Icon(Icons.chevron_right_sharp,
-                                  color: Color(0xFF1C1C1E)),
-                              onTap: () {
-                                Get.toNamed(Routes.security);
-                              },
-                            ),
-                            const Divider(),
-                          ],
-                        ),
                       ),
                     ],
                   ),
+                  Positioned(
+                    top: 165,
+                    child: Container(
+                      padding: const EdgeInsets.all(3),
+                      decoration: const BoxDecoration(
+                        shape: BoxShape.circle,
+                        color: AppColor.bodyColor,
+                      ),
+                      child: CircleAvatar(
+                        radius: 44.5,
+                        backgroundColor: Colors.white,
+                        backgroundImage: controller.myprofile.value.isNotEmpty
+                            ? MemoryImage(
+                                base64Decode(controller.myprofile.value),
+                              )
+                            : null,
+                        child: controller.myprofile.value.isEmpty
+                            ? const Icon(Icons.person,
+                                size: 44, color: Colors.blueAccent)
+                            : null,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
       ),
     );
   }
