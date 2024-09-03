@@ -46,15 +46,15 @@ class ProfileScreenController extends GetxController
 
     myprofile.value = profilepic;
     userData.add(data);
-    civilStatus.value = Variables.civilStatusData.where((element) {
-      return element["value"] == userData[0]['civil_status'];
-    }).toList()[0]["status"];
-    gender.value = userData[0]['gender'] == "F" ? "Female" : "Male";
 
     if (userData[0]['first_name'] != null) {
       if (userData[0]['region_id'] == null) {
         province.value = "No province provided";
       } else {
+        civilStatus.value = Variables.civilStatusData.where((element) {
+          return element["value"] == userData[0]['civil_status'];
+        }).toList()[0]["status"];
+        gender.value = userData[0]['gender'] == "F" ? "Female" : "Male";
         getProvince(userData[0]['region_id']);
       }
     } else {
