@@ -2,7 +2,6 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_multi_formatter/formatters/formatter_utils.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
@@ -17,7 +16,6 @@ import 'package:luvpark_get/custom_widgets/park_shimmer.dart';
 import 'package:luvpark_get/routes/routes.dart';
 import 'package:luvpark_get/wallet/controller.dart';
 import 'package:luvpark_get/wallet/utils/transaction_details.dart';
-import 'package:luvpark_get/web_view/webview.dart';
 
 import '../auth/authentication.dart';
 import '../custom_widgets/alert_dialog.dart';
@@ -31,13 +29,7 @@ class WalletScreen extends GetView<WalletController> {
         appBar: CustomAppbar(
           title: "My Wallet",
           onTap: () {
-            Get.back(result: () {
-              SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
-                statusBarColor: Colors.transparent,
-                statusBarBrightness: Brightness.light,
-                statusBarIconBrightness: Brightness.dark,
-              ));
-            });
+            Get.back();
           },
         ),
         body: Obx(
@@ -59,16 +51,7 @@ class WalletScreen extends GetView<WalletController> {
                             padding: const EdgeInsets.fromLTRB(15, 24, 15, 0),
                             child: Column(
                               children: [
-                                InkWell(
-                                    onTap: () {
-                                      // Get.to(WebviewPage(
-                                      //   urlDirect:
-                                      //       "https://www.figma.com/design/jHAAFCYEigpPbGOEsrOfbr/LuvPark---Park-Smarter?node-id=3427-3413&m=dev",
-                                      //   label: "luvpark",
-                                      //   isBuyToken: false,
-                                      // ));
-                                    },
-                                    child: buildProfileImage()),
+                                buildProfileImage(),
                                 SizedBox(
                                   height: 15,
                                 ),

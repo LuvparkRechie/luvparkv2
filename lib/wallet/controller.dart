@@ -36,9 +36,7 @@ class WalletController extends GetxController
     fromDate.text =
         timeNow.subtract(const Duration(days: 1)).toString().split(" ")[0];
     _dataController = StreamController<void>();
-    WidgetsBinding.instance.addPostFrameCallback((_) async {
-      getUserBalance();
-    });
+    getUserBalance();
   }
 
   void streamData() {
@@ -60,16 +58,24 @@ class WalletController extends GetxController
   }
 
   Future<void> getUserBalance() async {
-    userImage = await Authentication().getUserProfilePic();
+    final userPp = await Authentication().getUserProfilePic();
     var uData = await Authentication().getUserData();
     var item = jsonDecode(uData!);
-    fname.value =
-        "${item['first_name'].toString()} ${item['last_name'].toString()}";
+    userImage = userPp;
+
+    if (item['first_name'] == null) {
+      fname.value = "Not specified";
+    } else {
+      fname.value =
+          "${item['first_name'].toString()} ${item['last_name'].toString()}";
+    }
+
     Functions.getUserBalance(Get.context!, (dataBalance) async {
       if (!dataBalance[0]["has_net"]) {
         isLoading.value = false;
         isNetConn.value = false;
         isAllowToSync = false;
+
         return;
       } else {
         userData.value = dataBalance[0]["items"];
@@ -131,6 +137,7 @@ class WalletController extends GetxController
 
 //Get logs | transaction Page
   Future<void> getLogs() async {
+    print("get logs");
     final item = await Authentication().getUserData();
     String userId = jsonDecode(item!)['user_id'].toString();
     isLoading.value = true;
@@ -139,9 +146,8 @@ class WalletController extends GetxController
         "${ApiKeys.gApiSubFolderGetTransactionLogs}?user_id=$userId&tran_date_from=${fromDate.text}&tran_date_to=${toDate.text}";
 
     HttpRequest(api: subApi).get().then((response) {
+      print("response $response");
       if (response == "No Internet") {
-        _dataController.close();
-        dataSubscription.cancel();
         isAllowToSync = false;
         isLoading.value = false;
         isNetConn.value = false;
@@ -150,9 +156,7 @@ class WalletController extends GetxController
         return;
       }
       if (response == null) {
-        _dataController.close();
-        dataSubscription.cancel();
-        isLoading.value = true;
+        isLoading.value = false;
         isNetConn.value = true;
         isAllowToSync = false;
         logs.value = [];
@@ -184,7 +188,7 @@ class WalletController extends GetxController
         streamData();
       } else {
         _dataController.close();
-        dataSubscription.cancel();
+
         isLoading.value = false;
         isNetConn.value = true;
         isAllowToSync = false;

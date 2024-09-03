@@ -198,6 +198,8 @@ class LoginScreenController extends GetxController {
                   if (items["image_base64"] != null) {
                     Authentication()
                         .setProfilePic(jsonEncode(items["image_base64"]));
+                  } else {
+                    Authentication().setProfilePic("");
                   }
 
                   cb([

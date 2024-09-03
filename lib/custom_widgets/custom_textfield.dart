@@ -92,7 +92,8 @@ class _CustomTextFieldState extends State<CustomTextField> {
                 borderRadius: BorderRadius.circular(7.0),
                 borderSide: BorderSide.none),
             labelStyle: paragraphStyle(fontWeight: FontWeight.w600),
-            labelText: widget.labelText,
+            labelText: widget.title ?? widget.labelText,
+            hintText: widget.labelText,
             suffixIcon: widget.suffixIcon != null
                 ? InkWell(
                     onTap: () {

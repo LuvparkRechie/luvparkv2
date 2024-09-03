@@ -9,10 +9,10 @@ import 'package:luvpark_get/custom_widgets/app_color.dart';
 import 'package:luvpark_get/custom_widgets/custom_body.dart';
 import 'package:luvpark_get/custom_widgets/custom_button.dart';
 import 'package:luvpark_get/custom_widgets/custom_text.dart';
+import 'package:luvpark_get/custom_widgets/no_internet.dart';
 import 'package:luvpark_get/custom_widgets/variables.dart';
 import 'package:luvpark_get/drawer/view.dart';
 import 'package:luvpark_get/functions/functions.dart';
-import 'package:luvpark_get/internet/internet_conn.dart';
 import 'package:luvpark_get/routes/routes.dart';
 import 'package:luvpark_get/voice_search/view.dart';
 import 'package:map_picker/map_picker.dart';
@@ -29,7 +29,7 @@ class DashboardMapScreen extends GetView<DashboardMapController> {
 
     return Obx(() {
       if (!controller.netConnected.value) {
-        return const CustomScaffold(children: InternetConn());
+        return const CustomScaffold(children: NoInternetConnected());
       } else if (controller.isLoading.value) {
         return const PopScope(
           canPop: false,

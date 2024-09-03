@@ -75,9 +75,12 @@ class ForgotVerifiedAcct extends GetView<ForgotVerifiedAcctController> {
                                   fontWeight: FontWeight.w700,
                                   color: Colors.black,
                                 ),
+                                const VerticalHeight(height: 10),
                                 CustomTextField(
                                   title: "Answer",
                                   labelText: "Enter your answer",
+                                  textCapitalization:
+                                      TextCapitalization.characters,
                                   controller: controller.answer,
                                 ),
 
@@ -87,11 +90,6 @@ class ForgotVerifiedAcct extends GetView<ForgotVerifiedAcctController> {
                                     crossAxisAlignment:
                                         CrossAxisAlignment.start,
                                     children: [
-                                      const CustomParagraph(
-                                        text: "New Password",
-                                        fontWeight: FontWeight.w700,
-                                        color: Colors.black,
-                                      ),
                                       CustomTextField(
                                         title: "Password",
                                         labelText: "Enter your new password",

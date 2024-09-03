@@ -301,7 +301,7 @@ class ParkingDetailsController extends GetxController {
       btnLoading.value = false;
       CustomDialog().errorDialog(
         Get.context!,
-        "LuvPark",
+        "luvpark",
         "This area is not available at the moment.",
         () {
           Get.back();

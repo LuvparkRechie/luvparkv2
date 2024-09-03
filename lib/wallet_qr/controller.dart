@@ -70,13 +70,17 @@ class QrWalletController extends GetxController
     var userData = await Authentication().getUserData();
     var item = jsonDecode(userData!);
     // print('userdataaa$userData');
-    String middleName = item['middle_name'].toString().toUpperCase() == "NA"
-        ? ""
-        : "${item['middle_name'].toString()[0]}.";
-    fullName.value =
-        "${item['first_name'].toString()} $middleName ${item['last_name'].toString()}";
-    firstlastCapital.value =
-        "${item['first_name'].toString()[0]} ${item['last_name'].toString()[0]}";
+    if (item["first_name"] != null) {
+      String middleName = item['middle_name'].toString().toUpperCase() == "NA"
+          ? ""
+          : "${item['middle_name'].toString()[0]}.";
+      fullName.value =
+          "${item['first_name'].toString()} $middleName ${item['last_name'].toString()}";
+      firstlastCapital.value =
+          "${item['first_name'].toString()[0]} ${item['last_name'].toString()[0]}";
+    } else {
+      fullName.value = "Not specified";
+    }
     mono.value =
         "+639${item['mobile_no'].substring(3).toString().replaceAll(RegExp(r'.(?=.{4})'), '●')}";
     mobNum.value = item['mobile_no'];

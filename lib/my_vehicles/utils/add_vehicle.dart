@@ -50,11 +50,14 @@ class AddVehicles extends GetView<MyVehiclesController> {
                       },
                     ),
                     controller.isLoadingAddVh.value
-                        ? const CircularProgressIndicator()
+                        ? CustomTextField(
+                            labelText: "Vehicle brand",
+                            controller: TextEditingController(),
+                            isReadOnly: true,
+                          )
                         : CustomDropdown(
                             labelText: "Vehicle brand",
-                            // ignore: invalid_use_of_protected_member
-                            ddData: controller.vehicleBrandData.value,
+                            ddData: controller.vehicleBrandData,
                             ddValue: controller.ddVhBrand.value,
                             onChange: (String? newValue) {
                               controller.onChangedBrand(newValue!);

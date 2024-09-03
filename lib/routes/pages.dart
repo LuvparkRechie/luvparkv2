@@ -36,7 +36,6 @@ import '../registration/utils/otp_screen/index.dart';
 import '../security_settings/index.dart';
 import '../send_otp/index.dart';
 import '../splash_screen/index.dart';
-import '../terms/index.dart';
 import '../wallet/index.dart';
 import '../wallet_send/index.dart';
 import 'routes.dart';
@@ -51,10 +50,7 @@ class AppPages {
         name: Routes.landing,
         page: () => const LandingScreen(),
         binding: LandingBinding()),
-    GetPage(
-        name: Routes.terms,
-        page: () => const TermsOfUse(),
-        binding: TermsOfUseBinding()),
+
     GetPage(
         name: Routes.login,
         page: () => const LoginScreen(),

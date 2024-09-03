@@ -238,8 +238,6 @@ class BookingController extends GetxController
     if (selectedVh.isEmpty) {
       isBtnLoading.value = true;
     }
-    isLoadingVehicles.value = true;
-    isNetConnVehicles.value = true;
 
     isFirstScreen.value = true;
     plateNo.text = "";
@@ -266,10 +264,9 @@ class BookingController extends GetxController
         });
         return;
       }
-
+      print("myVehiclesData.value ${myVehiclesData}");
+      myVehiclesData.value = [];
       if (myVehicles["items"].length > 0) {
-        myVehiclesData.value = [];
-
         for (var row in myVehicles["items"]) {
           String brandName = await Functions.getBrandName(
               row["vehicle_type_id"], row["vehicle_brand_id"]);
@@ -282,6 +279,8 @@ class BookingController extends GetxController
           });
         }
         getDropdownVehicles();
+      } else {
+        getDropdownVehicles();
       }
     });
   }
@@ -293,9 +292,11 @@ class BookingController extends GetxController
                 "${ApiKeys.gApiLuvParkDDVehicleTypes2}?park_area_id=${parameters["areaData"]["park_area_id"]}")
         .get()
         .then((returnData) async {
+      isBtnLoading.value = false;
       if (returnData == "No Internet") {
         isNetConnVehicles.value = false;
         isLoadingVehicles.value = true;
+
         CustomDialog().internetErrorDialog(Get.context!, () {
           Get.back();
         });
@@ -465,7 +466,7 @@ class BookingController extends GetxController
             return;
           } else {
             isSubmitBooking.value = false;
-            // Get.offAndToNamed(Routes.bookingReceipt, arguments: paramArgs);
+            inactivityTimer?.cancel();
             Get.to(BookingDialog(data: [paramArgs]));
 
             return;

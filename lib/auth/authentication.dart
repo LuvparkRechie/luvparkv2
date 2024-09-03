@@ -102,8 +102,8 @@ class Authentication {
 
     String? data = prefs.getString('profile_pic');
 
-    if (data == null) {
-      return null;
+    if (data == null || data.isEmpty) {
+      return "";
     }
     return jsonDecode(data);
   }

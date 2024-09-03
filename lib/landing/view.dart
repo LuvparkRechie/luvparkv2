@@ -7,6 +7,8 @@ import 'package:luvpark_get/custom_widgets/custom_text.dart';
 import 'package:luvpark_get/landing/controller.dart';
 import 'package:luvpark_get/routes/routes.dart';
 
+import '../web_view/webview.dart';
+
 class LandingScreen extends StatelessWidget {
   const LandingScreen({super.key});
 
@@ -14,7 +16,7 @@ class LandingScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final LandingController controllers = Get.put(LandingController());
     return PopScope(
-      canPop: false,
+      canPop: true,
       child: Scaffold(
         appBar: AppBar(
           elevation: 0,
@@ -105,7 +107,13 @@ class LandingScreen extends StatelessWidget {
                                         Expanded(
                                           child: InkWell(
                                             onTap: () {
-                                              Get.offAllNamed(Routes.terms);
+                                              controllers.onPageChanged(true);
+                                              Get.to(const WebviewPage(
+                                                urlDirect:
+                                                    "https://luvpark.ph/terms-of-use/",
+                                                label: "Terms of Use",
+                                                isBuyToken: false,
+                                              ));
                                             },
                                             child: const CustomLinkLabel(
                                               text: "luvpark's Terms of use",

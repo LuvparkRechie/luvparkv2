@@ -97,7 +97,9 @@ class BookingDialog extends StatelessWidget {
                                       text: "Duration",
                                     ),
                                   ),
-                                  CustomLinkLabel(text: data[0]["hours"])
+                                  CustomLinkLabel(
+                                      text:
+                                          "${data[0]["hours"]} ${int.parse(data[0]["hours"].toString()) > 1 ? "Hours" : "Hour"}")
                                 ],
                               ),
                               Container(height: 10),

@@ -339,6 +339,23 @@ class DashboardMapController extends GetxController
     }
   }
 
+  void onDrawerOpen() async {
+    String? userData = await Authentication().getUserData();
+    final item = await Authentication().getUserData2();
+    final profPic = await Authentication().getUserProfilePic();
+    print("on drawer open");
+    userProfile = item;
+    myProfPic.value = profPic;
+
+    userProfile = item;
+    if (jsonDecode(userData!)["first_name"] == null) {
+      myName.value = "";
+    } else {
+      myName.value = jsonDecode(userData)["first_name"];
+    }
+    update();
+  }
+
 //END OF MAP SETUP
   void getUserData(isSearch) async {
     isLoading.value = true;
@@ -346,7 +363,7 @@ class DashboardMapController extends GetxController
     String? userData = await Authentication().getUserData();
     final item = await Authentication().getUserData2();
     final profPic = await Authentication().getUserProfilePic();
-
+    print("profPic $profPic");
     userProfile = item;
     myProfPic.value = profPic;
 

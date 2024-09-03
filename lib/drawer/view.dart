@@ -18,118 +18,121 @@ class CustomDrawer extends GetView<DashboardMapController> {
 
   @override
   Widget build(BuildContext context) {
+    controller.onDrawerOpen();
     return Drawer(
-      child: Column(
+        child: Obx(
+      () => Column(
         children: [
-          Stack(
-            children: [
-              SizedBox(
-                height: 296,
-                width: double.infinity,
-                child: Image.asset(
+          Container(
+            decoration: const BoxDecoration(
+              image: DecorationImage(
+                image: AssetImage(
                   "assets/images/profile_bg.png",
-                  fit: BoxFit.cover,
                 ),
+                fit: BoxFit.cover,
               ),
-              Positioned(
-                top: 20,
-                left: 0,
-                right: 0,
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    Container(height: 10),
-                    const Padding(
-                      padding: EdgeInsets.only(right: 15),
-                      child: SizedBox(
-                        height: 56,
-                        width: double.infinity,
-                        child: Image(
-                          image: AssetImage("assets/images/luvpark.png"),
-                          color: Colors.white,
-                        ),
-                      ),
-                    ),
-                    Container(
-                      decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        border: Border.all(
-                          color: Colors.white,
-                          width: 2.0,
-                        ),
-                      ),
-                      child: CircleAvatar(
-                        radius: 44.5,
-                        backgroundColor: Colors.white,
-                        backgroundImage: controller.myProfPic.isNotEmpty
-                            ? MemoryImage(
-                                base64Decode(controller.myProfPic.value),
-                              )
-                            : null,
-                        child: controller.myProfPic.isEmpty
-                            ? const Icon(
-                                Icons.person,
-                                size: 44,
-                                color: Colors.blueAccent,
-                              )
-                            : null,
-                      ),
-                    ),
-                    Container(height: 10),
-                    controller.userProfile != null &&
-                            controller.userProfile['first_name'] != null
-                        ? CustomTitle(
-                            text:
-                                '${controller.userProfile['first_name']} ${controller.userProfile['last_name']}',
+            ),
+            width: double.infinity,
+            child: SafeArea(
+              child: Column(
+                children: [
+                  Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Container(height: 10),
+                      const Padding(
+                        padding: EdgeInsets.only(right: 15),
+                        child: SizedBox(
+                          height: 56,
+                          width: double.infinity,
+                          child: Image(
+                            image: AssetImage("assets/images/luvpark.png"),
                             color: Colors.white,
-                            fontSize: 18,
-                            fontStyle: FontStyle.normal,
-                            textAlign: TextAlign.center,
-                            fontWeight: FontWeight.w700,
-                            letterSpacing: -0.408,
-                          )
-                        : Container(
-                            color: Colors.transparent,
-                            width: double.infinity,
-                            child: const CustomTitle(
-                              text: "Not Verified",
+                          ),
+                        ),
+                      ),
+                      Container(
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          border: Border.all(
+                            color: Colors.white,
+                            width: 2.0,
+                          ),
+                        ),
+                        child: CircleAvatar(
+                          radius: 44.5,
+                          backgroundColor: Colors.white,
+                          backgroundImage: controller.myProfPic.isNotEmpty
+                              ? MemoryImage(
+                                  base64Decode(controller.myProfPic.value),
+                                )
+                              : null,
+                          child: controller.myProfPic.isEmpty
+                              ? const Icon(
+                                  Icons.person,
+                                  size: 44,
+                                  color: Colors.blueAccent,
+                                )
+                              : null,
+                        ),
+                      ),
+                      Container(height: 10),
+                      controller.userProfile != null &&
+                              controller.userProfile['first_name'] != null
+                          ? CustomTitle(
+                              text:
+                                  '${controller.userProfile['first_name']} ${controller.userProfile['last_name']}',
                               color: Colors.white,
                               fontSize: 18,
-                              fontWeight: FontWeight.w700,
                               fontStyle: FontStyle.normal,
                               textAlign: TextAlign.center,
+                              fontWeight: FontWeight.w700,
                               letterSpacing: -0.408,
+                            )
+                          : Container(
+                              color: Colors.transparent,
+                              width: double.infinity,
+                              child: const CustomTitle(
+                                text: "Not Verified",
+                                color: Colors.white,
+                                fontSize: 18,
+                                fontWeight: FontWeight.w700,
+                                fontStyle: FontStyle.normal,
+                                textAlign: TextAlign.center,
+                                letterSpacing: -0.408,
+                              ),
                             ),
+                      Container(height: 10),
+                      OutlinedButton(
+                        onPressed: () {
+                          Get.toNamed(Routes.profile);
+                        },
+                        style: OutlinedButton.styleFrom(
+                          backgroundColor: Colors.transparent,
+                          side:
+                              const BorderSide(color: Colors.white, width: 1.0),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(58.0),
                           ),
-                    Container(height: 10),
-                    OutlinedButton(
-                      onPressed: () {
-                        Get.offAndToNamed(Routes.profile);
-                      },
-                      style: OutlinedButton.styleFrom(
-                        backgroundColor: Colors.transparent,
-                        side: const BorderSide(color: Colors.white, width: 1.0),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(58.0),
+                          padding: const EdgeInsets.symmetric(horizontal: 20.0),
                         ),
-                        padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                        child: const CustomTitle(
+                          text: "My Profile and Settings",
+                          fontSize: 14,
+                          fontStyle: FontStyle.normal,
+                          fontWeight: FontWeight.w700,
+                          textAlign: TextAlign.center,
+                          letterSpacing: -0.408,
+                          color: Colors.white,
+                        ),
                       ),
-                      child: const CustomTitle(
-                        text: "My Profile and Settings",
-                        fontSize: 14,
-                        fontStyle: FontStyle.normal,
-                        fontWeight: FontWeight.w700,
-                        textAlign: TextAlign.center,
-                        letterSpacing: -0.408,
-                        color: Colors.white,
-                      ),
-                    ),
-                    Container(height: 10),
-                  ],
-                ),
+                      Container(height: 10),
+                    ],
+                  ),
+                ],
               ),
-            ],
+            ),
           ),
           Expanded(
             child: ListView(
@@ -164,7 +167,7 @@ class CustomDrawer extends GetView<DashboardMapController> {
                   trailing: Icon(Icons.chevron_right_sharp,
                       color: AppColor.primaryColor),
                   onTap: () {
-                    Get.offAndToNamed(Routes.parking);
+                    Get.toNamed(Routes.parking);
                   },
                 ),
                 ListTile(
@@ -181,7 +184,7 @@ class CustomDrawer extends GetView<DashboardMapController> {
                   trailing: Icon(Icons.chevron_right_sharp,
                       color: AppColor.primaryColor),
                   onTap: () {
-                    Get.offAndToNamed(Routes.myVehicles);
+                    Get.toNamed(Routes.myVehicles);
                   },
                 ),
                 ListTile(
@@ -227,7 +230,7 @@ class CustomDrawer extends GetView<DashboardMapController> {
                   trailing: Icon(Icons.chevron_right_sharp,
                       color: AppColor.primaryColor),
                   onTap: () {
-                    Get.offAndToNamed(Routes.aboutus);
+                    Get.toNamed(Routes.aboutus);
                   },
                 ),
                 ListTile(
@@ -244,7 +247,7 @@ class CustomDrawer extends GetView<DashboardMapController> {
                   trailing: Icon(Icons.chevron_right_sharp,
                       color: AppColor.primaryColor),
                   onTap: () {
-                    Get.offAndToNamed(Routes.faqpage);
+                    Get.toNamed(Routes.faqpage);
                   },
                 ),
                 ListTile(
@@ -291,13 +294,13 @@ class CustomDrawer extends GetView<DashboardMapController> {
               ],
             ),
           ),
-          Divider(color: Colors.grey[350]),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 20),
-            child: SizedBox(
-              width: double.infinity,
-              child: Padding(
-                padding: const EdgeInsets.only(top: 15),
+          Container(
+            decoration: BoxDecoration(
+                border: Border(top: BorderSide(color: Colors.grey.shade200))),
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 20),
+              child: SizedBox(
+                width: double.infinity,
                 child: TextButton(
                   onPressed: () {
                     CustomDialog().customPopUp(
@@ -307,10 +310,10 @@ class CustomDrawer extends GetView<DashboardMapController> {
                       'Cancel',
                       'Yes, log out',
                       imageName: 'pu_confirmation',
-                      btnNotBackgroundColor: AppColor.primaryColor,
-                      btnNotTextColor: Colors.white,
-                      btnOkTextColor: AppColor.primaryColor,
-                      btnOkBackgroundColor: Colors.transparent,
+                      btnNotBackgroundColor: Colors.transparent,
+                      btnNotTextColor: AppColor.primaryColor,
+                      btnOkTextColor: Colors.white,
+                      btnOkBackgroundColor: AppColor.primaryColor,
                       onTapClose: () async {
                         Get.back();
                       },
@@ -371,6 +374,6 @@ class CustomDrawer extends GetView<DashboardMapController> {
           Container(height: 20),
         ],
       ),
-    );
+    ));
   }
 }
