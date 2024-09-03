@@ -53,8 +53,6 @@ class Profile extends GetView<ProfileScreenController> {
                             child: Column(
                               children: [
                                 Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
                                   children: [
                                     InkWell(
                                       onTap: () {
@@ -77,17 +75,18 @@ class Profile extends GetView<ProfileScreenController> {
                                         ],
                                       ),
                                     ),
-                                    const CustomTitle(
-                                      text: "My Account",
-                                      color: Colors.white,
-                                      fontSize: 20,
-                                    ),
-                                    const Padding(
-                                      padding: EdgeInsets.only(right: 10),
-                                      child: Icon(
-                                        Icons.more_vert,
+                                    const Expanded(
+                                      child: CustomTitle(
+                                        text: "My Account",
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.w900,
                                         color: Colors.white,
+                                        textAlign: TextAlign.center,
                                       ),
+                                    ),
+                                    const SizedBox(
+                                      width: 20,
+                                      height: 10,
                                     )
                                   ],
                                 ),
@@ -122,180 +121,6 @@ class Profile extends GetView<ProfileScreenController> {
                             ),
                           ),
                         ),
-                        // Column(
-                        //   children: [
-                        //     Container(
-                        //       width: MediaQuery.of(context).size.width,
-                        //       padding: const EdgeInsets.all(15),
-                        //       decoration: const BoxDecoration(
-                        //         image: DecorationImage(
-                        //           fit: BoxFit.cover,
-                        //           image: AssetImage("assets/images/profile_bg.png"),
-                        //         ),
-                        //       ),
-                        //       child: SafeArea(
-                        //         child: Stack(
-                        //           children: [
-                        //             Column(
-                        //               children: [
-                        //                 Row(
-                        //                   mainAxisAlignment:
-                        //                       MainAxisAlignment.spaceBetween,
-                        //                   children: [
-                        //                     InkWell(
-                        //                       onTap: () {
-                        //                         Get.back();
-                        //                       },
-                        //                       child: const Row(
-                        //                         mainAxisAlignment:
-                        //                             MainAxisAlignment.start,
-                        //                         children: [
-                        //                           Icon(
-                        //                             Icons.chevron_left,
-                        //                             color: Colors.white,
-                        //                           ),
-                        //                           CustomParagraph(
-                        //                             text: "Back",
-                        //                             fontSize: 14,
-                        //                             color: Colors.white,
-                        //                             fontWeight: FontWeight.w700,
-                        //                           ),
-                        //                         ],
-                        //                       ),
-                        //                     ),
-                        //                     const CustomTitle(
-                        //                       text: "My Account",
-                        //                       color: Colors.white,
-                        //                       fontSize: 20,
-                        //                     ),
-                        //                     const Padding(
-                        //                       padding: EdgeInsets.only(right: 10),
-                        //                       child: Icon(
-                        //                         Icons.more_vert,
-                        //                         color: Colors.white,
-                        //                       ),
-                        //                     )
-                        //                   ],
-                        //                 ),
-                        //                 const SizedBox(height: 120),
-                        //               ],
-                        //             ),
-                        //           ],
-                        //         ),
-                        //       ),
-                        //     ),
-                        //     Expanded(
-                        //       child: Container(
-                        //         width: MediaQuery.of(context).size.width,
-                        //         padding: const EdgeInsets.symmetric(horizontal: 25),
-                        //         color: AppColor.bodyColor,
-                        //         child: Column(
-                        //           crossAxisAlignment: CrossAxisAlignment.start,
-                        //           children: [
-                        //             Container(height: 50),
-                        //             controller.userData[0]['first_name'] != null
-                        //                 ? Row(
-                        //                     mainAxisAlignment:
-                        //                         MainAxisAlignment.center,
-                        //                     children: [
-                        //                       CustomTitle(
-                        //                         text:
-                        //                             '${controller.userData[0]['first_name']} ${controller.userData[0]['last_name']}',
-                        //                         color: Colors.black,
-                        //                         fontSize: 18,
-                        //                         fontStyle: FontStyle.normal,
-                        //                         textAlign: TextAlign.center,
-                        //                         fontWeight: FontWeight.w700,
-                        //                         letterSpacing: -0.408,
-                        //                       ),
-                        //                       Container(width: 5),
-                        //                       Icon(
-                        //                         Icons.verified,
-                        //                         color: AppColor.primaryColor,
-                        //                       )
-                        //                     ],
-                        //                   )
-                        //                 : const Center(
-                        //                     child: CustomTitle(
-                        //                       text: "Not Verified",
-                        //                       color: Colors.black,
-                        //                       fontSize: 18,
-                        //                       fontWeight: FontWeight.w700,
-                        //                       fontStyle: FontStyle.normal,
-                        //                       textAlign: TextAlign.center,
-                        //                       letterSpacing: -0.408,
-                        //                     ),
-                        //                   ),
-                        //             Center(
-                        //               child: CustomParagraph(
-                        //                 text:
-                        //                     "+${controller.userData[0]['mobile_no']}",
-                        //                 textAlign: TextAlign.center,
-                        //               ),
-                        //             ),
-                        //             Container(height: 10),
-                        //             Container(
-                        //               decoration: BoxDecoration(
-                        //                 color: Colors.white,
-                        //                 border: Border.all(
-                        //                   color: Colors.white38,
-                        //                   width: 1.0,
-                        //                 ),
-                        //                 borderRadius: BorderRadius.circular(15.0),
-                        //               ),
-                        //               child: ListView(
-                        //                 shrinkWrap: true,
-                        //                 padding: const EdgeInsets.all(10.0),
-                        //                 children: <Widget>[
-                        //                   ListTile(
-                        //                     leading: Icon(
-                        //                       Iconsax.personalcard,
-                        //                       color: AppColor.primaryColor,
-                        //                     ),
-                        //                     title: const CustomTitle(
-                        //                       text: "My Account",
-                        //                       fontSize: 14,
-                        //                       fontStyle: FontStyle.normal,
-                        //                       fontWeight: FontWeight.w700,
-                        //                       letterSpacing: -0.408,
-                        //                       color: Color(0xFF1C1C1E),
-                        //                     ),
-                        //                     trailing: Icon(Icons.chevron_right_sharp,
-                        //                         color: AppColor.primaryColor),
-                        //                     onTap: () {
-                        //                       Get.toNamed(Routes.myaccount);
-                        //                     },
-                        //                   ),
-                        //                   const Divider(),
-                        //                   ListTile(
-                        //                     leading: Icon(
-                        //                       Iconsax.setting_2,
-                        //                       color: AppColor.primaryColor,
-                        //                     ),
-                        //                     title: const CustomTitle(
-                        //                       text: "Security Settings",
-                        //                       fontSize: 14,
-                        //                       fontStyle: FontStyle.normal,
-                        //                       fontWeight: FontWeight.w700,
-                        //                       letterSpacing: -0.408,
-                        //                       color: Color(0xFF1C1C1E),
-                        //                     ),
-                        //                     trailing: Icon(Icons.chevron_right_sharp,
-                        //                         color: AppColor.primaryColor),
-                        //                     onTap: () {
-                        //                       Get.toNamed(Routes.security);
-                        //                     },
-                        //                   ),
-                        //                   // Add more ListTiles here if needed
-                        //                 ],
-                        //               ),
-                        //             ),
-                        //           ],
-                        //         ),
-                        //       ),
-                        //     ),
-                        //   ],
-                        // ),
                       ],
                     ),
                   ),
