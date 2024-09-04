@@ -20,8 +20,11 @@ class ForgotPassOtp extends GetView<ForgotPassOtpController> {
         height: 50,
         textStyle: TextStyle(
           fontSize: 24,
-          color:
-              controller.isOtpValid.value ? AppColor.primaryColor : Colors.red,
+          color: controller.isOtpValid.value
+              ? AppColor.primaryColor
+              : controller.inputPin.value.length != 6
+                  ? AppColor.primaryColor
+                  : Colors.red,
         ),
         decoration: BoxDecoration(
           border: Border.all(
@@ -29,7 +32,9 @@ class ForgotPassOtp extends GetView<ForgotPassOtpController> {
                   ? AppColor.borderColor
                   : controller.isOtpValid.value
                       ? AppColor.primaryColor
-                      : Colors.red,
+                      : controller.inputPin.value.length != 6
+                          ? AppColor.borderColor
+                          : Colors.red,
               width: 2),
           borderRadius: BorderRadius.circular(5),
           color: Colors.white,
@@ -149,17 +154,17 @@ class ForgotPassOtp extends GetView<ForgotPassOtpController> {
                                   color: AppColor.primaryColor, width: 2),
                             ),
                       ),
-                      submittedPinTheme: getDefaultPinTheme().copyWith(
-                        decoration: getDefaultPinTheme().decoration!.copyWith(
-                              borderRadius: BorderRadius.circular(5),
-                              color: AppColor.bodyColor,
-                              border: Border.all(
-                                  color: controller.isOtpValid.value
-                                      ? AppColor.primaryColor
-                                      : Colors.red,
-                                  width: 2),
-                            ),
-                      ),
+                      // submittedPinTheme: getDefaultPinTheme().copyWith(
+                      //   decoration: getDefaultPinTheme().decoration!.copyWith(
+                      //         borderRadius: BorderRadius.circular(5),
+                      //         color: AppColor.bodyColor,
+                      //         border: Border.all(
+                      //             color: controller.isOtpValid.value
+                      //                 ? AppColor.primaryColor
+                      //                 : Colors.red,
+                      //             width: 2),
+                      //       ),
+                      // ),
                     ),
                   ),
                 ),

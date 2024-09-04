@@ -15,30 +15,30 @@ class VoiceSearchPopup extends StatelessWidget {
             borderRadius: BorderRadius.circular(15),
           ),
           title: const Center(child: Text("Voice Search")),
-          content: Obx(
-            () => Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                const Icon(
-                  Icons.mic,
-                  size: 100,
-                  color: Colors.blue,
-                ),
-                const SizedBox(height: 20),
-                const Text(
-                  "Listening...",
-                  textAlign: TextAlign.center,
-                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
-                ),
-                const SizedBox(height: 20),
-                Text(
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              const Icon(
+                Icons.mic,
+                size: 100,
+                color: Colors.blue,
+              ),
+              const SizedBox(height: 20),
+              const Text(
+                "Listening...",
+                textAlign: TextAlign.center,
+                style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
+              ),
+              const SizedBox(height: 20),
+              Obx(
+                () => Text(
                   controller.searchText.value,
                   style: const TextStyle(
                       fontSize: 20, fontWeight: FontWeight.bold),
                 ),
-                const SizedBox(height: 20),
-              ],
-            ),
+              ),
+              const SizedBox(height: 20),
+            ],
           ),
         );
       },

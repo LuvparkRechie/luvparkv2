@@ -219,7 +219,6 @@ class LoginScreenController extends GetxController {
     mobileNumber = TextEditingController();
     password = TextEditingController();
 
-    print("sulod sa login");
     super.onInit();
   }
 

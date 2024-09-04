@@ -55,7 +55,7 @@ class ChangePassword extends GetView<ChangePasswordController> {
                       ),
                       const VerticalHeight(height: 30),
                       CustomTextField(
-                        title: "Password",
+                        title: "Old Password",
                         labelText: "Enter your old password",
                         controller: controller.oldPassword,
                         isObscure: !controller.isShowOldPass.value,
@@ -73,9 +73,8 @@ class ChangePassword extends GetView<ChangePasswordController> {
                           return null;
                         },
                       ),
-                      const VerticalHeight(height: 10),
                       CustomTextField(
-                        title: "Password",
+                        title: "New Password",
                         labelText: "Create your new password",
                         controller: controller.newPassword,
                         isObscure: !controller.isShowNewPass.value,
@@ -96,9 +95,8 @@ class ChangePassword extends GetView<ChangePasswordController> {
                           return null;
                         },
                       ),
-                      const VerticalHeight(height: 10),
                       CustomTextField(
-                        title: "Password",
+                        title: "Confirm Password",
                         labelText: "Confirm your new password",
                         controller: controller.newConfirmPassword,
                         isObscure: !controller.isShowNewPassConfirm.value,
@@ -125,7 +123,7 @@ class ChangePassword extends GetView<ChangePasswordController> {
                           return null;
                         },
                       ),
-                      Container(height: 10),
+                      Container(height: 20),
                       Container(
                         clipBehavior: Clip.antiAlias,
                         decoration: ShapeDecoration(

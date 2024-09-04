@@ -234,6 +234,9 @@ class ApiKeys {
   static const gApiBooking = '/ords/$luvApi/token/luvpark/booking';
   static const gApiPostSelfCheckIn =
       '/ords/$parkSpaceApi/pm/checkInAdvancedParking';
+  //Delete advance parking
+  static const gApiPostCancelParking =
+      '/ords/$parkSpaceApi/pm/cancelAdvancedParking';
 
   //REMOVED API
   // //Reserve payment key

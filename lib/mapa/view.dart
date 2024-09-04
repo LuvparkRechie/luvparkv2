@@ -47,32 +47,30 @@ class DashboardMapScreen extends GetView<DashboardMapController> {
         if (double.parse(controller.userBal[0]["amount_bal"].toString()) >=
             double.parse(controller.userBal[0]["min_wallet_bal"].toString())) {
           if (controller.isLoadingMap.value) {
-            return PopScope(
-              canPop: false,
-              child: CustomScaffold(
-                  children: SizedBox(
-                height: MediaQuery.of(context).size.height,
-                width: MediaQuery.of(context).size.width,
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    const Image(
-                        width: 100,
-                        height: 100,
-                        image: AssetImage("assets/images/logo.png")),
-                    FadeIn(
-                      delay: const Duration(milliseconds: 400),
-                      child: Shimmer.fromColors(
-                        baseColor: Colors.black,
-                        highlightColor: Colors.grey[100]!,
-                        child: const CustomParagraph(
-                            text: 'Getting nearest parking area for you.'),
+            return CustomScaffold(
+                canPop: false,
+                children: SizedBox(
+                  height: MediaQuery.of(context).size.height,
+                  width: MediaQuery.of(context).size.width,
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      const Image(
+                          width: 100,
+                          height: 100,
+                          image: AssetImage("assets/images/logo.png")),
+                      FadeIn(
+                        delay: const Duration(milliseconds: 400),
+                        child: Shimmer.fromColors(
+                          baseColor: Colors.black,
+                          highlightColor: Colors.grey[100]!,
+                          child: const CustomParagraph(
+                              text: 'Getting nearest parking area for you.'),
+                        ),
                       ),
-                    ),
-                  ],
-                ),
-              )),
-            );
+                    ],
+                  ),
+                ));
           } else {
             return PopScope(
               canPop: false,
@@ -327,6 +325,14 @@ class DashboardMapScreen extends GetView<DashboardMapController> {
                     },
                   ),
                 ),
+                InkWell(
+                    onTap: () {
+                      Get.toNamed(Routes.mapFilter, arguments: (data) {
+                        controller.getFilterNearest(data);
+                      });
+                    },
+                    child:
+                        SvgPicture.asset("assets/dashboard_icon/filter.svg")),
                 const SizedBox(width: 10),
                 InkWell(
                   onTap: () {
@@ -339,16 +345,7 @@ class DashboardMapScreen extends GetView<DashboardMapController> {
                       },
                     );
                   },
-                  child: Container(
-                    width: 24,
-                    decoration: const BoxDecoration(
-                      image: DecorationImage(
-                        image: AssetImage(
-                            "assets/dashboard_icon/google_voice.png"),
-                        fit: BoxFit.contain,
-                      ),
-                    ),
-                  ),
+                  child: SvgPicture.asset("assets/dashboard_icon/voice.svg"),
                 ),
               ],
             ),
@@ -393,6 +390,27 @@ class DashboardMapScreen extends GetView<DashboardMapController> {
                   },
                 ),
               ),
+              Visibility(
+                visible: controller.isOpenDial.value &&
+                    controller.isGetNearData.value,
+                child: Positioned(
+                  right: 20,
+                  bottom: 100,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.end,
+                    children: [
+                      _buildDialItem("list", 'Parking areas', () {
+                        Get.toNamed(Routes.parkingAreas,
+                            arguments: controller.dataNearest);
+                      }),
+                      const SizedBox(height: 16),
+                      _buildDialItem("gps", 'Current location', () {
+                        controller.getCurrentLoc();
+                      }),
+                    ],
+                  ),
+                ),
+              ),
 
               Visibility(
                 visible: controller.isGetNearData.value,
@@ -402,9 +420,13 @@ class DashboardMapScreen extends GetView<DashboardMapController> {
                   bottom: 25,
                   child: Row(
                     crossAxisAlignment: CrossAxisAlignment.end,
+                    mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Visibility(
-                        visible: controller.hasLastBooking.value,
+                        visible: (controller.hasLastBooking.value &&
+                                controller.isOpenDial.value
+                            ? false
+                            : true),
                         child: InkWell(
                           onTap: controller.bookNow,
                           child: Container(
@@ -458,73 +480,109 @@ class DashboardMapScreen extends GetView<DashboardMapController> {
                         ),
                       ),
                       Expanded(child: Container()),
-                      Column(
-                        children: [
-                          GestureDetector(
-                            onTap: () {
-                              Get.toNamed(Routes.mapFilter, arguments: (data) {
-                                controller.getFilterNearest(data);
-                              });
-                            },
-                            child: const Align(
-                              alignment: Alignment.centerRight,
-                              child: Image(
-                                width: 53,
-                                height: 53,
-                                image: AssetImage(
-                                    "assets/dashboard_icon/filter_map.png"),
-                                fit: BoxFit.contain,
+                      InkWell(
+                        onTap: controller.toggleSpeedDial,
+                        child: AnimatedBuilder(
+                          animation: controller.animationDialController,
+                          builder: (context, child) {
+                            return AnimatedSwitcher(
+                              duration: const Duration(milliseconds: 100),
+                              child: SvgPicture.asset(
+                                "assets/dashboard_icon/${controller.animationDialController.value > 0.5 ? "close_menu" : "menu"}.svg",
+                                key: ValueKey<bool>(
+                                    controller.animationDialController.value >
+                                        0.5),
                               ),
-                            ),
-                          ),
-                          Container(height: 8),
-                          GestureDetector(
-                            onTap: controller.getCurrentLoc,
-                            child: const Align(
-                              alignment: Alignment.centerRight,
-                              child: Image(
-                                width: 53,
-                                height: 53,
-                                image: AssetImage(
-                                    "assets/dashboard_icon/location.png"),
-                                fit: BoxFit.contain,
-                              ),
-                            ),
-                          ),
-                          Container(height: 8),
-                          GestureDetector(
-                            onTap: () {
-                              Get.toNamed(Routes.parkingAreas,
-                                  arguments: controller.dataNearest);
-                            },
-                            child: const Align(
-                              alignment: Alignment.centerRight,
-                              child: Image(
-                                width: 53,
-                                height: 53,
-                                image: AssetImage(
-                                    "assets/dashboard_icon/area_list.png"),
-                                fit: BoxFit.contain,
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
+                            );
+                          },
+                        ),
+                      )
                     ],
                   ),
                 ),
               ),
               //My balance
-              Positioned(
-                top: 40,
-                right: 20,
-                child: InkWell(
-                  onTap: () {
-                    Get.toNamed(Routes.wallet);
-                  },
+              Visibility(
+                visible: !controller.isOpenDial.value,
+                child: Positioned(
+                  top: 40,
+                  right: 20,
+                  child: InkWell(
+                    onTap: () {
+                      Get.toNamed(Routes.wallet);
+                    },
+                    child: Container(
+                      width: 178,
+                      padding: const EdgeInsets.fromLTRB(7, 5, 7, 5),
+                      clipBehavior: Clip.antiAlias,
+                      decoration: ShapeDecoration(
+                        color: Colors.white,
+                        shape: RoundedRectangleBorder(
+                          side: const BorderSide(
+                              width: 1, color: Color(0xFFDFE7EF)),
+                          borderRadius: BorderRadius.circular(7),
+                        ),
+                        shadows: const [
+                          BoxShadow(
+                            color: Color(0x0C000000),
+                            blurRadius: 15,
+                            offset: Offset(0, 5),
+                            spreadRadius: 0,
+                          )
+                        ],
+                      ),
+                      child: Row(
+                        children: [
+                          const SizedBox(
+                            width: 45,
+                            height: 38,
+                            child: Image(
+                              image: AssetImage("assets/images/logo.png"),
+                              width: 37,
+                              height: 32,
+                            ),
+                          ),
+                          Container(width: 5),
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                const CustomParagraph(
+                                  text: "My balance",
+                                  maxlines: 1,
+                                  fontWeight: FontWeight.w800,
+                                ),
+                                Obx(() => CustomTitle(
+                                      text: toCurrencyString(controller
+                                          .userBal[0]["amount_bal"]
+                                          .toString()),
+                                      maxlines: 1,
+                                      letterSpacing: -0.41,
+                                      fontWeight: FontWeight.w900,
+                                    ))
+                              ],
+                            ),
+                          ),
+                          Container(width: 5),
+                          Icon(
+                            Icons.chevron_right_outlined,
+                            color: AppColor.secondaryColor,
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+              //Drawer
+              Visibility(
+                visible: !controller.isOpenDial.value,
+                child: Positioned(
+                  top: 40,
+                  left: 20,
                   child: Container(
-                    width: 178,
-                    padding: const EdgeInsets.fromLTRB(7, 5, 7, 5),
+                    width: 45,
+                    height: 45,
                     clipBehavior: Clip.antiAlias,
                     decoration: ShapeDecoration(
                       color: Colors.white,
@@ -542,83 +600,18 @@ class DashboardMapScreen extends GetView<DashboardMapController> {
                         )
                       ],
                     ),
-                    child: Row(
-                      children: [
-                        const SizedBox(
-                          width: 45,
-                          height: 38,
-                          child: Image(
-                            image: AssetImage("assets/images/logo.png"),
-                            width: 37,
-                            height: 32,
-                          ),
-                        ),
-                        Container(width: 5),
-                        Expanded(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              const CustomParagraph(
-                                text: "My balance",
-                                maxlines: 1,
-                                fontWeight: FontWeight.w800,
-                              ),
-                              Obx(() => CustomTitle(
-                                    text: toCurrencyString(controller.userBal[0]
-                                            ["amount_bal"]
-                                        .toString()),
-                                    maxlines: 1,
-                                    letterSpacing: -0.41,
-                                    fontWeight: FontWeight.w900,
-                                  ))
-                            ],
-                          ),
-                        ),
-                        Container(width: 5),
-                        Icon(
-                          Icons.chevron_right_outlined,
-                          color: AppColor.secondaryColor,
-                        ),
-                      ],
+                    child: IconButton(
+                      icon: AnimatedIcon(
+                        icon: AnimatedIcons.menu_close,
+                        progress: controller.animationController.view,
+                        color: Colors.blue,
+                        size: 30,
+                      ),
+                      onPressed: () {
+                        controller.dashboardScaffoldKey.currentState
+                            ?.openDrawer();
+                      },
                     ),
-                  ),
-                ),
-              ),
-              //Drawer
-              Positioned(
-                top: 40,
-                left: 20,
-                child: Container(
-                  width: 45,
-                  height: 45,
-                  clipBehavior: Clip.antiAlias,
-                  decoration: ShapeDecoration(
-                    color: Colors.white,
-                    shape: RoundedRectangleBorder(
-                      side:
-                          const BorderSide(width: 1, color: Color(0xFFDFE7EF)),
-                      borderRadius: BorderRadius.circular(7),
-                    ),
-                    shadows: const [
-                      BoxShadow(
-                        color: Color(0x0C000000),
-                        blurRadius: 15,
-                        offset: Offset(0, 5),
-                        spreadRadius: 0,
-                      )
-                    ],
-                  ),
-                  child: IconButton(
-                    icon: AnimatedIcon(
-                      icon: AnimatedIcons.menu_close,
-                      progress: controller.animationController.view,
-                      color: Colors.blue,
-                      size: 30,
-                    ),
-                    onPressed: () {
-                      controller.dashboardScaffoldKey.currentState
-                          ?.openDrawer();
-                    },
                   ),
                 ),
               ),
@@ -782,6 +775,49 @@ class DashboardMapScreen extends GetView<DashboardMapController> {
           );
   }
 
+  Widget _buildDialItem(String icon, String label, Function ontap) {
+    return Align(
+      alignment: Alignment.centerRight,
+      child: GestureDetector(
+        onTap: () {
+          controller.isOpenDial.value = false;
+          controller.animationDialController.value = 0.0;
+          ontap();
+        },
+        child: Container(
+          padding: const EdgeInsets.all(10.0),
+          decoration: ShapeDecoration(
+            color: Colors.white,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(49),
+            ),
+            shadows: const [
+              BoxShadow(
+                color: Color(0x0C000000),
+                blurRadius: 4,
+                offset: Offset(0, 4),
+                spreadRadius: 0,
+              )
+            ],
+          ),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: [
+              SvgPicture.asset("assets/dashboard_icon/$icon.svg"),
+              Container(width: 10),
+              CustomParagraph(
+                text: label,
+                color: const Color(0xFF474545),
+                fontSize: 14,
+                fontWeight: FontWeight.w700,
+              )
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
   Widget accessList(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.all(15.0),
@@ -870,9 +906,9 @@ class PopUpNearestDialog extends GetView<DashboardMapController> {
               ),
               child: Column(
                 children: [
-                  CustomTitle(text: "Nearby parking found"),
+                  const CustomTitle(text: "Nearby parking found"),
                   Container(height: 10),
-                  CustomParagraph(
+                  const CustomParagraph(
                       text:
                           "Here's the nearby parking found in your current position"),
                 ],

@@ -48,7 +48,11 @@ class VoiceSearchController extends GetxController {
       isListening.value = false;
 
       _stopListeningTimer?.cancel();
-      Get.back();
+
+      if (searchText.value.isNotEmpty) {
+        Get.back();
+      }
+
       parameters(lastWords);
     }
   }

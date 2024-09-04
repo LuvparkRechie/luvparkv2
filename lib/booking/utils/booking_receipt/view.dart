@@ -310,6 +310,22 @@ class BookingReceipt extends GetView<BookingReceiptController> {
                   ],
                 ),
               ),
+            if (!controller.parameters["can_cancel"])
+              Padding(
+                padding: const EdgeInsets.all(15),
+                child: Column(
+                  children: [
+                    CustomButton(
+                      textColor: AppColor.primaryColor,
+                      btnColor: Colors.white,
+                      bordercolor: AppColor.primaryColor,
+                      text: "Cancel booking",
+                      onPressed: controller.cancelAdvanceParking,
+                    )
+                  ],
+                ),
+              ),
+            Container(height: 10)
           ],
         ),
       ),

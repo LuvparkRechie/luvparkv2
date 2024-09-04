@@ -88,12 +88,12 @@ class ParkingController extends GetxController
         });
         return;
       }
-      final id = userData[0]["items"][0]["user_id"];
+      final id = await Authentication().getUserId();
+      String api =
+          "${currentPage.value == 1 ? ApiKeys.gApiSubFolderGetActiveParking : ApiKeys.gApiSubFolderGetReservations}?luvpay_id=$id";
+
       try {
-        final returnData = await HttpRequest(
-                api:
-                    "${currentPage.value == 1 ? ApiKeys.gApiSubFolderGetActiveParking : ApiKeys.gApiSubFolderGetReservations}?luvpay_id=$id")
-            .get();
+        final returnData = await HttpRequest(api: api).get();
 
         if (returnData == "No Internet") {
           isLoading.value = false; // End loading
@@ -141,6 +141,8 @@ class ParkingController extends GetxController
     var dateOutRelated = "";
     dateInRelated = data["dt_in"];
     dateOutRelated = data["dt_out"];
+    DateTime now = DateTime.now();
+    DateTime resDate = DateTime.parse(data["reservation_date"].toString());
 
     Map<String, dynamic> parameters = {
       "client_id": userId,
@@ -175,10 +177,14 @@ class ParkingController extends GetxController
       'isBooking': false,
       'paramsCalc': parameters,
       'status': data["status"].toString() == "C" ? "R" : "A",
+      'can_cancel': int.parse(now.difference(resDate).inMinutes.toString()) <=
+          int.parse(data["cancel_minutes"].toString()),
+      'cancel_minute': data["cancel_minutes"],
       'onRefresh': () {
         onRefresh();
       }
     };
+
     Get.toNamed(Routes.bookingReceipt, arguments: args);
   }
 }

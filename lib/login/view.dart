@@ -104,6 +104,7 @@ class LoginScreen extends GetView<LoginScreenController> {
                             },
                           ),
                         ),
+                        Container(height: 20),
                         Align(
                             alignment: Alignment.centerRight,
                             child: InkWell(
@@ -119,7 +120,7 @@ class LoginScreen extends GetView<LoginScreenController> {
                                   text: "Forgot password"),
                             )),
                         const SizedBox(
-                          height: 20,
+                          height: 30,
                         ),
                         if (MediaQuery.of(context).viewInsets.bottom == 0)
                           Column(

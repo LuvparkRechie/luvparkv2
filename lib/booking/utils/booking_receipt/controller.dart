@@ -187,6 +187,61 @@ class BookingReceiptController extends GetxController
     });
   }
 
+  void cancelAdvanceParking() {
+    DateTime now = DateTime.now();
+    DateTime resDate = DateTime.parse(parameters["startDate"].toString());
+
+    if (int.parse(now.difference(resDate).inMinutes.toString()) >
+        int.parse(parameters["cancel_minute"].toString())) {
+      CustomDialog().errorDialog(Get.context!, "luvpark",
+          "The cancellation period for your booking has expired.", () {
+        Get.back();
+      });
+      return;
+    }
+    CustomDialog().confirmationDialog(
+        Get.context!, "Confirm Booking", "", "Cancel", "Proceed", () {
+      Get.back();
+    }, () {
+      Get.back();
+      CustomDialog().loadingDialog(Get.context!);
+      Map<String, dynamic> param = {
+        "reservation_id": parameters["reservationId"]
+      };
+
+      HttpRequest(api: ApiKeys.gApiBooking, parameters: param)
+          .postBody()
+          .then((objData) async {
+        Get.back();
+        print("objData $objData");
+        if (objData == "No Internet") {
+          CustomDialog().internetErrorDialog(Get.context!, () {
+            Get.back();
+          });
+          return;
+        }
+        if (objData == null) {
+          CustomDialog().serverErrorDialog(Get.context!, () {
+            Get.back();
+          });
+        }
+        if (objData["success"] == "Y") {
+          CustomDialog().successDialog(
+              Get.context!, "Success", "Successfully cancelled booking", "Okay",
+              () {
+            Get.back();
+          });
+        } else {
+          CustomDialog().errorDialog(Get.context!, "luvpark", objData["msg"],
+              () {
+            Get.back();
+          });
+          return;
+        }
+      });
+    });
+  }
+
   @override
   void onClose() {
     if (parameters["status"] == "A") {

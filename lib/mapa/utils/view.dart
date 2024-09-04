@@ -229,7 +229,7 @@ class FilterMap extends GetView<FilterMapController> {
           child: RadioListTile<String>(
             contentPadding: EdgeInsets.zero,
             title: const CustomParagraph(
-              text: "None",
+              text: "All",
               color: Colors.black87,
               fontWeight: FontWeight.w600,
             ),

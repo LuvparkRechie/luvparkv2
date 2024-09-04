@@ -158,8 +158,8 @@ class SendOtpController extends GetxController {
 
             Get.back();
 
-            CustomDialog().successDialog(Get.context!, "Success",
-                "Transaction successfully sent", "Okay", () {
+            CustomDialog().successDialog(
+                Get.context!, "Success", "Transaction complete", "Okay", () {
               Get.back();
               Get.back();
             });

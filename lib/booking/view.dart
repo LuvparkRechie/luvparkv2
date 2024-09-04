@@ -565,10 +565,7 @@ class BookingPage extends GetView<BookingController> {
                                                       child: CustomTitle(
                                                         text: toCurrencyString(
                                                                 controller
-                                                                    .parameters[
-                                                                        "userData"]
-                                                                        [0][
-                                                                        "points_bal"]
+                                                                    .displayRewards
                                                                     .toString())
                                                             .toString(),
                                                         fontSize: 16,
@@ -584,220 +581,232 @@ class BookingPage extends GetView<BookingController> {
                                         Container(
                                           height: 10,
                                         ),
-                                        // GestureDetector(
-                                        //   onTap: () {
-                                        //     controller.toggleRewardChecked(
-                                        //         !controller
-                                        //             .isRewardchecked.value);
-                                        //   },
-                                        //   child: Container(
-                                        //     padding: const EdgeInsets.symmetric(
-                                        //         vertical: 15),
-                                        //     width: MediaQuery.of(context)
-                                        //         .size
-                                        //         .width,
-                                        //     decoration: BoxDecoration(
-                                        //       borderRadius:
-                                        //           BorderRadius.circular(7),
-                                        //       color: Colors.white,
-                                        //       boxShadow: [
-                                        //         BoxShadow(
-                                        //           color: Colors.black
-                                        //               .withOpacity(0.1),
-                                        //           spreadRadius: 1,
-                                        //           blurRadius: 4,
-                                        //           offset: const Offset(0, 2),
-                                        //         ),
-                                        //       ],
-                                        //       border: Border.all(
-                                        //         color: Colors.black
-                                        //             .withOpacity(0.2),
-                                        //         width: 1,
-                                        //       ),
-                                        //     ),
-                                        //     child: Padding(
-                                        //       padding: const EdgeInsets.only(
-                                        //         left: 20.0,
-                                        //         right: 20,
-                                        //       ),
-                                        //       child: Column(
-                                        //         children: [
-                                        //           Row(
-                                        //             children: [
-                                        //               Icon(
-                                        //                 controller
-                                        //                         .isRewardchecked
-                                        //                         .value
-                                        //                     ? Icons
-                                        //                         .check_circle_outline
-                                        //                     : Icons
-                                        //                         .circle_outlined,
-                                        //                 color: controller
-                                        //                         .isRewardchecked
-                                        //                         .value
-                                        //                     ? AppColor
-                                        //                         .primaryColor
-                                        //                     : Colors.grey,
-                                        //               ),
-                                        //               Container(width: 5),
-                                        //               const Expanded(
-                                        //                 child: CustomTitle(
-                                        //                   text:
-                                        //                       "Use Reward Points",
-                                        //                   fontSize: 14,
-                                        //                   letterSpacing: -0.41,
-                                        //                   textAlign:
-                                        //                       TextAlign.left,
-                                        //                 ),
-                                        //               ),
-                                        //               Container(width: 5),
-                                        //               if (controller
-                                        //                   .isRewardchecked
-                                        //                   .value)
-                                        //                 GestureDetector(
-                                        //                   onTap: controller
-                                        //                       .showRewardDialog,
-                                        //                   child: Icon(
-                                        //                     Icons.edit_note,
-                                        //                     color: AppColor
-                                        //                         .primaryColor,
-                                        //                   ),
-                                        //                 )
-                                        //             ],
-                                        //           ),
-                                        //           if (controller
-                                        //               .isRewardchecked.value)
-                                        //             Padding(
-                                        //               padding:
-                                        //                   const EdgeInsets.all(
-                                        //                       10),
-                                        //               child: Column(
-                                        //                 children: [
-                                        //                   const Divider(
-                                        //                     color: Colors.grey,
-                                        //                   ),
-                                        //                   Row(
-                                        //                     mainAxisAlignment:
-                                        //                         MainAxisAlignment
-                                        //                             .spaceBetween,
-                                        //                     children: [
-                                        //                       const CustomParagraph(
-                                        //                           fontWeight:
-                                        //                               FontWeight
-                                        //                                   .w400,
-                                        //                           text:
-                                        //                               ' Reward Points :',
-                                        //                           letterSpacing:
-                                        //                               -0.41),
-                                        //                       Padding(
-                                        //                         padding:
-                                        //                             const EdgeInsets
-                                        //                                 .only(
-                                        //                                 right:
-                                        //                                     20),
-                                        //                         child:
-                                        //                             CustomParagraph(
-                                        //                           text: () {
-                                        //                             try {
-                                        //                               double
-                                        //                                   points =
-                                        //                                   double.parse(controller
-                                        //                                       .rewardsCon
-                                        //                                       .text);
-                                        //                               return points
-                                        //                                   .toStringAsFixed(
-                                        //                                       2); // Formats the number to 2 decimal places
-                                        //                             } catch (e) {
-                                        //                               return '0.00'; // Handle parsing error
-                                        //                             }
-                                        //                           }(),
-                                        //                           color: AppColor
-                                        //                               .primaryColor,
-                                        //                         ),
-                                        //                       ),
-                                        //                     ],
-                                        //                   ),
-                                        //                   Container(height: 5),
-                                        //                   Row(
-                                        //                     mainAxisAlignment:
-                                        //                         MainAxisAlignment
-                                        //                             .spaceBetween,
-                                        //                     children: [
-                                        //                       const CustomParagraph(
-                                        //                         fontWeight:
-                                        //                             FontWeight
-                                        //                                 .w400,
-                                        //                         text:
-                                        //                             ' Token :',
-                                        //                         letterSpacing:
-                                        //                             -0.41,
-                                        //                       ),
-                                        //                       Padding(
-                                        //                         padding:
-                                        //                             const EdgeInsets
-                                        //                                 .only(
-                                        //                                 right:
-                                        //                                     20),
-                                        //                         child:
-                                        //                             CustomParagraph(
-                                        //                           // text: subtractedToken
-                                        //                           //             .toStringAsFixed(
-                                        //                           //                 2) ==
-                                        //                           //         "0.00"
-                                        //                           //     ? toCurrencyString(
-                                        //                           //         totalAmount)
-                                        //                           //     : subtractedToken
-                                        //                           //         .toStringAsFixed(
-                                        //                           //             2),
-                                        //                           text:
-                                        //                               "Subtracted token",
-                                        //                           color: AppColor
-                                        //                               .primaryColor,
-                                        //                         ),
-                                        //                       ),
-                                        //                     ],
-                                        //                   ),
-                                        //                   Container(height: 10),
-                                        //                   Row(
-                                        //                     mainAxisAlignment:
-                                        //                         MainAxisAlignment
-                                        //                             .spaceBetween,
-                                        //                     children: [
-                                        //                       const CustomParagraph(
-                                        //                           text:
-                                        //                               ' total ',
-                                        //                           letterSpacing:
-                                        //                               -0.41),
-                                        //                       Padding(
-                                        //                         padding:
-                                        //                             const EdgeInsets
-                                        //                                 .only(
-                                        //                                 right:
-                                        //                                     20),
-                                        //                         child:
-                                        //                             CustomParagraph(
-                                        //                           // text: toCurrencyString(
-                                        //                           //     totalAmount),
-
-                                        //                           text:
-                                        //                               "Total amount",
-                                        //                           color: AppColor
-                                        //                               .primaryColor,
-                                        //                         ),
-                                        //                       ),
-                                        //                     ],
-                                        //                   )
-                                        //                 ],
-                                        //               ),
-                                        //             ),
-                                        //         ],
-                                        //       ),
-                                        //     ),
-                                        //   ),
-                                        // ),
-                                        // Container(
-                                        //   height: 5,
-                                        // ),
+                                        // if (double.parse(
+                                        //         controller.rewardsCon.text) !=
+                                        //     0.0)
+                                        GestureDetector(
+                                          onTap: () {
+                                            controller.toggleRewardChecked(
+                                                !controller
+                                                    .isRewardchecked.value);
+                                          },
+                                          child: Container(
+                                            padding: const EdgeInsets.symmetric(
+                                                vertical: 15),
+                                            width: MediaQuery.of(context)
+                                                .size
+                                                .width,
+                                            decoration: BoxDecoration(
+                                              borderRadius:
+                                                  BorderRadius.circular(7),
+                                              color: Colors.white,
+                                              boxShadow: [
+                                                BoxShadow(
+                                                  color: Colors.black
+                                                      .withOpacity(0.1),
+                                                  spreadRadius: 1,
+                                                  blurRadius: 4,
+                                                  offset: const Offset(0, 2),
+                                                ),
+                                              ],
+                                              border: Border.all(
+                                                color: Colors.black
+                                                    .withOpacity(0.2),
+                                                width: 1,
+                                              ),
+                                            ),
+                                            child: Padding(
+                                              padding: const EdgeInsets.only(
+                                                left: 20.0,
+                                                right: 20,
+                                              ),
+                                              child: Column(
+                                                children: [
+                                                  Row(
+                                                    children: [
+                                                      Icon(
+                                                        controller
+                                                                .isRewardchecked
+                                                                .value
+                                                            ? Icons
+                                                                .check_circle_outline
+                                                            : Icons
+                                                                .circle_outlined,
+                                                        color: controller
+                                                                .isRewardchecked
+                                                                .value
+                                                            ? AppColor
+                                                                .primaryColor
+                                                            : Colors.grey,
+                                                      ),
+                                                      Container(width: 5),
+                                                      const Expanded(
+                                                        child: CustomTitle(
+                                                          text:
+                                                              "Use Reward Points",
+                                                          fontSize: 14,
+                                                          letterSpacing: -0.41,
+                                                          textAlign:
+                                                              TextAlign.left,
+                                                        ),
+                                                      ),
+                                                      Container(width: 5),
+                                                      if (controller
+                                                          .isRewardchecked
+                                                          .value)
+                                                        GestureDetector(
+                                                          onTap: () {
+                                                            if (double.parse(controller
+                                                                            .parameters[
+                                                                        "userData"][0]
+                                                                    [
+                                                                    "points_bal"]) ==
+                                                                0.0) {
+                                                              CustomDialog()
+                                                                  .errorDialog(
+                                                                      context,
+                                                                      "luvpark",
+                                                                      "You don't have enough rewards to proceed.",
+                                                                      () {
+                                                                Get.back();
+                                                              });
+                                                              return;
+                                                            }
+                                                            Get.dialog(
+                                                              RewardsDialog(
+                                                                data: controller
+                                                                    .parameters,
+                                                                cb: (data) {
+                                                                  controller
+                                                                      .computeRewards(
+                                                                          data);
+                                                                },
+                                                              ),
+                                                            );
+                                                          },
+                                                          child: Icon(
+                                                            Icons.edit_note,
+                                                            color: AppColor
+                                                                .primaryColor,
+                                                          ),
+                                                        )
+                                                    ],
+                                                  ),
+                                                  if (controller
+                                                      .isRewardchecked.value)
+                                                    Padding(
+                                                      padding:
+                                                          const EdgeInsets.all(
+                                                              10),
+                                                      child: Column(
+                                                        children: [
+                                                          const Divider(
+                                                            color: Colors.grey,
+                                                          ),
+                                                          Row(
+                                                            mainAxisAlignment:
+                                                                MainAxisAlignment
+                                                                    .spaceBetween,
+                                                            children: [
+                                                              const CustomParagraph(
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .w400,
+                                                                  text:
+                                                                      ' Reward Points :',
+                                                                  letterSpacing:
+                                                                      -0.41),
+                                                              Padding(
+                                                                padding:
+                                                                    const EdgeInsets
+                                                                        .only(
+                                                                        right:
+                                                                            20),
+                                                                child:
+                                                                    CustomParagraph(
+                                                                  text: toCurrencyString(
+                                                                      controller
+                                                                          .usedRewards
+                                                                          .toString()),
+                                                                  color: AppColor
+                                                                      .primaryColor,
+                                                                ),
+                                                              ),
+                                                            ],
+                                                          ),
+                                                          Container(height: 5),
+                                                          Row(
+                                                            mainAxisAlignment:
+                                                                MainAxisAlignment
+                                                                    .spaceBetween,
+                                                            children: [
+                                                              const CustomParagraph(
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .w400,
+                                                                text:
+                                                                    ' Token :',
+                                                                letterSpacing:
+                                                                    -0.41,
+                                                              ),
+                                                              Padding(
+                                                                padding:
+                                                                    const EdgeInsets
+                                                                        .only(
+                                                                        right:
+                                                                            20),
+                                                                child:
+                                                                    CustomParagraph(
+                                                                  text: toCurrencyString(
+                                                                      controller
+                                                                          .tokenRewards
+                                                                          .toString()),
+                                                                  color: AppColor
+                                                                      .primaryColor,
+                                                                ),
+                                                              ),
+                                                            ],
+                                                          ),
+                                                          Container(height: 10),
+                                                          Row(
+                                                            mainAxisAlignment:
+                                                                MainAxisAlignment
+                                                                    .spaceBetween,
+                                                            children: [
+                                                              const CustomParagraph(
+                                                                  text:
+                                                                      ' total ',
+                                                                  letterSpacing:
+                                                                      -0.41),
+                                                              Padding(
+                                                                padding:
+                                                                    const EdgeInsets
+                                                                        .only(
+                                                                        right:
+                                                                            20),
+                                                                child:
+                                                                    CustomParagraph(
+                                                                  text: toCurrencyString(controller
+                                                                          .totalAmount
+                                                                          .value)
+                                                                      .toString(),
+                                                                  color: AppColor
+                                                                      .primaryColor,
+                                                                ),
+                                                              ),
+                                                            ],
+                                                          )
+                                                        ],
+                                                      ),
+                                                    ),
+                                                ],
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                        Container(
+                                          height: 10,
+                                        ),
                                         GestureDetector(
                                           onTap: () {
                                             controller.toggleExtendChecked(
@@ -1469,6 +1478,113 @@ class VehicleOption extends GetView<BookingController> {
           ),
         )
       ],
+    );
+  }
+}
+
+class RewardsDialog extends StatefulWidget {
+  final Map<String, dynamic> data;
+  final Function cb;
+  const RewardsDialog({super.key, required this.data, required this.cb});
+
+  @override
+  State<RewardsDialog> createState() => _RewardsDialogState();
+}
+
+class _RewardsDialogState extends State<RewardsDialog> {
+  final TextEditingController rewardsCon = TextEditingController();
+
+  bool isExceed = false;
+
+  @override
+  void initState() {
+    super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: Colors.transparent,
+      body: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Padding(
+            padding: const EdgeInsets.all(15),
+            child: Container(
+              padding: const EdgeInsets.all(15),
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(15),
+                color: Colors.white,
+              ),
+              width: MediaQuery.of(context).size.width,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const CustomTitle(
+                    text: "Reward Points",
+                    fontWeight: FontWeight.w700,
+                    fontSize: 19,
+                  ),
+                  Container(height: 20),
+                  const CustomParagraph(
+                      text: "Enter desired amount to be used"),
+                  Container(height: 5),
+                  CustomTextField(
+                    labelText: "Amount",
+                    controller: rewardsCon,
+                    keyboardType: TextInputType.number,
+                    inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+                    onChange: (value) {
+                      if (int.parse(value) >
+                          double.parse(
+                              widget.data["userData"][0]["points_bal"])) {
+                        setState(() {
+                          isExceed = true;
+                          rewardsCon.text =
+                              value.substring(0, value.length - 1);
+                        });
+                      } else {
+                        setState(() {
+                          isExceed = false;
+                        });
+                      }
+                    },
+                  ),
+                  if (isExceed)
+                    const CustomParagraph(
+                      text:
+                          "Reward points inputted should not be greater than the total bill for parking",
+                      maxlines: 2,
+                      fontSize: 10,
+                      color: Colors.red,
+                    ),
+                  Container(height: 20),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      TextButton(
+                        child: const Text('Cancel'),
+                        onPressed: () {
+                          Navigator.of(context).pop();
+                        },
+                      ),
+                      TextButton(
+                        child: const Text('OK'),
+                        onPressed: () {
+                          int amtReward = int.parse(rewardsCon.text);
+
+                          Get.back();
+                          widget.cb(amtReward);
+                        },
+                      ),
+                    ],
+                  )
+                ],
+              ),
+            ),
+          ),
+        ],
+      ),
     );
   }
 }

@@ -24,7 +24,8 @@ import 'package:sliding_up_panel/sliding_up_panel.dart';
 
 // ignore: deprecated_member_use
 class DashboardMapController extends GetxController
-    with GetSingleTickerProviderStateMixin {
+    with GetTickerProviderStateMixin {
+  RxBool isOpenDial = false.obs;
   // Dependencies
   final GlobalKey<ScaffoldState> dashboardScaffoldKey =
       GlobalKey<ScaffoldState>();
@@ -32,6 +33,7 @@ class DashboardMapController extends GetxController
   final TextEditingController searchCon = TextEditingController();
   final PanelController panelController = PanelController();
   late AnimationController animationController;
+  late AnimationController animationDialController;
   late Animation<Offset> slideAnimation;
   RxBool isSidebarVisible = false.obs;
   GoogleMapController? gMapController;
@@ -85,7 +87,11 @@ class DashboardMapController extends GetxController
     isAllowOverNight = "";
     animationController = AnimationController(
       vsync: this,
-      duration: const Duration(milliseconds: 500),
+      duration: const Duration(milliseconds: 300),
+    );
+    animationDialController = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 100),
     );
     slideAnimation = Tween<Offset>(
       begin: const Offset(-1, 0), // Start off-screen to the left
@@ -94,6 +100,7 @@ class DashboardMapController extends GetxController
       parent: animationController,
       curve: Curves.easeInOut,
     ));
+
     getLastBooking();
     getUserData(false);
   }
@@ -102,6 +109,17 @@ class DashboardMapController extends GetxController
   void dispose() {
     super.dispose();
     gMapController!.dispose();
+    animationDialController.dispose();
+    animationController.dispose();
+  }
+
+  void toggleSpeedDial() {
+    isOpenDial.value = !isOpenDial.value;
+    if (isOpenDial.value) {
+      animationDialController.forward();
+    } else {
+      animationDialController.reverse();
+    }
   }
 
   //Get last available booking
@@ -244,6 +262,8 @@ class DashboardMapController extends GetxController
     vtypeId = "";
     addressText = "".obs;
     isAllowOverNight = "";
+    isOpenDial.value = false;
+    animationDialController.value = 0.0;
 
     getUserData(false);
   }
@@ -298,7 +318,7 @@ class DashboardMapController extends GetxController
     initialCameraPosition = CameraPosition(
       target: LatLng(initialCameraPosition!.target.latitude,
           initialCameraPosition!.target.longitude),
-      zoom: 14,
+      zoom: 16,
       tilt: 0,
       bearing: 0,
     );
@@ -333,7 +353,7 @@ class DashboardMapController extends GetxController
           CameraPosition(
               target: LatLng(initialCameraPosition!.target.latitude,
                   initialCameraPosition!.target.longitude),
-              zoom: 14),
+              zoom: 16),
         ),
       );
     }
@@ -343,7 +363,7 @@ class DashboardMapController extends GetxController
     String? userData = await Authentication().getUserData();
     final item = await Authentication().getUserData2();
     final profPic = await Authentication().getUserProfilePic();
-    print("on drawer open");
+
     userProfile = item;
     myProfPic.value = profPic;
 
@@ -448,7 +468,7 @@ class DashboardMapController extends GetxController
     isLoadingMap.value = false;
     initialCameraPosition = CameraPosition(
       target: searchCoordinates,
-      zoom: 14,
+      zoom: 16,
       tilt: 0,
       bearing: 0,
     );
@@ -469,7 +489,7 @@ class DashboardMapController extends GetxController
         double.parse(uData[0]["min_wallet_bal"].toString())) {
       initialCameraPosition = CameraPosition(
         target: coordinates,
-        zoom: uData.isEmpty ? 14 : 14,
+        zoom: uData.isEmpty ? 14 : 17,
         tilt: 0,
         bearing: 0,
       );

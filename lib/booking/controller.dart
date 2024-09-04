@@ -71,6 +71,11 @@ class BookingController extends GetxController
   Timer? inactivityTimer;
   final int timeoutDuration = 180; //3 mins
 
+  //Rewards param
+  RxString usedRewards = "0".obs;
+  RxString tokenRewards = "0".obs;
+  RxDouble displayRewards = 0.0.obs;
+
   @override
   void onInit() {
     super.onInit();
@@ -86,7 +91,8 @@ class BookingController extends GetxController
       noHours.text =
           "1 ${int.parse(selectedNumber.value.toString()) > 1 ? "hours" : "hour"}";
     }
-
+    displayRewards.value =
+        double.parse(parameters["userData"][0]["points_bal"].toString());
     timeInParam = TextEditingController();
     plateNo = TextEditingController();
     startDate = TextEditingController();
@@ -177,6 +183,9 @@ class BookingController extends GetxController
 
   void toggleRewardChecked(bool value) {
     isRewardchecked.value = value;
+
+    usedRewards.value = "0.0";
+    tokenRewards.value = "0.0";
   }
 
   void toggleExtendChecked(bool value) {
@@ -264,7 +273,7 @@ class BookingController extends GetxController
         });
         return;
       }
-      print("myVehiclesData.value ${myVehiclesData}");
+
       myVehiclesData.value = [];
       if (myVehicles["items"].length > 0) {
         for (var row in myVehicles["items"]) {
@@ -348,6 +357,7 @@ class BookingController extends GetxController
     }
     isBtnLoading.value = false;
     totalAmount.value = "$finalData";
+    tokenRewards.value = totalAmount.value;
   }
 
   //Reservation Submit
@@ -396,6 +406,7 @@ class BookingController extends GetxController
       "vehicle_type_id": params["vehicle_type_id"].toString(),
       "vehicle_plate_no": params["vehicle_plate_no"],
       "park_area_id": params["park_area_id"].toString(),
+      "points_used": double.parse(usedRewards.toString())
     };
 
     CustomDialog().confirmationDialog(
@@ -404,6 +415,8 @@ class BookingController extends GetxController
         "Please ensure that you arrive at the destination by $areaEtaTime mins, or your advance booking will be forfeited.",
         "Cancel",
         "Proceed", () {
+      isSubmitBooking.value = false;
+      isBtnLoading.value = false;
       Get.back();
     }, () {
       Get.back();
@@ -468,7 +481,6 @@ class BookingController extends GetxController
             isSubmitBooking.value = false;
             inactivityTimer?.cancel();
             Get.to(BookingDialog(data: [paramArgs]));
-
             return;
           }
         }
@@ -567,88 +579,38 @@ class BookingController extends GetxController
     });
   }
 
-  void showRewardDialog() {
-    Get.dialog(Container(
-      height: 200,
-      width: 200,
-      color: Colors.white,
-    ));
-    // showDialog<double>(
-    //   context: Get.context!,
-    //   builder: (BuildContext context) {
-    //     return AlertDialog(
-    //       title: CustomTitle(
-    //         text: "Reward Points",
-    //         fontWeight: FontWeight.w700,
-    //         fontSize: 19,
-    //       ),
-    //       content: Container(
-    //         height: 150,
-    //         child: Column(
-    //           crossAxisAlignment: CrossAxisAlignment.start,
-    //           children: [
-    //             CustomParagraph(text: "Enter desired amount to be used"),
-    //             CustomTextField(
-    //               label:
-    //                   toCurrencyString(parameters["userData"][0]["points_bal"])
-    //                       .toString(),
-    //               controller: rewardsCon,
-    //               keyboardType: TextInputType.number,
-    //               inputFormatters: [
-    //                 //LengthLimitingTextInputFormatter(int.parse(totalAmount)),
-    //                 FilteringTextInputFormatter.digitsOnly
-    //               ],
-    //               onChanged: (value) {
-    //                 if (int.parse(value) >
-    //                     int.parse(
-    //                         widget.totalAmount.toString().split(".")[0])) {
-    //                   setState(() {
-    //                     isExceed = true;
-    //                   });
-    //                 } else {
-    //                   setState(() {
-    //                     isExceed = false;
-    //                   });
-    //                 }
-    //               },
-    //             ),
-    //             if (isExceed)
-    //               CustomParagraph(
-    //                 text:
-    //                     "Reward points inputted should not be greater than the total bill for parking",
-    //                 maxlines: 2,
-    //                 fontSize: 10,
-    //                 color: Colors.red,
-    //               ),
-    //           ],
-    //         ),
-    //       ),
-    //       actions: <Widget>[
-    //         TextButton(
-    //           child: Text('Cancel'),
-    //           onPressed: () {
-    //             _rewardpoints.clear();
-    //             Navigator.of(context).pop();
-    //           },
-    //         ),
-    //         TextButton(
-    //           child: Text('OK'),
-    //           onPressed: () {
-    //             if (int.parse(_rewardpoints.text) >
-    //                 int.parse(totalAmount.toString().split(".")[0])) {
-    //               showAlertDialog(context, "LuvPark", "Limit exceeds", () {
-    //                 Navigator.of(context).pop();
-    //               });
-    //             } else {
-    //               Navigator.of(context).pop(double.parse(_rewardpoints.text));
-    //             }
-    //             _RewardSubtract();
-    //           },
-    //         ),
-    //       ],
-    //     );
-    //   },
-    // );
+  //Compute rewards
+  void computeRewards(dynamic data) {
+    final int parsedData = int.parse(data.toString());
+
+    // Set initial token rewards
+    tokenRewards.value = totalAmount.value;
+
+    // Check if input data is valid
+    final int totalAmountParsed = int.parse(totalAmount.value.toString());
+
+    if (parsedData > totalAmountParsed) {
+      CustomDialog().errorDialog(Get.context!, "luvpark",
+          "Amount must be less than or equal to the total amount", () {
+        Get.back();
+        usedRewards.value = parsedData.toString();
+        usedRewards.value = "0.0";
+      });
+      return;
+    }
+
+    isLoadingPage.value = true;
+
+    usedRewards.value = parsedData.toString();
+
+    final int currentTokenRewards = int.parse(tokenRewards.value.toString());
+    if (parsedData < currentTokenRewards) {
+      tokenRewards.value = (currentTokenRewards - parsedData).toString();
+    } else {
+      tokenRewards.value = "0.0";
+    }
+
+    isLoadingPage.value = false;
   }
 
   @override
