@@ -22,24 +22,13 @@ class WalletSend extends GetView<WalletSendController> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        elevation: 0,
-        toolbarHeight: 0,
-        systemOverlayStyle: SystemUiOverlayStyle(
-          statusBarColor: Colors.white,
-          statusBarBrightness: Brightness.light,
-          statusBarIconBrightness: Brightness.dark,
-        ),
+      appBar: CustomAppbar(
+        title: "Send",
       ),
       body: SingleChildScrollView(
+        physics: NeverScrollableScrollPhysics(),
         child: Column(
           children: [
-            CustomAppbar(
-              onTap: () {
-                Get.back();
-              },
-              title: "Send",
-            ),
             Form(
               key: controller.formKeySend,
               child: Padding(
