@@ -136,7 +136,7 @@ class ParkingController extends GetxController
   // BTN details
   Future<void> getParkingDetails(dynamic data) async {
     int userId = await Authentication().getUserId();
-
+    print("data $data");
     var dateInRelated = "";
     var dateOutRelated = "";
     dateInRelated = data["dt_in"];
@@ -177,9 +177,12 @@ class ParkingController extends GetxController
       'isBooking': false,
       'paramsCalc': parameters,
       'status': data["status"].toString() == "C" ? "R" : "A",
-      'can_cancel': int.parse(now.difference(resDate).inMinutes.toString()) <=
-          int.parse(data["cancel_minutes"].toString()),
-      'cancel_minute': data["cancel_minutes"],
+      'can_cancel': data["status"].toString() == "U"
+          ? false
+          : int.parse(now.difference(resDate).inMinutes.toString()) <=
+              int.parse(data["cancel_minutes"].toString()),
+      'cancel_minute':
+          data["status"].toString() == "U" ? "" : data["cancel_minutes"],
       'onRefresh': () {
         onRefresh();
       }

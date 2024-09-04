@@ -4,6 +4,7 @@ import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:intl/intl.dart';
 import 'package:luvpark_get/custom_widgets/alert_dialog.dart';
 import 'package:luvpark_get/custom_widgets/app_color.dart';
 import 'package:luvpark_get/custom_widgets/variables.dart';
@@ -51,10 +52,12 @@ class ParkingDetailsController extends GetxController {
 
   String finalSttime = "";
   String finalEndtime = "";
+  String parkSched = "";
 
   @override
   void onInit() {
     super.onInit();
+
     final vehicleTypesList = dataNearest['vehicle_types_list'] as String;
     vehicleTypes.value = _parseVehicleTypes(vehicleTypesList);
     finalSttime = formatTime(dataNearest["start_time"]);
@@ -62,6 +65,12 @@ class ParkingDetailsController extends GetxController {
     isOpen.value = Functions.checkAvailability(finalSttime, finalEndtime);
     destLoc.value =
         LatLng(dataNearest["pa_latitude"], dataNearest["pa_longitude"]);
+    if (dataNearest["parking_schedule"].toString().contains("-")) {
+      parkSched =
+          "${dataNearest["parking_schedule"].toString().split("-")[0]} to ${dataNearest["parking_schedule"].toString().split("-")[1]}";
+    } else {
+      parkSched = dataNearest["parking_schedule"].toString();
+    }
     refreshAmenData();
   }
 
@@ -81,6 +90,7 @@ class ParkingDetailsController extends GetxController {
                 "${ApiKeys.gApiSubFolderGetAmenities}?park_area_id=${dataNearest["park_area_id"]}")
         .get();
 
+    print("getAmenities $response");
     if (response == "No Internet") {
       isNetConnected.value = false;
       CustomDialog().internetErrorDialog(Get.context!, () => Get.back());
@@ -296,6 +306,43 @@ class ParkingDetailsController extends GetxController {
   }
 
   void onClickBooking() {
+    if (dataNearest["is_24_hrs"] == "N") {
+      DateTime now = DateTime.now();
+      String ctime = dataNearest["closed_time"].toString().trim();
+      DateTime specifiedTime = DateFormat("HH:mm").parse(ctime);
+      DateTime todaySpecifiedTime = DateTime(now.year, now.month, now.day,
+          specifiedTime.hour, specifiedTime.minute);
+
+      // Calculate the difference between the current time and the specified time
+      Duration difference = todaySpecifiedTime.difference(now);
+
+      // Convert the difference to minutes
+      int minutes = difference.inMinutes;
+
+      if (minutes <= 0) {
+        CustomDialog().errorDialog(
+          Get.context!,
+          "luvpark",
+          "Apologies, but we are closed for bookings right now.",
+          () {
+            Get.back();
+          },
+        );
+        return;
+      }
+      if (minutes <= 29) {
+        CustomDialog().errorDialog(
+          Get.context!,
+          "luvpark",
+          "You cannot make a booking within 30 minutes of our closing time.",
+          () {
+            Get.back();
+          },
+        );
+        return;
+      }
+    }
+
     btnLoading.value = true;
     if (dataNearest["is_allow_reserve"] == "N") {
       btnLoading.value = false;

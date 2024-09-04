@@ -21,10 +21,13 @@ class OtpScreen extends GetView<OtpController> {
       return PinTheme(
         width: 50,
         height: 50,
-        textStyle: TextStyle(
-          fontSize: 24,
-          color:
-              controller.isOtpValid.value ? AppColor.primaryColor : Colors.red,
+        textStyle: paragraphStyle(
+          fontSize: 20,
+          color: controller.isOtpValid.value
+              ? AppColor.primaryColor
+              : controller.inputPin.value.length != 6
+                  ? Colors.black
+                  : Colors.red,
         ),
         decoration: BoxDecoration(
           border: Border.all(
@@ -32,7 +35,9 @@ class OtpScreen extends GetView<OtpController> {
                   ? AppColor.borderColor
                   : controller.isOtpValid.value
                       ? AppColor.primaryColor
-                      : Colors.red,
+                      : controller.inputPin.value.length != 6
+                          ? AppColor.borderColor
+                          : Colors.red,
               width: 2),
           borderRadius: BorderRadius.circular(5),
           color: Colors.white,
