@@ -9,13 +9,8 @@ class SecuritySettingsController extends GetxController {
   RxString mobileNo = "".obs;
   RxList userData = [].obs;
 
-  @override
-  void onInit() {
-    super.onInit();
-    getUserData();
-  }
-
-  Future<void> getUserData() async {
+  Future<void> deleteAccount() async {
+    CustomDialog().loadingDialog(Get.context!);
     try {
       final mydata = await Authentication().getUserData2();
 
@@ -27,6 +22,7 @@ class SecuritySettingsController extends GetxController {
       var returnData = await HttpRequest(
               api: ApiKeys.gApiLuvPayPostDeleteAccount, parameters: param)
           .post();
+      Get.back();
 
       if (returnData == "No Internet") {
         CustomDialog().internetErrorDialog(Get.context!, () {
@@ -65,10 +61,17 @@ class SecuritySettingsController extends GetxController {
         "You will be directed to delete account page. Wait for customer support",
         "Okay", () {
       Get.back();
-      Get.to(const WebviewPage(
+      Get.to(WebviewPage(
         urlDirect: "https://luvpark.ph/account-deletion/",
         label: "Account Deletion",
         isBuyToken: false,
+        callback: () {
+          controller.getAccountStatus(context,
+              "63${controller.mobileNumber.text.toString().replaceAll(" ", "")}",
+              (obj) {
+            final items = obj[0]["items"];
+          });
+        },
       ));
     });
   }

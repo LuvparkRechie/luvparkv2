@@ -52,7 +52,7 @@ class Profile extends GetView<ProfileScreenController> {
                           child: SafeArea(
                             child: Column(
                               children: [
-                                Row(
+                                Stack(
                                   children: [
                                     InkWell(
                                       onTap: () {
@@ -61,6 +61,8 @@ class Profile extends GetView<ProfileScreenController> {
                                       child: const Row(
                                         mainAxisAlignment:
                                             MainAxisAlignment.start,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.center,
                                         children: [
                                           Icon(
                                             Icons.chevron_left,
@@ -75,19 +77,21 @@ class Profile extends GetView<ProfileScreenController> {
                                         ],
                                       ),
                                     ),
-                                    const Expanded(
-                                      child: CustomTitle(
-                                        text: "My Account",
-                                        fontSize: 16,
-                                        fontWeight: FontWeight.w900,
-                                        color: Colors.white,
-                                        textAlign: TextAlign.center,
-                                      ),
+                                    const Column(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: [
+                                        Center(
+                                          child: CustomTitle(
+                                            text: "My Account",
+                                            fontSize: 16,
+                                            fontWeight: FontWeight.w900,
+                                            color: Colors.white,
+                                            textAlign: TextAlign.center,
+                                          ),
+                                        ),
+                                      ],
                                     ),
-                                    const SizedBox(
-                                      width: 20,
-                                      height: 10,
-                                    )
                                   ],
                                 ),
                               ],

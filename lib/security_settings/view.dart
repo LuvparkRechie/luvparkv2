@@ -168,7 +168,7 @@ class Security extends GetView<SecuritySettingsController> {
               trailing: const Icon(Icons.chevron_right_sharp,
                   color: Color(0xFF1C1C1E)),
               onTap: () {
-                controller.getUserData();
+                controller.deleteAccount();
               },
             ),
           ),
