@@ -169,7 +169,6 @@ class Security extends GetView<SecuritySettingsController> {
                   color: Color(0xFF1C1C1E)),
               onTap: () {
                 controller.getUserData();
-                //r  controller.printMobileNo();
               },
             ),
           ),

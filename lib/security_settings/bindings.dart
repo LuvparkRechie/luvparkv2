@@ -1,5 +1,6 @@
 import 'package:get/get.dart';
-import 'package:luvpark_get/security_Settings/controller.dart';
+
+import 'controller.dart';
 
 class SecuritySettingsBinding implements Bindings {
   @override
