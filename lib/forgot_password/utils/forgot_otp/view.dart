@@ -18,12 +18,12 @@ class ForgotPassOtp extends GetView<ForgotPassOtpController> {
       return PinTheme(
         width: 50,
         height: 50,
-        textStyle: TextStyle(
-          fontSize: 24,
+        textStyle: paragraphStyle(
+          fontSize: 20,
           color: controller.isOtpValid.value
               ? AppColor.primaryColor
               : controller.inputPin.value.length != 6
-                  ? AppColor.primaryColor
+                  ? Colors.black
                   : Colors.red,
         ),
         decoration: BoxDecoration(

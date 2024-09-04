@@ -310,7 +310,7 @@ class BookingReceipt extends GetView<BookingReceiptController> {
                   ],
                 ),
               ),
-            if (!controller.parameters["can_cancel"])
+            if (controller.parameters["can_cancel"])
               Padding(
                 padding: const EdgeInsets.all(15),
                 child: Column(

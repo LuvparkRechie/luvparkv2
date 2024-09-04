@@ -584,226 +584,233 @@ class BookingPage extends GetView<BookingController> {
                                         // if (double.parse(
                                         //         controller.rewardsCon.text) !=
                                         //     0.0)
-                                        GestureDetector(
-                                          onTap: () {
-                                            controller.toggleRewardChecked(
-                                                !controller
-                                                    .isRewardchecked.value);
-                                          },
-                                          child: Container(
-                                            padding: const EdgeInsets.symmetric(
-                                                vertical: 15),
-                                            width: MediaQuery.of(context)
-                                                .size
-                                                .width,
-                                            decoration: BoxDecoration(
-                                              borderRadius:
-                                                  BorderRadius.circular(7),
-                                              color: Colors.white,
-                                              boxShadow: [
-                                                BoxShadow(
-                                                  color: Colors.black
-                                                      .withOpacity(0.1),
-                                                  spreadRadius: 1,
-                                                  blurRadius: 4,
-                                                  offset: const Offset(0, 2),
-                                                ),
-                                              ],
-                                              border: Border.all(
-                                                color: Colors.black
-                                                    .withOpacity(0.2),
-                                                width: 1,
-                                              ),
-                                            ),
-                                            child: Padding(
-                                              padding: const EdgeInsets.only(
-                                                left: 20.0,
-                                                right: 20,
-                                              ),
-                                              child: Column(
-                                                children: [
-                                                  Row(
-                                                    children: [
-                                                      Icon(
-                                                        controller
-                                                                .isRewardchecked
-                                                                .value
-                                                            ? Icons
-                                                                .check_circle_outline
-                                                            : Icons
-                                                                .circle_outlined,
-                                                        color: controller
-                                                                .isRewardchecked
-                                                                .value
-                                                            ? AppColor
-                                                                .primaryColor
-                                                            : Colors.grey,
-                                                      ),
-                                                      Container(width: 5),
-                                                      const Expanded(
-                                                        child: CustomTitle(
-                                                          text:
-                                                              "Use Reward Points",
-                                                          fontSize: 14,
-                                                          letterSpacing: -0.41,
-                                                          textAlign:
-                                                              TextAlign.left,
-                                                        ),
-                                                      ),
-                                                      Container(width: 5),
-                                                      if (controller
-                                                          .isRewardchecked
-                                                          .value)
-                                                        GestureDetector(
-                                                          onTap: () {
-                                                            if (double.parse(controller
-                                                                            .parameters[
-                                                                        "userData"][0]
-                                                                    [
-                                                                    "points_bal"]) ==
-                                                                0.0) {
-                                                              CustomDialog()
-                                                                  .errorDialog(
-                                                                      context,
-                                                                      "luvpark",
-                                                                      "You don't have enough rewards to proceed.",
-                                                                      () {
-                                                                Get.back();
-                                                              });
-                                                              return;
-                                                            }
-                                                            Get.dialog(
-                                                              RewardsDialog(
-                                                                data: controller
-                                                                    .parameters,
-                                                                cb: (data) {
-                                                                  controller
-                                                                      .computeRewards(
-                                                                          data);
-                                                                },
-                                                              ),
-                                                            );
-                                                          },
-                                                          child: Icon(
-                                                            Icons.edit_note,
-                                                            color: AppColor
-                                                                .primaryColor,
-                                                          ),
-                                                        )
-                                                    ],
+                                        if (double.parse(controller
+                                                    .parameters["userData"][0]
+                                                ["points_bal"]) ==
+                                            0.0)
+                                          GestureDetector(
+                                            onTap: () {
+                                              controller.toggleRewardChecked(
+                                                  !controller
+                                                      .isRewardchecked.value);
+                                            },
+                                            child: Container(
+                                              padding:
+                                                  const EdgeInsets.symmetric(
+                                                      vertical: 15),
+                                              width: MediaQuery.of(context)
+                                                  .size
+                                                  .width,
+                                              decoration: BoxDecoration(
+                                                borderRadius:
+                                                    BorderRadius.circular(7),
+                                                color: Colors.white,
+                                                boxShadow: [
+                                                  BoxShadow(
+                                                    color: Colors.black
+                                                        .withOpacity(0.1),
+                                                    spreadRadius: 1,
+                                                    blurRadius: 4,
+                                                    offset: const Offset(0, 2),
                                                   ),
-                                                  if (controller
-                                                      .isRewardchecked.value)
-                                                    Padding(
-                                                      padding:
-                                                          const EdgeInsets.all(
-                                                              10),
-                                                      child: Column(
-                                                        children: [
-                                                          const Divider(
-                                                            color: Colors.grey,
+                                                ],
+                                                border: Border.all(
+                                                  color: Colors.black
+                                                      .withOpacity(0.2),
+                                                  width: 1,
+                                                ),
+                                              ),
+                                              child: Padding(
+                                                padding: const EdgeInsets.only(
+                                                  left: 20.0,
+                                                  right: 20,
+                                                ),
+                                                child: Column(
+                                                  children: [
+                                                    Row(
+                                                      children: [
+                                                        Icon(
+                                                          controller
+                                                                  .isRewardchecked
+                                                                  .value
+                                                              ? Icons
+                                                                  .check_circle_outline
+                                                              : Icons
+                                                                  .circle_outlined,
+                                                          color: controller
+                                                                  .isRewardchecked
+                                                                  .value
+                                                              ? AppColor
+                                                                  .primaryColor
+                                                              : Colors.grey,
+                                                        ),
+                                                        Container(width: 5),
+                                                        const Expanded(
+                                                          child: CustomTitle(
+                                                            text:
+                                                                "Use Reward Points",
+                                                            fontSize: 14,
+                                                            letterSpacing:
+                                                                -0.41,
+                                                            textAlign:
+                                                                TextAlign.left,
                                                           ),
-                                                          Row(
-                                                            mainAxisAlignment:
-                                                                MainAxisAlignment
-                                                                    .spaceBetween,
-                                                            children: [
-                                                              const CustomParagraph(
+                                                        ),
+                                                        Container(width: 5),
+                                                        if (controller
+                                                            .isRewardchecked
+                                                            .value)
+                                                          GestureDetector(
+                                                            onTap: () {
+                                                              if (double.parse(controller
+                                                                              .parameters[
+                                                                          "userData"][0]
+                                                                      [
+                                                                      "points_bal"]) ==
+                                                                  0.0) {
+                                                                CustomDialog()
+                                                                    .errorDialog(
+                                                                        context,
+                                                                        "luvpark",
+                                                                        "You don't have enough rewards to proceed.",
+                                                                        () {
+                                                                  Get.back();
+                                                                });
+                                                                return;
+                                                              }
+                                                              Get.dialog(
+                                                                RewardsDialog(
+                                                                  data: controller
+                                                                      .parameters,
+                                                                  cb: (data) {
+                                                                    controller
+                                                                        .computeRewards(
+                                                                            data);
+                                                                  },
+                                                                ),
+                                                              );
+                                                            },
+                                                            child: Icon(
+                                                              Icons.edit_note,
+                                                              color: AppColor
+                                                                  .primaryColor,
+                                                            ),
+                                                          )
+                                                      ],
+                                                    ),
+                                                    if (controller
+                                                        .isRewardchecked.value)
+                                                      Padding(
+                                                        padding:
+                                                            const EdgeInsets
+                                                                .all(10),
+                                                        child: Column(
+                                                          children: [
+                                                            const Divider(
+                                                              color:
+                                                                  Colors.grey,
+                                                            ),
+                                                            Row(
+                                                              mainAxisAlignment:
+                                                                  MainAxisAlignment
+                                                                      .spaceBetween,
+                                                              children: [
+                                                                const CustomParagraph(
+                                                                    fontWeight:
+                                                                        FontWeight
+                                                                            .w400,
+                                                                    text:
+                                                                        ' Reward Points :',
+                                                                    letterSpacing:
+                                                                        -0.41),
+                                                                Padding(
+                                                                  padding:
+                                                                      const EdgeInsets
+                                                                          .only(
+                                                                          right:
+                                                                              20),
+                                                                  child:
+                                                                      CustomParagraph(
+                                                                    text: toCurrencyString(controller
+                                                                        .usedRewards
+                                                                        .toString()),
+                                                                    color: AppColor
+                                                                        .primaryColor,
+                                                                  ),
+                                                                ),
+                                                              ],
+                                                            ),
+                                                            Container(
+                                                                height: 5),
+                                                            Row(
+                                                              mainAxisAlignment:
+                                                                  MainAxisAlignment
+                                                                      .spaceBetween,
+                                                              children: [
+                                                                const CustomParagraph(
                                                                   fontWeight:
                                                                       FontWeight
                                                                           .w400,
                                                                   text:
-                                                                      ' Reward Points :',
+                                                                      ' Token :',
                                                                   letterSpacing:
-                                                                      -0.41),
-                                                              Padding(
-                                                                padding:
-                                                                    const EdgeInsets
-                                                                        .only(
-                                                                        right:
-                                                                            20),
-                                                                child:
-                                                                    CustomParagraph(
-                                                                  text: toCurrencyString(
-                                                                      controller
-                                                                          .usedRewards
-                                                                          .toString()),
-                                                                  color: AppColor
-                                                                      .primaryColor,
+                                                                      -0.41,
                                                                 ),
-                                                              ),
-                                                            ],
-                                                          ),
-                                                          Container(height: 5),
-                                                          Row(
-                                                            mainAxisAlignment:
-                                                                MainAxisAlignment
-                                                                    .spaceBetween,
-                                                            children: [
-                                                              const CustomParagraph(
-                                                                fontWeight:
-                                                                    FontWeight
-                                                                        .w400,
-                                                                text:
-                                                                    ' Token :',
-                                                                letterSpacing:
-                                                                    -0.41,
-                                                              ),
-                                                              Padding(
-                                                                padding:
-                                                                    const EdgeInsets
-                                                                        .only(
-                                                                        right:
-                                                                            20),
-                                                                child:
-                                                                    CustomParagraph(
-                                                                  text: toCurrencyString(
-                                                                      controller
-                                                                          .tokenRewards
-                                                                          .toString()),
-                                                                  color: AppColor
-                                                                      .primaryColor,
+                                                                Padding(
+                                                                  padding:
+                                                                      const EdgeInsets
+                                                                          .only(
+                                                                          right:
+                                                                              20),
+                                                                  child:
+                                                                      CustomParagraph(
+                                                                    text: toCurrencyString(controller
+                                                                        .tokenRewards
+                                                                        .toString()),
+                                                                    color: AppColor
+                                                                        .primaryColor,
+                                                                  ),
                                                                 ),
-                                                              ),
-                                                            ],
-                                                          ),
-                                                          Container(height: 10),
-                                                          Row(
-                                                            mainAxisAlignment:
-                                                                MainAxisAlignment
-                                                                    .spaceBetween,
-                                                            children: [
-                                                              const CustomParagraph(
-                                                                  text:
-                                                                      ' total ',
-                                                                  letterSpacing:
-                                                                      -0.41),
-                                                              Padding(
-                                                                padding:
-                                                                    const EdgeInsets
-                                                                        .only(
-                                                                        right:
-                                                                            20),
-                                                                child:
-                                                                    CustomParagraph(
-                                                                  text: toCurrencyString(controller
-                                                                          .totalAmount
-                                                                          .value)
-                                                                      .toString(),
-                                                                  color: AppColor
-                                                                      .primaryColor,
+                                                              ],
+                                                            ),
+                                                            Container(
+                                                                height: 10),
+                                                            Row(
+                                                              mainAxisAlignment:
+                                                                  MainAxisAlignment
+                                                                      .spaceBetween,
+                                                              children: [
+                                                                const CustomParagraph(
+                                                                    text:
+                                                                        ' Total ',
+                                                                    letterSpacing:
+                                                                        -0.41),
+                                                                Padding(
+                                                                  padding:
+                                                                      const EdgeInsets
+                                                                          .only(
+                                                                          right:
+                                                                              20),
+                                                                  child:
+                                                                      CustomParagraph(
+                                                                    text: toCurrencyString(controller
+                                                                            .totalAmount
+                                                                            .value)
+                                                                        .toString(),
+                                                                    color: AppColor
+                                                                        .primaryColor,
+                                                                  ),
                                                                 ),
-                                                              ),
-                                                            ],
-                                                          )
-                                                        ],
+                                                              ],
+                                                            )
+                                                          ],
+                                                        ),
                                                       ),
-                                                    ),
-                                                ],
+                                                  ],
+                                                ),
                                               ),
                                             ),
                                           ),
-                                        ),
                                         Container(
                                           height: 10,
                                         ),

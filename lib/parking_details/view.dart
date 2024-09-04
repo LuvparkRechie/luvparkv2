@@ -273,8 +273,7 @@ class ParkingDetails extends GetView<ParkingDetailsController> {
                         ),
                       ),
                       TextSpan(
-                        text:
-                            ' ● ${controller.dataNearest["parking_schedule"].toString().split("-")[0]} to ${controller.dataNearest["parking_schedule"].toString().split("-")[1]}  ●  ',
+                        text: ' ●  ${controller.parkSched}  ●  ',
                         style: paragraphStyle(),
                       ),
                       TextSpan(
