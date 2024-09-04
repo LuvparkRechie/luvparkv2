@@ -1,40 +1,29 @@
 import 'package:get/get.dart';
+import 'package:luvpark_get/auth/authentication.dart';
 import 'package:luvpark_get/custom_widgets/alert_dialog.dart';
 import 'package:luvpark_get/http/api_keys.dart';
 import 'package:luvpark_get/http/http_request.dart';
 import 'package:luvpark_get/web_view/webview.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-import 'dart:convert';
 
 class SecuritySettingsController extends GetxController {
   RxString mobileNo = "".obs;
-  SecuritySettingsController();
+  RxList userData = [].obs;
 
   @override
   void onInit() {
     super.onInit();
-    print("Test");
-    // getUserData();
+    getUserData();
   }
 
   Future<void> getUserData() async {
-    print("TESt");
-    return;
-    final prefs = await SharedPreferences.getInstance();
-    var userDataString = prefs.getString('userData');
-
-    if (userDataString == null) {
-      Get.snackbar("Error", "User data not found.");
-      return;
-    }
-
     try {
-      // Parse user data
-      Map<String, dynamic> userDataMap = jsonDecode(userDataString);
-      mobileNo.value = userDataMap['mobile_no'].toString();
+      final mydata = await Authentication().getUserData2();
 
-      // Call the API to delete account
-      var param = {'mobile_no': mobileNo.value};
+      mobileNo.value = mydata["mobile_no"];
+
+      Map<String, dynamic> param = {
+        "mobile_no": mydata["mobile_no"],
+      };
       var returnData = await HttpRequest(
               api: ApiKeys.gApiLuvPayPostDeleteAccount, parameters: param)
           .post();
@@ -63,12 +52,6 @@ class SecuritySettingsController extends GetxController {
     }
   }
 
-  void printMobileNo() {
-    print('Mobile Number: ${mobileNo.value}');
-    // Alternatively, use Get.snackbar for a UI message
-    Get.snackbar("Mobile Number", 'Current mobile number: ${mobileNo.value}');
-  }
-
   void _showErrorDialog(String title, String message) {
     CustomDialog().errorDialog(Get.context!, title, message, () {
       Get.back();
@@ -81,6 +64,7 @@ class SecuritySettingsController extends GetxController {
         "Success",
         "You will be directed to delete account page. Wait for customer support",
         "Okay", () {
+      Get.back();
       Get.to(const WebviewPage(
         urlDirect: "https://luvpark.ph/account-deletion/",
         label: "Account Deletion",
