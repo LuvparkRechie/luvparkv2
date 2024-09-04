@@ -2,23 +2,17 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:iconsax/iconsax.dart';
-import 'package:luvpark_get/custom_widgets/alert_dialog.dart';
 import 'package:luvpark_get/custom_widgets/app_color.dart';
 import 'package:luvpark_get/custom_widgets/custom_appbar.dart';
 import 'package:luvpark_get/custom_widgets/custom_text.dart';
 import 'package:luvpark_get/routes/routes.dart';
-import 'package:luvpark_get/security_Settings/controller.dart';
+import 'package:luvpark_get/security_settings/index.dart';
 
 class Security extends GetView<SecuritySettingsController> {
   const Security({super.key});
 
   @override
   Widget build(BuildContext context) {
-    SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
-      statusBarColor: Colors.transparent,
-      statusBarBrightness: Brightness.light,
-      statusBarIconBrightness: Brightness.dark,
-    ));
     return Scaffold(
       backgroundColor: AppColor.bodyColor,
       appBar: const CustomAppbar(title: ""),
@@ -174,34 +168,8 @@ class Security extends GetView<SecuritySettingsController> {
               trailing: const Icon(Icons.chevron_right_sharp,
                   color: Color(0xFF1C1C1E)),
               onTap: () {
-                CustomDialog().customPopUp(
-                  context,
-                  "Delete your Account?",
-                  "Deleting your account will result in the loss of all your data. You'll be redirected to the account deletion page where you'll receive an SMS containing an OTP code. Our support team will then reach out to you promptly.",
-                  "I changed my mind",
-                  "Delete my account",
-                  imageName: 'pu_confirmation',
-                  btnNotBackgroundColor: Colors.transparent,
-                  btnNotTextColor: Colors.red,
-                  onTapClose: () {
-                    Get.back();
-                  },
-                  onTapConfirm: () {
-                    Get.back();
-                    CustomDialog().customPopUp(
-                      context,
-                      "Notice",
-                      "Your account deletion request is now in progress. You'll get a text once it's processed.",
-                      "",
-                      "Okay",
-                      imageName: 'pu_success',
-                      showTwoButtons: false,
-                      onTapConfirm: () {
-                        Get.back();
-                      },
-                    );
-                  },
-                );
+                controller.getUserData();
+                //r  controller.printMobileNo();
               },
             ),
           ),
