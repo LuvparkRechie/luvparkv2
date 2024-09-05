@@ -34,9 +34,9 @@ class CustomButton extends StatelessWidget {
           border: Border.all(color: bordercolor ?? Colors.transparent),
           borderRadius: BorderRadius.circular(7),
         ),
-        child: Center(
-          child: Padding(
-            padding: const EdgeInsets.all(15.0),
+        child: Padding(
+          padding: const EdgeInsets.all(13),
+          child: Center(
             child: loading == null
                 ? CustomLinkLabel(
                     text: text,
