@@ -158,17 +158,6 @@ class OtpUpdate extends GetView<OtpUpdateController> {
                                   color: AppColor.primaryColor, width: 2),
                             ),
                       ),
-                      submittedPinTheme: getDefaultPinTheme().copyWith(
-                        decoration: getDefaultPinTheme().decoration!.copyWith(
-                              borderRadius: BorderRadius.circular(5),
-                              color: AppColor.bodyColor,
-                              border: Border.all(
-                                  color: controller.isOtpValid.value
-                                      ? AppColor.primaryColor
-                                      : Colors.red,
-                                  width: 2),
-                            ),
-                      ),
                     ),
                   ),
                 ),

@@ -95,7 +95,7 @@ class SecuritySettingsController extends GetxController {
                 }).toList();
 
                 await Authentication().setLogin(jsonEncode(userData[0]));
-                print("isLogin");
+
                 Get.back();
                 Get.offAllNamed(Routes.login);
               });

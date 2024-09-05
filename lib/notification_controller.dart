@@ -232,8 +232,6 @@ class NotificationController {
 
   static Future<void> onActionReceivedImplementationMethod(
       ReceivedAction receivedAction) async {
-    BuildContext context = MyApp.navigatorKey.currentState!.context;
-
     void redirect() async {
       MyApp.navigatorKey.currentState?.pushNamedAndRemoveUntil(
         '/${receivedAction.payload!["notificationId"]}',
@@ -244,6 +242,8 @@ class NotificationController {
         arguments: receivedAction,
       );
     }
+
+    print("receivedAction.buttonKeyPressed ${receivedAction.buttonKeyPressed}");
 
     switch (receivedAction.buttonKeyPressed) {
       case "VIEW":
@@ -336,9 +336,13 @@ Future<void> getParkingTrans(int ctr) async {
 
   HttpRequest(
     api:
-        "${ApiKeys.gApiSubFolderGetActiveParking}?user_id=${akongId.toString()}",
+        "${ApiKeys.gApiSubFolderGetActiveParking}?luvpay_id=${akongId.toString()}",
   ).get().then((notificationData) async {
     if (notificationData == "No Internet") {
+      return;
+    }
+    if (notificationData["items"].isEmpty) {
+      NotificationDatabase.instance.deleteAll();
       return;
     }
     if (notificationData != null) {
@@ -347,87 +351,45 @@ Future<void> getParkingTrans(int ctr) async {
             .readNotificationByDateOut(
                 dataRow["dt_in"].toString(), dataRow["reservation_id"])
             .then((returnData) async {
-          DateTime pdt =
-              DateTime.parse(dataRow["dt_in"].toString().replaceAll("/", "-"));
+          DateTime pdt = DateTime.parse(dataRow["dt_in"].toString());
 
           DateTime targetDate =
               DateTime(pdt.year, pdt.month, pdt.day, pdt.hour, pdt.minute);
 
           if (!Variables.withinOneHourRange(targetDate)) return;
+
           if (returnData == null) {
             // Insert process
-
             var resData = {
               NotificationDataFields.reservedId:
                   int.parse(dataRow["reservation_id"].toString()),
-              NotificationDataFields.userId:
-                  int.parse(dataRow["user_id"].toString()),
+              NotificationDataFields.userId: int.parse(akongId.toString()),
               NotificationDataFields.description:
-                  "Your Parking at ${dataRow["notes"]} is about to expire.",
+                  "Your Parking at ${dataRow["park_area_name"]} is about to expire.",
               NotificationDataFields.notifDate: dataRow["dt_out"].toString(),
               NotificationDataFields.status: dataRow["status"].toString(),
-              NotificationDataFields.isActive: dataRow["is_active"].toString(),
+              NotificationDataFields.isActive: "Y",
               NotificationDataFields.dtIn: dataRow["dt_in"].toString(),
             };
-            if (dataRow["is_active"] == "Y" && dataRow["status"] == "U") {
+
+            if (dataRow["status"] == "U") {
               ctr++;
 
               NotificationController.createNewNotification(
                   int.parse(dataRow["reservation_id"].toString()),
                   0,
                   'Check In',
-                  "Great! You have successfully checked in to ${dataRow["notes"].toString()} parking area",
+                  "Great! You have successfully checked in to ${dataRow["park_area_name"].toString()} parking area",
                   "custom_Screen");
 
               NotificationController.scheduleNewNotification(
                   int.parse(dataRow["reservation_id"].toString()),
                   "luvpark",
-                  "Your Parking at ${dataRow["notes"]} is about to expire.",
+                  "Your Parking at ${dataRow["park_area_name"]} is about to expire.",
                   dataRow["dt_out"].toString(),
                   "custom_Screen");
 
               await NotificationDatabase.instance.insertUpdate(resData);
-            }
-          } else {
-            if (DateTime.parse(returnData["notif_date"].toString())
-                    .isBefore(DateTime.parse(dataRow["dt_out"].toString())) &&
-                dataRow["is_active"] == "Y" &&
-                dataRow["status"] == "U") {
-              NotificationController.cancelNotificationsById(
-                  returnData["reserved_id"]);
-
-              var resData = {
-                NotificationDataFields.reservedId:
-                    int.parse(dataRow["reservation_id"].toString()),
-                NotificationDataFields.userId:
-                    int.parse(dataRow["user_id"].toString()),
-                NotificationDataFields.description:
-                    "Your Parking at ${dataRow["notes"]} is about to expire.",
-                NotificationDataFields.notifDate: dataRow["dt_out"].toString(),
-                NotificationDataFields.status: dataRow["status"].toString(),
-                NotificationDataFields.isActive:
-                    dataRow["is_active"].toString(),
-                NotificationDataFields.dtIn: dataRow["dt_in"].toString(),
-              };
-              await NotificationDatabase.instance
-                  .insertUpdate(resData)
-                  .then((updateProcess) {
-                NotificationController.scheduleNewNotification(
-                    int.parse(dataRow["reservation_id"].toString()),
-                    "Check In",
-                    "Your Parking at ${dataRow["notes"]} is about to expire.",
-                    dataRow["dt_out"].toString(),
-                    "custom_Screen");
-              });
-            } else {
-              if (int.parse(dataRow["reservation_id"].toString()) ==
-                      int.parse(returnData["reserved_id"].toString()) &&
-                  dataRow["is_active"].toString() == "N") {
-                NotificationController.cancelNotificationsById(
-                    returnData["reserved_id"]);
-                await NotificationDatabase.instance
-                    .deleteItem(dataRow["reservation_id"]);
-              } else {}
             }
           }
         });

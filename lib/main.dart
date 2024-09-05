@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:io';
 
 import 'package:awesome_notifications/awesome_notifications.dart';
@@ -7,9 +8,9 @@ import 'package:flutter/services.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:luvpark_get/auth/authentication.dart';
 import 'package:luvpark_get/custom_widgets/app_color.dart';
 import 'package:luvpark_get/custom_widgets/variables.dart';
-import 'package:luvpark_get/main_controller.dart';
 import 'package:luvpark_get/routes/pages.dart';
 import 'package:luvpark_get/routes/routes.dart';
 // ignore: depend_on_referenced_packages
@@ -20,6 +21,20 @@ import 'package:timezone/data/latest_all.dart' as tz;
 import 'package:upgrader/upgrader.dart';
 
 import 'notification_controller.dart';
+
+@pragma('vm:entry-point')
+Future<void> backgroundFunc() async {
+  int counter = 0;
+
+  Timer.periodic(const Duration(seconds: 10), (timer) async {
+    var akongId = await Authentication().getUserId();
+    print("afsasas $akongId");
+    if (akongId == 0) return;
+    await getParkingTrans(counter);
+
+    await getMessNotif();
+  });
+}
 
 void main() async {
   tz.initializeTimeZones();
@@ -64,12 +79,23 @@ class NavigationProvider with ChangeNotifier {
   final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 }
 
-class MyApp extends GetView<MainController> {
+class MyApp extends StatefulWidget {
   static final GlobalKey<NavigatorState> navigatorKey =
       GlobalKey<NavigatorState>();
   static final GlobalKey<ScaffoldState> scaffoldKey =
       GlobalKey<ScaffoldState>();
   const MyApp({super.key});
+
+  @override
+  State<MyApp> createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
+  @override
+  void initState() {
+    super.initState();
+    backgroundFunc();
+  }
 
   @override
   Widget build(BuildContext context) {

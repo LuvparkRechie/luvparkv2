@@ -723,6 +723,20 @@ class DashboardMapController extends GetxController
                     }
                   }
 
+                  final String isPwd = dataNearest[index]["is_pwd"] ?? "N";
+                  final String vehicleTypes =
+                      dataNearest[index]["vehicle_types_list"];
+
+                  String iconAsset;
+                  // Determine the iconAsset based on parking type and PWD status
+                  if (isPwd == "Y") {
+                    iconAsset = _getIconAssetForPwd(
+                        dataNearest[index]["parking_type_code"], vehicleTypes);
+                  } else {
+                    iconAsset = _getIconAssetForNonPwd(
+                        dataNearest[index]["parking_type_code"], vehicleTypes);
+                  }
+
                   return ShowUpAnimation(
                     delay: 5 * index,
                     child: InkWell(
@@ -746,9 +760,8 @@ class DashboardMapController extends GetxController
                               height: 34,
                               clipBehavior: Clip.antiAlias,
                               decoration: const BoxDecoration(),
-                              child: const Image(
-                                image: AssetImage(
-                                    "assets/dashboard_icon/location_on.png"),
+                              child: Image(
+                                image: AssetImage(iconAsset),
                                 fit: BoxFit.cover,
                               ),
                             ),

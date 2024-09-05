@@ -112,12 +112,22 @@ class ParkingAreas extends GetView<ParkingAreasController> {
                           }
                         }
 
-                        // String finalSttime =
-                        //     "${ct.searchedZone[index]["start_time"].toString().substring(0, 2)}:${ct.searchedZone[index]["start_time"].toString().substring(2)}";
-                        // String finalEndtime =
-                        //     "${ct.searchedZone[index]["end_time"].toString().substring(0, 2)}:${ct.searchedZone[index]["end_time"].toString().substring(2)}";
-                        // bool isOpen = Functions.checkAvailability(
-                        //     finalSttime, finalEndtime);
+                        final String isPwd =
+                            ct.searchedZone[index]["is_pwd"] ?? "N";
+                        final String vehicleTypes =
+                            ct.searchedZone[index]["vehicle_types_list"];
+
+                        String iconAsset;
+                        // Determine the iconAsset based on parking type and PWD status
+                        if (isPwd == "Y") {
+                          iconAsset = controller.getIconAssetForPwd(
+                              ct.searchedZone[index]["parking_type_code"],
+                              vehicleTypes);
+                        } else {
+                          iconAsset = controller.getIconAssetForNonPwd(
+                              ct.searchedZone[index]["parking_type_code"],
+                              vehicleTypes);
+                        }
 
                         return ShowUpAnimation(
                           delay: 5 * index,
@@ -138,12 +148,11 @@ class ParkingAreas extends GetView<ParkingAreasController> {
                               child: Row(
                                 children: [
                                   Container(
-                                    height: 34,
+                                    height: 40,
                                     clipBehavior: Clip.antiAlias,
                                     decoration: const BoxDecoration(),
-                                    child: const Image(
-                                      image: AssetImage(
-                                          "assets/dashboard_icon/location_on.png"),
+                                    child: Image(
+                                      image: AssetImage(iconAsset),
                                       fit: BoxFit.cover,
                                     ),
                                   ),

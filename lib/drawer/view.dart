@@ -9,6 +9,7 @@ import 'package:luvpark_get/custom_widgets/app_color.dart';
 import 'package:luvpark_get/custom_widgets/custom_text.dart';
 import 'package:luvpark_get/mapa/controller.dart';
 import 'package:luvpark_get/routes/routes.dart';
+import 'package:luvpark_get/sqlite/reserve_notification_table.dart';
 import 'package:luvpark_get/web_view/webview.dart';
 
 import '../custom_widgets/variables.dart';
@@ -327,9 +328,10 @@ class CustomDrawer extends GetView<DashboardMapController> {
                           e["is_login"] = "N";
                           return e;
                         }).toList();
-
+                        await NotificationDatabase.instance.deleteAll();
                         await Authentication()
                             .setLogin(jsonEncode(userData[0]));
+
                         Get.back();
                         Get.offAllNamed(Routes.splash);
                       },

@@ -171,7 +171,7 @@ class WalletSend extends GetView<WalletSendController> {
                             ],
                           ),
                         SizedBox(
-                          height: 10,
+                          height: 30,
                         ),
                         if (MediaQuery.of(context).viewInsets.bottom ==
                             0) //hide button
