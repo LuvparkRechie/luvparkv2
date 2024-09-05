@@ -1,4 +1,4 @@
-library auditor;
+library activate;
 
 export './bindings.dart';
 export './controller.dart';

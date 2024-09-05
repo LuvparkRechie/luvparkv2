@@ -9,7 +9,7 @@ class Routes {
   static const otp = "/otp";
   static const map = "/map";
   static const loading = "/loading";
-  static const activate = "/activate";
+  static const activate = "/activate_acc";
   static const permission = "/permission";
   static const splash = "/splash";
   static const parking = "/parking";
