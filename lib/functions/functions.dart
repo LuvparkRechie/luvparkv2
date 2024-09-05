@@ -299,8 +299,8 @@ class Functions {
                         context,
                         "Inactive Account",
                         "Your account is currently inactive. Would you like to activate it now?",
-                        "Yes",
-                        "No", () {
+                        "No",
+                        "Yes", () {
                       cb([false, "No"]);
                       Get.back();
                     }, () {

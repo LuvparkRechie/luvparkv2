@@ -1,6 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:luvpark_get/custom_widgets/app_color.dart';
 import 'package:luvpark_get/custom_widgets/custom_appbar.dart';
 import 'package:webview_flutter/webview_flutter.dart';
@@ -51,6 +52,12 @@ class _WebviewPageState extends State<WebviewPage> {
     return Scaffold(
       appBar: CustomAppbar(
         title: widget.label,
+        onTap: () {
+          Get.back();
+          if (widget.callback != null) {
+            widget.callback!();
+          }
+        },
       ),
       body: isLoading
           ? Center(

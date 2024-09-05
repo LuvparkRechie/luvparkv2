@@ -3,7 +3,6 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:luvpark_get/auth/authentication.dart';
-import 'package:luvpark_get/custom_widgets/alert_dialog.dart';
 import 'package:luvpark_get/login/controller.dart';
 import 'package:luvpark_get/routes/routes.dart';
 
@@ -41,18 +40,9 @@ class SplashController extends GetxController
         if (items.isEmpty) {
           return;
         }
+
         if (items[0]["is_active"] == "N") {
-          CustomDialog().confirmationDialog(
-              Get.context!,
-              "Information",
-              "Your account is currently inactive. Would you like to activate it now?",
-              "Yes",
-              "Cancel", () {
-            Get.back();
-            Get.offAll(() => Routes.activate);
-          }, () {
-            Get.back();
-          });
+          Get.toNamed(Routes.login);
         } else {
           final userLogin = await Authentication().getUserLogin();
 

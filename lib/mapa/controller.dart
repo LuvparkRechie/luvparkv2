@@ -72,6 +72,7 @@ class DashboardMapController extends GetxController
   RxDouble minHeight = 0.0.obs;
   //Last Booking variables
   RxBool hasLastBooking = false.obs;
+  RxBool isSearch = false.obs;
   RxString plateNo = "".obs;
   RxString brandName = "".obs;
 
@@ -353,7 +354,7 @@ class DashboardMapController extends GetxController
           CameraPosition(
               target: LatLng(initialCameraPosition!.target.latitude,
                   initialCameraPosition!.target.longitude),
-              zoom: 16),
+              zoom: dataNearest.isEmpty ? 15 : 17),
         ),
       );
     }
@@ -380,10 +381,11 @@ class DashboardMapController extends GetxController
   void getUserData(isSearch) async {
     isLoading.value = true;
     isLoadingMap.value = true;
+
     String? userData = await Authentication().getUserData();
     final item = await Authentication().getUserData2();
     final profPic = await Authentication().getUserProfilePic();
-    print("profPic $profPic");
+
     userProfile = item;
     myProfPic.value = profPic;
 

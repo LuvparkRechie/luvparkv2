@@ -1,9 +1,14 @@
+import 'dart:convert';
+
 import 'package:get/get.dart';
 import 'package:luvpark_get/auth/authentication.dart';
 import 'package:luvpark_get/custom_widgets/alert_dialog.dart';
 import 'package:luvpark_get/http/api_keys.dart';
 import 'package:luvpark_get/http/http_request.dart';
 import 'package:luvpark_get/web_view/webview.dart';
+
+import '../login/controller.dart';
+import '../routes/routes.dart';
 
 class SecuritySettingsController extends GetxController {
   RxString mobileNo = "".obs;
@@ -65,11 +70,36 @@ class SecuritySettingsController extends GetxController {
         urlDirect: "https://luvpark.ph/account-deletion/",
         label: "Account Deletion",
         isBuyToken: false,
-        callback: () {
-          controller.getAccountStatus(context,
-              "63${controller.mobileNumber.text.toString().replaceAll(" ", "")}",
-              (obj) {
+        callback: () async {
+          CustomDialog().loadingDialog(Get.context!);
+          Get.put(LoginScreenController());
+          final lc = Get.find<LoginScreenController>();
+          final userData = await Authentication().getUserData2();
+
+          lc.getAccountStatus(Get.context!, userData["mobile_no"], (obj) {
+            Get.back();
             final items = obj[0]["items"];
+
+            if (items.isEmpty || items[0]["is_active"] == "N") {
+              CustomDialog().infoDialog(
+                  "Account status", "Your account might not be active.",
+                  () async {
+                Get.back();
+                CustomDialog().loadingDialog(Get.context!);
+                await Future.delayed(const Duration(seconds: 3));
+                final userLogin = await Authentication().getUserLogin();
+                List userData = [userLogin];
+                userData = userData.map((e) {
+                  e["is_login"] = "N";
+                  return e;
+                }).toList();
+
+                await Authentication().setLogin(jsonEncode(userData[0]));
+
+                Get.back();
+                Get.offAllNamed(Routes.login);
+              });
+            }
           });
         },
       ));
