@@ -39,66 +39,92 @@ class MyVehicles extends GetView<MyVehiclesController> {
                     onTap: controller.onRefresh,
                   )
                 : Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 15),
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 15, vertical: 5),
                     child: RefreshIndicator(
                       onRefresh: controller.onRefresh,
                       child: controller.vehicleData.isEmpty
                           ? const NoDataFound()
                           : StretchingOverscrollIndicator(
                               axisDirection: AxisDirection.down,
-                              child: ListView.separated(
-                                  itemBuilder: (context, index) {
-                                    return ListTile(
+                              child: ListView.builder(
+                                itemCount: controller.vehicleData.length,
+                                itemBuilder: (context, index) {
+                                  return Container(
+                                    margin: const EdgeInsets.symmetric(
+                                        vertical: 5.0),
+                                    decoration: BoxDecoration(
+                                      color: Colors.white,
+                                      borderRadius: BorderRadius.circular(8.0),
+                                      border: Border.all(
+                                        color: Colors.grey.shade300,
+                                        width: 1.0,
+                                      ),
+                                    ),
+                                    child: ListTile(
                                       title: Row(
                                         mainAxisAlignment:
-                                            MainAxisAlignment.end,
+                                            MainAxisAlignment.start,
                                         children: [
                                           CustomTitle(
                                             text: controller.vehicleData[index]
-                                                ["vehicle_plate_no"],
+                                                ["vehicle_brand_name"],
                                             fontSize: 14,
                                           ),
                                         ],
                                       ),
                                       subtitle: Row(
                                         mainAxisAlignment:
-                                            MainAxisAlignment.end,
+                                            MainAxisAlignment.start,
                                         children: [
                                           CustomParagraph(
-                                            text: controller.vehicleData[index]
-                                                ["vehicle_brand_name"],
+                                            text:
+                                                'Plate number: ${controller.vehicleData[index]["vehicle_plate_no"]}',
                                             fontSize: 12,
                                           ),
                                         ],
                                       ),
                                       leading: Padding(
                                         padding: const EdgeInsets.only(top: 5),
-                                        child: Icon(
-                                          int.parse(controller
-                                                      .vehicleData[index]
-                                                          ["vehicle_type_id"]
-                                                      .toString()) ==
-                                                  1
-                                              ? Icons.motorcycle_outlined
-                                              : Icons.time_to_leave,
+                                        child: Container(
+                                          decoration: const BoxDecoration(
+                                            shape: BoxShape.circle,
+                                            color: Color(0xFFEAF4FF),
+                                          ),
+                                          padding: const EdgeInsets.all(8.0),
+                                          child: Icon(
+                                            int.parse(controller
+                                                        .vehicleData[index]
+                                                            ["vehicle_type_id"]
+                                                        .toString()) ==
+                                                    1
+                                                ? Icons.motorcycle_outlined
+                                                : Icons.time_to_leave,
+                                            color: const Color(0xFF0078FF),
+                                          ),
                                         ),
                                       ),
-                                      trailing: const Icon(
-                                        Icons.delete,
-                                        color: Colors.red,
+                                      trailing: Container(
+                                        decoration: const BoxDecoration(
+                                          shape: BoxShape.circle,
+                                          color: Color(0xFFF9D9D9),
+                                        ),
+                                        padding: const EdgeInsets.all(8.0),
+                                        child: const Icon(
+                                          Icons.delete,
+                                          color: Color(0xFFD34949),
+                                          size: 24.0,
+                                        ),
                                       ),
                                       onTap: () {
                                         controller.onDeleteVehicle(
                                             controller.vehicleData[index]
                                                 ["vehicle_plate_no"]);
                                       },
-                                    );
-                                  },
-                                  separatorBuilder: (context, index) => Divider(
-                                        color: Colors.grey[800],
-                                        height: 1,
-                                      ),
-                                  itemCount: controller.vehicleData.length),
+                                    ),
+                                  );
+                                },
+                              ),
                             ),
                     ),
                   ),
