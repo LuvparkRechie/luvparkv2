@@ -171,9 +171,11 @@ class LoginScreen extends GetView<LoginScreenController> {
                                             "Yes", () {
                                           Get.back();
                                         }, () {
-                                          Get.toNamed(Routes.activate,
-                                              arguments:
-                                                  controller.mobileNumber.text);
+                                          Get.toNamed(
+                                            Routes.activate,
+                                            arguments:
+                                                "63${controller.mobileNumber.text.replaceAll(" ", "")}",
+                                          );
                                         });
                                       } else {
                                         Map<String, dynamic> postParam = {

@@ -36,7 +36,8 @@ class ActivateAccountController extends GetxController {
     pinController = TextEditingController();
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      restartTimer();
+      resendFunction();
+      startTimers();
     });
     super.onInit();
   }
