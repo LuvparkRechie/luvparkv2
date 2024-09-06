@@ -16,7 +16,6 @@ class WalletController extends GetxController
   late StreamSubscription<void> dataSubscription;
   RxBool isLoading = true.obs;
   RxBool isNetConn = true.obs;
-  bool isAllowToSync = true;
   RxList logs = [].obs;
   RxList userData = [].obs;
   var userImage;
@@ -45,19 +44,18 @@ class WalletController extends GetxController
   }
 
   void fetchDataPeriodically() async {
-    dataSubscription = Stream.periodic(const Duration(seconds: 20), (count) {
+    dataSubscription = Stream.periodic(const Duration(seconds: 10), (count) {
       fetchData();
     }).listen((event) {});
   }
 
   Future<void> fetchData() async {
     await Future.delayed(const Duration(seconds: 5));
-    if (isAllowToSync) {
-      getUserBalance();
-    }
+    getUserBalance();
   }
 
   Future<void> getUserBalance() async {
+    print("Get user balance");
     final userPp = await Authentication().getUserProfilePic();
     var uData = await Authentication().getUserData();
     var item = jsonDecode(uData!);
@@ -70,11 +68,10 @@ class WalletController extends GetxController
           "${item['first_name'].toString()} ${item['last_name'].toString()}";
     }
 
-    Functions.getUserBalance(Get.context!, (dataBalance) async {
+    Functions.getUserBalance2(Get.context!, (dataBalance) async {
       if (!dataBalance[0]["has_net"]) {
         isLoading.value = false;
         isNetConn.value = false;
-        isAllowToSync = false;
 
         return;
       } else {
@@ -148,7 +145,6 @@ class WalletController extends GetxController
     HttpRequest(api: subApi).get().then((response) {
       print("response $response");
       if (response == "No Internet") {
-        isAllowToSync = false;
         isLoading.value = false;
         isNetConn.value = false;
         logs.value = [];
@@ -158,7 +154,6 @@ class WalletController extends GetxController
       if (response == null) {
         isLoading.value = false;
         isNetConn.value = true;
-        isAllowToSync = false;
         logs.value = [];
         CustomDialog().errorDialog(
           Get.context!,
@@ -172,7 +167,6 @@ class WalletController extends GetxController
       if (response["items"].isNotEmpty) {
         isLoading.value = false;
         isNetConn.value = true;
-        isAllowToSync = true;
 
         DateTime today = DateTime.now().toUtc();
         String todayString = today.toIso8601String().substring(0, 10);
@@ -191,7 +185,7 @@ class WalletController extends GetxController
 
         isLoading.value = false;
         isNetConn.value = true;
-        isAllowToSync = false;
+
         logs.value = [];
       }
     });

@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:luvpark_get/custom_widgets/custom_button.dart';
 import 'package:luvpark_get/custom_widgets/custom_text.dart';
 
 class NoInternetConnected extends StatelessWidget {
@@ -38,11 +37,11 @@ class NoInternetConnected extends StatelessWidget {
           Container(
             height: 25,
           ),
-          CustomButton(
-              text: "Reconnect",
+          TextButton(
               onPressed: () {
                 onTap!();
-              })
+              },
+              child: const CustomLinkLabel(text: "Reconnect"))
         ],
       ),
     );

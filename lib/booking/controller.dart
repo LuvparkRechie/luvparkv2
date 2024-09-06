@@ -406,7 +406,8 @@ class BookingController extends GetxController
       "vehicle_type_id": params["vehicle_type_id"].toString(),
       "vehicle_plate_no": params["vehicle_plate_no"],
       "park_area_id": params["park_area_id"].toString(),
-      "points_used": double.parse(usedRewards.toString())
+      "points_used": double.parse(usedRewards.toString()),
+      "auto_extend": isExtendchecked.value ? "Y" : "N"
     };
 
     CustomDialog().confirmationDialog(

@@ -168,7 +168,7 @@ class CustomDrawer extends GetView<DashboardMapController> {
                   trailing: Icon(Icons.chevron_right_sharp,
                       color: AppColor.primaryColor),
                   onTap: () {
-                    Get.toNamed(Routes.parking);
+                    Get.toNamed(Routes.parking, arguments: "D");
                   },
                 ),
                 ListTile(

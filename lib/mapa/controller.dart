@@ -303,6 +303,7 @@ class DashboardMapController extends GetxController
 
   void onCameraMoveStarted() {
     if (isMarkerTapped.value) return;
+
     mapPickerController.mapMoving!();
     isGetNearData.value = false;
   }
@@ -631,17 +632,20 @@ class DashboardMapController extends GetxController
 
         markers.add(
           Marker(
-              // ignore: deprecated_member_use
-              infoWindow: InfoWindow(title: items["park_area_name"]),
-              // ignore: deprecated_member_use
-              icon: BitmapDescriptor.fromBytes(markerIcon),
-              markerId: MarkerId(ctr.toString()),
-              position: LatLng(double.parse(items["pa_latitude"].toString()),
-                  double.parse(items["pa_longitude"].toString())),
-              onTap: () {
-                dialogData.clear();
-                onMarkerTapped(items);
-              }),
+            // ignore: deprecated_member_use
+            consumeTapEvents: true,
+            infoWindow: InfoWindow(title: items["park_area_name"]),
+            // ignore: deprecated_member_use
+            icon: BitmapDescriptor.fromBytes(markerIcon),
+            markerId: MarkerId(ctr.toString()),
+            position: LatLng(double.parse(items["pa_latitude"].toString()),
+                double.parse(items["pa_longitude"].toString())),
+            onTap: () {
+              dialogData.clear();
+
+              onMarkerTapped(items);
+            },
+          ),
         );
       }
     }
@@ -888,8 +892,6 @@ class DashboardMapController extends GetxController
     isGetNearData.value = false;
 
     mapPickerController.mapFinishedMoving!();
-
-    update();
   }
 
   void closeMarkerDialog() {

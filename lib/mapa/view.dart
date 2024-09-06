@@ -420,7 +420,7 @@ class DashboardMapScreen extends GetView<DashboardMapController> {
                   bottom: 25,
                   child: Row(
                     crossAxisAlignment: CrossAxisAlignment.end,
-                    mainAxisAlignment: MainAxisAlignment.center,
+                    mainAxisAlignment: MainAxisAlignment.end,
                     children: [
                       Visibility(
                         visible: (controller.hasLastBooking.value &&

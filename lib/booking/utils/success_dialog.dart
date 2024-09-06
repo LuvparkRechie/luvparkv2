@@ -133,7 +133,7 @@ class BookingDialog extends StatelessWidget {
                 bordercolor: Colors.white,
                 text: "Go to parking",
                 onPressed: () {
-                  Get.offAllNamed(Routes.parking, arguments: true);
+                  Get.offAllNamed(Routes.parking, arguments: "B");
                 },
               ),
             ),

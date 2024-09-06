@@ -26,7 +26,7 @@ import 'package:luvpark_get/sqlite/vehicle_brands_table.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:timezone/data/latest_all.dart' as tz;
 
-import '../notification_controller/notification_controller.dart';
+import '../notification_controller.dart';
 
 class Functions {
   static GeolocatorPlatform geolocatorPlatform = GeolocatorPlatform.instance;
@@ -111,6 +111,82 @@ class Functions {
                 Get.offAndToNamed(Routes.login);
               });
             });
+          } else {
+            cb([
+              {
+                "has_net": true,
+                "success": true,
+                "items": returnBalance["items"]
+              }
+            ]);
+          }
+        });
+      }
+    });
+  }
+
+  static Future<void> getUserBalance2(context, Function cb) async {
+    void logoutAccount() async {
+      CustomDialog().errorDialog(context, "Error",
+          "There ase some changes made in your account. please contact support.",
+          () async {
+        SharedPreferences pref = await SharedPreferences.getInstance();
+        Navigator.pop(context);
+
+        await NotificationDatabase.instance
+            .readAllNotifications()
+            .then((notifData) async {
+          if (notifData.isNotEmpty) {
+            for (var nData in notifData) {
+              NotificationController.cancelNotificationsById(
+                  nData["reserved_id"]);
+            }
+          }
+          var logData = pref.getString('loginData');
+          var mappedLogData = [jsonDecode(logData!)];
+          mappedLogData[0]["is_active"] = "N";
+          pref.setString("loginData", jsonEncode(mappedLogData[0]!));
+          pref.remove('myId');
+          NotificationDatabase.instance.deleteAll();
+          PaMessageDatabase.instance.deleteAll();
+          ShareLocationDatabase.instance.deleteAll();
+          NotificationController.cancelNotifications();
+          //  ForegroundNotif.onStop();
+          Authentication().clearPassword();
+          Get.offAndToNamed(Routes.login);
+        });
+      });
+    }
+
+    Authentication().getUserData().then((userData) {
+      if (userData == null) {
+        cb([
+          {"has_net": true, "success": false, "items": []}
+        ]);
+        logoutAccount();
+      } else {
+        var user = jsonDecode(userData);
+
+        String subApi =
+            "${ApiKeys.gApiSubFolderGetBalance}?user_id=${user["user_id"]}";
+
+        HttpRequest(api: subApi).get().then((returnBalance) async {
+          if (returnBalance == "No Internet") {
+            cb([
+              {"has_net": false, "success": false, "items": []}
+            ]);
+
+            return;
+          }
+          if (returnBalance == null) {
+            cb([
+              {"has_net": true, "success": false, "items": []}
+            ]);
+
+            return;
+          }
+          if (returnBalance["items"].isEmpty) {
+            logoutAccount();
           } else {
             cb([
               {

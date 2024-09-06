@@ -10,14 +10,13 @@ import 'package:luvpark_get/http/http_request.dart';
 import 'package:luvpark_get/routes/routes.dart';
 
 class ParkingController extends GetxController
-    with GetSingleTickerProviderStateMixin {
-  bool? parameter = Get.arguments;
+    with GetTickerProviderStateMixin {
+  String parameter = Get.arguments;
   late TabController tabController;
   TextEditingController searchCtrl = TextEditingController();
   late StreamController<void> _dataController;
   late StreamSubscription<void> _dataSubscription;
   PageController pageController = PageController();
-  final GlobalKey tabBarKey = GlobalKey();
   RxInt currentPage = 0.obs;
   RxList resData = [].obs;
   RxBool hasNet = false.obs;
@@ -30,8 +29,13 @@ class ParkingController extends GetxController
   @override
   void onInit() {
     super.onInit();
+
     tabController = TabController(vsync: this, length: 2);
     _dataController = StreamController<void>();
+
+    if (parameter == "N") {
+      onTabTapped(1);
+    }
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       onRefresh();
     });
@@ -64,28 +68,24 @@ class ParkingController extends GetxController
   }
 
   void fetchDataPeriodically() async {
-    _dataSubscription = Stream.periodic(const Duration(seconds: 20), (count) {
+    _dataSubscription = Stream.periodic(const Duration(seconds: 10), (count) {
       fetchData();
     }).listen((event) {});
   }
 
   Future<void> fetchData() async {
     await Future.delayed(const Duration(seconds: 5));
-    if (isAllowToSync) {
-      onRefresh();
-    }
+    onRefresh();
   }
 
   //Get Reserve Data
   Future<void> getReserveData(String status) async {
-    isLoading.value = true; // Start loading
-    Functions.getUserBalance(Get.context!, (userData) async {
+    isLoading.value = true;
+
+    Functions.getUserBalance2(Get.context!, (userData) async {
       if (!userData[0]["has_net"]) {
         isLoading.value = false;
-        CustomDialog().errorDialog(Get.context!, "Error",
-            "Please check your internet connection and try again.", () {
-          Get.back();
-        });
+        hasNet.value = false;
         return;
       }
       final id = await Authentication().getUserId();
@@ -97,24 +97,21 @@ class ParkingController extends GetxController
 
         if (returnData == "No Internet") {
           isLoading.value = false; // End loading
-          isAllowToSync = false;
-          CustomDialog().errorDialog(Get.context!, "Error",
-              "Please check your internet connection and try again.", () {
+          hasNet.value = false;
+          CustomDialog().internetErrorDialog(Get.context!, () {
             Get.back();
           });
           return;
         }
-        isAllowToSync = true;
+        isLoading.value = false; // End loading
+        hasNet.value = true;
         if (returnData == null) {
-          isLoading.value = false; // End loading
           CustomDialog().errorDialog(Get.context!, "Internet Error",
               "Error while connecting to server, Please contact support.", () {
             Get.back();
           });
           return;
         } else {
-          isLoading.value = false;
-
           List itemData = returnData["items"];
 
           if (currentPage.value == 0) {

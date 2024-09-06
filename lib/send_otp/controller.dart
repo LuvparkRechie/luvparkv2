@@ -7,7 +7,7 @@ import 'package:luvpark_get/auth/authentication.dart';
 import '../custom_widgets/alert_dialog.dart';
 import '../http/api_keys.dart';
 import '../http/http_request.dart';
-import '../notification_controller/notification_controller.dart';
+import '../notification_controller.dart';
 
 class SendOtpController extends GetxController {
   SendOtpController();

@@ -4,15 +4,12 @@ import 'dart:ui';
 
 import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:http/http.dart' as http;
 import 'package:luvpark_get/auth/authentication.dart';
 import 'package:luvpark_get/custom_widgets/variables.dart';
 import 'package:luvpark_get/http/http_request.dart';
-// import 'package:luvpark/sqlite/pa_message_controller.dart';
-// import 'package:luvpark/sqlite/pa_message_model.dart';
-
-import 'package:luvpark_get/main.dart';
 import 'package:luvpark_get/sqlite/notification_model.dart';
 import 'package:luvpark_get/sqlite/pa_message_model.dart';
 import 'package:luvpark_get/sqlite/pa_message_table.dart';
@@ -22,6 +19,7 @@ import 'package:timezone/data/latest_all.dart' as tz;
 import 'package:timezone/timezone.dart' as tzz;
 
 import 'http/api_keys.dart';
+import 'routes/routes.dart';
 
 class NotificationController {
   static ReceivedAction? initialAction;
@@ -97,8 +95,9 @@ class NotificationController {
     print(re.body);
   }
 
-  static Future<void> createNewNotification(int id, int geoShareId,
-      String? title, String? body, String? payload) async {
+  //Parking notification
+  static Future<void> parkingNotif(int id, int geoShareId, String? title,
+      String? body, String? payload) async {
     bool isAllowed = await AwesomeNotifications().isNotificationAllowed();
     if (!isAllowed) return;
 
@@ -109,16 +108,10 @@ class NotificationController {
         title: title!,
         body: body!,
         wakeUpScreen: true,
-        autoDismissible: payload == "custom_Screen" ? true : false,
+        autoDismissible: true,
         notificationLayout: NotificationLayout.BigPicture,
         payload: {'notificationId': payload!, "geo_share_id": "$geoShareId"},
       ),
-      actionButtons: payload == "custom_Screen"
-          ? []
-          : [
-              NotificationActionButton(key: 'ACCEPT', label: 'Accept'),
-              NotificationActionButton(key: 'DECLINE', label: 'Reject'),
-            ],
     );
   }
   //Share token notif
@@ -232,46 +225,10 @@ class NotificationController {
 
   static Future<void> onActionReceivedImplementationMethod(
       ReceivedAction receivedAction) async {
-    void redirect() async {
-      MyApp.navigatorKey.currentState?.pushNamedAndRemoveUntil(
-        '/${receivedAction.payload!["notificationId"]}',
-        (route) =>
-            (route.settings.name !=
-                '/${receivedAction.payload!["notificationId"]}') ||
-            route.isFirst,
-        arguments: receivedAction,
-      );
-    }
+    print("receivedAction.buttonKeyPressed $receivedAction");
 
-    print("receivedAction.buttonKeyPressed ${receivedAction.buttonKeyPressed}");
-
-    switch (receivedAction.buttonKeyPressed) {
-      case "VIEW":
-        redirect();
-        break;
-      case "VIEW_SHARING":
-        if (MyApp.scaffoldKey.currentContext != null) {
-          Navigator.of(MyApp.scaffoldKey.currentContext!).pop();
-        }
-        redirect();
-        break;
-      case "MESSAGE":
-        if (MyApp.scaffoldKey.currentContext != null) {
-          Navigator.of(MyApp.scaffoldKey.currentContext!).pop();
-        }
-        redirect();
-        break;
-      case "":
-        if (receivedAction.payload!["notificationId"].toString() ==
-            "custom_Screen") {
-          if (MyApp.scaffoldKey.currentContext != null) {
-            Navigator.of(MyApp.scaffoldKey.currentContext!).pop();
-          }
-          redirect();
-        }
-        break;
-      // default:
-      //   redirect();
+    if (receivedAction.payload!["notificationId"] == "parking") {
+      Get.toNamed(Routes.parking, arguments: "N");
     }
   }
 
@@ -375,19 +332,19 @@ Future<void> getParkingTrans(int ctr) async {
             if (dataRow["status"] == "U") {
               ctr++;
 
-              NotificationController.createNewNotification(
+              NotificationController.parkingNotif(
                   int.parse(dataRow["reservation_id"].toString()),
                   0,
                   'Check In',
                   "Great! You have successfully checked in to ${dataRow["park_area_name"].toString()} parking area",
-                  "custom_Screen");
+                  "parking");
 
               NotificationController.scheduleNewNotification(
                   int.parse(dataRow["reservation_id"].toString()),
                   "luvpark",
                   "Your Parking at ${dataRow["park_area_name"]} is about to expire.",
                   dataRow["dt_out"].toString(),
-                  "custom_Screen");
+                  "parking");
 
               await NotificationDatabase.instance.insertUpdate(resData);
             }

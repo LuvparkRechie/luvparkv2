@@ -6,6 +6,7 @@ import 'package:luvpark_get/custom_widgets/app_color.dart';
 import 'package:luvpark_get/custom_widgets/custom_appbar.dart';
 import 'package:luvpark_get/custom_widgets/custom_text.dart';
 import 'package:luvpark_get/custom_widgets/no_data_found.dart';
+import 'package:luvpark_get/custom_widgets/no_internet.dart';
 import 'package:luvpark_get/custom_widgets/park_shimmer.dart';
 import 'package:luvpark_get/custom_widgets/variables.dart';
 import 'package:luvpark_get/routes/routes.dart';
@@ -27,10 +28,16 @@ class ParkingScreen extends GetView<ParkingController> {
           textColor: Colors.white,
           elevation: 0,
           onTap: () {
-            if (controller.parameter == null) {
-              Get.back();
-            } else {
-              Get.offAndToNamed(Routes.map);
+            switch (controller.parameter) {
+              case 'N':
+                Get.back();
+                break;
+              case 'D':
+                Get.back();
+                break;
+              case 'B':
+                Get.offAndToNamed(Routes.map);
+                break;
             }
           },
         ),
@@ -146,49 +153,58 @@ class ParkingScreen extends GetView<ParkingController> {
               Expanded(
                 child: controller.isLoading.value
                     ? const ParkShimmer()
-                    : controller.resData.isEmpty
-                        ? const NoDataFound()
-                        : RefreshIndicator(
-                            onRefresh: controller.onRefresh,
-                            child: ListView.separated(
-                                padding: const EdgeInsets.symmetric(
-                                    vertical: 10, horizontal: 15),
-                                itemBuilder: (context, index) {
-                                  String title = controller.resData[index]
-                                      ["park_area_name"];
-                                  String subTitle = controller.resData[index]
-                                      ["ticket_ref_no"];
-                                  String date = Variables.convertDateFormat(
-                                      controller.resData[index]["dt_in"]);
-                                  String time =
-                                      "${Variables.convertTime(controller.resData[index]["dt_in"].toString().split(" ")[1])} - ${Variables.convertTime(controller.resData[index]["dt_out"].toString().split(" ")[1])}";
-                                  String totalAmt = toCurrencyString(controller
-                                      .resData[index]["amount"]
-                                      .toString());
-                                  String status = controller.resData[index]
-                                              ["status"] ==
-                                          "U"
-                                      ? "${controller.resData[index]["is_auto_extend"].toString() == "Y" ? "EXTENDED" : "ACTIVE"} PARKING"
-                                      : "CONFIRMED";
+                    : !controller.hasNet.value
+                        ? NoInternetConnected(
+                            onTap: controller.onRefresh,
+                          )
+                        : controller.resData.isEmpty
+                            ? const NoDataFound(
+                                text: "No parking found",
+                              )
+                            : RefreshIndicator(
+                                onRefresh: controller.onRefresh,
+                                child: ListView.separated(
+                                    padding: const EdgeInsets.symmetric(
+                                        vertical: 10, horizontal: 15),
+                                    itemBuilder: (context, index) {
+                                      String title = controller.resData[index]
+                                          ["park_area_name"];
+                                      String subTitle = controller
+                                          .resData[index]["ticket_ref_no"];
+                                      String date = Variables.convertDateFormat(
+                                          controller.resData[index]["dt_in"]);
+                                      String time =
+                                          "${Variables.convertTime(controller.resData[index]["dt_in"].toString().split(" ")[1])} - ${Variables.convertTime(controller.resData[index]["dt_out"].toString().split(" ")[1])}";
+                                      String totalAmt = toCurrencyString(
+                                          controller.resData[index]["amount"]
+                                              .toString());
+                                      String status = controller.resData[index]
+                                                  ["status"] ==
+                                              "U"
+                                          ? "${controller.resData[index]["is_auto_extend"].toString() == "Y" ? "EXTENDED" : "ACTIVE"} PARKING"
+                                          : "CONFIRMED";
 
-                                  return ListCard(
-                                    title: title,
-                                    subTitle: subTitle,
-                                    date: date,
-                                    time: time,
-                                    totalAmt: totalAmt,
-                                    status: status,
-                                    data: controller.resData[index],
-                                    currentTab: controller.currentPage.value,
-                                    onRefresh: () {},
-                                  );
-                                },
-                                separatorBuilder: (context, index) =>
-                                    const SizedBox(
-                                      height: 15,
-                                    ),
-                                itemCount: controller.resData.length),
-                          ),
+                                      return ListCard(
+                                        title: title,
+                                        subTitle: subTitle,
+                                        date: date,
+                                        time: time,
+                                        totalAmt: totalAmt,
+                                        status: status,
+                                        data: controller.resData[index],
+                                        currentTab:
+                                            controller.currentPage.value,
+                                        onRefresh: () {
+                                          print("atatat");
+                                        },
+                                      );
+                                    },
+                                    separatorBuilder: (context, index) =>
+                                        const SizedBox(
+                                          height: 15,
+                                        ),
+                                    itemCount: controller.resData.length),
+                              ),
               ),
             ],
           ),

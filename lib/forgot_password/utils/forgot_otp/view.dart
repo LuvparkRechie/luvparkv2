@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:luvpark_get/custom_widgets/app_color.dart';
-import 'package:luvpark_get/custom_widgets/custom_body.dart';
+import 'package:luvpark_get/custom_widgets/custom_appbar.dart';
 import 'package:luvpark_get/custom_widgets/custom_button.dart';
 import 'package:luvpark_get/custom_widgets/custom_text.dart';
 import 'package:luvpark_get/custom_widgets/vertical_height.dart';
@@ -42,22 +42,12 @@ class ForgotPassOtp extends GetView<ForgotPassOtpController> {
       );
     }
 
-    return CustomScaffold(
-      bodyColor: Colors.white,
-      appBar: AppBar(
+    return Scaffold(
+      backgroundColor: Colors.white,
+      appBar: const CustomAppbar(
         elevation: 0,
-        backgroundColor: Colors.white,
-        leading: IconButton(
-          onPressed: () {
-            Get.back();
-          },
-          icon: const Icon(
-            Icons.chevron_left,
-            color: Colors.black,
-          ),
-        ),
       ),
-      children: Padding(
+      body: Padding(
         padding: const EdgeInsets.fromLTRB(20, 10, 15, 0),
         child: StretchingOverscrollIndicator(
           axisDirection: AxisDirection.down,

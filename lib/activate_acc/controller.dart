@@ -24,28 +24,95 @@ class ActivateAccountController extends GetxController {
   BuildContext? mainContext;
 
   bool isRequested = false;
+  RxBool isNetConn = true.obs;
+  RxBool isLoadingPage = true.obs;
   RxString inputPin = "".obs;
   bool isOtpValid = true;
   RxInt minutes = 5.obs;
   RxInt seconds = 0.obs;
   RxInt initialMinutes = 5.obs;
   RxBool isRunning = false.obs;
+  RxInt otpCode = 0.obs;
 
   @override
   void onInit() {
     pinController = TextEditingController();
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      resendFunction();
-      startTimers();
+      getOtpRequest();
     });
     super.onInit();
+  }
+
+  void getOtpRequest() {
+    inputPin.value = "";
+    CustomDialog().loadingDialog(Get.context!);
+    var otpData = {
+      "mobile_no": parameters.toString(),
+      "reg_type": "REQUEST_OTP"
+    };
+
+    HttpRequest(api: ApiKeys.gApiSubFolderPutOTP, parameters: otpData)
+        .put()
+        .then((returnData) async {
+      if (returnData == "No Internet") {
+        inputPin.value = "";
+        isLoadingPage.value = false;
+        isNetConn.value = false;
+        Get.back();
+        CustomDialog().errorDialog(Get.context!, "Error",
+            "Please check your internet connection and try again.", () {
+          Get.back();
+        });
+
+        return;
+      }
+      if (returnData == null) {
+        inputPin.value = "";
+        isLoadingPage.value = false;
+        isNetConn.value = true;
+        Get.back();
+        CustomDialog().errorDialog(Get.context!, "Error",
+            "Error while connecting to server, Please try again.", () {
+          Get.back();
+        });
+
+        return;
+      }
+
+      if (returnData["success"] == 'Y') {
+        Get.back();
+        isLoadingPage.value = false;
+        isNetConn.value = true;
+        pinController.clear();
+        inputPin.value = "";
+        minutes.value = initialMinutes.value;
+        seconds.value = 0;
+        otpCode.value = int.parse(returnData["otp"]);
+        isRequested = true;
+
+        startTimers();
+        CustomDialog().successDialog(Get.context!, "Success",
+            "OTP has been sent to your registered mobile number.", "Okay", () {
+          Get.back();
+        });
+      } else {
+        inputPin.value = "";
+        isLoadingPage.value = false;
+        isNetConn.value = true;
+        Get.back();
+        CustomDialog().errorDialog(Get.context!, "LuvPark", returnData["msg"],
+            () {
+          Get.back();
+        });
+      }
+    });
   }
 
   void onInputChanged(String value) {
     inputPin.value = value;
 
-    if (pinController.text == inputPin.value.toString()) {
+    if (int.parse(pinController.text) == otpCode.value) {
       isOtpValid = true;
     } else {
       isOtpValid = false;
@@ -112,10 +179,14 @@ class ActivateAccountController extends GetxController {
       if (returnData["success"] == 'Y') {
         Get.back();
 
-        inputPin.value = returnData["otp"];
+        pinController.clear();
+        inputPin.value = "";
+        minutes.value = initialMinutes.value;
+        seconds.value = 0;
+        otpCode.value = int.parse(returnData["otp"]);
         isRequested = true;
 
-        resetTimer();
+        startTimers();
         CustomDialog().successDialog(Get.context!, "Success",
             "OTP has been sent to your registered mobile number.", "Okay", () {
           Get.back();
@@ -144,7 +215,6 @@ class ActivateAccountController extends GetxController {
     HttpRequest(api: ApiKeys.gApiSubFolderPutOTP, parameters: otpData)
         .put()
         .then((returnData) async {
-      print("retdata$returnData");
       if (returnData == "No Internet") {
         Get.back();
         CustomDialog().errorDialog(Get.context!, "Error",
@@ -185,25 +255,6 @@ class ActivateAccountController extends GetxController {
         });
       }
     });
-  }
-
-  void addTime() {
-    final addSeconds = isCountdown ? -1 : 1;
-
-    final seconds = duration.inSeconds + addSeconds;
-
-    if (seconds == 0) {
-      timer?.cancel();
-      isCountdown = false;
-    } else {
-      duration = Duration(seconds: seconds);
-    }
-  }
-
-  void resetTimer() {
-    isCountdown = true;
-
-    duration = countdownDuration;
   }
 
   @override

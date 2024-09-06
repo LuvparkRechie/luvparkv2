@@ -586,7 +586,7 @@ class BookingPage extends GetView<BookingController> {
                                         //     0.0)
                                         if (double.parse(controller
                                                     .parameters["userData"][0]
-                                                ["points_bal"]) ==
+                                                ["points_bal"]) !=
                                             0.0)
                                           GestureDetector(
                                             onTap: () {
