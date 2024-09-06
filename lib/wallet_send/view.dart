@@ -118,9 +118,7 @@ class WalletSend extends GetView<WalletSendController> {
                           controller: controller.tokenAmount,
                           keyboardType: TextInputType.number,
                           inputFormatters: [
-                            LengthLimitingTextInputFormatter(
-                              15,
-                            ),
+                            LengthLimitingTextInputFormatter(15),
                           ],
                           onChange: (text) {
                             controller.onTextChange();
@@ -135,6 +133,10 @@ class WalletSend extends GetView<WalletSendController> {
                               parsedValue = double.parse(value);
                             } catch (e) {
                               return "Invalid amount";
+                            }
+
+                            if (parsedValue < 10) {
+                              return "Amount must be at least 10 tokens";
                             }
 
                             double availableBalance;
