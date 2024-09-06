@@ -203,6 +203,26 @@ class Profile extends GetView<ProfileScreenController> {
                                 const Divider(),
                                 ListTile(
                                   leading: Icon(
+                                    Iconsax.car,
+                                    color: AppColor.primaryColor,
+                                  ),
+                                  title: const CustomTitle(
+                                    text: "My Vehicles",
+                                    fontSize: 14,
+                                    fontStyle: FontStyle.normal,
+                                    fontWeight: FontWeight.w700,
+                                    letterSpacing: -0.408,
+                                    color: Color(0xFF1C1C1E),
+                                  ),
+                                  trailing: Icon(Icons.chevron_right_sharp,
+                                      color: AppColor.primaryColor),
+                                  onTap: () {
+                                    Get.toNamed(Routes.myVehicles);
+                                  },
+                                ),
+                                const Divider(),
+                                ListTile(
+                                  leading: Icon(
                                     Iconsax.setting_2,
                                     color: AppColor.primaryColor,
                                   ),
