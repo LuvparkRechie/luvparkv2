@@ -29,7 +29,7 @@ class WalletScreen extends GetView<WalletController> {
         appBar: CustomAppbar(
           title: "My Wallet",
           onTap: () {
-            Get.back();
+            Get.offAllNamed(Routes.map);
           },
         ),
         body: Obx(
