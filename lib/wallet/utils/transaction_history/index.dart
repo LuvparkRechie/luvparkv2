@@ -29,9 +29,9 @@ class _TransactionHistoryState extends State<TransactionHistory> {
   bool isLoadingPage = true;
   bool isNetConn = true;
 
-  DateTime _fromDate = DateTime.now().subtract(Duration(days: 15));
+  DateTime _fromDate = DateTime.now().subtract(const Duration(days: 15));
   DateTime _toDate = DateTime.now();
-  final DateTime _yesterday = DateTime.now().subtract(Duration(days: 1));
+  final DateTime _yesterday = DateTime.now().subtract(const Duration(days: 1));
 
   List filterLogs = [];
   @override
@@ -55,7 +55,6 @@ class _TransactionHistoryState extends State<TransactionHistory> {
         "${ApiKeys.gApiSubFolderGetTransactionLogs}?user_id=$userId&tran_date_from=${filterfromDate.text}&tran_date_to=${filtertoDate.text}";
 
     HttpRequest(api: subApi).get().then((response) {
-       
       setState(() {
         isLoadingPage = false;
       });
@@ -156,13 +155,13 @@ class _TransactionHistoryState extends State<TransactionHistory> {
         ],
       ),
       body: isLoadingPage
-          ? PageLoader()
+          ? const PageLoader()
           : !isNetConn
               ? NoInternetConnected(
                   onTap: getFilteredLogs,
                 )
               : filterLogs.isEmpty
-                  ? NoDataFound()
+                  ? const NoDataFound()
                   : ListView.separated(
                       padding: const EdgeInsets.all(10),
                       itemCount: filterLogs.length,
@@ -203,7 +202,9 @@ class _TransactionHistoryState extends State<TransactionHistory> {
                               color: (filterLogs[index]["tran_desc"] ==
                                           'Share a token' ||
                                       filterLogs[index]["tran_desc"] ==
-                                          'Received token')
+                                          'Received token' ||
+                                      filterLogs[index]["tran_desc"] ==
+                                          'Credit top-up')
                                   ? const Color(0xFF0078FF)
                                   : const Color(0xFFBD2424),
                             ),
