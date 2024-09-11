@@ -11,8 +11,9 @@ import 'package:luvpark_get/mapa/controller.dart';
 import 'package:luvpark_get/routes/routes.dart';
 import 'package:luvpark_get/sqlite/reserve_notification_table.dart';
 import 'package:luvpark_get/web_view/webview.dart';
-
+import 'package:http/http.dart' as http;
 import '../custom_widgets/variables.dart';
+import '../http/http_request.dart';
 
 class CustomDrawer extends GetView<DashboardMapController> {
   const CustomDrawer({super.key});
@@ -264,7 +265,7 @@ class CustomDrawer extends GetView<DashboardMapController> {
                   ),
                   trailing: Icon(Icons.chevron_right_sharp,
                       color: AppColor.primaryColor),
-                  onTap: () {
+                  onTap: () async {
                     Get.to(const WebviewPage(
                       urlDirect: "https://luvpark.ph/terms-of-use/",
                       label: "Terms of Use",

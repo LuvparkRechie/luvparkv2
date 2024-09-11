@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
+import 'dart:ffi';
 import 'dart:math';
 
 import 'package:flutter/material.dart';
@@ -104,6 +105,12 @@ class DashboardMapController extends GetxController
 
     getLastBooking();
     getUserData(false);
+  }
+
+  @override
+  Future<void> refresh() async {
+    netConnected.value = true;
+    getLastBooking();
   }
 
   @override

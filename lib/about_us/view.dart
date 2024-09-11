@@ -18,7 +18,6 @@ class AboutUs extends GetView<AboutUsController> {
       statusBarIconBrightness: Brightness.dark,
     ));
     return Scaffold(
-      backgroundColor: AppColor.bodyColor,
       appBar: const CustomAppbar(
         title: "About Us",
       ),

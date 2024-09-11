@@ -29,7 +29,10 @@ class DashboardMapScreen extends GetView<DashboardMapController> {
 
     return Obx(() {
       if (!controller.netConnected.value) {
-        return const CustomScaffold(children: NoInternetConnected());
+        return CustomScaffold(
+            children: NoInternetConnected(
+          onTap: controller.refresh,
+        ));
       } else if (controller.isLoading.value) {
         return const PopScope(
           canPop: false,
