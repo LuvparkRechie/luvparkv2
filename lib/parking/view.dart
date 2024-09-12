@@ -1,3 +1,5 @@
+// ignore_for_file: prefer_const_constructors
+
 import 'package:flutter/material.dart';
 import 'package:flutter_multi_formatter/formatters/formatter_utils.dart';
 import 'package:flutter_svg/svg.dart';
@@ -274,26 +276,6 @@ class ListCard extends GetView<ParkingController> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  if (data["is_auto_extend"] == "Y")
-                    Align(
-                      alignment: Alignment.centerRight,
-                      child: Container(
-                        padding:
-                            EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                        decoration: BoxDecoration(
-                          color: const Color.fromARGB(255, 253, 244, 255),
-                          borderRadius: BorderRadius.circular(7),
-                        ),
-                        child: CustomParagraph(
-                          text: "auto extend",
-                          color: Colors.purple,
-                          fontWeight: FontWeight.w700,
-                          fontSize: 12,
-                          textAlign: TextAlign.center,
-                        ),
-                      ),
-                    ),
-                  Container(height: 10),
                   ListTile(
                     contentPadding: EdgeInsets.zero,
                     leading: CircleAvatar(
@@ -306,26 +288,45 @@ class ListCard extends GetView<ParkingController> {
                         width: 24,
                       ),
                     ),
-                    title: CustomTitle(
-                      text: title,
-                      color: AppColor.primaryColor,
-                      letterSpacing: -0.41,
-                      fontSize: 16,
-                      fontWeight: FontWeight.w800,
+                    title: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Expanded(
+                          child: CustomTitle(
+                            text: title,
+                            color: AppColor.primaryColor,
+                            letterSpacing: -0.41,
+                            maxlines: 1,
+                            fontSize: 16,
+                            fontWeight: FontWeight.w800,
+                          ),
+                        ),
+                        if (data["is_auto_extend"] == "Y")
+                          Align(
+                            alignment: Alignment.centerRight,
+                            child: Container(
+                              padding: EdgeInsets.symmetric(
+                                  horizontal: 8, vertical: 4),
+                              decoration: BoxDecoration(
+                                color: const Color.fromARGB(255, 253, 244, 255),
+                                borderRadius: BorderRadius.circular(7),
+                              ),
+                              child: CustomParagraph(
+                                text: "Auto-extend",
+                                color: Colors.purple,
+                                fontWeight: FontWeight.w700,
+                                fontSize: 12,
+                                textAlign: TextAlign.center,
+                              ),
+                            ),
+                          ),
+                      ],
                     ),
                     subtitle: CustomParagraph(
                       text: subTitle,
                       fontSize: 14,
                       letterSpacing: -0.41,
                     ),
-                    trailing: Icon(
-                      Icons.chevron_right,
-                      color: AppColor.primaryColor,
-                      size: 30,
-                    ),
-                    onTap: () {
-                      controller.getParkingDetails(data);
-                    },
                   ),
                   Row(
                     children: [
@@ -380,31 +381,48 @@ class ListCard extends GetView<ParkingController> {
                 ],
               ),
             ),
-            Container(
-              padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 13),
-              decoration: const BoxDecoration(
-                  color: Color(0xFF2495eb),
-                  borderRadius:
-                      BorderRadius.vertical(bottom: Radius.circular(10))),
-              child: Row(
-                children: [
-                  const Expanded(
-                    child: CustomTitle(
-                      text: "Total Amount Paid",
-                      color: Colors.white,
-                      letterSpacing: -0.41,
-                      fontSize: 14,
-                      fontWeight: FontWeight.w700,
+            InkWell(
+              onTap: () {
+                controller.getParkingDetails(data);
+              },
+              child: Container(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 14, vertical: 13),
+                decoration: const BoxDecoration(
+                    color: Color(0xFF2495eb),
+                    borderRadius:
+                        BorderRadius.vertical(bottom: Radius.circular(10))),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Row(
+                      children: [
+                        CustomTitle(
+                          text: "Total Paid:",
+                          color: Colors.white,
+                          letterSpacing: -0.41,
+                          fontSize: 14,
+                          fontWeight: FontWeight.w700,
+                        ),
+                        Container(
+                          width: 5,
+                        ),
+                        CustomTitle(
+                          text: totalAmt,
+                          color: Colors.white,
+                          fontWeight: FontWeight.w700,
+                          letterSpacing: -0.41,
+                          fontSize: 14,
+                        ),
+                      ],
                     ),
-                  ),
-                  CustomTitle(
-                    text: totalAmt,
-                    color: Colors.white,
-                    fontWeight: FontWeight.w700,
-                    letterSpacing: -0.41,
-                    fontSize: 14,
-                  ),
-                ],
+                    Icon(
+                      Icons.chevron_right,
+                      color: Colors.white,
+                      size: 30,
+                    ),
+                  ],
+                ),
               ),
             )
           ],

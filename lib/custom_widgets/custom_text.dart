@@ -44,6 +44,7 @@ class CustomTitle extends StatelessWidget {
       ),
       maxLines: maxlines,
       textAlign: textAlign,
+      minFontSize: 10,
     );
   }
 }

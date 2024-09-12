@@ -190,7 +190,7 @@ class CustomDrawer extends GetView<DashboardMapController> {
                 ),
                 ListTile(
                   leading:
-                      SvgPicture.asset('assets/drawer_icon/drawer_parking.svg'),
+                      SvgPicture.asset('assets/drawer_icon/drawer_message.svg'),
                   title: const CustomTitle(
                     text: "Messages",
                     fontSize: 14,
