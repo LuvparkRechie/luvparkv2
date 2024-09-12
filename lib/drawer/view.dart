@@ -11,9 +11,8 @@ import 'package:luvpark_get/mapa/controller.dart';
 import 'package:luvpark_get/routes/routes.dart';
 import 'package:luvpark_get/sqlite/reserve_notification_table.dart';
 import 'package:luvpark_get/web_view/webview.dart';
-import 'package:http/http.dart' as http;
+
 import '../custom_widgets/variables.dart';
-import '../http/http_request.dart';
 
 class CustomDrawer extends GetView<DashboardMapController> {
   const CustomDrawer({super.key});
@@ -172,23 +171,6 @@ class CustomDrawer extends GetView<DashboardMapController> {
                     Get.toNamed(Routes.parking, arguments: "D");
                   },
                 ),
-                // ListTile(
-                //   leading:
-                //       SvgPicture.asset('assets/drawer_icon/drawer_parking.svg'),
-                //   title: const CustomTitle(
-                //     text: "My Vehicles",
-                //     fontSize: 14,
-                //     fontStyle: FontStyle.normal,
-                //     fontWeight: FontWeight.w700,
-                //     letterSpacing: -0.408,
-                //     color: Color(0xFF1C1C1E),
-                //   ),
-                //   trailing: Icon(Icons.chevron_right_sharp,
-                //       color: AppColor.primaryColor),
-                //   onTap: () {
-                //     Get.toNamed(Routes.myVehicles);
-                //   },
-                // ),
                 ListTile(
                   leading:
                       SvgPicture.asset('assets/drawer_icon/drawer_wallet.svg'),
@@ -208,7 +190,7 @@ class CustomDrawer extends GetView<DashboardMapController> {
                 ),
                 ListTile(
                   leading:
-                      SvgPicture.asset('assets/drawer_icon/drawer_wallet.svg'),
+                      SvgPicture.asset('assets/drawer_icon/drawer_parking.svg'),
                   title: const CustomTitle(
                     text: "Messages",
                     fontSize: 14,
@@ -282,7 +264,7 @@ class CustomDrawer extends GetView<DashboardMapController> {
                   ),
                   trailing: Icon(Icons.chevron_right_sharp,
                       color: AppColor.primaryColor),
-                  onTap: () async {
+                  onTap: () {
                     Get.to(const WebviewPage(
                       urlDirect: "https://luvpark.ph/terms-of-use/",
                       label: "Terms of Use",

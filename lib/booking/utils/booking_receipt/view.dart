@@ -36,6 +36,7 @@ class BookingReceipt extends GetView<BookingReceiptController> {
         title: "Parking Details",
         textColor: Colors.white,
         titleColor: Colors.white,
+        elevation: 0,
         onTap: () {
           if (controller.parameters["status"] == "B") {
             Get.offAllNamed(Routes.map);
@@ -303,8 +304,12 @@ class BookingReceipt extends GetView<BookingReceiptController> {
                     const SizedBox(width: 10),
                     Expanded(
                       child: CustomButton(
-                        text: "Extend parking",
-                        onPressed: controller.onExtend,
+                        text: controller.parameters["isAutoExtend"] == "Y"
+                            ? "Cancel auto extend"
+                            : "Extend parking",
+                        onPressed: controller.parameters["isAutoExtend"] == "Y"
+                            ? controller.cancelAutoExtend
+                            : controller.onExtend,
                       ),
                     ),
                   ],
@@ -366,6 +371,7 @@ class BookingReceipt extends GetView<BookingReceiptController> {
 
                         Get.back();
 
+                        // ignore: deprecated_member_use
                         await Share.shareFiles([imgFile.path]);
                       }),
                       CustomParagraph(

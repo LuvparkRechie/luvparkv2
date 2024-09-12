@@ -29,7 +29,7 @@ class WalletScreen extends GetView<WalletController> {
         appBar: CustomAppbar(
           title: "My Wallet",
           onTap: () {
-            Get.offAllNamed(Routes.map);
+            Get.back();
           },
         ),
         body: Obx(
@@ -217,10 +217,8 @@ class WalletScreen extends GetView<WalletController> {
                                         InkWell(
                                           onTap: () async {
                                             Get.toNamed(Routes.walletsend,
-                                                arguments: () {
-                                              controller.getLogs();
-                                              controller.getUserBalance();
-                                            });
+                                                arguments:
+                                                    controller.getUserBalance);
                                           },
                                           child: Column(
                                             children: [

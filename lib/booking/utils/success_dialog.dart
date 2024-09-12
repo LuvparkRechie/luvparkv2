@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_multi_formatter/formatters/formatter_utils.dart';
 import 'package:get/get.dart';
-import 'package:iconsax/iconsax.dart';
 import 'package:luvpark_get/booking/utils/rateus.dart';
 import 'package:luvpark_get/custom_widgets/app_color.dart';
 import 'package:luvpark_get/custom_widgets/custom_button.dart';

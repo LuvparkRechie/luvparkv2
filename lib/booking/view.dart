@@ -948,6 +948,56 @@ class BookingPage extends GetView<BookingController> {
                                                       .selectedVh.isEmpty
                                                   ? () {}
                                                   : () {
+                                                      // final String timeString =
+                                                      //     controller
+                                                      //         .dialogData[0][
+                                                      //             "opened_time"]
+                                                      //         .toString();
+
+                                                      // // Parse the time string
+                                                      // final List<String>
+                                                      //     timeParts =
+                                                      //     timeString.split(':');
+                                                      // final int hour =
+                                                      //     int.parse(
+                                                      //         timeParts[0]);
+                                                      // final int minute =
+                                                      //     int.parse(
+                                                      //         timeParts[1]);
+
+                                                      // // Create the opening time using the current date and parsed time
+                                                      // final DateTime now =
+                                                      //     DateTime.now();
+                                                      // final DateTime
+                                                      //     openingTime =
+                                                      //     DateTime(
+                                                      //   now.year,
+                                                      //   now.month,
+                                                      //   now.day,
+                                                      //   17,
+                                                      //   38,
+                                                      // );
+
+                                                      // // Calculate the difference in minutes
+                                                      // final int
+                                                      //     differenceInMinutes =
+                                                      //     openingTime
+                                                      //         .difference(now)
+                                                      //         .inMinutes;
+
+                                                      // // Check if the difference is within the acceptable range
+                                                      // print(
+                                                      //     "  $differenceInMinutes");
+                                                      // if (differenceInMinutes <=
+                                                      //         30 &&
+                                                      //     differenceInMinutes >=
+                                                      //         0) {
+                                                      //   print("can book");
+                                                      // } else {
+                                                      //   print(
+                                                      //       "can't book $differenceInMinutes");
+                                                      // }
+
                                                       var dateIn = DateTime.parse(
                                                           "${controller.startDate.text} ${controller.timeInParam.text}");
 
@@ -1022,7 +1072,10 @@ class BookingPage extends GetView<BookingController> {
                                                     }),
                                         ),
                                       ],
-                                    )
+                                    ),
+                                  Container(
+                                    height: 10,
+                                  ),
                                 ],
                               ),
                             ),
@@ -1065,12 +1118,10 @@ class BookingDuration extends GetView<BookingController> {
             crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisSize: MainAxisSize.min,
             children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
+              Column(
                 children: [
                   InkWell(
                     onTap: () {
-                      Get.back();
                       Get.back();
                     },
                     child: Stack(
@@ -1094,11 +1145,7 @@ class BookingDuration extends GetView<BookingController> {
                         ),
                       ],
                     ),
-                  )
-                ],
-              ),
-              Column(
-                children: [
+                  ),
                   ListTile(
                     contentPadding: EdgeInsets.zero,
                     leading: Padding(
@@ -1204,9 +1251,6 @@ class BookingDuration extends GetView<BookingController> {
                         Get.back();
                       }),
                 ),
-              Container(
-                height: 30,
-              ),
             ],
           ),
         ));
@@ -1261,7 +1305,7 @@ class VehicleOption extends GetView<BookingController> {
                     : null
                 : MediaQuery.of(context).size.height * .50,
             decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(7),
+              borderRadius: BorderRadius.vertical(top: Radius.circular(7)),
               color: Colors.white,
             ),
             child: !controller.isNetConnVehicles.value

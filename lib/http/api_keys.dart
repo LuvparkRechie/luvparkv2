@@ -218,9 +218,8 @@ class ApiKeys {
   //POST mobile_no DELETE
   static const gApiLuvPayPostDeleteAccount = '/ords/$luvApi/user/del';
 
-  //Cancel Auto Extend   parameter: reservation_id
-  static const gApiLuvPayPutCancelAutoExtend =
-      '/ords/$luvApi/ps/stopAutoExtend';
+  //Cancel Auto Extend  POSt  parameter: reservation_id
+  // static const gApiCancelAutoExtend = '/ords/$parkSpaceApi/pm/cancelAutoExtend';
   //GET amenities by park_area
   static const gApiSubFolderGetAmenities =
       '/ords/$parkSpaceApi/zone/parkingAmenities';
@@ -237,6 +236,9 @@ class ApiKeys {
   //Delete advance parking
   static const gApiPostCancelParking =
       '/ords/$parkSpaceApi/pm/cancelAdvancedParking';
+  //Cancel auto extendPost param reservation_id, no_hours
+  static const gApiCancelAutoExtend =
+      '/ords/$parkSpaceApi/pm/extendAdvancedParking';
 
   //REMOVED API
   // //Reserve payment key

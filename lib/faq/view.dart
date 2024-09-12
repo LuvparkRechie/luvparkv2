@@ -19,10 +19,6 @@ class FaqPage extends GetView<FaqPageController> {
           extendBodyBehindAppBar: true,
           backgroundColor:
               controller.isLoadingPage.value ? null : AppColor.primaryColor,
-          // appBar: const PreferredSize(
-          //   preferredSize: Size.fromHeight(236),
-          //   child: FaqsAppbar(),
-          // ),
           body: controller.isLoadingPage.value
               ? const PageLoader()
               : Column(

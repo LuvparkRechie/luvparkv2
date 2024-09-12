@@ -1,6 +1,5 @@
 // ignore_for_file: prefer_const_constructors
 
-import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
@@ -9,11 +8,12 @@ import 'package:iconsax/iconsax.dart';
 import 'package:luvpark_get/auth/authentication.dart';
 import 'package:luvpark_get/custom_widgets/alert_dialog.dart';
 import 'package:luvpark_get/custom_widgets/custom_text.dart';
-import 'package:rive/rive.dart';
-import '../../custom_widgets/app_color.dart';
-import '../../custom_widgets/custom_button.dart';
 import 'package:luvpark_get/http/api_keys.dart';
 import 'package:luvpark_get/http/http_request.dart';
+import 'package:rive/rive.dart';
+
+import '../../custom_widgets/app_color.dart';
+import '../../custom_widgets/custom_button.dart';
 
 class RateUs extends StatefulWidget {
   final int? reservationId;
@@ -42,22 +42,6 @@ class _RateUsState extends State<RateUs> {
   }
 
   Future<void> postRatingComments() async {
-//
-    // SharedPreferences prefs = await SharedPreferences.getInstance();
-    // var objInfoData = prefs.getString(
-    //   'userData',
-    // );
-    // var myData = jsonDecode(objInfoData!);
-    // CustomModal(context: context).loader();
-
-    // Map<String, dynamic> param = {
-    //   'user_id': myData["user_id"],
-    //   'reservation_id': widget.reservationId!,
-    //   'rating': myRate.round(),
-    //   'comments': commentController.text,
-    // };
-
-//
     int? userId = await Authentication().getUserId();
 
     CustomDialog().loadingDialog(Get.context!);
@@ -67,7 +51,7 @@ class _RateUsState extends State<RateUs> {
       'rating': myRate.round(),
       'comments': commentController.text,
     };
-    // print("param $param");
+
     return HttpRequest(api: ApiKeys.gApiLuvParkPostRating, parameters: param)
         .post()
         .then((returnData) async {

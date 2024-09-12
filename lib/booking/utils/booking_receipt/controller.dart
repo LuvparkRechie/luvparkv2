@@ -4,7 +4,6 @@ import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:luvpark_get/booking/utils/extend.dart';
 import 'package:luvpark_get/custom_widgets/alert_dialog.dart';
-import 'package:luvpark_get/functions/functions.dart';
 import 'package:luvpark_get/http/api_keys.dart';
 import 'package:luvpark_get/http/http_request.dart';
 
@@ -96,97 +95,6 @@ class BookingReceiptController extends GetxController
     update();
   }
 
-  Future<void> onSubmit() async {
-    CustomDialog().confirmationDialog(Get.context!, "Confirmation",
-        "Are you sure you want to proceed?", "No", "yes", () {
-      Get.back();
-    }, () {
-      Get.back();
-      CustomDialog().loadingDialog(Get.context!);
-
-      Functions.getUserBalance(Get.context!, (dataBalance) async {
-        if (dataBalance[0]["success"]) {
-          final items = dataBalance[0]["items"];
-          dynamic paramHours = {
-            "no_hours": noHours.value,
-            "ps_ref_no": parameters["refno"],
-            "luvpark_amount": items[0]["amount_bal"]
-          };
-
-          HttpRequest(
-                  api: ApiKeys.gApiSubFolderPutExtend, parameters: paramHours)
-              .put()
-              .then((returnPost) {
-            if (returnPost == "No Internet") {
-              Get.back();
-              CustomDialog().internetErrorDialog(Get.context!, () {
-                Get.back();
-              });
-              return;
-            }
-            if (returnPost == null) {
-              Get.back();
-              CustomDialog().serverErrorDialog(Get.context!, () {
-                Get.back();
-              });
-            }
-
-            if (returnPost["success"] == "Y") {
-              var param = {
-                "payment_date": DateTime.now().toString().split(".")[0],
-                "amount": returnPost["amount"].toString(),
-                "dt_out": returnPost["dt_out"].toString(),
-                "reservation_ref_no": parameters["refno"],
-                "user_id": items[0]["user_id"],
-                "no_hours": noHours.value,
-              };
-
-              HttpRequest(
-                      api: ApiKeys.gApiSubFolderPutExtendPay, parameters: param)
-                  .put()
-                  .then((returnPut) {
-                if (returnPut == "No Internet") {
-                  Get.back();
-                  CustomDialog().internetErrorDialog(Get.context!, () {
-                    Get.back();
-                  });
-                  return;
-                }
-                if (returnPut == null) {
-                  Get.back();
-                  CustomDialog().serverErrorDialog(Get.context!, () {
-                    Get.back();
-                  });
-                }
-                if (returnPut["success"] == "Y") {
-                  Get.back();
-                  Get.back();
-                  Get.back();
-                  parameters["onRefresh"]();
-                } else {
-                  Get.back();
-
-                  CustomDialog().errorDialog(
-                      Get.context!, "luvpark", returnPut["msg"], () {
-                    Get.back();
-                  });
-                }
-              });
-            } else {
-              Get.back();
-              CustomDialog()
-                  .errorDialog(Get.context!, "luvpark", returnPost["msg"], () {
-                Get.back();
-              });
-            }
-          });
-        } else {
-          Get.back();
-        }
-      });
-    });
-  }
-
   void cancelAdvanceParking() {
     DateTime now = DateTime.now();
     DateTime resDate = DateTime.parse(parameters["startDate"].toString());
@@ -199,8 +107,8 @@ class BookingReceiptController extends GetxController
       });
       return;
     }
-    CustomDialog().confirmationDialog(
-        Get.context!, "Confirm Booking", "", "Cancel", "Proceed", () {
+    CustomDialog().confirmationDialog(Get.context!, "Cancel Booking",
+        "Are you sure you want to cancel your booking? ", "No", "Yes", () {
       Get.back();
     }, () {
       Get.back();
@@ -209,11 +117,11 @@ class BookingReceiptController extends GetxController
         "reservation_id": parameters["reservationId"]
       };
 
-      HttpRequest(api: ApiKeys.gApiBooking, parameters: param)
+      HttpRequest(api: ApiKeys.gApiPostCancelParking, parameters: param)
           .postBody()
           .then((objData) async {
         Get.back();
-        print("objData $objData");
+
         if (objData == "No Internet") {
           CustomDialog().internetErrorDialog(Get.context!, () {
             Get.back();
@@ -230,6 +138,62 @@ class BookingReceiptController extends GetxController
               Get.context!, "Success", "Successfully cancelled booking", "Okay",
               () {
             Get.back();
+            Get.back();
+            parameters["onRefresh"]();
+          });
+        } else {
+          CustomDialog().errorDialog(Get.context!, "luvpark", objData["msg"],
+              () {
+            Get.back();
+          });
+          return;
+        }
+      });
+    });
+  }
+
+  void cancelAutoExtend() {
+    CustomDialog().errorDialog(
+        Get.context!, "Sorry", "We're currently working on it", () {
+      Get.back();
+    });
+  }
+
+  //EXTend parking
+  void extendParking() {
+    CustomDialog().confirmationDialog(Get.context!, "Extend Parking",
+        "Are you sure you want to extend your parking? ", "No", "Yes", () {
+      Get.back();
+    }, () {
+      Get.back();
+      CustomDialog().loadingDialog(Get.context!);
+      Map<String, dynamic> param = {
+        "reservation_id": parameters["reservationId"],
+        "no_hours": parameters["hours"]
+      };
+      HttpRequest(api: ApiKeys.gApiCancelAutoExtend, parameters: param)
+          .postBody()
+          .then((objData) async {
+        Get.back();
+
+        if (objData == "No Internet") {
+          CustomDialog().internetErrorDialog(Get.context!, () {
+            Get.back();
+          });
+          return;
+        }
+        if (objData == null) {
+          CustomDialog().serverErrorDialog(Get.context!, () {
+            Get.back();
+          });
+        }
+        if (objData["success"] == "Y") {
+          CustomDialog().successDialog(
+              Get.context!, "Success", objData["msg"], "Okay", () {
+            Get.back();
+            Get.back();
+            Get.back();
+            parameters["onRefresh"]();
           });
         } else {
           CustomDialog().errorDialog(Get.context!, "luvpark", objData["msg"],

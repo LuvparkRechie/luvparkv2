@@ -4,13 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:luvpark_get/custom_widgets/app_color.dart';
 import 'package:luvpark_get/custom_widgets/custom_appbar.dart';
-import 'package:luvpark_get/custom_widgets/no_internet.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 import 'package:webview_flutter_android/webview_flutter_android.dart';
 import 'package:webview_flutter_wkwebview/webview_flutter_wkwebview.dart';
-import 'package:http/http.dart' as http;
-
-import '../http/http_request.dart';
 
 class WebviewPage extends StatefulWidget {
   final String urlDirect, label;
@@ -37,12 +33,11 @@ class _WebviewPageState extends State<WebviewPage> {
   WebViewController? _controller;
   final UniqueKey _key = UniqueKey();
   bool isLoading = true;
-  bool isNetConn = true;
 
   @override
   void initState() {
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      internetLookUp();
+      initialize();
     });
     super.initState();
   }
@@ -50,33 +45,6 @@ class _WebviewPageState extends State<WebviewPage> {
   @override
   void dispose() {
     super.dispose();
-  }
-
-  Future<void> refresh() async {
-    isLoading = true;
-    isNetConn = true;
-    internetLookUp();
-  }
-
-  internetLookUp() async {
-    var links =
-        http.get(Uri.parse(Uri.decodeFull(Uri.https("luvpark.ph").toString())));
-
-    try {
-      final response = await HttpRequest.fetchDataWithTimeout(links);
-
-      if (response.statusCode == 200) {
-        setState(() {
-          isNetConn = true;
-        });
-        initialize();
-      }
-    } catch (e) {
-      setState(() {
-        isLoading = false;
-        isNetConn = false;
-      });
-    }
   }
 
   @override
@@ -101,11 +69,7 @@ class _WebviewPageState extends State<WebviewPage> {
                 ),
               ),
             )
-          : !isNetConn
-              ? NoInternetConnected(
-                  onTap: refresh,
-                )
-              : bodyniya(),
+          : bodyniya(),
     );
   }
 
@@ -162,6 +126,5 @@ class _WebviewPageState extends State<WebviewPage> {
     setState(() {
       _controller = controller;
     });
-    print("objectss $controller");
   }
 }

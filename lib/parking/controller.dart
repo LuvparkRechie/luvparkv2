@@ -114,15 +114,7 @@ class ParkingController extends GetxController
         } else {
           List itemData = returnData["items"];
 
-          if (currentPage.value == 0) {
-            resData.value = itemData.where((element) {
-              return element["status"] == "C";
-            }).toList();
-          } else {
-            resData.value = itemData.where((element) {
-              return element["status"] == "U";
-            }).toList();
-          }
+          resData.value = itemData;
         }
       } finally {
         isLoading.value = false; // Ensure loading ends
@@ -133,7 +125,7 @@ class ParkingController extends GetxController
   // BTN details
   Future<void> getParkingDetails(dynamic data) async {
     int userId = await Authentication().getUserId();
-    print("data $data");
+
     var dateInRelated = "";
     var dateOutRelated = "";
     dateInRelated = data["dt_in"];
@@ -170,7 +162,7 @@ class ParkingController extends GetxController
       'isShowRate': false,
       'reservationId': data["reservation_id"],
       'address': data["address"],
-      'isAutoExtend': data["is_auto_extend"] == null ? "N" : "Y",
+      'isAutoExtend': data["is_auto_extend"],
       'isBooking': false,
       'paramsCalc': parameters,
       'status': data["status"].toString() == "C" ? "R" : "A",
@@ -184,7 +176,6 @@ class ParkingController extends GetxController
         onRefresh();
       }
     };
-
     Get.toNamed(Routes.bookingReceipt, arguments: args);
   }
 }

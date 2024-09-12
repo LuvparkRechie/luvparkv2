@@ -13,7 +13,7 @@ class MessageScreenController extends GetxController {
 
   @override
   void onInit() {
-    getMessages();
+    refresher();
     super.onInit();
   }
 
@@ -27,6 +27,7 @@ class MessageScreenController extends GetxController {
     int userId = await Authentication().getUserId();
     String subApi = "${ApiKeys.gApiLuvParkMessageNotif}?user_id=$userId";
     HttpRequest(api: subApi).get().then((objData) {
+      print("objData $objData");
       if (objData == "No Internet") {
         isLoading.value = false;
         isNetConn.value = false;
@@ -46,18 +47,13 @@ class MessageScreenController extends GetxController {
         );
         return;
       }
-      if (objData["items"] != null &&
-          objData["items"] is List<dynamic> &&
-          objData["items"].isNotEmpty) {
-        isLoading.value = true;
-        isNetConn.value = true;
-        List<Map<String, dynamic>> convertItems = [];
-        if (objData["items"].every((item) => item is Map<String, dynamic>)) {
-          convertItems = objData["items"].cast<Map<String, dynamic>>();
-          messages.value = convertItems;
-        }
+      if (objData["items"].isNotEmpty) {
         isLoading.value = false;
+        isNetConn.value = true;
+        messages.value = objData["items"];
       } else {
+        isLoading.value = false;
+        isNetConn.value = true;
         messages.value = [];
       }
     });

@@ -4,12 +4,10 @@ import 'package:luvpark_get/change_password/index.dart';
 import 'package:luvpark_get/faq/index.dart';
 import 'package:luvpark_get/forgot_password/utils/forgot_otp/index.dart';
 import 'package:luvpark_get/forgot_password/utils/forgot_verified_acc/index.dart';
-import 'package:luvpark_get/message/index.dart';
 import 'package:luvpark_get/my_account/index.dart';
 import 'package:luvpark_get/my_account/utils/index.dart';
 import 'package:luvpark_get/my_account/utils/otp_update/index.dart';
 import 'package:luvpark_get/profile/index.dart';
-import 'package:luvpark_get/rate_booking/index.dart';
 import 'package:luvpark_get/wallet_qr/index.dart';
 import 'package:luvpark_get/wallet_recharge/index.dart';
 import 'package:luvpark_get/wallet_recharge_load/index.dart';
@@ -25,6 +23,7 @@ import '../landing/index.dart';
 import '../login/index.dart';
 import '../mapa/index.dart';
 import '../mapa/utils/index.dart';
+import '../message/index.dart';
 import '../my_vehicles/index.dart';
 import '../my_vehicles/utils/add_vehicle.dart';
 import '../onboarding/index.dart';
@@ -134,11 +133,7 @@ class AppPages {
       page: () => const WalletSend(),
       binding: WalletSendBinding(),
     ),
-    GetPage(
-      name: Routes.rateBooking,
-      page: () => RateBooking(),
-      binding: RateBookingBinding(),
-    ),
+
     GetPage(
       name: Routes.sendOtp,
       page: () => const SendOtp(),

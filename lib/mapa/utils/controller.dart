@@ -23,6 +23,7 @@ class FilterMapController extends GetxController {
   RxList radiusData = [].obs;
   RxList sfPt = [].obs;
   RxList sfAmen = [].obs;
+  RxList selectedVehicleTypes = [].obs;
   RxList<Map<String, String>> filterParam = [
     {"ovp": "", "radius": "", "vh_type": "", "park_type": "", "amen": ""}
   ].obs;
@@ -37,12 +38,12 @@ class FilterMapController extends GetxController {
       e["radius"] = currentDistance.value.roundToDouble().toString();
       return e;
     }).toList();
-
     loadData();
   }
 
   Future<void> onPickDistance(value) async {
     currentDistance.value = value;
+
     if ((currentDistance.value * 1000) > 1000) {
       labelDistance.value =
           "${(currentDistance.value * 1000).toDouble().round() / 1000} km";

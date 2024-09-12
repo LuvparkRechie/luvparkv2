@@ -15,7 +15,6 @@ import 'package:luvpark_get/wallet_send/index.dart';
 
 import '../custom_widgets/app_color.dart';
 import '../custom_widgets/variables.dart';
-import '../routes/routes.dart';
 
 class WalletSend extends GetView<WalletSendController> {
   const WalletSend({super.key});
@@ -24,10 +23,11 @@ class WalletSend extends GetView<WalletSendController> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: CustomAppbar(
-        onTap: () {
-          Get.offAllNamed(Routes.wallet);
-        },
         title: "Send",
+        onTap: () {
+          Get.back();
+          controller.parameter();
+        },
       ),
       body: SingleChildScrollView(
         physics: NeverScrollableScrollPhysics(),
@@ -118,7 +118,9 @@ class WalletSend extends GetView<WalletSendController> {
                           controller: controller.tokenAmount,
                           keyboardType: TextInputType.number,
                           inputFormatters: [
-                            LengthLimitingTextInputFormatter(15),
+                            LengthLimitingTextInputFormatter(
+                              15,
+                            ),
                           ],
                           onChange: (text) {
                             controller.onTextChange();
@@ -133,10 +135,6 @@ class WalletSend extends GetView<WalletSendController> {
                               parsedValue = double.parse(value);
                             } catch (e) {
                               return "Invalid amount";
-                            }
-
-                            if (parsedValue < 10) {
-                              return "Amount must be at least 10 tokens";
                             }
 
                             double availableBalance;
