@@ -236,9 +236,11 @@ class ApiKeys {
   //Delete advance parking
   static const gApiPostCancelParking =
       '/ords/$parkSpaceApi/pm/cancelAdvancedParking';
-  //Cancel auto extendPost param reservation_id, no_hours
-  static const gApiCancelAutoExtend =
+  //Post extend parking param reservation_id, no_hours
+  static const gApiExtendParking =
       '/ords/$parkSpaceApi/pm/extendAdvancedParking';
+  //Cancel Auto Extend  POSt  parameter: reservation_id
+  static const gApiCancelAutoExtend = '/ords/$parkSpaceApi/pm/cancelAutoExtend';
 
   //REMOVED API
   // //Reserve payment key
