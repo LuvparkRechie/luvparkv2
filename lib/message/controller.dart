@@ -1,39 +1,66 @@
 import 'package:get/get.dart';
+import 'package:luvpark_get/auth/authentication.dart';
 import 'package:luvpark_get/custom_widgets/alert_dialog.dart';
+import 'package:luvpark_get/http/http_request.dart';
+
+import '../http/api_keys.dart';
 
 class MessageScreenController extends GetxController {
   MessageScreenController();
   RxBool isLoading = true.obs;
   RxBool isNetConn = true.obs;
-  var messages = <String>[].obs;
+  RxList messages = [].obs;
 
   @override
   void onInit() {
-    getMessage();
+    getMessages();
     super.onInit();
   }
 
-  Future<void> getMessage() async {
+  Future<void> refresher() async {
     isLoading.value = true;
-    await Future.delayed(const Duration(seconds: 2));
-    messages.value = [
-      "Attention! Your vehicle requires assistance. Kindly proceed to your designated parking area. Broken side mirror.",
-      "Parking reminder: Your parking slot is due for renewal.",
-      "Important notice: Please update your parking information.",
-      "Vehicle maintenance alert: Please check your tire pressure.",
-      "Security alert: Unusual activity detected near your vehicle.",
-      "Payment reminder: Your parking fees are due in 3 days.",
-      "New parking policy: Please be aware of the updated rules.",
-      "Notification: Your vehicle has been successfully parked.",
-      "Reminder: Please remove your vehicle from the reserved spot.",
-      "Service update: Parking area maintenance scheduled for tomorrow.",
-      "Alert: Your vehicle's battery needs attention.",
-      "Reminder: Your parking permit is about to expire.",
-      "Important: New parking lot entrance has been opened.",
-      "Alert: Severe weather expected, please secure your vehicle.",
-      "Notification: Parking area CCTV cameras are now operational."
-    ];
-    isLoading.value = false;
+    isNetConn.value = true;
+    getMessages();
+  }
+
+  Future<void> getMessages() async {
+    int userId = await Authentication().getUserId();
+    String subApi = "${ApiKeys.gApiLuvParkMessageNotif}?user_id=$userId";
+    HttpRequest(api: subApi).get().then((objData) {
+      if (objData == "No Internet") {
+        isLoading.value = false;
+        isNetConn.value = false;
+        messages.value = [];
+        CustomDialog().internetErrorDialog(Get.context!, () => Get.back());
+        return;
+      }
+      if (objData == null) {
+        isLoading.value = false;
+        isNetConn.value = true;
+        messages.value = [];
+        CustomDialog().errorDialog(
+          Get.context!,
+          "luvpark",
+          "Error while connecting to server, Please contact support.",
+          () => Get.back(),
+        );
+        return;
+      }
+      if (objData["items"] != null &&
+          objData["items"] is List<dynamic> &&
+          objData["items"].isNotEmpty) {
+        isLoading.value = true;
+        isNetConn.value = true;
+        List<Map<String, dynamic>> convertItems = [];
+        if (objData["items"].every((item) => item is Map<String, dynamic>)) {
+          convertItems = objData["items"].cast<Map<String, dynamic>>();
+          messages.value = convertItems;
+        }
+        isLoading.value = false;
+      } else {
+        messages.value = [];
+      }
+    });
   }
 
   Future<void> deleteMessage(int index) async {
