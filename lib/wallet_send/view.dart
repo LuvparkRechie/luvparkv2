@@ -145,7 +145,9 @@ class WalletSend extends GetView<WalletSendController> {
                             } catch (e) {
                               return "Error retrieving balance";
                             }
-
+                            if (parsedValue < 10) {
+                              return "Amount must not be less than 10";
+                            }
                             if (parsedValue > availableBalance) {
                               return "You don't have enough balance to proceed";
                             }
