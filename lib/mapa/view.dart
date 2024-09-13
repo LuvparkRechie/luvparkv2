@@ -14,6 +14,7 @@ import 'package:luvpark_get/custom_widgets/no_internet.dart';
 import 'package:luvpark_get/custom_widgets/variables.dart';
 import 'package:luvpark_get/drawer/view.dart';
 import 'package:luvpark_get/functions/functions.dart';
+import 'package:luvpark_get/mapa/utils/view.dart';
 import 'package:luvpark_get/routes/routes.dart';
 import 'package:luvpark_get/voice_search/view.dart';
 import 'package:sliding_up_panel/sliding_up_panel.dart';
@@ -270,7 +271,7 @@ class DashboardMapScreen extends GetView<DashboardMapController> {
                 decoration: InputDecoration(
                   hintText: 'Search parking',
                   hintStyle: paragraphStyle(
-                      color: Color(0xFF6A6161),
+                      color: const Color(0xFF6A6161),
                       fontWeight: FontWeight.w600,
                       fontSize: 16),
                   filled: true,
@@ -282,7 +283,8 @@ class DashboardMapScreen extends GetView<DashboardMapController> {
                   border: const OutlineInputBorder(),
                   enabledBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(54),
-                    borderSide: BorderSide(width: 1, color: Color(0x0C131313)),
+                    borderSide:
+                        const BorderSide(width: 1, color: Color(0x0C131313)),
                   ),
                   prefixIcon: Row(
                     mainAxisSize: MainAxisSize.min,
@@ -309,10 +311,11 @@ class DashboardMapScreen extends GetView<DashboardMapController> {
                           children: [
                             InkWell(
                                 onTap: () {
-                                  Get.toNamed(Routes.mapFilter,
-                                      arguments: (data) {
-                                    controller.getFilterNearest(data);
-                                  });
+                                  // Get.toNamed(Routes.mapFilter,
+                                  //     arguments: (data) {
+                                  //   controller.getFilterNearest(data);
+                                  //});
+                                  Get.bottomSheet(const FilterMap());
                                 },
                                 child: SvgPicture.asset(
                                     "assets/dashboard_icon/filter.svg")),
@@ -427,7 +430,7 @@ class DashboardMapScreen extends GetView<DashboardMapController> {
                                     clipBehavior: Clip.antiAlias,
                                     decoration: const BoxDecoration(),
                                     child: Image(
-                                      image: AssetImage(
+                                      image: const AssetImage(
                                           "assets/dashboard_icon/car.png"),
                                       fit: BoxFit.contain,
                                       color: AppColor.primaryColor,
@@ -461,7 +464,7 @@ class DashboardMapScreen extends GetView<DashboardMapController> {
                           mainAxisAlignment: MainAxisAlignment.end,
                           children: [
                             _buildDialItem("lightbulb", () {
-                              Get.dialog(LegendDialogScreen());
+                              Get.dialog(const LegendDialogScreen());
                             }),
                             const SizedBox(width: 10),
                             _buildDialItem("list", () {
@@ -623,12 +626,12 @@ class DashboardMapScreen extends GetView<DashboardMapController> {
                         padding: const EdgeInsets.all(15.0),
                         child: GetBuilder<DashboardMapController>(
                             builder: (context) {
-                          List<String> _biniMae = controller.dialogData[0]
+                          List<String> biniMae = controller.dialogData[0]
                                   ["parking_schedule"]
                               .toString()
                               .split("-");
                           String mySpecialBiniSched =
-                              '  ●  ${_biniMae[0]} ${_biniMae.length > 1 ? "to ${_biniMae[1]}" : ""}  ●   ';
+                              '  ●  ${biniMae[0]} ${biniMae.length > 1 ? "to ${biniMae[1]}" : ""}  ●   ';
                           String formatTime(String time) {
                             return "${time.substring(0, 2)}:${time.substring(2)}";
                           }
@@ -782,7 +785,7 @@ class DashboardMapScreen extends GetView<DashboardMapController> {
         ),
         child: SvgPicture.asset(
           "assets/dashboard_icon/$icon.svg",
-          color: Color(0xFF474545),
+          color: const Color(0xFF474545),
           height: 20,
         ),
       ),
