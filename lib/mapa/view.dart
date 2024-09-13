@@ -14,13 +14,13 @@ import 'package:luvpark_get/custom_widgets/no_internet.dart';
 import 'package:luvpark_get/custom_widgets/variables.dart';
 import 'package:luvpark_get/drawer/view.dart';
 import 'package:luvpark_get/functions/functions.dart';
-import 'package:luvpark_get/mapa/utils/view.dart';
 import 'package:luvpark_get/routes/routes.dart';
 import 'package:luvpark_get/voice_search/view.dart';
 import 'package:sliding_up_panel/sliding_up_panel.dart';
 
 import 'controller.dart';
 import 'utils/legend/legend_dialog.dart';
+import 'utils/view.dart';
 
 class DashboardMapScreen extends GetView<DashboardMapController> {
   const DashboardMapScreen({Key? key}) : super(key: key);
@@ -311,11 +311,22 @@ class DashboardMapScreen extends GetView<DashboardMapController> {
                           children: [
                             InkWell(
                                 onTap: () {
-                                  // Get.toNamed(Routes.mapFilter,
-                                  //     arguments: (data) {
-                                  //   controller.getFilterNearest(data);
-                                  //});
-                                  Get.bottomSheet(const FilterMap());
+                                  showModalBottomSheet(
+                                    context: Get.context!,
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.vertical(
+                                          top: Radius.circular(
+                                              20.0)), // Rounded corners
+                                    ),
+                                    clipBehavior: Clip.none,
+                                    builder: (BuildContext context) {
+                                      // Obtain the screen height
+
+                                      return FilterMap();
+                                    },
+                                    isScrollControlled:
+                                        true, // Ensure the height is respected
+                                  );
                                 },
                                 child: SvgPicture.asset(
                                     "assets/dashboard_icon/filter.svg")),
