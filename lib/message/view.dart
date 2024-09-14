@@ -1,13 +1,13 @@
+// ignore_for_file: deprecated_member_use, prefer_const_constructors
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:iconsax/iconsax.dart';
+import 'package:intl/intl.dart';
 import 'package:luvpark_get/custom_widgets/custom_appbar.dart';
 import 'package:luvpark_get/custom_widgets/custom_text.dart';
 import 'package:luvpark_get/custom_widgets/no_data_found.dart';
 import 'package:luvpark_get/custom_widgets/no_internet.dart';
 import 'package:luvpark_get/custom_widgets/page_loader.dart';
-
-import '../custom_widgets/app_color.dart';
 import 'controller.dart';
 
 class MessageScreen extends GetView<MessageScreenController> {
@@ -26,7 +26,7 @@ class MessageScreen extends GetView<MessageScreenController> {
                 onTap: controller.deleteAll,
                 child: CustomParagraph(
                   text: "Delete all",
-                  color: AppColor.primaryColor,
+                  color: Color(0xFFFF2E09),
                 ),
               ),
             ),
@@ -54,22 +54,62 @@ class MessageScreen extends GetView<MessageScreenController> {
                     itemCount: controller.messages.length,
                     itemBuilder: (context, index) {
                       final message = controller.messages[index];
+
                       return Padding(
-                        padding: const EdgeInsets.fromLTRB(15, 0, 15, 5),
-                        child: Card(
-                          child: ListTile(
-                            leading: const Icon(Iconsax.message_question),
-                            title: CustomParagraph(
-                              maxlines: 5,
-                              text: message["message"] ?? "No message content",
-                            ),
-                            trailing: IconButton(
-                              onPressed: () {
-                                controller.deleteMessage(index);
-                              },
-                              icon: const Icon(
-                                Icons.delete_rounded,
-                                color: Colors.red,
+                        padding: const EdgeInsets.fromLTRB(15, 10, 15, 0),
+                        child: Container(
+                          decoration: BoxDecoration(
+                            // color: Color(0xFFedf7ff),
+                            border: Border.all(color: Color(0xFFE9E9E9)),
+                            borderRadius: BorderRadius.circular(15),
+                          ),
+                          child: InkWell(
+                            onLongPress: () {
+                              controller.deleteMessage(index);
+                            },
+                            child: ListTile(
+                              title: CustomParagraph(
+                                fontWeight: FontWeight.w500,
+                                maxlines: 3,
+                                text:
+                                    message["message"] ?? "No message content",
+                              ),
+                              leading: Image.asset(
+                                  height: 30,
+                                  "assets/images/message_alert.png"),
+                              // trailing: InkWell(
+                              //   onTap: () {
+                              //     controller.deleteMessage(index);
+                              //   },
+                              //   child: Icon(
+                              //     Icons.delete,
+                              //     size: 30,
+                              //   ),
+                              // ),
+                              subtitle: Padding(
+                                padding: const EdgeInsets.only(top: 8.0),
+                                child: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    CustomParagraph(
+                                      fontSize: 12,
+                                      fontWeight: FontWeight.w500,
+                                      color: Colors.black45,
+                                      text: DateFormat('MMM dd, yyyy')
+                                          .format(DateTime.parse(
+                                              message["created_on"]))
+                                          .toUpperCase(),
+                                    ),
+                                    CustomParagraph(
+                                      fontSize: 12,
+                                      color: Colors.black45,
+                                      text: DateFormat('hh:mm a').format(
+                                          DateTime.parse(
+                                              message["created_on"])),
+                                    ),
+                                  ],
+                                ),
                               ),
                             ),
                           ),

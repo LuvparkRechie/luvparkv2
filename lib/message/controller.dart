@@ -85,4 +85,15 @@ class MessageScreenController extends GetxController {
       });
     }
   }
+
+  // Future<void> markForDeletion(int index) async {
+  //   if (index >= 0 && index < messages.length) {
+  //     var message = messages[index];
+  //     if (message['isMarkedForDeletion'] == null) {
+  //       message['isMarkedForDeletion'] = false;
+  //     }
+  //     message['isMarkedForDeletion'] = !message['isMarkedForDeletion'];
+  //     messages[index] = message;
+  //   }
+  // }
 }
