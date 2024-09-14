@@ -527,10 +527,31 @@ class CustomDialog {
     );
   }
 
+  Widget dialogBody2(Widget? child) {
+    return PopScope(
+      canPop: false,
+      child: Scaffold(
+        backgroundColor: Colors.transparent,
+        body: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 40),
+            child: Container(
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(16),
+                  color: Colors.white,
+                ),
+                width: MediaQuery.of(Get.context!).size.width,
+                child: child),
+          )
+        ]),
+      ),
+    );
+  }
+
   void loadingDialog(
     BuildContext context,
   ) {
-    Get.dialog(Column(
+    Get.dialog(const Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         SizedBox(
@@ -557,7 +578,7 @@ class CustomDialog {
                 Container(
                   height: 150,
                   width: MediaQuery.of(Get.context!).size.width,
-                  decoration: BoxDecoration(
+                  decoration: const BoxDecoration(
                     borderRadius: BorderRadius.vertical(
                       top: Radius.circular(14),
                     ),
@@ -573,9 +594,8 @@ class CustomDialog {
                 )
               ],
             ),
-            Padding(
-              padding:
-                  const EdgeInsets.symmetric(horizontal: 15.0, vertical: 20),
+            const Padding(
+              padding: EdgeInsets.symmetric(horizontal: 15.0, vertical: 20),
               child: CustomParagraph(
                 text: "Getting nearest parking,\nplease wait...",
                 textAlign: TextAlign.center,
@@ -617,7 +637,7 @@ class CustomDialog {
     bool showTwoButtons = true,
     required String imageName, // Add this parameter for the dynamic image name
   }) {
-    Get.dialog(dialogBody(
+    Get.dialog(dialogBody2(
       Column(
         mainAxisSize: MainAxisSize.min,
         children: <Widget>[

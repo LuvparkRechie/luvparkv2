@@ -8,9 +8,9 @@ class FilterMapController extends GetxController {
   FilterMapController();
   final arguments = Get.arguments;
   final List items = [
-    {"text": "Allow", "value": "Y"},
-    {"text": "No overnight", "value": "N"},
-    {"text": "All", "value": ""},
+    {"text": "Allow Overnight", "value": "Y"},
+    {"text": "No Overnight", "value": "N"},
+    {"text": "Both", "value": ""},
   ];
   RxDouble currentDistance = 1.0.obs;
   RxString labelDistance = "1km".obs;
