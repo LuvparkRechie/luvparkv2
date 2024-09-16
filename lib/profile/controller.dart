@@ -20,6 +20,7 @@ enum AppState {
 
 class ProfileScreenController extends GetxController
     with GetSingleTickerProviderStateMixin {
+  final parameters = Get.arguments;
   ProfileScreenController();
   final ImagePicker _picker = ImagePicker();
   String? imageBase64;

@@ -107,7 +107,9 @@ class CustomDrawer extends GetView<DashboardMapController> {
                       Container(height: 10),
                       OutlinedButton(
                         onPressed: () {
-                          Get.toNamed(Routes.profile);
+                          Get.toNamed(Routes.profile, arguments: () {
+                            controller.getUserData();
+                          });
                         },
                         style: OutlinedButton.styleFrom(
                           backgroundColor: Colors.transparent,
@@ -202,7 +204,9 @@ class CustomDrawer extends GetView<DashboardMapController> {
                   trailing: Icon(Icons.chevron_right_sharp,
                       color: AppColor.primaryColor),
                   onTap: () {
-                    Get.toNamed(Routes.message);
+                    Get.toNamed(
+                      Routes.message,
+                    );
                   },
                 ),
                 Divider(color: Colors.grey[350]),
