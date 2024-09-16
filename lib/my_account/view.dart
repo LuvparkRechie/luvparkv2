@@ -26,7 +26,7 @@ class MyAccount extends GetView<MyAccountScreenController> {
           textColor: Colors.white,
           titleColor: Colors.white,
           bgColor: Colors.transparent,
-          title: "My Account",
+          title: "My Profile",
           onTap: () {
             Get.back();
             controller.parameter();
@@ -262,7 +262,7 @@ class MyAccount extends GetView<MyAccountScreenController> {
                                           Container(height: 5),
                                           CustomParagraph(
                                               text:
-                                                  "${controller.userData[0]['address'] ?? "No adress provided"}"),
+                                                  "${controller.userData[0]['address1'] ?? "No adress provided"}"),
                                           Divider(
                                             color: Colors.grey.shade500,
                                           ),

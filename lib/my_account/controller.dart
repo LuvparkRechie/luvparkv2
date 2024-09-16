@@ -21,8 +21,8 @@ enum AppState {
 class MyAccountScreenController extends GetxController
     with GetSingleTickerProviderStateMixin {
   MyAccountScreenController();
-  final parameter = Get.arguments;
   final ImagePicker _picker = ImagePicker();
+  final parameter = Get.arguments;
   String? imageBase64;
   AppState? state;
   File? imageFile;

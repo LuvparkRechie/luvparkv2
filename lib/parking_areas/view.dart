@@ -4,7 +4,6 @@ import 'package:get/get.dart';
 import 'package:luvpark_get/custom_widgets/app_color.dart';
 import 'package:luvpark_get/custom_widgets/custom_appbar.dart';
 import 'package:luvpark_get/custom_widgets/custom_text.dart';
-import 'package:luvpark_get/custom_widgets/variables.dart';
 import 'package:luvpark_get/parking_areas/controller.dart';
 import 'package:luvpark_get/routes/routes.dart';
 
@@ -102,8 +101,9 @@ class ParkingAreas extends GetView<ParkingAreasController> {
                       itemCount: ct.searchedZone.length,
                       itemBuilder: (context, index) {
                         String getDistanceString() {
-                          double kmDist = Variables.convertToMeters(
+                          double kmDist = double.parse(
                               ct.searchedZone[index]["distance"].toString());
+
                           if (kmDist >= 1000) {
                             double distanceInKilometers = kmDist / 1000;
                             return '${distanceInKilometers.round()} km';

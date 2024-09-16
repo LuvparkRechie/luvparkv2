@@ -506,9 +506,54 @@ class CustomDialog {
     ));
   }
 
+  void loadingDialog(
+    BuildContext context,
+  ) {
+    Get.dialog(
+        loadingBody(
+          Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Center(
+                child: Container(
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(15),
+                    color: Colors.white,
+                  ),
+                  width: 90,
+                  height: 90,
+                  child: Center(
+                    child: SizedBox(
+                      width: 35,
+                      height: 35,
+                      child: CircularProgressIndicator(
+                        color: Colors.blue,
+                        backgroundColor: Colors.blue.withOpacity(.3),
+                        strokeWidth: 5,
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+        barrierColor: Colors.black.withOpacity(0.2));
+  }
+
+  Widget loadingBody(Widget? child) {
+    return PopScope(
+      canPop: false,
+      child: Scaffold(
+        backgroundColor: Colors.transparent,
+        body: child,
+      ),
+    );
+  }
+
   Widget dialogBody(Widget? child) {
     return PopScope(
-      canPop: true,
+      canPop: false,
       child: Scaffold(
         backgroundColor: Colors.transparent,
         body: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
@@ -534,7 +579,7 @@ class CustomDialog {
         backgroundColor: Colors.transparent,
         body: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
           Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 40),
+            padding: const EdgeInsets.symmetric(horizontal: 20),
             child: Container(
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(16),
@@ -548,26 +593,7 @@ class CustomDialog {
     );
   }
 
-  void loadingDialog(
-    BuildContext context,
-  ) {
-    Get.dialog(const Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        SizedBox(
-          width: 100,
-          height: 100,
-          child: Center(
-            child: CircularProgressIndicator(
-              color: Colors.blue,
-            ),
-          ),
-        ),
-      ],
-    ));
-  }
-
-  void mapLoading() {
+  void mapLoading(String title) {
     Get.dialog(
       dialogBody(
         Column(
@@ -578,7 +604,7 @@ class CustomDialog {
                 Container(
                   height: 150,
                   width: MediaQuery.of(Get.context!).size.width,
-                  decoration: const BoxDecoration(
+                  decoration: BoxDecoration(
                     borderRadius: BorderRadius.vertical(
                       top: Radius.circular(14),
                     ),
@@ -594,10 +620,11 @@ class CustomDialog {
                 )
               ],
             ),
-            const Padding(
-              padding: EdgeInsets.symmetric(horizontal: 15.0, vertical: 20),
+            Padding(
+              padding:
+                  const EdgeInsets.symmetric(horizontal: 15.0, vertical: 20),
               child: CustomParagraph(
-                text: "Getting nearest parking,\nplease wait...",
+                text: "Getting nearest parking within \n$title, please wait...",
                 textAlign: TextAlign.center,
               ),
             )

@@ -25,7 +25,7 @@ class Profile extends GetView<ProfileScreenController> {
           textColor: Colors.white,
           titleColor: Colors.white,
           bgColor: Colors.transparent,
-          title: "My Profile",
+          title: "My Account",
           onTap: () {
             Get.back();
             controller.parameters();
@@ -49,11 +49,6 @@ class Profile extends GetView<ProfileScreenController> {
                             image: DecorationImage(
                               fit: BoxFit.cover,
                               image: AssetImage("assets/images/profile_bg.png"),
-                            ),
-                          ),
-                          child: SafeArea(
-                            child: Column(
-                              children: [],
                             ),
                           ),
                         ),
@@ -146,7 +141,7 @@ class Profile extends GetView<ProfileScreenController> {
                                     color: AppColor.primaryColor,
                                   ),
                                   title: const CustomTitle(
-                                    text: "My Account",
+                                    text: "My Profile",
                                     fontSize: 14,
                                     fontStyle: FontStyle.normal,
                                     fontWeight: FontWeight.w700,

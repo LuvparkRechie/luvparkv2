@@ -238,7 +238,6 @@ class WalletSend extends GetView<WalletSendController> {
             padding: const EdgeInsets.fromLTRB(20, 17, 20, 17),
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(7),
-
               border: Border.all(
                   color: Colors.grey.shade200,
                   width: 1), // Color(0xFF2563EB) corresponds to #2563EB

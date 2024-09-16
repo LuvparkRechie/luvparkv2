@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
@@ -11,6 +12,7 @@ import 'package:luvpark_get/mapa/controller.dart';
 import 'package:luvpark_get/routes/routes.dart';
 import 'package:luvpark_get/sqlite/reserve_notification_table.dart';
 import 'package:luvpark_get/web_view/webview.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../custom_widgets/variables.dart';
 
@@ -204,9 +206,7 @@ class CustomDrawer extends GetView<DashboardMapController> {
                   trailing: Icon(Icons.chevron_right_sharp,
                       color: AppColor.primaryColor),
                   onTap: () {
-                    Get.toNamed(
-                      Routes.message,
-                    );
+                    Get.toNamed(Routes.message);
                   },
                 ),
                 Divider(color: Colors.grey[350]),
@@ -335,6 +335,11 @@ class CustomDrawer extends GetView<DashboardMapController> {
                         await NotificationDatabase.instance.deleteAll();
                         await Authentication()
                             .setLogin(jsonEncode(userData[0]));
+                        final prefs = await SharedPreferences.getInstance();
+                        prefs.remove("last_booking");
+                        Authentication().setLogoutStatus(true);
+                        AwesomeNotifications().dismissAllNotifications();
+                        AwesomeNotifications().cancelAll();
 
                         Get.back();
                         Get.offAllNamed(Routes.splash);

@@ -95,7 +95,7 @@ class CustomParagraph extends StatelessWidget {
       textAlign: textAlign,
       maxLines: maxlines,
       overflow: overflow,
-      minFontSize: 8,
+      minFontSize: 10,
     );
   }
 }

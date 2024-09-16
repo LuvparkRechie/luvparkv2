@@ -776,4 +776,11 @@ class Functions {
 
     return brandName!;
   }
+
+  static Future<String> getBrandImage(int vtId, int vbId) async {
+    final String? image =
+        await VehicleBrandsTable.instance.getBrandImage(vtId, vbId);
+
+    return image!;
+  }
 }

@@ -109,6 +109,9 @@ class LoginScreenController extends GetxController {
                 int.parse(dataRow["vehicle_brand_id"].toString()),
             VHBrandsDataFields.vhBrandName:
                 dataRow["vehicle_brand_name"].toString(),
+            VHBrandsDataFields.image: dataRow["imageb64"] == null
+                ? ""
+                : dataRow["imageb64"].toString(),
           };
           await VehicleBrandsTable.instance.insertUpdate(vbData);
         }
@@ -195,6 +198,7 @@ class LoginScreenController extends GetxController {
                   Authentication().setUserData(jsonEncode(items));
                   Authentication().setPasswordBiometric(param["pwd"]);
                   Authentication().setShowPopUpNearest(false);
+                  Authentication().setLogoutStatus(false);
                   if (items["image_base64"] != null) {
                     Authentication()
                         .setProfilePic(jsonEncode(items["image_base64"]));

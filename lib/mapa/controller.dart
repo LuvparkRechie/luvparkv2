@@ -21,6 +21,7 @@ import 'package:luvpark_get/routes/routes.dart';
 import 'package:sliding_up_panel/sliding_up_panel.dart';
 
 import '../custom_widgets/app_color.dart';
+import 'utils/marker_data_dialog/marker_data_dialog.dart';
 import 'utils/suggestions/suggestions.dart';
 
 // ignore: deprecated_member_use
@@ -36,12 +37,13 @@ class DashboardMapController extends GetxController
   late AnimationController animationDialController;
   late Animation<Offset> slideAnimation;
   RxBool isSidebarVisible = false.obs;
+  bool isFilter = false;
   GoogleMapController? gMapController;
   CameraPosition? initialCameraPosition;
   RxList<Marker> markers = <Marker>[].obs;
   RxList<dynamic> userBal = <dynamic>[].obs;
   RxList<dynamic> dataNearest = [].obs;
-  RxList<dynamic> dialogData = [].obs;
+  List markerData = [];
   //drawerdata
   var userProfile;
   Circle circle = const Circle(circleId: CircleId('dottedCircle'));
@@ -67,7 +69,6 @@ class DashboardMapController extends GetxController
   // State Variables
   RxBool netConnected = true.obs;
   RxBool isLoading = true.obs;
-  RxBool isLoadingMap = true.obs;
   RxBool isGetNearData = false.obs;
   RxBool isMarkerTapped = false.obs;
   //Panel variables
@@ -81,6 +82,13 @@ class DashboardMapController extends GetxController
   RxString brandName = "".obs;
   late StreamController<void> _dataController;
   late StreamSubscription<void> dataSubscription;
+//panel gg
+  RxDouble panelHeightOpen = 200.0.obs;
+  RxDouble initFabHeight = 80.0.obs;
+  RxDouble fabHeight = 0.0.obs;
+  RxDouble panelHeightClosed = 60.0.obs;
+  RxBool isOPenFab = false.obs;
+
   @override
   void onInit() {
     super.onInit();
@@ -110,6 +118,7 @@ class DashboardMapController extends GetxController
     getLastBooking();
     getUserData();
     getDefaultLocation();
+    fabHeight.value = panelHeightOpen.value + 30;
     _dataController = StreamController<void>();
   }
 
@@ -121,6 +130,32 @@ class DashboardMapController extends GetxController
     animationController.dispose();
     _dataController.close();
     dataSubscription.cancel();
+  }
+
+  double getPanelHeight() {
+    double bottomInset = MediaQuery.of(Get.context!).viewInsets.bottom;
+    print("bottomInset $bottomInset");
+    double height = suggestions.isEmpty
+        ? bottomInset != 0
+            ? bottomInset + 20
+            : 200
+        : bottomInset != 0
+            ? bottomInset + 20
+            : MediaQuery.of(Get.context!).size.height * 0.70;
+    print("inatay $height");
+    panelHeightOpen.value = height;
+    return height;
+  }
+
+  void onPanelSlide(double pos) {
+    fabHeight.value = pos * (panelHeightOpen.value - panelHeightClosed.value) +
+        initFabHeight.value;
+  }
+
+  void updateFabInit(bool isOpen) {
+    isOPenFab.value = isOpen;
+    panelHeightOpen.value = getPanelHeight(); // Ensure it recalculates
+    onPanelSlide(isOpen ? 1.0 : 0.0);
   }
 
   void streamData() {
@@ -152,7 +187,6 @@ class DashboardMapController extends GetxController
     String subApi = "${ApiKeys.gApiSubFolderGetBalance}?user_id=$item";
 
     HttpRequest(api: subApi).get().then((returnBalance) async {
-      print("ataya ${returnBalance["items"]}");
       if (returnBalance["items"].isNotEmpty) {
         userBal.value = returnBalance["items"];
       }
@@ -179,6 +213,7 @@ class DashboardMapController extends GetxController
   //GEt nearest data based on
   getDefaultLocation() {
     isLoading.value = true;
+    isFilter = false;
     LocationService.grantPermission(Get.context!, (isGranted) async {
       if (isGranted) {
         List ltlng = await Functions.getCurrentPosition();
@@ -194,11 +229,12 @@ class DashboardMapController extends GetxController
   }
 
   void bridgeLocation(coordinates) {
-    isLoadingMap.value = true;
-
+    CustomDialog().mapLoading(
+        Variables.convertDistance(ddRadius.value.toString()).toString());
     Functions.getUserBalance(Get.context!, (dataBalance) async {
       userBal.value = dataBalance[0]["items"];
       if (!dataBalance[0]["has_net"]) {
+        Get.back();
         netConnected.value = false;
         isLoading.value = false;
         gMapController!.dispose();
@@ -207,22 +243,21 @@ class DashboardMapController extends GetxController
         _dataController.close();
         dataSubscription.cancel();
       } else {
-        isLoading.value = false;
+        isLoading.value = true;
         getNearest(dataBalance[0]["items"], coordinates);
       }
     });
   }
 
   void getNearest(dynamic userData, coordinates) async {
-    CustomDialog().mapLoading();
     String params =
-        "${ApiKeys.gApiSubFolderGetNearestSpace}?is_allow_overnight=$isAllowOverNight&parking_type_code=$pTypeCode&latitude=${coordinates.latitude}&longitude=${coordinates.longitude}&radius=${ddRadius.value}&parking_amenity_code=$amenities&vehicle_type_id=$vtypeId";
+        "${ApiKeys.gApiSubGetNearybyParkings}?is_allow_overnight=$isAllowOverNight&parking_type_code=$pTypeCode&latitude=${coordinates.latitude}&longitude=${coordinates.longitude}&radius=${Variables.convertToMeters(ddRadius.value.toString())}&parking_amenity_code=$amenities&vehicle_type_id=$vtypeId";
     print(" params$params");
     try {
       var returnData = await HttpRequest(api: params).get();
 
       Get.back();
-      isLoadingMap.value = false;
+
       if (returnData == "No Internet") {
         handleNoInternet();
         return;
@@ -244,32 +279,36 @@ class DashboardMapController extends GetxController
 
   void handleNoInternet() {
     netConnected.value = false;
+    isLoading.value = false;
     CustomDialog().internetErrorDialog(Get.context!, () {
       Get.back();
     });
+    return;
   }
 
   void handleServerError() {
     netConnected.value = true;
+    isLoading.value = false;
     CustomDialog().errorDialog(Get.context!, "Internet Error",
         "Error while connecting to server, Please contact support.", () {
       Get.back();
     });
+    return;
   }
 
   void handleNoParkingFound(dynamic nearData) {
     netConnected.value = true;
-
+    isLoading.value = false;
     markers.clear();
     bool isDouble = ddRadius.value.contains(".");
+    String message = isFilter
+        ? "There are no parking areas available based on your filter."
+        : "No parking area found within \n${(isDouble ? double.parse(ddRadius.value) : int.parse(ddRadius.value)) >= 1 ? '${ddRadius.value} Km' : '${double.parse(ddRadius.value) * 1000} meters'}, please change location.";
 
-    CustomDialog().errorDialog(Get.context!, "Luvpark",
-        "No parking area found within \n${(isDouble ? double.parse(ddRadius.value) : int.parse(ddRadius.value)) >= 1 ? '${ddRadius.value} Km' : '${double.parse(ddRadius.value) * 1000} meters'}, please change location.",
-        () {
+    CustomDialog().errorDialog(Get.context!, "Luvpark", message, () {
       Get.back();
       showDottedCircle(nearData);
     });
-    update();
   }
 
   void handleData(dynamic nearData) async {
@@ -302,11 +341,11 @@ class DashboardMapController extends GetxController
         double.parse(userBal[0]["min_wallet_bal"].toString())) {
       initialCameraPosition = CameraPosition(
         target: searchCoordinates,
-        zoom: nearData.isEmpty ? 14 : 14,
+        zoom: nearData.isEmpty ? 14 : 15,
         tilt: 0,
         bearing: 0,
       );
-
+      print("animate camera ${isLoading.value}");
       animateCamera();
     }
   }
@@ -388,11 +427,12 @@ class DashboardMapController extends GetxController
   }
 
   //Book marker dialog
-  Future<void> bookMarkerNow(data) async {
+  Future<void> bookMarkerNow(data, Function cb) async {
     CustomDialog().loadingDialog(Get.context!);
 
     LatLng destLoc = LatLng(data[0]["pa_latitude"], data[0]["pa_longitude"]);
     if (data[0]["is_allow_reserve"] == "N") {
+      cb(true);
       Get.back();
       CustomDialog().errorDialog(
         Get.context!,
@@ -412,6 +452,7 @@ class DashboardMapController extends GetxController
       if (userdata["success"]) {
         if (double.parse(items[0]["amount_bal"].toString()) <
             double.parse(items[0]["min_wallet_bal"].toString())) {
+          cb(true);
           Get.back();
           CustomDialog().errorDialog(
             Get.context!,
@@ -426,6 +467,7 @@ class DashboardMapController extends GetxController
         } else {
           Functions.computeDistanceResorChckIN(Get.context!, destLoc,
               (success) {
+            cb(true);
             Get.back();
             if (success["success"]) {
               Get.toNamed(Routes.booking, arguments: {
@@ -438,6 +480,7 @@ class DashboardMapController extends GetxController
           });
         }
       } else {
+        cb(true);
         Get.back();
       }
     });
@@ -459,6 +502,8 @@ class DashboardMapController extends GetxController
 
   //get curr location
   Future<void> getFilterNearest(data) async {
+    print("data $data");
+
     List ltlng = await Functions.getCurrentPosition();
     LatLng coordinates = LatLng(ltlng[0]["lat"], ltlng[0]["long"]);
     ddRadius.value = data[0]["radius"];
@@ -467,7 +512,7 @@ class DashboardMapController extends GetxController
     vtypeId = data[0]["vh_type"];
     isAllowOverNight = data[0]["ovp"];
     searchCoordinates = coordinates;
-
+    isFilter = true;
     bridgeLocation(coordinates);
   }
 
@@ -493,14 +538,15 @@ class DashboardMapController extends GetxController
   }
 
   void onCameraMoveStarted() {
-    if (isMarkerTapped.value) return;
-
     isGetNearData.value = false;
   }
 
   void onCameraIdle() async {
-    if (isMarkerTapped.value) return;
     isGetNearData.value = true;
+    print("suggestion ${suggestions.length}");
+    if (suggestions.isEmpty) {
+      panelController.open();
+    }
   }
 
   void animateCamera() {
@@ -533,6 +579,8 @@ class DashboardMapController extends GetxController
         ),
       ),
     );
+    isLoading.value = false;
+
     if (gMapController != null) {
       gMapController!.animateCamera(
         CameraUpdate.newCameraPosition(
@@ -665,10 +713,10 @@ class DashboardMapController extends GetxController
             position: LatLng(double.parse(items["pa_latitude"].toString()),
                 double.parse(items["pa_longitude"].toString())),
             onTap: () async {
+              markerData.clear();
               CustomDialog().loadingDialog(Get.context!);
-              List subData = [];
-              subData.add(items);
-              dialogData.clear();
+
+              markerData.add(items);
 
               List ltlng = await Functions.getCurrentPosition();
               LatLng coordinates = LatLng(ltlng[0]["lat"], ltlng[0]["long"]);
@@ -676,11 +724,14 @@ class DashboardMapController extends GetxController
                   double.parse(items["pa_latitude"].toString()),
                   double.parse(items["pa_longitude"].toString()));
               final estimatedData = await Functions.fetchETA(coordinates, dest);
-              subData = subData.map((e) {
-                e["distance"] = estimatedData[0]["distance"];
+              print("data $estimatedData");
+              markerData = markerData.map((e) {
+                e["distance"] = "${estimatedData[0]["distance"]} away";
+                e["time_arrival"] = estimatedData[0]["time"];
                 return e;
               }).toList();
               Get.back();
+
               if (estimatedData[0]["error"] == "No Internet") {
                 CustomDialog().internetErrorDialog(Get.context!, () {
                   Get.back();
@@ -688,7 +739,7 @@ class DashboardMapController extends GetxController
 
                 return;
               }
-              onMarkerTapped(subData[0]);
+              onMarkerTapped(markerData);
             },
           ),
         );
@@ -716,19 +767,15 @@ class DashboardMapController extends GetxController
             suggestions.add(
                 "${prediction['description']}=Rechie=${prediction['place_id']}=structured=${prediction["structured_formatting"]["main_text"]}");
           }
-          update();
         } else {
           suggestions.value = [];
-          update();
         }
       } else {
         suggestions.value = [];
-        update();
       }
     } catch (e) {
-      suggestions.value = [];
-      update();
       CustomDialog().internetErrorDialog(Get.context!, () {
+        suggestions.value = [];
         Get.back();
       });
     }
@@ -749,22 +796,21 @@ class DashboardMapController extends GetxController
   LatLng calculateNewCoordinates(
       double lat, double lon, double radiusInMeters, double angleInDegrees) {
     const double PI = 3.141592653589793;
-    const double EARTH_RADIUS_IN_METERS = 6371000.0;
 
     double angleInRadians = angleInDegrees * PI / 180.0;
+    double radiusInDegrees =
+        radiusInMeters / 111320.0; // Approx. meters per degree latitude
 
-    // Calculate the change in latitude
-    double deltaLat = radiusInMeters / EARTH_RADIUS_IN_METERS * 180.0 / PI;
+    // Calculate the new latitude
+    double newLat = lat + radiusInDegrees * cos(angleInRadians);
 
-    // Calculate the change in longitude
-    double deltaLon = radiusInMeters /
-        (EARTH_RADIUS_IN_METERS * cos(lat * PI / 180.0)) *
-        180.0 /
-        PI;
+    // Calculate the new longitude
+    double newLon =
+        lon + (radiusInDegrees / cos(lat * PI / 180.0)) * sin(angleInRadians);
 
-    // Calculate new coordinates
-    double newLat = lat + deltaLat * cos(angleInRadians);
-    double newLon = lon + deltaLon * sin(angleInRadians);
+    // Normalize the longitude to be within -180 to 180 degrees
+    if (newLon > 180.0) newLon -= 360.0;
+    if (newLon < -180.0) newLon += 360.0;
 
     return LatLng(newLat, newLon);
   }
@@ -773,13 +819,22 @@ class DashboardMapController extends GetxController
   void onMarkerTapped(data) {
     isMarkerTapped.value = false;
     isGetNearData.value = true;
-    dialogData.add(data);
-    isMarkerTapped.value = !isMarkerTapped.value;
-    isGetNearData.value = !isGetNearData.value;
+
+    // isMarkerTapped.value = !isMarkerTapped.value;
+    // isGetNearData.value = !isGetNearData.value;
+
+    Get.bottomSheet(
+      DialogMarker(
+          markerData: data,
+          cb: (datas) {
+            print("data");
+            isMarkerTapped.value = false;
+            isGetNearData.value = true;
+          }),
+      barrierColor: Colors.black.withOpacity(.1),
+      isScrollControlled: true, // Ensure the height is respected
+    );
   }
 
-  void closeMarkerDialog() {
-    isMarkerTapped.value = false;
-    isGetNearData.value = true;
-  }
+  //on[ anel slide]
 }

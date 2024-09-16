@@ -295,6 +295,21 @@ class Variables {
     return distanceValue * 1000;
   }
 
+  static String convertDistance(String distanceString) {
+    // Extract numeric part of the string
+    String numericPart = distanceString.replaceAll(RegExp(r'[^0-9.]'), '');
+
+    // Parse numeric part to double
+    double distanceValue = double.tryParse(numericPart) ?? 0;
+    // Convert to meters
+
+    double dist = distanceValue * 1000;
+    if (distanceValue < 1)
+      return "$dist meters";
+    else
+      return "$distanceValue km";
+  }
+
   static double convertToMeters3(String distanceString) {
     // Extract numeric part of the string
     String numericPart = distanceString.replaceAll(RegExp(r'[^0-9.]'), '');

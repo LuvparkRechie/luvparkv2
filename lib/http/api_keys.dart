@@ -80,6 +80,8 @@ class ApiKeys {
 
   static const gApiSubFolderGetNearestSpace =
       '/ords/$parkSpaceApi/zone/nearestParking';
+  static const gApiSubGetNearybyParkings =
+      '/ords/$parkSpaceApi/zone/nearbyParkings';
 
   //get parking type filter dropdown dashboard
   static const gApiSubFolderGetParkingTypes =
@@ -236,7 +238,7 @@ class ApiKeys {
   //Delete advance parking
   static const gApiPostCancelParking =
       '/ords/$parkSpaceApi/pm/cancelAdvancedParking';
-  //Post extend parking param reservation_id, no_hours
+  //  extendPost param reservation_id, no_hours
   static const gApiExtendParking =
       '/ords/$parkSpaceApi/pm/extendAdvancedParking';
   //Cancel Auto Extend  POSt  parameter: reservation_id

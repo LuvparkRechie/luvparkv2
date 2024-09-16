@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:luvpark_get/custom_widgets/custom_button.dart';
 import 'package:luvpark_get/custom_widgets/custom_text.dart';
-import 'package:luvpark_get/custom_widgets/variables.dart';
 
 import '../../../custom_widgets/showup_animation.dart';
 import '../../../routes/routes.dart';
@@ -60,10 +59,11 @@ class SuggestionsScreen extends StatelessWidget {
                               ? data.take(5).toList().length
                               : data.length,
                           itemBuilder: (context, index) {
-                            print("data $data");
+                            print(data[index]["distance"]);
                             String getDistanceString() {
-                              double kmDist = Variables.convertToMeters(
+                              double kmDist = double.parse(
                                   data[index]["distance"].toString());
+
                               if (kmDist >= 1000) {
                                 double distanceInKilometers = kmDist / 1000;
                                 return '${distanceInKilometers.round()} km';

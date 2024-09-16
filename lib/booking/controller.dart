@@ -8,13 +8,14 @@ import 'package:intl/intl.dart';
 import 'package:luvpark_get/auth/authentication.dart';
 import 'package:luvpark_get/booking/utils/success_dialog.dart';
 import 'package:luvpark_get/custom_widgets/alert_dialog.dart';
-import 'package:luvpark_get/custom_widgets/app_color.dart';
 import 'package:luvpark_get/custom_widgets/variables.dart';
 import 'package:luvpark_get/functions/functions.dart';
 import 'package:luvpark_get/http/api_keys.dart';
 import 'package:luvpark_get/http/http_request.dart';
 import 'package:luvpark_get/routes/routes.dart';
 import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
+
+import '../custom_widgets/app_color.dart';
 
 class BookingController extends GetxController
     with GetSingleTickerProviderStateMixin {
@@ -64,6 +65,7 @@ class BookingController extends GetxController
   RxList ddVehiclesData = [].obs;
   String? dropdownValue;
 
+  RxList noticeData = [].obs;
   //Booking param
   RxBool isSubmitBooking = false.obs;
 
@@ -75,19 +77,10 @@ class BookingController extends GetxController
   RxString tokenRewards = "0".obs;
   RxDouble displayRewards = 0.0.obs;
 
-  RxBool isAgree = false.obs;
-
-  RxList noticeData = [].obs;
-
-  void onPageChanged(bool agree) {
-    isAgree.value = agree;
-    update();
-  }
-
   @override
   void onInit() {
     super.onInit();
-    getNotice();
+
     _startInactivityTimer();
     _updateMaskFormatter("");
     int endNumber =
@@ -113,10 +106,6 @@ class BookingController extends GetxController
       timeComputation();
       getAvailabeAreaVh();
     });
-  }
-
-  void isReadAgree(bool agree) {
-    isAgree.value = agree;
   }
 
   void _startInactivityTimer() {
@@ -227,63 +216,7 @@ class BookingController extends GetxController
         vehicleTypeData.value = dataVehicle;
         _updateMaskFormatter(vehicleTypeData[0]["format"]);
       }
-    });
-  }
-
-  Future<void> getNotice() async {
-    isInternetConn.value = true;
-    isLoadingPage.value = true;
-    String subApi = "${ApiKeys.gApiLuvParkGetNotice}?msg_code=PREBOOKMSG";
-
-    HttpRequest(api: subApi).get().then((retDataNotice) async {
-      if (retDataNotice == "No Internet") {
-        isLoadingPage.value = false;
-        isInternetConn.value = false;
-        noticeData.value = [];
-        CustomDialog().internetErrorDialog(Get.context!, () {
-          Get.back();
-        });
-        return;
-      }
-      if (retDataNotice == null) {
-        isInternetConn.value = true;
-        isLoadingPage.value = true;
-        noticeData.value = [];
-        CustomDialog().serverErrorDialog(Get.context!, () {
-          Get.back();
-        });
-      }
-      if (retDataNotice["items"].length > 0) {
-        isInternetConn.value = true;
-        isLoadingPage.value = false;
-        noticeData.value = retDataNotice["items"];
-
-        CustomDialog().customPopUp(
-          Get.context!,
-          noticeData[0]["msg_title"],
-          noticeData[0]["msg"],
-          '',
-          'Proceed Booking',
-          imageName: 'pu_confirmation',
-          btnNotBackgroundColor: Colors.transparent,
-          btnNotTextColor: AppColor.primaryColor,
-          btnOkTextColor: Colors.white,
-          btnOkBackgroundColor: AppColor.primaryColor,
-          onTapClose: () async {},
-          onTapConfirm: () async {
-            Get.back();
-          },
-          showTwoButtons: false,
-        );
-      } else {
-        isInternetConn.value = true;
-        isLoadingPage.value = false;
-        noticeData.value = [];
-        CustomDialog().errorDialog(Get.context!, "luvpark", "No data found",
-            () {
-          Get.back();
-        });
-      }
+      getNotice();
     });
   }
 
@@ -662,6 +595,63 @@ class BookingController extends GetxController
     }
 
     isLoadingPage.value = false;
+  }
+
+  Future<void> getNotice() async {
+    isInternetConn.value = true;
+    isLoadingPage.value = true;
+    String subApi = "${ApiKeys.gApiLuvParkGetNotice}?msg_code=PREBOOKMSG";
+
+    HttpRequest(api: subApi).get().then((retDataNotice) async {
+      if (retDataNotice == "No Internet") {
+        isLoadingPage.value = false;
+        isInternetConn.value = false;
+        noticeData.value = [];
+        CustomDialog().internetErrorDialog(Get.context!, () {
+          Get.back();
+        });
+        return;
+      }
+      if (retDataNotice == null) {
+        isInternetConn.value = true;
+        isLoadingPage.value = true;
+        noticeData.value = [];
+        CustomDialog().serverErrorDialog(Get.context!, () {
+          Get.back();
+        });
+      }
+      if (retDataNotice["items"].length > 0) {
+        isInternetConn.value = true;
+        isLoadingPage.value = false;
+        noticeData.value = retDataNotice["items"];
+
+        CustomDialog().customPopUp(
+          Get.context!,
+          noticeData[0]["msg_title"],
+          noticeData[0]["msg"],
+          '',
+          'Proceed Booking',
+          imageName: 'pu_confirmation',
+          btnNotBackgroundColor: Colors.transparent,
+          btnNotTextColor: AppColor.primaryColor,
+          btnOkTextColor: Colors.white,
+          btnOkBackgroundColor: AppColor.primaryColor,
+          onTapClose: () async {},
+          onTapConfirm: () async {
+            Get.back();
+          },
+          showTwoButtons: false,
+        );
+      } else {
+        isInternetConn.value = true;
+        isLoadingPage.value = false;
+        noticeData.value = [];
+        CustomDialog().errorDialog(Get.context!, "luvpark", "No data found",
+            () {
+          Get.back();
+        });
+      }
+    });
   }
 
   @override

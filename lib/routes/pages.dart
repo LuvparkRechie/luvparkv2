@@ -15,13 +15,13 @@ import 'package:luvpark_get/wallet_recharge_load/index.dart';
 import '../activate_acc/index.dart';
 import '../booking/index.dart';
 import '../booking/utils/booking_receipt/index.dart';
+import '../booking_notice/index.dart';
 import '../forgot_password/index.dart';
 import '../forgot_password/utils/create_new/index.dart';
 import '../forgot_password/utils/forgot_otp/utils/forgot_pass_success.dart';
 import '../landing/index.dart';
 import '../login/index.dart';
 import '../mapa/index.dart';
-import '../mapa/utils/index.dart';
 import '../message/index.dart';
 import '../my_vehicles/index.dart';
 import '../my_vehicles/utils/add_vehicle.dart';
@@ -118,6 +118,11 @@ class AppPages {
       binding: BookingBinding(),
     ),
     GetPage(
+      name: Routes.bookingNotice,
+      page: () => const BookingNotice(),
+      binding: BookingNoticeBinding(),
+    ),
+    GetPage(
       name: Routes.bookingReceipt,
       page: () => BookingReceipt(),
       binding: BookingReceiptBinding(),
@@ -138,11 +143,11 @@ class AppPages {
       page: () => const FaqPage(),
       binding: FaqPageBinding(),
     ),
-    GetPage(
-      name: Routes.mapFilter,
-      page: () => const FilterMap(),
-      binding: FilterMapBinding(),
-    ),
+    // GetPage(
+    //   name: Routes.mapFilter,
+    //   page: () => const FilterMap(),
+    //   binding: FilterMapBinding(),
+    // ),
     GetPage(
       name: Routes.walletrecharge,
       page: () => const WalletRechargeScreen(),
