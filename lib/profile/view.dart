@@ -26,6 +26,10 @@ class Profile extends GetView<ProfileScreenController> {
           titleColor: Colors.white,
           bgColor: Colors.transparent,
           title: "My Profile",
+          onTap: () {
+            Get.back();
+            controller.parameters();
+          },
         ),
         body: controller.isLoading.value
             ? const PageLoader()
@@ -152,7 +156,10 @@ class Profile extends GetView<ProfileScreenController> {
                                   trailing: Icon(Icons.chevron_right_sharp,
                                       color: AppColor.primaryColor),
                                   onTap: () {
-                                    Get.toNamed(Routes.myaccount);
+                                    Get.toNamed(Routes.myaccount,
+                                        arguments: () {
+                                      controller.getUserData();
+                                    });
                                   },
                                 ),
                                 const Divider(),
