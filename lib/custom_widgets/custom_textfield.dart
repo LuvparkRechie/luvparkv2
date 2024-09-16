@@ -275,17 +275,18 @@ class _CustomDropdownState extends State<CustomDropdown> {
           dropdownColor: Colors.white,
           focusNode: focusNode,
           decoration: InputDecoration(
-            floatingLabelStyle: TextStyle(fontWeight: FontWeight.w600),
-            contentPadding:
-                const EdgeInsets.symmetric(vertical: 10, horizontal: 12),
-            focusedBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.all(Radius.circular(12)),
-                borderSide: BorderSide(color: Color(0xFF0078FF))),
-            border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(7.0),
-            ),
-            labelText: widget.labelText,
-          ),
+              floatingLabelStyle: TextStyle(fontWeight: FontWeight.w600),
+              contentPadding:
+                  const EdgeInsets.symmetric(vertical: 10, horizontal: 12),
+              focusedBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.all(Radius.circular(12)),
+                  borderSide: BorderSide(color: Color(0xFF0078FF))),
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(7.0),
+              ),
+              labelText: widget.labelText,
+              labelStyle: paragraphStyle()),
+          style: paragraphStyle(color: Colors.black),
           value: widget.ddValue,
           isExpanded: true,
           onChanged: (value) {
