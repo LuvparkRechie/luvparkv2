@@ -29,16 +29,13 @@ Future<void> backgroundFunc() async {
     final isLogout = await Authentication().getLogoutStatus();
 
     if (isLogout != null && !isLogout) {
-      print("if");
       var akongId = await Authentication().getUserId();
 
       if (akongId == 0) return;
       await getParkingTrans(counter);
 
       await getMessNotif();
-    } else {
-      print("else permi");
-    }
+    } else {}
   });
 }
 
