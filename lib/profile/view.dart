@@ -1,5 +1,3 @@
-// ignore_for_file: prefer_const_constructors
-
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
@@ -28,10 +26,6 @@ class Profile extends GetView<ProfileScreenController> {
           titleColor: Colors.white,
           bgColor: Colors.transparent,
           title: "My Profile",
-          onTap: () {
-            Get.back();
-            controller.parameters();
-          },
         ),
         body: controller.isLoading.value
             ? const PageLoader()
@@ -158,10 +152,7 @@ class Profile extends GetView<ProfileScreenController> {
                                   trailing: Icon(Icons.chevron_right_sharp,
                                       color: AppColor.primaryColor),
                                   onTap: () {
-                                    Get.toNamed(Routes.myaccount,
-                                        arguments: () {
-                                      controller.getUserData();
-                                    });
+                                    Get.toNamed(Routes.myaccount);
                                   },
                                 ),
                                 const Divider(),

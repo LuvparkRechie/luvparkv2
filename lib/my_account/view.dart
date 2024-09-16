@@ -27,10 +27,6 @@ class MyAccount extends GetView<MyAccountScreenController> {
           titleColor: Colors.white,
           bgColor: Colors.transparent,
           title: "My Account",
-          onTap: () {
-            Get.back();
-            controller.parameter();
-          },
         ),
         body: controller.isLoading.value
             ? const PageLoader()
