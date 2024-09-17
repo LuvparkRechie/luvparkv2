@@ -2,7 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:iconsax/iconsax.dart';
+import 'package:lucide_icons/lucide_icons.dart';
 import 'package:luvpark_get/custom_widgets/app_color.dart';
 import 'package:luvpark_get/custom_widgets/custom_appbar.dart';
 import 'package:luvpark_get/custom_widgets/page_loader.dart';
@@ -137,7 +137,7 @@ class Profile extends GetView<ProfileScreenController> {
                               children: <Widget>[
                                 ListTile(
                                   leading: Icon(
-                                    Iconsax.personalcard,
+                                    LucideIcons.userCircle2,
                                     color: AppColor.primaryColor,
                                   ),
                                   title: const CustomTitle(
@@ -160,7 +160,7 @@ class Profile extends GetView<ProfileScreenController> {
                                 const Divider(),
                                 ListTile(
                                   leading: Icon(
-                                    Iconsax.car,
+                                    LucideIcons.car,
                                     color: AppColor.primaryColor,
                                   ),
                                   title: const CustomTitle(
@@ -180,7 +180,7 @@ class Profile extends GetView<ProfileScreenController> {
                                 const Divider(),
                                 ListTile(
                                   leading: Icon(
-                                    Iconsax.setting_2,
+                                    LucideIcons.shieldCheck,
                                     color: AppColor.primaryColor,
                                   ),
                                   title: const CustomTitle(
