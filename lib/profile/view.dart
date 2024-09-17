@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:iconsax/iconsax.dart';
+import 'package:lucide_icons/lucide_icons.dart';
 import 'package:luvpark_get/custom_widgets/app_color.dart';
 import 'package:luvpark_get/custom_widgets/custom_appbar.dart';
 import 'package:luvpark_get/custom_widgets/page_loader.dart';
@@ -137,7 +138,7 @@ class Profile extends GetView<ProfileScreenController> {
                               children: <Widget>[
                                 ListTile(
                                   leading: Icon(
-                                    Iconsax.personalcard,
+                                    LucideIcons.userCircle,
                                     color: AppColor.primaryColor,
                                   ),
                                   title: const CustomTitle(
@@ -159,8 +160,12 @@ class Profile extends GetView<ProfileScreenController> {
                                 ),
                                 const Divider(),
                                 ListTile(
+                                  // leading: Icon(
+                                  //   Iconsax.car,
+                                  //   color: AppColor.primaryColor,
+                                  // ),
                                   leading: Icon(
-                                    Iconsax.car,
+                                    LucideIcons.car,
                                     color: AppColor.primaryColor,
                                   ),
                                   title: const CustomTitle(
@@ -180,7 +185,27 @@ class Profile extends GetView<ProfileScreenController> {
                                 const Divider(),
                                 ListTile(
                                   leading: Icon(
-                                    Iconsax.setting_2,
+                                    LucideIcons.info,
+                                    color: AppColor.primaryColor,
+                                  ),
+                                  title: const CustomTitle(
+                                    text: "Help and Feedback",
+                                    fontSize: 14,
+                                    fontStyle: FontStyle.normal,
+                                    fontWeight: FontWeight.w700,
+                                    letterSpacing: -0.408,
+                                    color: Color(0xFF1C1C1E),
+                                  ),
+                                  trailing: Icon(Icons.chevron_right_sharp,
+                                      color: AppColor.primaryColor),
+                                  onTap: () {
+                                    Get.toNamed(Routes.helpfeedback);
+                                  },
+                                ),
+                                const Divider(),
+                                ListTile(
+                                  leading: Icon(
+                                    LucideIcons.shieldCheck,
                                     color: AppColor.primaryColor,
                                   ),
                                   title: const CustomTitle(
@@ -197,6 +222,7 @@ class Profile extends GetView<ProfileScreenController> {
                                     Get.toNamed(Routes.security);
                                   },
                                 ),
+
                                 // Add more ListTiles here if needed
                               ],
                             ),

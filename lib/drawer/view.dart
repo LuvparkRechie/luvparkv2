@@ -121,15 +121,32 @@ class CustomDrawer extends GetView<DashboardMapController> {
                       //   fontWeight: FontWeight.w700,
                       //   color: const Color(0xFF616161),
                       // ),
+                      // ListTile(
+                      //   contentPadding: EdgeInsets.zero,
+                      //   minLeadingWidth: 18,
+                      //   leading: Iconify(
+                      //       MaterialSymbols
+                      //           .collections_bookmark_outline_rounded,
+                      //       color: const Color(0xFF000000)),
+                      //   title: const CustomTitle(
+                      //     text: "About Us",
+                      //     fontSize: 17,
+                      //     fontStyle: FontStyle.normal,
+                      //     fontWeight: FontWeight.w600,
+                      //     letterSpacing: -0.408,
+                      //     color: Color(0xFF1C1C1E),
+                      //   ),
+                      //   onTap: () {
+                      //     Get.toNamed(Routes.aboutus);
+                      //   },
+                      // ),
                       ListTile(
                         contentPadding: EdgeInsets.zero,
                         minLeadingWidth: 18,
-                        leading: Iconify(
-                            MaterialSymbols
-                                .collections_bookmark_outline_rounded,
+                        leading: Iconify(MaterialSymbols.info_outline,
                             color: const Color(0xFF000000)),
                         title: const CustomTitle(
-                          text: "About Us",
+                          text: "Help and Feedback",
                           fontSize: 17,
                           fontStyle: FontStyle.normal,
                           fontWeight: FontWeight.w600,
@@ -137,66 +154,7 @@ class CustomDrawer extends GetView<DashboardMapController> {
                           color: Color(0xFF1C1C1E),
                         ),
                         onTap: () {
-                          Get.toNamed(Routes.aboutus);
-                        },
-                      ),
-                      ListTile(
-                        contentPadding: EdgeInsets.zero,
-                        minLeadingWidth: 18,
-                        leading: Iconify(MaterialSymbols.help_center_outline,
-                            color: const Color(0xFF000000)),
-                        title: const CustomTitle(
-                          text: "FAQs",
-                          fontSize: 17,
-                          fontStyle: FontStyle.normal,
-                          fontWeight: FontWeight.w600,
-                          letterSpacing: -0.408,
-                          color: Color(0xFF1C1C1E),
-                        ),
-                        onTap: () {
-                          Get.toNamed(Routes.faqpage);
-                        },
-                      ),
-                      ListTile(
-                        contentPadding: EdgeInsets.zero,
-                        minLeadingWidth: 18,
-                        leading: Iconify(MaterialSymbols.info_outline_rounded,
-                            color: const Color(0xFF000000)),
-                        title: const CustomTitle(
-                          text: "Terms of Use",
-                          fontSize: 17,
-                          fontStyle: FontStyle.normal,
-                          fontWeight: FontWeight.w600,
-                          letterSpacing: -0.408,
-                          color: Color(0xFF1C1C1E),
-                        ),
-                        onTap: () {
-                          Get.to(const WebviewPage(
-                            urlDirect: "https://luvpark.ph/terms-of-use/",
-                            label: "Terms of Use",
-                            isBuyToken: false,
-                          ));
-                        },
-                      ),
-                      ListTile(
-                        contentPadding: EdgeInsets.zero,
-                        minLeadingWidth: 18,
-                        leading: Iconify(MaterialSymbols.shield_outline,
-                            color: const Color(0xFF000000)),
-                        title: const CustomTitle(
-                          text: "Privacy Policy",
-                          fontSize: 17,
-                          fontStyle: FontStyle.normal,
-                          fontWeight: FontWeight.w600,
-                          letterSpacing: -0.408,
-                          color: Color(0xFF1C1C1E),
-                        ),
-                        onTap: () {
-                          Get.to(const WebviewPage(
-                            urlDirect: "https://luvpark.ph/privacy-policy/",
-                            label: "Privacy Policy",
-                            isBuyToken: false,
-                          ));
+                          Get.toNamed(Routes.helpfeedback);
                         },
                       ),
                     ],
