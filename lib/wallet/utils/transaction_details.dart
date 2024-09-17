@@ -154,7 +154,7 @@ class TransactionDetails extends StatelessWidget {
                 color: Colors.white,
               )),
           child: SvgPicture.asset(
-            fit: BoxFit.cover, height: 50,
+            fit: BoxFit.cover, height: 60,
             "assets/images/${data[index]["tran_desc"] == 'Share a token' ? 'wallet_sharetoken' : data[index]["tran_desc"] == 'Received token' ? 'wallet_receivetoken' : 'wallet_payparking'}.svg",
             //if trans_Desc is equal to Share a token svg is wallet_sharetoken else Receive Token svg is wallet_receivetoken else parking transaction is svg wallet_payparking
           ),
