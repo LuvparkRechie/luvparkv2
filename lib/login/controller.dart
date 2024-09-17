@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -10,6 +9,8 @@ import 'package:luvpark_get/http/http_request.dart';
 import 'package:luvpark_get/routes/routes.dart';
 import 'package:luvpark_get/sqlite/vehicle_brands_model.dart';
 import 'package:luvpark_get/sqlite/vehicle_brands_table.dart';
+
+import '../custom_widgets/variables.dart';
 
 class LoginScreenController extends GetxController {
   LoginScreenController();
@@ -101,8 +102,8 @@ class LoginScreenController extends GetxController {
           ]);
         });
       } else {
+        Variables.gVBrand.value = returnBrandData["items"];
         VehicleBrandsTable.instance.deleteAll();
-
         for (var dataRow in returnBrandData["items"]) {
           var vbData = {
             VHBrandsDataFields.vhTypeId:
@@ -113,7 +114,7 @@ class LoginScreenController extends GetxController {
                 dataRow["vehicle_brand_name"].toString(),
             VHBrandsDataFields.image: dataRow["imageb64"] == null
                 ? ""
-                : dataRow["imageb64"].toString(),
+                : dataRow["imageb64"].toString().replaceAll("\n", ""),
           };
           await VehicleBrandsTable.instance.insertUpdate(vbData);
         }

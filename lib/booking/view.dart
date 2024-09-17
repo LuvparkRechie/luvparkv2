@@ -179,7 +179,7 @@ class BookingPage extends GetView<BookingController> {
                                                       Variables.convertToMeters(
                                                     controller
                                                         .parameters["areaData"]
-                                                            ["distance"]
+                                                            ["current_distance"]
                                                         .toString(),
                                                   )),
                                                   color: Colors.white,

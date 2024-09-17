@@ -7,6 +7,7 @@ import 'dart:ui' as ui;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_image_compress/flutter_image_compress.dart';
+import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:luvpark_get/custom_widgets/app_color.dart';
 import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
@@ -28,6 +29,7 @@ class Variables {
   static String notifTable = 'notification_table';
   static String shareLocTable = 'share_location_table';
   static String lastBooking = 'booking_table';
+  static RxList gVBrand = [].obs;
   //static void Timer? backgroundTimer
   static final emailRegex = RegExp(
     r'^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$',

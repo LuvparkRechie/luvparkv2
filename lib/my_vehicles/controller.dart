@@ -98,17 +98,19 @@ class MyVehiclesController extends GetxController {
         vehicleData.value = [];
 
         for (var row in myVehicles["items"]) {
-          String brandName = await Functions.getBrandName(
-              row["vehicle_type_id"], row["vehicle_brand_id"]);
-          String? image = await Functions.getBrandImage(
+          // String brandName = await Functions.getBrandName(
+          //     row["vehicle_type_id"], row["vehicle_brand_id"]);
+          // String? image = await Functions.getBrandImage(
+          //     row["vehicle_type_id"], row["vehicle_brand_id"]);
+          List dataVBrand = await Functions.getBranding(
               row["vehicle_type_id"], row["vehicle_brand_id"]);
 
           vehicleData.add({
             "vehicle_type_id": row["vehicle_type_id"],
             "vehicle_brand_id": row["vehicle_brand_id"],
-            "vehicle_brand_name": brandName,
+            "vehicle_brand_name": dataVBrand[0]["vehicle_brand_name"],
             "vehicle_plate_no": row["vehicle_plate_no"],
-            "image": image
+            "image": dataVBrand[0]["imageb64"]
           });
         }
         isLoadingAddVh.value = false;

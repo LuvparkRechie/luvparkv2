@@ -12,7 +12,6 @@ import 'package:luvpark_get/custom_widgets/custom_appbar.dart';
 import 'package:luvpark_get/custom_widgets/custom_button.dart';
 import 'package:luvpark_get/custom_widgets/custom_text.dart';
 import 'package:luvpark_get/custom_widgets/no_internet.dart';
-import 'package:luvpark_get/custom_widgets/variables.dart';
 import 'package:luvpark_get/parking_details/controller.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -286,11 +285,7 @@ class ParkingDetails extends GetView<ParkingDetailsController> {
               ),
             ),
             CustomParagraph(
-              text: Variables.gagi(
-                Variables.convertToMeters(
-                  controller.dataNearest["distance"].toString(),
-                ),
-              ),
+              text: controller.dataNearest["distance_display"],
             )
           ],
         ),

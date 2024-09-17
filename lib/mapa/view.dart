@@ -9,7 +9,6 @@ import 'package:luvpark_get/custom_widgets/app_color.dart';
 import 'package:luvpark_get/custom_widgets/custom_body.dart';
 import 'package:luvpark_get/custom_widgets/custom_text.dart';
 import 'package:luvpark_get/custom_widgets/no_internet.dart';
-import 'package:luvpark_get/custom_widgets/variables.dart';
 import 'package:luvpark_get/drawer/view.dart';
 import 'package:luvpark_get/functions/functions.dart';
 import 'package:luvpark_get/routes/routes.dart';
@@ -70,6 +69,7 @@ class DashboardMapScreen extends GetView<DashboardMapController> {
                         SlidingUpPanel(
                           maxHeight: controller.getPanelHeight(),
                           minHeight: controller.panelHeightClosed.value,
+                          panelSnapping: true,
                           collapsed: Container(
                             decoration: const ShapeDecoration(
                               color: Colors.white,
@@ -144,6 +144,7 @@ class DashboardMapScreen extends GetView<DashboardMapController> {
                                 // }),
                                 // const SizedBox(width: 10),
                                 _buildDialItem("parking", () {
+                                  print(" ${controller.dataNearest}");
                                   Get.toNamed(Routes.parkingAreas,
                                       arguments: controller.dataNearest);
                                 }),
@@ -388,7 +389,7 @@ class DashboardMapScreen extends GetView<DashboardMapController> {
         axisDirection: AxisDirection.down,
         child: ListView.builder(
             controller: sc,
-            padding: EdgeInsets.fromLTRB(15, 200, 15, 5),
+            padding: EdgeInsets.fromLTRB(15, 180, 15, 5),
             itemCount: controller.suggestions.length,
             itemBuilder: (context, index) {
               return Column(
@@ -480,16 +481,6 @@ class DashboardMapScreen extends GetView<DashboardMapController> {
             ),
           ),
           Container(height: 20),
-          Obx(
-            () => CustomParagraph(
-              text: controller.myName.value.toString().isEmpty
-                  ? "Welcome to luvpark"
-                  : "${Variables.greeting()}, ${controller.myName.value}",
-              fontSize: 16,
-              fontWeight: FontWeight.w600,
-              letterSpacing: -0.41,
-            ),
-          ),
           const CustomTitle(
             text: "Where do you want to go today?",
             color: Color(0xFF131313),
@@ -595,7 +586,6 @@ class DashboardMapScreen extends GetView<DashboardMapController> {
                   controller.panelController.open();
                 },
                 onChanged: (text) {
-                  print("adfa ");
                   controller.fetchSuggestions();
                   controller.searchCon.text = text;
                   if (text.isEmpty) {

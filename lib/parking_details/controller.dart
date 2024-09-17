@@ -319,14 +319,11 @@ class ParkingDetailsController extends GetxController {
       int minutes = difference.inMinutes;
 
       if (minutes <= 0) {
-        CustomDialog().errorDialog(
-          Get.context!,
-          "luvpark",
-          "Apologies, but we are closed for bookings right now.",
-          () {
-            Get.back();
-          },
-        );
+        CustomDialog().infoDialog(
+            "luvpark", "Apologies, but we are closed for bookings right now.",
+            () {
+          Get.back();
+        });
         return;
       }
       if (minutes <= 29) {

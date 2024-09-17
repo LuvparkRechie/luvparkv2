@@ -59,10 +59,10 @@ class SuggestionsScreen extends StatelessWidget {
                               ? data.take(5).toList().length
                               : data.length,
                           itemBuilder: (context, index) {
-                            print(data[index]["distance"]);
+                            print(data[index]);
                             String getDistanceString() {
                               double kmDist = double.parse(
-                                  data[index]["distance"].toString());
+                                  data[index]["current_distance"].toString());
 
                               if (kmDist >= 1000) {
                                 double distanceInKilometers = kmDist / 1000;

@@ -51,7 +51,6 @@ class _DialogMarkerState extends State<DialogMarker> {
               ],
             ),
             child: LayoutBuilder(builder: (context, constraints) {
-              print("widget.markerData[0] ${widget.markerData[0]}");
               String formatTimeSched(String time) {
                 // Ensure the time string is in 4 characters (HHmm format)
                 if (time.length != 4) {
@@ -110,8 +109,9 @@ class _DialogMarkerState extends State<DialogMarker> {
                     children: [
                       Row(
                         children: [
-                          SvgPicture.asset(
-                              "assets/dashboard_icon/marker_panel/panel_car.svg"),
+                          // SvgPicture.asset(
+                          //     "assets/dashboard_icon/private/car_private.svg"),
+
                           Container(width: 10),
                           Expanded(
                             child: Column(
@@ -183,7 +183,8 @@ class _DialogMarkerState extends State<DialogMarker> {
                                         .toString(),
                                   ),
                                   CustomParagraph(
-                                    text: widget.markerData[0]["distance"]
+                                    text: widget.markerData[0]
+                                            ["distance_display"]
                                         .toString(),
                                     fontSize: 14,
                                   )
@@ -250,7 +251,8 @@ class _DialogMarkerState extends State<DialogMarker> {
                         child: Row(
                           children: [
                             SvgPicture.asset(
-                                "assets/dashboard_icon/marker_panel/panel_parking.svg"),
+                              "assets/dashboard_icon/marker_panel/panel_parking.svg",
+                            ),
                             Container(width: 10),
                             Expanded(
                               child: Column(

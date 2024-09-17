@@ -683,7 +683,7 @@ class Functions {
                     return;
                   } else {
                     bool canCheckIn = Variables.convertToMeters2(
-                                estimatedData[0]["distance"]) >
+                                estimatedData[0]["current_distance"]) >
                             5
                         ? false
                         : true;
@@ -721,7 +721,7 @@ class Functions {
                     } else {
                       //COMPUTE DISTANCE BY DISTANCE IN METERS IF AVAILABLE FOR RESERVATION
                       double estimatedDistance = Variables.convertToMeters2(
-                          estimatedData[0]["distance"].toString());
+                          estimatedData[0]["current_distance"].toString());
                       double minDistance = Variables.convertToMeters2(
                           returnData["items"][0]["min_psr_from"].toString());
                       // double maxDistance = double.parse(
@@ -782,5 +782,13 @@ class Functions {
         await VehicleBrandsTable.instance.getBrandImage(vtId, vbId);
 
     return image!;
+  }
+
+  static Future<List> getBranding(int typeId, int brandId) async {
+    List data = Variables.gVBrand.where((objData) {
+      return objData["vehicle_type_id"] == typeId &&
+          objData["vehicle_brand_id"] == brandId;
+    }).toList();
+    return data;
   }
 }

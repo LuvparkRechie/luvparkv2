@@ -4,7 +4,6 @@ import 'package:luvpark_get/change_password/index.dart';
 import 'package:luvpark_get/faq/index.dart';
 import 'package:luvpark_get/forgot_password/utils/forgot_otp/index.dart';
 import 'package:luvpark_get/forgot_password/utils/forgot_verified_acc/index.dart';
-import 'package:luvpark_get/help_feedback/index.dart';
 import 'package:luvpark_get/my_account/index.dart';
 import 'package:luvpark_get/my_account/utils/index.dart';
 import 'package:luvpark_get/my_account/utils/otp_update/index.dart';
@@ -20,6 +19,7 @@ import '../booking_notice/index.dart';
 import '../forgot_password/index.dart';
 import '../forgot_password/utils/create_new/index.dart';
 import '../forgot_password/utils/forgot_otp/utils/forgot_pass_success.dart';
+import '../help_feedback/index.dart';
 import '../landing/index.dart';
 import '../login/index.dart';
 import '../mapa/index.dart';
@@ -228,11 +228,6 @@ class AppPages {
       name: Routes.otpUpdProfile,
       page: () => const OtpUpdate(),
       binding: OtpUpdateBinding(),
-    ),
-    GetPage(
-      name: Routes.message,
-      page: () => const MessageScreen(),
-      binding: MessageScreenBinding(),
     ),
     GetPage(
       name: Routes.message,

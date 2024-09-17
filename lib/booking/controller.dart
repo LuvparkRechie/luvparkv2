@@ -631,7 +631,7 @@ class BookingController extends GetxController
           noticeData[0]["msg"],
           '',
           'Proceed Booking',
-          imageName: 'pu_confirmation',
+          imageName: 'pu_info',
           btnNotBackgroundColor: Colors.transparent,
           btnNotTextColor: AppColor.primaryColor,
           btnOkTextColor: Colors.white,

@@ -26,7 +26,7 @@ import 'utils/suggestions/suggestions.dart';
 
 // ignore: deprecated_member_use
 class DashboardMapController extends GetxController
-    with GetTickerProviderStateMixin {
+    with GetTickerProviderStateMixin, WidgetsBindingObserver {
   // Dependencies
   final GlobalKey<ScaffoldState> dashboardScaffoldKey =
       GlobalKey<ScaffoldState>();
@@ -82,12 +82,14 @@ class DashboardMapController extends GetxController
   RxString brandName = "".obs;
   late StreamController<void> _dataController;
   late StreamSubscription<void> dataSubscription;
+  LatLng currentCoord = LatLng(0, 0);
 //panel gg
-  RxDouble panelHeightOpen = 200.0.obs;
+  RxDouble panelHeightOpen = 180.0.obs;
   RxDouble initFabHeight = 80.0.obs;
   RxDouble fabHeight = 0.0.obs;
   RxDouble panelHeightClosed = 60.0.obs;
   RxBool isOPenFab = false.obs;
+  bool _isKeyboardVisible = false;
 
   @override
   void onInit() {
@@ -120,6 +122,7 @@ class DashboardMapController extends GetxController
     getDefaultLocation();
     fabHeight.value = panelHeightOpen.value + 30;
     _dataController = StreamController<void>();
+    WidgetsBinding.instance.addObserver(this);
   }
 
   @override
@@ -130,24 +133,37 @@ class DashboardMapController extends GetxController
     animationController.dispose();
     _dataController.close();
     dataSubscription.cancel();
+    WidgetsBinding.instance.removeObserver(this);
+  }
+
+  @override
+  void didChangeMetrics() {
+    super.didChangeMetrics();
+    final isKeyboardVisible =
+        WidgetsBinding.instance.window.viewInsets.bottom > 0;
+
+    _isKeyboardVisible = isKeyboardVisible;
+
+    panelController.open();
   }
 
   double getPanelHeight() {
     double bottomInset = MediaQuery.of(Get.context!).viewInsets.bottom;
-    print("bottomInset $bottomInset");
     double height = suggestions.isEmpty
         ? bottomInset != 0
             ? bottomInset + 20
-            : 200
+            : 180
         : bottomInset != 0
             ? bottomInset + 20
             : MediaQuery.of(Get.context!).size.height * 0.70;
-    print("inatay $height");
+
     panelHeightOpen.value = height;
+
     return height;
   }
 
   void onPanelSlide(double pos) {
+    print("ataya ${panelHeightOpen.value}");
     fabHeight.value = pos * (panelHeightOpen.value - panelHeightClosed.value) +
         initFabHeight.value;
   }
@@ -219,7 +235,7 @@ class DashboardMapController extends GetxController
         List ltlng = await Functions.getCurrentPosition();
         LatLng coordinates = LatLng(ltlng[0]["lat"], ltlng[0]["long"]);
         searchCoordinates = coordinates;
-
+        currentCoord = coordinates;
         bridgeLocation(coordinates);
       } else {
         isLoading.value = true;
@@ -249,9 +265,9 @@ class DashboardMapController extends GetxController
     });
   }
 
-  void getNearest(dynamic userData, coordinates) async {
+  void getNearest(dynamic userData, LatLng coordinates) async {
     String params =
-        "${ApiKeys.gApiSubGetNearybyParkings}?is_allow_overnight=$isAllowOverNight&parking_type_code=$pTypeCode&latitude=${coordinates.latitude}&longitude=${coordinates.longitude}&radius=${Variables.convertToMeters(ddRadius.value.toString())}&parking_amenity_code=$amenities&vehicle_type_id=$vtypeId";
+        "${ApiKeys.gApiSubGetNearybyParkings}?is_allow_overnight=$isAllowOverNight&parking_type_code=$pTypeCode&current_latitude=${currentCoord.latitude}&current_longitude=${currentCoord.longitude}&search_latitude=${coordinates.latitude}&search_longitude=${coordinates.longitude}&radius=${Variables.convertToMeters(ddRadius.value.toString())}&parking_amenity_code=$amenities&vehicle_type_id=$vtypeId";
     print(" params$params");
     try {
       var returnData = await HttpRequest(api: params).get();
@@ -289,8 +305,7 @@ class DashboardMapController extends GetxController
   void handleServerError() {
     netConnected.value = true;
     isLoading.value = false;
-    CustomDialog().errorDialog(Get.context!, "Internet Error",
-        "Error while connecting to server, Please contact support.", () {
+    CustomDialog().serverErrorDialog(Get.context!, () {
       Get.back();
     });
     return;
@@ -341,7 +356,7 @@ class DashboardMapController extends GetxController
         double.parse(userBal[0]["min_wallet_bal"].toString())) {
       initialCameraPosition = CameraPosition(
         target: searchCoordinates,
-        zoom: nearData.isEmpty ? 14 : 15,
+        zoom: nearData.isEmpty ? 14 : 16,
         tilt: 0,
         bearing: 0,
       );
@@ -429,8 +444,8 @@ class DashboardMapController extends GetxController
   //Book marker dialog
   Future<void> bookMarkerNow(data, Function cb) async {
     CustomDialog().loadingDialog(Get.context!);
-
     LatLng destLoc = LatLng(data[0]["pa_latitude"], data[0]["pa_longitude"]);
+
     if (data[0]["is_allow_reserve"] == "N") {
       cb(true);
       Get.back();
@@ -587,7 +602,7 @@ class DashboardMapController extends GetxController
           CameraPosition(
               target: LatLng(initialCameraPosition!.target.latitude,
                   initialCameraPosition!.target.longitude),
-              zoom: dataNearest.isEmpty ? 14 : 15),
+              zoom: dataNearest.isEmpty ? 14 : 16),
         ),
       );
     }
@@ -724,9 +739,10 @@ class DashboardMapController extends GetxController
                   double.parse(items["pa_latitude"].toString()),
                   double.parse(items["pa_longitude"].toString()));
               final estimatedData = await Functions.fetchETA(coordinates, dest);
-              print("data $estimatedData");
+
               markerData = markerData.map((e) {
-                e["distance"] = "${estimatedData[0]["distance"]} away";
+                e["distance_display"] =
+                    "${estimatedData[0]["current_distance"]} away";
                 e["time_arrival"] = estimatedData[0]["time"];
                 return e;
               }).toList();

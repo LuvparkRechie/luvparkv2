@@ -248,7 +248,7 @@ class CustomDialog {
             ),
             clipBehavior: Clip.hardEdge,
             child: Image.asset(
-              'assets/images/pu_confirmation.png', // Use the static image name
+              'assets/images/pu_info.png', // Use the static image name
               fit: BoxFit.cover,
               height: 100,
               width: double.infinity,
