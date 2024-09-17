@@ -22,6 +22,7 @@ class TransactionDetails extends StatelessWidget {
       alignment: Alignment.topCenter,
       children: [
         Column(
+          mainAxisAlignment: MainAxisAlignment.end,
           children: [
             SizedBox(
               height: 38,
