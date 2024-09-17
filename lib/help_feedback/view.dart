@@ -92,7 +92,7 @@ class HelpandFeedback extends GetView<HelpandFeedbackController> {
                     letterSpacing: -0.408,
                   ),
                   subtitle: const CustomParagraph(
-                    text: "Understand how we handle your personal information.",
+                    text: "Know the meaning and purpose of the application.",
                     letterSpacing: -0.408,
                     fontSize: 12,
                   ),
