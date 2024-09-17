@@ -29,11 +29,11 @@ class CustomDrawer extends GetView<DashboardMapController> {
         behavior: ScrollBehavior().copyWith(overscroll: false),
         child: Column(
           children: [
-            SizedBox(height: 70),
+            SizedBox(height: 50),
             Align(
               alignment: Alignment.centerLeft,
               child: Image(
-                height: 70,
+                height: 60,
                 image: AssetImage("assets/images/luvpark.png"),
               ),
             ),
@@ -190,6 +190,7 @@ class CustomDrawer extends GetView<DashboardMapController> {
                       },
                     ),
                     ListTile(
+                      minLeadingWidth: 18,
                       contentPadding: EdgeInsets.zero,
                       leading:
                           Iconify(MaterialSymbols.logout, color: Colors.red),
