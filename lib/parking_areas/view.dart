@@ -103,7 +103,6 @@ class ParkingAreas extends GetView<ParkingAreasController> {
                       },
                       itemCount: ct.searchedZone.length,
                       itemBuilder: (context, index) {
-                        print("inataya ${ct.searchedZone[index]}");
                         String getDistanceString() {
                           double kmDist = double.parse(ct.searchedZone[index]
                                   ["current_distance"]
@@ -142,9 +141,6 @@ class ParkingAreas extends GetView<ParkingAreasController> {
 
                               controller.markerData = ct.searchedZone;
 
-                              print(
-                                  "controller.markerData  ${controller.markerData}");
-
                               List ltlng = await Functions.getCurrentPosition();
                               LatLng coordinates =
                                   LatLng(ltlng[0]["lat"], ltlng[0]["long"]);
@@ -161,7 +157,7 @@ class ParkingAreas extends GetView<ParkingAreasController> {
                               controller.markerData.value =
                                   controller.markerData.map((e) {
                                 e["distance_display"] =
-                                    "${estimatedData[0]["current_distance"]} away";
+                                    "${estimatedData[0]["distance"]} away";
                                 e["time_arrival"] = estimatedData[0]["time"];
                                 return e;
                               }).toList();

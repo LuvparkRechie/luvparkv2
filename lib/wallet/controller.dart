@@ -55,7 +55,6 @@ class WalletController extends GetxController
   }
 
   Future<void> getUserBalance() async {
-    print("get user balance");
     final userPp = await Authentication().getUserProfilePic();
     var uData = await Authentication().getUserData();
     var item = jsonDecode(uData!);

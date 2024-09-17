@@ -170,7 +170,7 @@ class BookingReceiptController extends GetxController
           .postBody()
           .then((objData) async {
         Get.back();
-        // print(objData);
+
         if (objData == "No Internet") {
           CustomDialog().internetErrorDialog(Get.context!, () {
             Get.back();

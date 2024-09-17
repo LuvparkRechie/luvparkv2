@@ -34,8 +34,7 @@ class DashboardMapController extends GetxController
   final TextEditingController searchCon = TextEditingController();
   final PanelController panelController = PanelController();
   late AnimationController animationController;
-  late AnimationController animationDialController;
-  late Animation<Offset> slideAnimation;
+
   RxBool isSidebarVisible = false.obs;
   bool isFilter = false;
   GoogleMapController? gMapController;
@@ -89,7 +88,7 @@ class DashboardMapController extends GetxController
   RxDouble fabHeight = 0.0.obs;
   RxDouble panelHeightClosed = 60.0.obs;
   RxBool isOPenFab = false.obs;
-  bool _isKeyboardVisible = false;
+  bool isKeyboardVisible = false;
 
   @override
   void onInit() {
@@ -105,17 +104,6 @@ class DashboardMapController extends GetxController
       vsync: this,
       duration: const Duration(milliseconds: 300),
     );
-    animationDialController = AnimationController(
-      vsync: this,
-      duration: const Duration(milliseconds: 100),
-    );
-    slideAnimation = Tween<Offset>(
-      begin: const Offset(-1, 0), // Start off-screen to the left
-      end: Offset.zero, // End at the screen edge
-    ).animate(CurvedAnimation(
-      parent: animationController,
-      curve: Curves.easeInOut,
-    ));
 
     getLastBooking();
     getUserData();
@@ -129,7 +117,7 @@ class DashboardMapController extends GetxController
   void onClose() {
     super.onClose();
     gMapController!.dispose();
-    animationDialController.dispose();
+
     animationController.dispose();
     _dataController.close();
     dataSubscription.cancel();
@@ -139,11 +127,7 @@ class DashboardMapController extends GetxController
   @override
   void didChangeMetrics() {
     super.didChangeMetrics();
-    final isKeyboardVisible =
-        WidgetsBinding.instance.window.viewInsets.bottom > 0;
-
-    _isKeyboardVisible = isKeyboardVisible;
-
+    print("adfsaf %dfaf");
     panelController.open();
   }
 
@@ -163,15 +147,8 @@ class DashboardMapController extends GetxController
   }
 
   void onPanelSlide(double pos) {
-    print("ataya ${panelHeightOpen.value}");
     fabHeight.value = pos * (panelHeightOpen.value - panelHeightClosed.value) +
         initFabHeight.value;
-  }
-
-  void updateFabInit(bool isOpen) {
-    isOPenFab.value = isOpen;
-    panelHeightOpen.value = getPanelHeight(); // Ensure it recalculates
-    onPanelSlide(isOpen ? 1.0 : 0.0);
   }
 
   void streamData() {
@@ -254,7 +231,7 @@ class DashboardMapController extends GetxController
         netConnected.value = false;
         isLoading.value = false;
         gMapController!.dispose();
-        animationDialController.dispose();
+
         animationController.dispose();
         _dataController.close();
         dataSubscription.cancel();
@@ -360,7 +337,7 @@ class DashboardMapController extends GetxController
         tilt: 0,
         bearing: 0,
       );
-      print("animate camera ${isLoading.value}");
+
       animateCamera();
     }
   }
@@ -510,15 +487,11 @@ class DashboardMapController extends GetxController
     addressText = "".obs;
     isAllowOverNight = "";
 
-    animationDialController.value = 0.0;
-
     getDefaultLocation();
   }
 
   //get curr location
   Future<void> getFilterNearest(data) async {
-    print("data $data");
-
     List ltlng = await Functions.getCurrentPosition();
     LatLng coordinates = LatLng(ltlng[0]["lat"], ltlng[0]["long"]);
     ddRadius.value = data[0]["radius"];
@@ -554,11 +527,13 @@ class DashboardMapController extends GetxController
 
   void onCameraMoveStarted() {
     isGetNearData.value = false;
+    if (panelController.isPanelOpen) {
+      panelController.close();
+    }
   }
 
   void onCameraIdle() async {
     isGetNearData.value = true;
-    print("suggestion ${suggestions.length}");
     if (suggestions.isEmpty) {
       panelController.open();
     }
@@ -741,8 +716,7 @@ class DashboardMapController extends GetxController
               final estimatedData = await Functions.fetchETA(coordinates, dest);
 
               markerData = markerData.map((e) {
-                e["distance_display"] =
-                    "${estimatedData[0]["current_distance"]} away";
+                e["distance_display"] = "${estimatedData[0]["distance"]} away";
                 e["time_arrival"] = estimatedData[0]["time"];
                 return e;
               }).toList();
@@ -843,7 +817,6 @@ class DashboardMapController extends GetxController
       DialogMarker(
           markerData: data,
           cb: (datas) {
-            print("data");
             isMarkerTapped.value = false;
             isGetNearData.value = true;
           }),

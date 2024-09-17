@@ -22,6 +22,78 @@ class DialogMarker extends StatefulWidget {
 }
 
 class _DialogMarkerState extends State<DialogMarker> {
+  String getIconAssetForPwdDetails(
+      String parkingTypeCode, String vehicleTypes) {
+    switch (parkingTypeCode) {
+      case "S":
+        if (vehicleTypes.contains("Motorcycle") &&
+            vehicleTypes.contains("Trikes and Cars")) {
+          return 'assets/details_logo/blue/blue_cmp.svg';
+        } else if (vehicleTypes.contains("Motorcycle")) {
+          return 'assets/details_logo/blue/blue_mp.svg';
+        } else {
+          return 'assets/details_logo/blue/blue_cp.svg';
+        }
+      case "P":
+        if (vehicleTypes.contains("Motorcycle") &&
+            vehicleTypes.contains("Trikes and Cars")) {
+          return 'assets/details_logo/orange/orange_cmp.svg';
+        } else if (vehicleTypes.contains("Motorcycle")) {
+          return 'assets/details_logo/orange/orange_mp.svg';
+        } else {
+          return 'assets/details_logo/orange/orange_cp.svg';
+        }
+      case "C":
+        if (vehicleTypes.contains("Motorcycle") &&
+            vehicleTypes.contains("Trikes and Cars")) {
+          return 'assets/details_logo/green/green_cmp.svg';
+        } else if (vehicleTypes.contains("Motorcycle")) {
+          return 'assets/details_logo/green/green_mp.svg';
+        } else {
+          return 'assets/details_logo/green/green_cp.svg';
+        }
+      default:
+        return 'assets/details_logo/violet/violet.svg'; // Valet
+    }
+  }
+
+  static String getIconAssetForNonPwdDetails(
+      String parkingTypeCode, String vehicleTypes) {
+    switch (parkingTypeCode) {
+      case "S":
+        if (vehicleTypes.contains("Motorcycle") &&
+            vehicleTypes.contains("Trikes and Cars")) {
+          return 'assets/details_logo/blue/blue_cm.svg';
+        } else if (vehicleTypes.contains("Motorcycle")) {
+          return 'assets/details_logo/blue/blue_motor.svg';
+        } else {
+          return 'assets/details_logo/blue/blue_car.svg';
+        }
+      case "P":
+        if (vehicleTypes.contains("Motorcycle") &&
+            vehicleTypes.contains("Trikes and Cars")) {
+          return 'assets/details_logo/orange/orange_cm.svg';
+        } else if (vehicleTypes.contains("Motorcycle")) {
+          return 'assets/details_logo/orange/orange_motor.svg';
+        } else {
+          return 'assets/details_logo/orange/orange_car.svg';
+        }
+      case "C":
+        if (vehicleTypes.contains("Motorcycle") &&
+            vehicleTypes.contains("Trikes and Cars")) {
+          return 'assets/details_logo/green/green_cm.svg';
+        } else if (vehicleTypes.contains("Motorcycle")) {
+          return 'assets/details_logo/green/green_motor.svg';
+        } else {
+          return 'assets/details_logo/green/green_car.svg';
+        }
+      case "V":
+        return 'assets/details_logo/violet/violet.svg'; // Valet
+      default:
+        return 'assets/images/no_image.png'; // Fallback icon
+    }
+  }
+
   @override
   void initState() {
     super.initState();
@@ -102,6 +174,20 @@ class _DialogMarkerState extends State<DialogMarker> {
               bool isOpen =
                   Functions.checkAvailability(finalSttime, finalEndtime);
 
+              final String isPwd = widget.markerData[0]["is_pwd"] ?? "N";
+              final String vehicleTypes =
+                  widget.markerData[0]["vehicle_types_list"];
+              String iconAsset;
+
+              if (isPwd == "Y") {
+                iconAsset = getIconAssetForPwdDetails(
+                    widget.markerData[0]["parking_type_code"], vehicleTypes);
+              } else {
+                iconAsset = getIconAssetForNonPwdDetails(
+                    widget.markerData[0]["parking_type_code"], vehicleTypes);
+              }
+
+              print("widget.markerData[0] ${widget.markerData[0]}");
               return Padding(
                   padding: const EdgeInsets.fromLTRB(15.0, 22, 15, 20),
                   child: Column(
@@ -109,9 +195,18 @@ class _DialogMarkerState extends State<DialogMarker> {
                     children: [
                       Row(
                         children: [
-                          // SvgPicture.asset(
-                          //     "assets/dashboard_icon/private/car_private.svg"),
-
+                          LayoutBuilder(
+                            builder: ((context, constraints) {
+                              return iconAsset.contains("png")
+                                  ? Image(
+                                      image: AssetImage(iconAsset),
+                                      height: 50,
+                                      width: 50,
+                                    )
+                                  : SvgPicture.asset(
+                                      height: 50, width: 50, iconAsset);
+                            }),
+                          ),
                           Container(width: 10),
                           Expanded(
                             child: Column(

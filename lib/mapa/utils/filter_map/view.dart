@@ -50,7 +50,7 @@ class _FilterMapState extends State<FilterMap> {
       e["radius"] = currentDistance.toStringAsFixed(2);
       return e;
     }).toList();
-    print("tatata $filterParam");
+
     loadData();
   }
 

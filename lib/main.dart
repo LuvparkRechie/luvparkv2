@@ -35,7 +35,7 @@ Future<void> backgroundFunc() async {
       await getParkingTrans(counter);
 
       await getMessNotif();
-    } else {}
+    }
   });
 }
 

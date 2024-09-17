@@ -649,7 +649,7 @@ class Functions {
             if (hasInternet) {
               final estimatedData = await Functions.fetchETA(
                   LatLng(ll.latitude, ll.longitude), dest);
-              print("estimatedData $estimatedData");
+
               if (estimatedData[0]["error"] == "No Internet") {
                 cb({"success": false});
 
@@ -683,7 +683,7 @@ class Functions {
                     return;
                   } else {
                     bool canCheckIn = Variables.convertToMeters2(
-                                estimatedData[0]["current_distance"]) >
+                                estimatedData[0]["distance"]) >
                             5
                         ? false
                         : true;
@@ -721,7 +721,7 @@ class Functions {
                     } else {
                       //COMPUTE DISTANCE BY DISTANCE IN METERS IF AVAILABLE FOR RESERVATION
                       double estimatedDistance = Variables.convertToMeters2(
-                          estimatedData[0]["current_distance"].toString());
+                          estimatedData[0]["distance"].toString());
                       double minDistance = Variables.convertToMeters2(
                           returnData["items"][0]["min_psr_from"].toString());
                       // double maxDistance = double.parse(
@@ -775,13 +775,6 @@ class Functions {
         await VehicleBrandsTable.instance.readVehicleBrandsByVbId(vtId, vbId);
 
     return brandName!;
-  }
-
-  static Future<String> getBrandImage(int vtId, int vbId) async {
-    final String? image =
-        await VehicleBrandsTable.instance.getBrandImage(vtId, vbId);
-
-    return image!;
   }
 
   static Future<List> getBranding(int typeId, int brandId) async {

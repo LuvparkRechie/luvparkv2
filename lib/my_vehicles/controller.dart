@@ -268,13 +268,11 @@ class MyVehiclesController extends GetxController {
     if (imageFile != null) {
       state = AppState.picked;
       imageFile!.readAsBytes().then((data) {
-        print("data $data");
         if (isOr) {
           orImageBase64.value = base64.encode(data);
         } else {
           crImageBase64.value = base64.encode(data);
         }
-        print("orImageBase64 $orImageBase64");
       });
     } else {
       if (isOr) {

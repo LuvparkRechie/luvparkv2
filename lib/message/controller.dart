@@ -1,14 +1,13 @@
 import 'package:get/get.dart';
-import 'package:luvpark_get/auth/authentication.dart';
 import 'package:luvpark_get/custom_widgets/alert_dialog.dart';
 import 'package:luvpark_get/http/http_request.dart';
 
 import '../http/api_keys.dart';
+import '../sqlite/pa_message_table.dart';
 
 class MessageScreenController extends GetxController {
   MessageScreenController();
   RxBool isLoading = true.obs;
-  RxBool isNetConn = true.obs;
   RxList messages = [].obs;
 
   @override
@@ -19,44 +18,13 @@ class MessageScreenController extends GetxController {
 
   Future<void> refresher() async {
     isLoading.value = true;
-    isNetConn.value = true;
-    getMessages();
+    getInataysiMae();
   }
 
-  Future<void> getMessages() async {
-    int userId = await Authentication().getUserId();
-    String subApi = "${ApiKeys.gApiLuvParkMessageNotif}?user_id=$userId";
-    HttpRequest(api: subApi).get().then((objData) {
-      print("objData $objData");
-      if (objData == "No Internet") {
-        isLoading.value = false;
-        isNetConn.value = false;
-        messages.value = [];
-        CustomDialog().internetErrorDialog(Get.context!, () => Get.back());
-        return;
-      }
-      if (objData == null) {
-        isLoading.value = false;
-        isNetConn.value = true;
-        messages.value = [];
-        CustomDialog().errorDialog(
-          Get.context!,
-          "luvpark",
-          "Error while connecting to server, Please contact support.",
-          () => Get.back(),
-        );
-        return;
-      }
-      if (objData["items"].isNotEmpty) {
-        isLoading.value = false;
-        isNetConn.value = true;
-        messages.value = objData["items"];
-      } else {
-        isLoading.value = false;
-        isNetConn.value = true;
-        messages.value = [];
-      }
-    });
+  Future<void> getInataysiMae() async {
+    final data = await PaMessageDatabase.instance.readAllMessage();
+
+    messages.value = data;
   }
 
   Future<void> deleteMessage(int index) async {
@@ -64,36 +32,76 @@ class MessageScreenController extends GetxController {
         "Are you sure you want to delete this message?", "Cancel", "Yes", () {
       Get.back();
     }, () {
-      messages.removeAt(index);
       Get.back();
+      CustomDialog().loadingDialog(Get.context!);
+      var params = {
+        "push_status": "R",
+        "push_msg_id": messages[index]["push_msg_id"],
+      };
+      HttpRequest(
+              api: ApiKeys.gApiLuvParkPutUpdMessageNotif, parameters: params)
+          .put()
+          .then((updateData) async {
+        print("updateData $updateData");
+        if (updateData == "No Internet") {
+          Get.back();
+          CustomDialog().internetErrorDialog(Get.context!, () {
+            Get.back();
+          });
+          return;
+        }
+        if (updateData == null) {
+          Get.back();
+          CustomDialog().serverErrorDialog(Get.context!, () {
+            Get.back();
+          });
+          return;
+        }
+        if (updateData["success"] == "Y") {
+          int messageId =
+              int.tryParse(messages[index]["push_msg_id"].toString()) ?? -1;
+          int rowsAffected =
+              await PaMessageDatabase.instance.deleteMessageById(messageId);
+
+          if (rowsAffected > 0) {
+            Get.back();
+            CustomDialog().successDialog(
+                Get.context!, "Success", "Successfully deleted.", "Okay", () {
+              Get.back();
+              refresher();
+            });
+          } else {
+            Get.back();
+            CustomDialog().errorDialog(
+                Get.context!, "Delete Message", "Failed to delete message.",
+                () {
+              Get.back();
+            });
+          }
+        } else {
+          Get.back();
+          CustomDialog().infoDialog("Delete Message", updateData["msg"], () {
+            Get.back();
+          });
+        }
+      });
     });
   }
 
-  Future<void> deleteAll() async {
-    if (messages.isEmpty) {
-      CustomDialog().errorDialog(Get.context!, "luvpark", "No messages found",
-          () {
-        Get.back();
-      });
-    } else {
-      CustomDialog().confirmationDialog(Get.context!, "luvpark",
-          "Are you sure you want to delete all messages?", "Cancel", "Yes", () {
-        Get.back();
-      }, () {
-        messages.clear();
-        Get.back();
-      });
-    }
-  }
-
-  // Future<void> markForDeletion(int index) async {
-  //   if (index >= 0 && index < messages.length) {
-  //     var message = messages[index];
-  //     if (message['isMarkedForDeletion'] == null) {
-  //       message['isMarkedForDeletion'] = false;
-  //     }
-  //     message['isMarkedForDeletion'] = !message['isMarkedForDeletion'];
-  //     messages[index] = message;
+  // Future<void> deleteAll() async {
+  //   if (messages.isEmpty) {
+  //     CustomDialog().errorDialog(Get.context!, "luvpark", "No messages found",
+  //         () {
+  //       Get.back();
+  //     });
+  //   } else {
+  //     CustomDialog().confirmationDialog(Get.context!, "luvpark",
+  //         "Are you sure you want to delete all messages?", "Cancel", "Yes", () {
+  //       Get.back();
+  //     }, () {
+  //       messages.clear();
+  //       Get.back();
+  //     });
   //   }
   // }
 }

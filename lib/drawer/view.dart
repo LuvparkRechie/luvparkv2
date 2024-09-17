@@ -45,26 +45,18 @@ class CustomDrawer extends GetView<DashboardMapController> {
                   child: ListView(
                     padding: const EdgeInsets.fromLTRB(20, 15, 15, 0),
                     children: <Widget>[
-                      // CustomTitle(
-                      //   text: "My Account".toUpperCase(),
-                      //   fontSize: 18,
-                      //   fontStyle: FontStyle.normal,
-                      //   letterSpacing: -0.408,
-                      //   fontWeight: FontWeight.w700,
-                      //   color: const Color(0xFF616161),
-                      // ),
                       ListTile(
                         contentPadding: EdgeInsets.zero,
                         minLeadingWidth: 18,
                         leading: Iconify(
-                            MaterialSymbols.directions_car_outline_rounded,
-                            color: const Color(0xFF000000)),
-                        title: const CustomTitle(
+                          MaterialSymbols.directions_car_outline_rounded,
+                          color: const Color.fromARGB(221, 32, 32, 32),
+                        ),
+                        title: const CustomParagraph(
                           text: "My Parking",
-                          fontSize: 17,
+                          fontSize: 16,
                           fontStyle: FontStyle.normal,
                           fontWeight: FontWeight.w600,
-                          letterSpacing: -0.408,
                           color: Color(0xFF1C1C1E),
                         ),
                         onTap: () {
@@ -78,16 +70,16 @@ class CustomDrawer extends GetView<DashboardMapController> {
                         //     color: const Color(0xFF000000)),
                         leading: Icon(
                           LucideIcons.walletCards,
-                          color: Colors.black,
+                          color: const Color.fromARGB(221, 32, 32, 32),
                         ),
-                        title: const CustomTitle(
+                        title: const CustomParagraph(
                           text: "Wallet",
-                          fontSize: 17,
+                          fontSize: 16,
                           fontStyle: FontStyle.normal,
                           fontWeight: FontWeight.w600,
-                          letterSpacing: -0.408,
                           color: Color(0xFF1C1C1E),
                         ),
+
                         onTap: () {
                           Get.toNamed(Routes.wallet);
                         },
@@ -99,58 +91,30 @@ class CustomDrawer extends GetView<DashboardMapController> {
                         //     color: const Color(0xFF000000)),
                         leading: Icon(
                           LucideIcons.messageSquare,
-                          color: Colors.black,
+                          color: const Color.fromARGB(221, 32, 32, 32),
                         ),
-                        title: const CustomTitle(
+                        title: const CustomParagraph(
                           text: "Messages",
-                          fontSize: 17,
+                          fontSize: 16,
                           fontStyle: FontStyle.normal,
                           fontWeight: FontWeight.w600,
-                          letterSpacing: -0.408,
                           color: Color(0xFF1C1C1E),
                         ),
+
                         onTap: () {
                           Get.toNamed(Routes.message);
                         },
                       ),
-                      // CustomTitle(
-                      //   text: "Help and Support".toUpperCase(),
-                      //   fontSize: 18,
-                      //   fontStyle: FontStyle.normal,
-                      //   letterSpacing: -0.408,
-                      //   fontWeight: FontWeight.w700,
-                      //   color: const Color(0xFF616161),
-                      // ),
-                      // ListTile(
-                      //   contentPadding: EdgeInsets.zero,
-                      //   minLeadingWidth: 18,
-                      //   leading: Iconify(
-                      //       MaterialSymbols
-                      //           .collections_bookmark_outline_rounded,
-                      //       color: const Color(0xFF000000)),
-                      //   title: const CustomTitle(
-                      //     text: "About Us",
-                      //     fontSize: 17,
-                      //     fontStyle: FontStyle.normal,
-                      //     fontWeight: FontWeight.w600,
-                      //     letterSpacing: -0.408,
-                      //     color: Color(0xFF1C1C1E),
-                      //   ),
-                      //   onTap: () {
-                      //     Get.toNamed(Routes.aboutus);
-                      //   },
-                      // ),
                       ListTile(
                         contentPadding: EdgeInsets.zero,
                         minLeadingWidth: 18,
                         leading: Iconify(MaterialSymbols.info_outline,
-                            color: const Color(0xFF000000)),
-                        title: const CustomTitle(
-                          text: "Help and Feedback",
-                          fontSize: 17,
+                            color: const Color.fromARGB(221, 32, 32, 32)),
+                        title: const CustomParagraph(
+                          text: "Help & Feedback",
+                          fontSize: 16,
                           fontStyle: FontStyle.normal,
                           fontWeight: FontWeight.w600,
-                          letterSpacing: -0.408,
                           color: Color(0xFF1C1C1E),
                         ),
                         onTap: () {
@@ -188,7 +152,7 @@ class CustomDrawer extends GetView<DashboardMapController> {
                             'Are you sure you want to logout',
                             'Cancel',
                             'Yes, log out',
-                            imageName: 'pu_confirmation',
+                            imageName: 'pu_info',
                             btnNotBackgroundColor: Colors.transparent,
                             btnNotTextColor: AppColor.primaryColor,
                             btnOkTextColor: Colors.white,

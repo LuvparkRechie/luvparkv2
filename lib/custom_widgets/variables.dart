@@ -558,4 +558,22 @@ class Variables {
         await resizedFrameInfo.image.toByteData(format: ui.ImageByteFormat.png);
     return resizedByteData!.buffer.asUint8List();
   }
+
+// '16:30'; format
+  static String timeFormatter(String time) {
+    print(time);
+    try {
+      // Parse the 24-hour time into a DateTime object
+      DateFormat format24Hour = DateFormat('HH:mm');
+      DateTime dateTime = format24Hour.parse(time.trim());
+
+      // Convert to 12-hour format with AM/PM
+      DateFormat format12Hour = DateFormat('h:mm a');
+      return format12Hour.format(dateTime);
+    } catch (e) {
+      // Handle parsing errors if necessary
+      print("Error parsing time: $e");
+      return 'Invalid time'; // Return a default value or error message
+    }
+  }
 }

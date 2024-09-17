@@ -61,6 +61,7 @@ class BookingController extends GetxController
   RxBool isFirstScreen = true.obs;
   RxBool isLoadingVehicles = true.obs;
   RxBool isNetConnVehicles = true.obs;
+  RxBool isShowNotice = false.obs;
   RxList myVehiclesData = [].obs;
   RxList ddVehiclesData = [].obs;
   String? dropdownValue;
@@ -116,6 +117,9 @@ class BookingController extends GetxController
 
   void _handleInactivity() {
     inactivityTimer?.cancel();
+    if (isShowNotice.value) {
+      Get.back();
+    }
     CustomDialog().errorDialog(Get.context!, "No Interaction Detected",
         "No Gestures were detected within the last minute. Reloading the page",
         () {
@@ -216,6 +220,7 @@ class BookingController extends GetxController
         vehicleTypeData.value = dataVehicle;
         _updateMaskFormatter(vehicleTypeData[0]["format"]);
       }
+
       getNotice();
     });
   }
@@ -600,6 +605,7 @@ class BookingController extends GetxController
   Future<void> getNotice() async {
     isInternetConn.value = true;
     isLoadingPage.value = true;
+    isShowNotice.value = true;
     String subApi = "${ApiKeys.gApiLuvParkGetNotice}?msg_code=PREBOOKMSG";
 
     HttpRequest(api: subApi).get().then((retDataNotice) async {
@@ -607,6 +613,7 @@ class BookingController extends GetxController
         isLoadingPage.value = false;
         isInternetConn.value = false;
         noticeData.value = [];
+        isShowNotice.value = false;
         CustomDialog().internetErrorDialog(Get.context!, () {
           Get.back();
         });
@@ -616,6 +623,7 @@ class BookingController extends GetxController
         isInternetConn.value = true;
         isLoadingPage.value = true;
         noticeData.value = [];
+        isShowNotice.value = false;
         CustomDialog().serverErrorDialog(Get.context!, () {
           Get.back();
         });
@@ -624,28 +632,31 @@ class BookingController extends GetxController
         isInternetConn.value = true;
         isLoadingPage.value = false;
         noticeData.value = retDataNotice["items"];
-
-        CustomDialog().customPopUp(
-          Get.context!,
-          noticeData[0]["msg_title"],
-          noticeData[0]["msg"],
-          '',
-          'Proceed Booking',
-          imageName: 'pu_info',
-          btnNotBackgroundColor: Colors.transparent,
-          btnNotTextColor: AppColor.primaryColor,
-          btnOkTextColor: Colors.white,
-          btnOkBackgroundColor: AppColor.primaryColor,
-          onTapClose: () async {},
-          onTapConfirm: () async {
-            Get.back();
-          },
-          showTwoButtons: false,
-        );
+        Timer(Duration(milliseconds: 500), () {
+          CustomDialog().customPopUp(
+            Get.context!,
+            noticeData[0]["msg_title"],
+            noticeData[0]["msg"],
+            '',
+            'Proceed Booking',
+            imageName: 'pu_info',
+            btnNotBackgroundColor: Colors.transparent,
+            btnNotTextColor: AppColor.primaryColor,
+            btnOkTextColor: Colors.white,
+            btnOkBackgroundColor: AppColor.primaryColor,
+            onTapClose: () async {},
+            onTapConfirm: () async {
+              isShowNotice.value = false;
+              Get.back();
+            },
+            showTwoButtons: false,
+          );
+        });
       } else {
         isInternetConn.value = true;
         isLoadingPage.value = false;
         noticeData.value = [];
+        isShowNotice.value = false;
         CustomDialog().errorDialog(Get.context!, "luvpark", "No data found",
             () {
           Get.back();

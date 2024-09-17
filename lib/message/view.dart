@@ -6,8 +6,7 @@ import 'package:intl/intl.dart';
 import 'package:luvpark_get/custom_widgets/custom_appbar.dart';
 import 'package:luvpark_get/custom_widgets/custom_text.dart';
 import 'package:luvpark_get/custom_widgets/no_data_found.dart';
-import 'package:luvpark_get/custom_widgets/no_internet.dart';
-import 'package:luvpark_get/custom_widgets/page_loader.dart';
+
 import 'controller.dart';
 
 class MessageScreen extends GetView<MessageScreenController> {
@@ -18,20 +17,6 @@ class MessageScreen extends GetView<MessageScreenController> {
     return Scaffold(
       appBar: CustomAppbar(
         title: "Messages",
-        action: [
-          Padding(
-            padding: const EdgeInsets.only(right: 15.0),
-            child: Center(
-              child: InkWell(
-                onTap: controller.deleteAll,
-                child: CustomParagraph(
-                  text: "Delete all",
-                  color: Color(0xFFFF2E09),
-                ),
-              ),
-            ),
-          )
-        ],
       ),
       body: StretchingOverscrollIndicator(
         axisDirection: AxisDirection.down,
@@ -41,14 +26,8 @@ class MessageScreen extends GetView<MessageScreenController> {
             behavior: const ScrollBehavior().copyWith(overscroll: false),
             child: Obx(
               () {
-                if (controller.isLoading.value) {
-                  return const PageLoader();
-                } else if (!controller.isNetConn.value) {
-                  return NoInternetConnected(
-                    onTap: controller.refresher,
-                  );
-                } else if (controller.messages.isEmpty) {
-                  return const NoDataFound(text: "No messages found");
+                if (controller.messages.isEmpty) {
+                  return NoDataFound(text: "No messages found");
                 } else {
                   return ListView.builder(
                     itemCount: controller.messages.length,
@@ -64,28 +43,71 @@ class MessageScreen extends GetView<MessageScreenController> {
                             borderRadius: BorderRadius.circular(15),
                           ),
                           child: InkWell(
+                            onTap: () {
+                              Get.dialog(PopScope(
+                                canPop: true,
+                                child: Scaffold(
+                                  backgroundColor: Colors.transparent,
+                                  body: Column(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: [
+                                        Padding(
+                                          padding: const EdgeInsets.symmetric(
+                                              horizontal: 20),
+                                          child: Container(
+                                            padding: EdgeInsets.all(15),
+                                            decoration: BoxDecoration(
+                                              borderRadius:
+                                                  BorderRadius.circular(16),
+                                              color: Colors.white,
+                                            ),
+                                            width: MediaQuery.of(Get.context!)
+                                                .size
+                                                .width,
+                                            height: 300,
+                                            child: Column(
+                                              children: [
+                                                CustomTitle(text: "PA Message"),
+                                                Container(height: 10),
+                                                Expanded(
+                                                    child:
+                                                        SingleChildScrollView(
+                                                  child: CustomParagraph(
+                                                      text: message["message"]),
+                                                )),
+                                                Container(height: 5),
+                                                Align(
+                                                  alignment:
+                                                      Alignment.bottomRight,
+                                                  child: TextButton(
+                                                      onPressed: () {
+                                                        Get.back();
+                                                      },
+                                                      child: CustomLinkLabel(
+                                                          text: "Okay")),
+                                                )
+                                              ],
+                                            ),
+                                          ),
+                                        )
+                                      ]),
+                                ),
+                              ));
+                            },
                             onLongPress: () {
                               controller.deleteMessage(index);
                             },
                             child: ListTile(
                               title: CustomParagraph(
-                                fontWeight: FontWeight.w500,
-                                maxlines: 3,
+                                fontWeight: FontWeight.w600,
+                                maxlines: 4,
                                 text:
                                     message["message"] ?? "No message content",
                               ),
                               leading: Image.asset(
                                   height: 30,
                                   "assets/images/message_alert.png"),
-                              // trailing: InkWell(
-                              //   onTap: () {
-                              //     controller.deleteMessage(index);
-                              //   },
-                              //   child: Icon(
-                              //     Icons.delete,
-                              //     size: 30,
-                              //   ),
-                              // ),
                               subtitle: Padding(
                                 padding: const EdgeInsets.only(top: 8.0),
                                 child: Row(

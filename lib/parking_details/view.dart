@@ -12,6 +12,7 @@ import 'package:luvpark_get/custom_widgets/custom_appbar.dart';
 import 'package:luvpark_get/custom_widgets/custom_button.dart';
 import 'package:luvpark_get/custom_widgets/custom_text.dart';
 import 'package:luvpark_get/custom_widgets/no_internet.dart';
+import 'package:luvpark_get/custom_widgets/variables.dart';
 import 'package:luvpark_get/parking_details/controller.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -335,7 +336,8 @@ class ParkingDetails extends GetView<ParkingDetailsController> {
                         ),
                       ),
                       TextSpan(
-                        text: ' ●  ${controller.parkSched}  ●  ',
+                        text:
+                            ' ●  ${Variables.timeFormatter(controller.dataNearest["opened_time"].toString())} - ${Variables.timeFormatter(controller.dataNearest["closed_time"]).toString()}  ●  ',
                         style: paragraphStyle(),
                       ),
                       TextSpan(
@@ -345,6 +347,7 @@ class ParkingDetails extends GetView<ParkingDetailsController> {
                       ),
                     ],
                   ),
+                  maxLines: 1,
                 ),
                 Container(height: 15),
                 const CustomTitle(

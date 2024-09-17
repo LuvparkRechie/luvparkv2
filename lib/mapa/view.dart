@@ -94,9 +94,8 @@ class DashboardMapScreen extends GetView<DashboardMapController> {
                           ),
                           parallaxEnabled: true,
                           controller: controller.panelController,
-                          parallaxOffset: .5,
+                          parallaxOffset: .3,
                           body: _mapa(),
-                          slideDirection: SlideDirection.UP,
                           panelBuilder: (sc) => panelSearchedList(sc),
                           header:
                               LayoutBuilder(builder: (context, constraints) {
@@ -122,14 +121,6 @@ class DashboardMapScreen extends GetView<DashboardMapController> {
                           onPanelSlide: (double pos) {
                             controller.onPanelSlide(pos);
                           },
-                          onPanelOpened: () {
-                            print(
-                                "on panel open ${controller.getPanelHeight()}");
-                          },
-                          onPanelClosed: () {
-                            print(
-                                "on panel close ${controller.getPanelHeight()}");
-                          },
                         ),
 
                         if (MediaQuery.of(Get.context!).viewInsets.bottom == 0)
@@ -144,7 +135,6 @@ class DashboardMapScreen extends GetView<DashboardMapController> {
                                 // }),
                                 // const SizedBox(width: 10),
                                 _buildDialItem("parking", () {
-                                  print(" ${controller.dataNearest}");
                                   Get.toNamed(Routes.parkingAreas,
                                       arguments: controller.dataNearest);
                                 }),
@@ -373,9 +363,9 @@ class DashboardMapScreen extends GetView<DashboardMapController> {
       polylines: {controller.polyline},
       circles: {controller.circle},
       onMapCreated: controller.onMapCreated,
-      onCameraMove: (s) {
-        controller.panelController.close();
-      },
+      // onCameraMove: (s) {
+      //   controller.panelController.close();
+      // },
       onCameraMoveStarted: controller.onCameraMoveStarted,
       onCameraIdle: () async {
         controller.onCameraIdle();
@@ -605,7 +595,6 @@ class DashboardMapScreen extends GetView<DashboardMapController> {
   Widget _buildDialItem(String icon, Function ontap) {
     return GestureDetector(
       onTap: () {
-        controller.animationDialController.value = 0.0;
         ontap();
       },
       child: Container(
