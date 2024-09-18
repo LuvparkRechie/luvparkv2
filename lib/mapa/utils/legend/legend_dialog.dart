@@ -1,3 +1,5 @@
+// ignore_for_file: prefer_const_constructors
+
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
@@ -73,14 +75,20 @@ class _LegendDialogScreenState extends State<LegendDialogScreen> {
                     ),
                     SizedBox(
                       height: MediaQuery.of(context).size.height * .60,
-                      child: PageView(
-                        controller: pageController,
-                        onPageChanged: (index) {
-                          setState(() {
-                            currentPage = index;
-                          });
-                        },
-                        children: [page1(), page2()],
+                      child: ScrollConfiguration(
+                        behavior: ScrollBehavior().copyWith(overscroll: false),
+                        child: StretchingOverscrollIndicator(
+                          axisDirection: AxisDirection.right,
+                          child: PageView(
+                            controller: pageController,
+                            onPageChanged: (index) {
+                              setState(() {
+                                currentPage = index;
+                              });
+                            },
+                            children: [page1(), page2()],
+                          ),
+                        ),
                       ),
                     ),
                     SizedBox(
