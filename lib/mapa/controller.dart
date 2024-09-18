@@ -263,7 +263,7 @@ class DashboardMapController extends GetxController
         _dataController.close();
         dataSubscription.cancel();
       } else {
-        isLoading.value = true;
+        isLoading.value = false;
         getNearest(dataBalance[0]["items"], coordinates);
       }
     });
@@ -756,7 +756,7 @@ class DashboardMapController extends GetxController
 
                 return;
               }
-              onMarkerTapped(markerData);
+              Get.toNamed(Routes.parkingDetails, arguments: markerData[0]);
             },
           ),
         );

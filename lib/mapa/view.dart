@@ -5,6 +5,7 @@ import 'package:flutter_multi_formatter/formatters/formatter_utils.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:luvpark_get/custom_widgets/alert_dialog.dart';
 import 'package:luvpark_get/custom_widgets/app_color.dart';
 import 'package:luvpark_get/custom_widgets/custom_body.dart';
 import 'package:luvpark_get/custom_widgets/custom_text.dart';
@@ -324,9 +325,11 @@ class DashboardMapScreen extends GetView<DashboardMapController> {
                       onTap: () async {
                         FocusManager.instance.primaryFocus!.unfocus();
                         controller.panelController.close();
+                        CustomDialog().loadingDialog(context);
                         await Functions.searchPlaces(context,
                             controller.suggestions[index].split("=Rechie=")[0],
                             (searchedPlace) {
+                          Get.back();
                           if (searchedPlace.isEmpty) {
                             return;
                           } else {

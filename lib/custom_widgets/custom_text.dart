@@ -35,7 +35,7 @@ class CustomTitle extends StatelessWidget {
       text,
       style: titleStyle(
         fontSize: fontSize,
-        color: color ?? const Color(0xFF131313),
+        color: color ?? AppColor.titleColor,
         fontWeight: fontWeight,
         fontStyle: fontStyle,
         letterSpacing: letterSpacing,
@@ -182,7 +182,7 @@ TextStyle paragraphStyle({
 // Style for titles
 TextStyle titleStyle({
   double? fontSize = 16.0,
-  Color color = const Color.fromARGB(221, 32, 32, 32),
+  Color? color,
   FontWeight fontWeight = FontWeight.w700,
   FontStyle fontStyle = FontStyle.normal,
   double letterSpacing = -1.0,
@@ -191,7 +191,7 @@ TextStyle titleStyle({
 }) {
   return GoogleFonts.manrope(
     fontSize: fontSize,
-    color: color,
+    color: color ?? AppColor.titleColor,
     fontWeight: fontWeight,
     fontStyle: fontStyle,
     letterSpacing: letterSpacing,
