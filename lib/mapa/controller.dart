@@ -43,6 +43,7 @@ class DashboardMapController extends GetxController
   RxList<dynamic> userBal = <dynamic>[].obs;
   RxList<dynamic> dataNearest = [].obs;
   List markerData = [];
+
   //drawerdata
   var userProfile;
   Circle circle = const Circle(circleId: CircleId('dottedCircle'));
@@ -90,6 +91,8 @@ class DashboardMapController extends GetxController
   RxBool isOPenFab = false.obs;
   bool isKeyboardVisible = false;
 
+  Timer? debounce;
+
   @override
   void onInit() {
     super.onInit();
@@ -117,18 +120,42 @@ class DashboardMapController extends GetxController
   void onClose() {
     super.onClose();
     gMapController!.dispose();
-
     animationController.dispose();
     _dataController.close();
     dataSubscription.cancel();
+    debounce?.cancel();
     WidgetsBinding.instance.removeObserver(this);
   }
 
   @override
   void didChangeMetrics() {
     super.didChangeMetrics();
-    print("adfsaf %dfaf");
     panelController.open();
+    update();
+  }
+
+  Future<void> onSearchChanged() async {
+    if (debounce?.isActive ?? false) debounce?.cancel();
+
+    Duration duration = const Duration(seconds: 1);
+
+    debounce = Timer(duration, () {
+      fetchSuggestions((cbData) {
+        FocusManager.instance.primaryFocus!.unfocus();
+
+        panelController.open();
+        update();
+      });
+    });
+  }
+
+  void onVoiceGiatay() {
+    fetchSuggestions((cbData) {
+      FocusManager.instance.primaryFocus!.unfocus();
+
+      panelController.open();
+      update();
+    });
   }
 
   double getPanelHeight() {
@@ -142,7 +169,7 @@ class DashboardMapController extends GetxController
             : MediaQuery.of(Get.context!).size.height * 0.70;
 
     panelHeightOpen.value = height;
-
+    update();
     return height;
   }
 
@@ -527,9 +554,8 @@ class DashboardMapController extends GetxController
 
   void onCameraMoveStarted() {
     isGetNearData.value = false;
-    if (panelController.isPanelOpen) {
-      panelController.close();
-    }
+    panelController.close();
+    update();
   }
 
   void onCameraIdle() async {
@@ -537,6 +563,7 @@ class DashboardMapController extends GetxController
     if (suggestions.isEmpty) {
       panelController.open();
     }
+    update();
   }
 
   void animateCamera() {
@@ -738,7 +765,8 @@ class DashboardMapController extends GetxController
   }
 
   //SEARCH PLACE
-  Future<void> fetchSuggestions() async {
+  Future<void> fetchSuggestions(Function? cb) async {
+    CustomDialog().loadingDialog(Get.context!);
     final url =
         'https://maps.googleapis.com/maps/api/place/autocomplete/json?input=${searchCon.text}&location=${initialCameraPosition!.target.latitude},${initialCameraPosition!.target.longitude}&radius=${double.parse(ddRadius.toString())}&key=${Variables.mapApiKey}';
 
@@ -748,6 +776,7 @@ class DashboardMapController extends GetxController
       final response = await HttpRequest.fetchDataWithTimeout(links);
       suggestions.value = [];
       if (response.statusCode == 200) {
+        Get.back();
         final data = json.decode(response.body);
 
         final predictions = data['predictions'];
@@ -757,15 +786,21 @@ class DashboardMapController extends GetxController
             suggestions.add(
                 "${prediction['description']}=Rechie=${prediction['place_id']}=structured=${prediction["structured_formatting"]["main_text"]}");
           }
+          cb!(suggestions.length);
         } else {
           suggestions.value = [];
+          cb!(suggestions.length);
         }
       } else {
+        Get.back();
         suggestions.value = [];
+        cb!(suggestions.length);
       }
     } catch (e) {
+      Get.back();
+      suggestions.value = [];
+      cb!(suggestions.length);
       CustomDialog().internetErrorDialog(Get.context!, () {
-        suggestions.value = [];
         Get.back();
       });
     }

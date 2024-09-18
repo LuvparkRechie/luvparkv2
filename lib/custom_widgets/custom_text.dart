@@ -85,8 +85,7 @@ class CustomParagraph extends StatelessWidget {
       text,
       style: paragraphStyle(
         fontSize: fontSize,
-        color: color ??
-            const Color.fromARGB(221, 32, 32, 32), //AppColor.paragraphColor,
+        color: color ?? Colors.grey[600], //AppColor.paragraphColor,
         fontWeight: fontWeight,
         fontStyle: fontStyle,
         letterSpacing: letterSpacing,

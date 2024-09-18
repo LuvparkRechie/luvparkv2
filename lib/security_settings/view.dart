@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:iconsax/iconsax.dart';
-import 'package:lucide_icons/lucide_icons.dart';
 import 'package:luvpark_get/custom_widgets/app_color.dart';
 import 'package:luvpark_get/custom_widgets/custom_appbar.dart';
 import 'package:luvpark_get/custom_widgets/custom_text.dart';
@@ -77,8 +76,9 @@ class Security extends GetView<SecuritySettingsController> {
                       color: AppColor.primaryColor.withOpacity(0.1),
                     ),
                     child: Icon(
-                      LucideIcons.fileLock,
+                      Iconsax.lock,
                       color: AppColor.primaryColor,
+                      size: 20,
                     ),
                   ),
                   title: const CustomTitle(
