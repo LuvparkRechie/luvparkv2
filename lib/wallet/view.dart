@@ -176,15 +176,23 @@ class WalletScreen extends GetView<WalletController> {
                                             String? fname = item["first_name"];
 
                                             if (fname == null) {
-                                              // ignore: use_build_context_synchronously
-                                              CustomDialog().errorDialog(
-                                                  // ignore: use_build_context_synchronously
-                                                  context,
-                                                  "Attention",
-                                                  "Complete your account information to access the requested service.\nGo to profile and update your account.",
-                                                  () {
-                                                Get.back();
-                                              });
+                                              CustomDialog().customPopUp(
+                                                // ignore: use_build_context_synchronously
+                                                context,
+                                                "Attention",
+                                                "Complete your account information to access the requested service.\nGo to profile and update your account.",
+                                                "Close",
+                                                "Update Account",
+                                                imageName: 'pu_confirmation',
+                                                onTapConfirm: () {
+                                                  Get.toNamed(
+                                                    Routes.myaccount,
+                                                  );
+                                                },
+                                                onTapClose: () {
+                                                  Get.back();
+                                                },
+                                              );
                                               return;
                                             }
                                             Get.toNamed(Routes.walletrecharge);
