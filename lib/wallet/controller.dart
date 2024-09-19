@@ -18,7 +18,8 @@ class WalletController extends GetxController
   RxBool isNetConn = true.obs;
   RxList logs = [].obs;
   RxList userData = [].obs;
-  var userImage;
+  //var userImage;
+  RxString myprofile = "".obs;
   RxString fname = "".obs;
   RxList filterLogs = [].obs;
 
@@ -55,10 +56,10 @@ class WalletController extends GetxController
   }
 
   Future<void> getUserBalance() async {
-    final userPp = await Authentication().getUserProfilePic();
+    final profilepic = await Authentication().getUserProfilePic();
     var uData = await Authentication().getUserData();
     var item = jsonDecode(uData!);
-    userImage = userPp;
+    myprofile.value = profilepic;
 
     if (item['first_name'] == null) {
       fname.value = "Not specified";

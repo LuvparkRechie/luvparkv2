@@ -7,6 +7,8 @@ import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:intl/intl.dart';
+import 'package:lucide_icons/lucide_icons.dart';
+import 'package:luvpark_get/custom_widgets/app_color.dart';
 import 'package:luvpark_get/custom_widgets/custom_appbar.dart';
 import 'package:luvpark_get/custom_widgets/custom_text.dart';
 import 'package:luvpark_get/custom_widgets/no_data_found.dart';
@@ -208,8 +210,9 @@ class WalletScreen extends GetView<WalletController> {
                                                   shape: BoxShape.circle,
                                                   color: Color(0xFFE0EEFF),
                                                 ),
-                                                child: SvgPicture.asset(
-                                                  "assets/images/wallet_icons_load.svg",
+                                                child: Icon(
+                                                  LucideIcons.walletCards,
+                                                  color: AppColor.primaryColor,
                                                 ),
                                               ),
                                               SizedBox(
@@ -239,8 +242,9 @@ class WalletScreen extends GetView<WalletController> {
                                                   shape: BoxShape.circle,
                                                   color: Color(0xFFE0EEFF),
                                                 ),
-                                                child: SvgPicture.asset(
-                                                  "assets/images/wallet_icons_send.svg",
+                                                child: Icon(
+                                                  LucideIcons.arrowLeftRight,
+                                                  color: AppColor.primaryColor,
                                                 ),
                                               ),
                                               SizedBox(
@@ -268,8 +272,9 @@ class WalletScreen extends GetView<WalletController> {
                                                   shape: BoxShape.circle,
                                                   color: Color(0xFFE0EEFF),
                                                 ),
-                                                child: SvgPicture.asset(
-                                                  "assets/images/wallet_icons_qr.svg",
+                                                child: Icon(
+                                                  LucideIcons.qrCode,
+                                                  color: AppColor.primaryColor,
                                                 ),
                                               ),
                                               SizedBox(
@@ -421,28 +426,49 @@ class WalletScreen extends GetView<WalletController> {
     return Row(
       mainAxisAlignment: MainAxisAlignment.start,
       children: [
-        Container(
-          padding: EdgeInsets.all(18),
-          decoration: BoxDecoration(
-            shape: BoxShape.circle,
+        // Container(
+        //   padding: EdgeInsets.all(18),
+        //   decoration: BoxDecoration(
+        //     shape: BoxShape.circle,
 
-            image: controller.userImage != null
-                ? DecorationImage(
-                    image: MemoryImage(
-                      base64Decode(controller.userImage!),
-                    ),
-                    fit: BoxFit.cover,
-                  )
-                : null, // No background image if userImage is null
+        //     image: controller.userImage != null
+        //         ? DecorationImage(
+        //             image: MemoryImage(
+        //               base64Decode(controller.userImage!),
+        //             ),
+        //             fit: BoxFit.cover,
+        //           )
+        //         : null, // No background image if userImage is null
+        //   ),
+        //   child: controller.userImage == null
+        //       ? Center(
+        //           child: Icon(
+        //             Icons.person,
+        //             color: Colors.blueAccent,
+        //           ),
+        //         )
+        //       : null,
+        // ),
+        Container(
+          decoration: const BoxDecoration(
+            shape: BoxShape.circle,
+            color: AppColor.bodyColor,
           ),
-          child: controller.userImage == null
-              ? Center(
-                  child: Icon(
-                    Icons.person,
-                    color: Colors.blueAccent,
-                  ),
-                )
-              : null,
+          child: Padding(
+            padding: const EdgeInsets.all(3.0),
+            child: CircleAvatar(
+              radius: 24,
+              backgroundColor: Colors.white,
+              backgroundImage: controller.myprofile.value.isNotEmpty
+                  ? MemoryImage(
+                      base64Decode(controller.myprofile.value),
+                    )
+                  : null,
+              child: controller.myprofile.value.isEmpty
+                  ? const Icon(Icons.person, size: 24, color: Colors.blueAccent)
+                  : null,
+            ),
+          ),
         ),
         SizedBox(
           width: 10,
