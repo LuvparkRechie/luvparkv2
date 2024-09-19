@@ -217,7 +217,7 @@ class CustomDrawer extends GetView<DashboardMapController> {
                                     letterSpacing: -0.408,
                                   )
                                 : CustomTitle(
-                                    text: "NOT SPECIFIED",
+                                    text: "NOT VERIFIED",
                                     fontWeight: FontWeight.w700,
                                     fontStyle: FontStyle.normal,
                                     textAlign: TextAlign.center,
