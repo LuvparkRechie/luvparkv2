@@ -534,14 +534,15 @@ class DashboardMapController extends GetxController
 
   void onCameraIdle() async {
     isGetNearData.value = true;
-    if (debounceIdle?.isActive ?? false) debounceIdle?.cancel();
+    // if (debounceIdle?.isActive ?? false) debounceIdle?.cancel();
 
-    Duration duration = const Duration(seconds: 2);
+    // Duration duration = const Duration(seconds: 2);
 
-    debounceIdle = Timer(duration, () {
-      panelController.open();
-      update();
-    });
+    // debounceIdle = Timer(duration, () {
+    //   panelController.close();
+    //   update();
+    // });
+    update();
   }
 
   void animateCamera() {

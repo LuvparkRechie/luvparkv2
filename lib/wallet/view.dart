@@ -7,6 +7,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:intl/intl.dart';
+import 'package:lucide_icons/lucide_icons.dart';
 import 'package:luvpark_get/custom_widgets/custom_appbar.dart';
 import 'package:luvpark_get/custom_widgets/custom_text.dart';
 import 'package:luvpark_get/custom_widgets/no_data_found.dart';
@@ -17,6 +18,7 @@ import 'package:shimmer/shimmer.dart';
 
 import '../auth/authentication.dart';
 import '../custom_widgets/alert_dialog.dart';
+import '../custom_widgets/app_color.dart';
 import 'utils/transaction_history/index.dart';
 
 class WalletScreen extends GetView<WalletController> {
@@ -37,12 +39,13 @@ class WalletScreen extends GetView<WalletController> {
               child: StretchingOverscrollIndicator(
                 axisDirection: AxisDirection.down,
                 child: Padding(
-                  padding: const EdgeInsets.fromLTRB(15, 24, 15, 0),
+                  padding: const EdgeInsets.fromLTRB(15, 13, 15, 0),
                   child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       buildProfileImage(),
                       SizedBox(
-                        height: 15,
+                        height: 20,
                       ),
                       Stack(
                         fit: StackFit.loose,
@@ -180,18 +183,18 @@ class WalletScreen extends GetView<WalletController> {
                                 child: Column(
                                   children: [
                                     Container(
-                                      padding: EdgeInsets.all(10),
-                                      width: 50,
-                                      height: 50,
-                                      clipBehavior: Clip.antiAlias,
-                                      decoration: BoxDecoration(
-                                        shape: BoxShape.circle,
-                                        color: Color(0xFFE0EEFF),
-                                      ),
-                                      child: SvgPicture.asset(
-                                        "assets/images/wallet_icons_load.svg",
-                                      ),
-                                    ),
+                                        padding: EdgeInsets.all(10),
+                                        width: 50,
+                                        height: 50,
+                                        clipBehavior: Clip.antiAlias,
+                                        decoration: BoxDecoration(
+                                          shape: BoxShape.circle,
+                                          color: Color(0xFFE0EEFF),
+                                        ),
+                                        child: Icon(
+                                          LucideIcons.walletCards,
+                                          color: AppColor.primaryColor,
+                                        )),
                                     SizedBox(
                                       height: 5,
                                     ),
@@ -210,18 +213,18 @@ class WalletScreen extends GetView<WalletController> {
                                 child: Column(
                                   children: [
                                     Container(
-                                      padding: EdgeInsets.all(10),
-                                      width: 50,
-                                      height: 50,
-                                      clipBehavior: Clip.antiAlias,
-                                      decoration: BoxDecoration(
-                                        shape: BoxShape.circle,
-                                        color: Color(0xFFE0EEFF),
-                                      ),
-                                      child: SvgPicture.asset(
-                                        "assets/images/wallet_icons_send.svg",
-                                      ),
-                                    ),
+                                        padding: EdgeInsets.all(10),
+                                        width: 50,
+                                        height: 50,
+                                        clipBehavior: Clip.antiAlias,
+                                        decoration: BoxDecoration(
+                                          shape: BoxShape.circle,
+                                          color: Color(0xFFE0EEFF),
+                                        ),
+                                        child: Icon(
+                                          LucideIcons.arrowLeftRight,
+                                          color: AppColor.primaryColor,
+                                        )),
                                     SizedBox(
                                       height: 5,
                                     ),
@@ -268,23 +271,16 @@ class WalletScreen extends GetView<WalletController> {
                             ]),
                       ),
                       SizedBox(
-                        height: 30,
+                        height: 20,
                       ),
                       // Divider(),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           CustomTitle(
-                            text: "Activities Today",
-                            fontWeight: FontWeight.w600,
+                            text: "Recent Activity",
+                            fontWeight: FontWeight.w800,
                           ),
-                          // IconButton(
-                          //   onPressed: controller.getFilteredLogs,
-                          //   icon: SvgPicture.asset(
-                          //     "assets/images/wallet_filter.svg",
-                          //     height: 19,
-                          //   ),
-                          // )
                           InkWell(
                             onTap: () {
                               Get.to(TransactionHistory());
@@ -296,9 +292,11 @@ class WalletScreen extends GetView<WalletController> {
                           )
                         ],
                       ),
+                      SizedBox(
+                        height: 10,
+                      ),
                       Expanded(
                         child: LayoutBuilder(builder: (context, constraints) {
-                          print("constraints ${constraints.maxHeight}");
                           return ScrollConfiguration(
                             behavior:
                                 ScrollBehavior().copyWith(overscroll: false),
@@ -328,6 +326,7 @@ class WalletScreen extends GetView<WalletController> {
                                                     ["tran_desc"],
                                                 fontSize: 14,
                                                 fontWeight: FontWeight.w600,
+                                                maxlines: 1,
                                               ),
                                               subtitle: CustomParagraph(
                                                 text: DateFormat(
@@ -336,6 +335,8 @@ class WalletScreen extends GetView<WalletController> {
                                                         controller.logs[index]
                                                             ["tran_date"])),
                                                 fontSize: 12,
+                                                maxlines: 1,
+                                                overflow: TextOverflow.ellipsis,
                                               ),
                                               trailing: CustomTitle(
                                                 text: controller.logs[index]
@@ -378,31 +379,32 @@ class WalletScreen extends GetView<WalletController> {
 
   Widget buildProfileImage() {
     return Row(
+      mainAxisSize: MainAxisSize.min,
       mainAxisAlignment: MainAxisAlignment.start,
       children: [
-        Container(
-          padding: EdgeInsets.all(18),
-          decoration: BoxDecoration(
-            shape: BoxShape.circle,
-          ),
-          child: controller.userImage.value.isEmpty
-              ? Center(
-                  child: Icon(
-                    Icons.person,
-                    color: Colors.blueAccent,
-                  ),
-                )
-              : ClipRRect(
-                  borderRadius: BorderRadius.circular(25),
-                  child: Image.memory(
-                    base64Decode(controller.userImage.value),
-                    gaplessPlayback: true,
-                    width: 50,
-                    height: 50,
-                    fit: BoxFit.cover,
-                  ),
+        controller.userImage.value.isEmpty
+            ? Container(
+                height: 50,
+                width: 50,
+                decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    border: Border.all(
+                        color: AppColor.primaryColor.withOpacity(.6))),
+                child: Icon(
+                  Icons.person,
+                  color: Colors.blueAccent,
                 ),
-        ),
+              )
+            : ClipRRect(
+                borderRadius: BorderRadius.circular(25),
+                child: Image.memory(
+                  base64Decode(controller.userImage.value),
+                  gaplessPlayback: true,
+                  width: 50,
+                  height: 50,
+                  fit: BoxFit.cover,
+                ),
+              ),
         SizedBox(
           width: 10,
         ),

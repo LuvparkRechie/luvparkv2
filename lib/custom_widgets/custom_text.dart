@@ -45,6 +45,7 @@ class CustomTitle extends StatelessWidget {
       maxLines: maxlines,
       textAlign: textAlign,
       minFontSize: 10,
+      overflow: TextOverflow.ellipsis,
     );
   }
 }
