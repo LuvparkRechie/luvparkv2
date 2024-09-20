@@ -1,5 +1,3 @@
-// ignore_for_file: prefer_const_constructors
-
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
@@ -128,7 +126,7 @@ class _LegendDialogScreenState extends State<LegendDialogScreen> {
         ),
         SizedBox(height: 8),
         Text(
-          'Parking Zones',
+          'Parking Zone Signs',
           textAlign: TextAlign.center,
           style: TextStyle(
             color: Color(0xFF1E1E1E),
@@ -291,7 +289,7 @@ class _LegendDialogScreenState extends State<LegendDialogScreen> {
         ),
         SizedBox(height: 8),
         Text(
-          'Parking Zones',
+          'Parking Icons',
           textAlign: TextAlign.center,
           style: TextStyle(
             color: Color(0xFF1E1E1E),
@@ -302,7 +300,7 @@ class _LegendDialogScreenState extends State<LegendDialogScreen> {
         ),
         SizedBox(height: 8),
         Text(
-          'These are the meanings of the colors\nassigned to each parking zone',
+          'Watch out for these parking signs to see which vehicles are allowed',
           textAlign: TextAlign.center,
           style: TextStyle(
             color: Color(0xFF616161),

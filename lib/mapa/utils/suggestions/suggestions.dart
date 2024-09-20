@@ -30,37 +30,37 @@ class _SuggestionsScreenState extends State<SuggestionsScreen> {
         body: Container(
           padding: EdgeInsets.symmetric(horizontal: 34),
           width: MediaQuery.of(context).size.width,
-          child: ScrollConfiguration(
-            behavior: ScrollBehavior().copyWith(overscroll: false),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Container(
-                  width: MediaQuery.of(context).size.width,
-                  height: MediaQuery.of(context).size.height * .60,
-                  padding: EdgeInsets.symmetric(horizontal: 15, vertical: 34),
-                  decoration: ShapeDecoration(
-                    color: Colors.white,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10),
-                    ),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Container(
+                width: MediaQuery.of(context).size.width,
+                height: MediaQuery.of(context).size.height * .60,
+                padding: EdgeInsets.symmetric(horizontal: 15, vertical: 34),
+                decoration: ShapeDecoration(
+                  color: Colors.white,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10),
                   ),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      CustomTitle(
-                        text: "Nearby parking found",
-                        fontSize: 20,
-                      ),
-                      Container(height: 10),
-                      const CustomParagraph(
-                        text: 'Here are the list of parking zone.',
-                        textAlign: TextAlign.center,
-                      ),
-                      Container(height: 10),
-                      Expanded(
-                        child: StretchingOverscrollIndicator(
-                          axisDirection: AxisDirection.down,
+                ),
+                child: StretchingOverscrollIndicator(
+                  axisDirection: AxisDirection.down,
+                  child: ScrollConfiguration(
+                    behavior: ScrollBehavior().copyWith(overscroll: false),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        CustomTitle(
+                          text: "Nearby parking found",
+                          fontSize: 20,
+                        ),
+                        Container(height: 10),
+                        const CustomParagraph(
+                          text: 'Here are the list of parking zone.',
+                          textAlign: TextAlign.center,
+                        ),
+                        Container(height: 10),
+                        Expanded(
                           child: ListView.separated(
                             padding: EdgeInsets.zero,
                             separatorBuilder: (context, index) {
@@ -191,18 +191,18 @@ class _SuggestionsScreenState extends State<SuggestionsScreen> {
                             },
                           ),
                         ),
-                      ),
-                      SizedBox(height: 22),
-                      CustomButton(
-                          text: "Okay",
-                          onPressed: () {
-                            Get.back();
-                          })
-                    ],
+                        SizedBox(height: 22),
+                        CustomButton(
+                            text: "Okay",
+                            onPressed: () {
+                              Get.back();
+                            })
+                      ],
+                    ),
                   ),
-                )
-              ],
-            ),
+                ),
+              )
+            ],
           ),
         ),
       ),

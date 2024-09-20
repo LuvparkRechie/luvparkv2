@@ -1,5 +1,3 @@
-// ignore_for_file: prefer_const_constructors
-
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:lucide_icons/lucide_icons.dart';
@@ -17,7 +15,7 @@ class HelpandFeedback extends GetView<HelpandFeedbackController> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColor.scafColor,
+      backgroundColor: AppColor.bodyColor,
       appBar: const CustomAppbar(title: ""),
       body: StretchingOverscrollIndicator(
         axisDirection: AxisDirection.down,
@@ -26,45 +24,49 @@ class HelpandFeedback extends GetView<HelpandFeedbackController> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Container(
-                height: 20,
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
+              Column(
                 children: [
                   Container(
-                    padding: const EdgeInsets.all(24.0),
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      color: AppColor.primaryColor.withOpacity(0.1),
-                    ),
-                    child: Center(
-                      child: Icon(
-                        LucideIcons.info,
-                        color: AppColor.primaryColor,
-                        size: 55,
+                    height: 20,
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Container(
+                        padding: const EdgeInsets.all(24.0),
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          color: AppColor.primaryColor.withOpacity(0.1),
+                        ),
+                        child: Center(
+                          child: Icon(
+                            LucideIcons.info,
+                            color: AppColor.primaryColor,
+                            size: 55,
+                          ),
+                        ),
                       ),
-                    ),
+                    ],
                   ),
+                  Container(
+                    height: 10,
+                  ),
+                  const Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      CustomTitle(
+                        text: "Help and Feedback",
+                        fontSize: 16,
+                        fontStyle: FontStyle.normal,
+                        fontWeight: FontWeight.w700,
+                        letterSpacing: -0.408,
+                        color: Color(0xFF1C1C1E),
+                      ),
+                    ],
+                  ),
+                  Container(height: 20),
                 ],
               ),
-              Container(
-                height: 10,
-              ),
-              const Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  CustomTitle(
-                    text: "Help and Feedback",
-                    fontSize: 16,
-                    fontStyle: FontStyle.normal,
-                    fontWeight: FontWeight.w700,
-                    letterSpacing: -0.408,
-                    color: Color(0xFF1C1C1E),
-                  ),
-                ],
-              ),
-              Container(height: 20),
               Expanded(
                 child: ListView(
                   padding: const EdgeInsets.symmetric(

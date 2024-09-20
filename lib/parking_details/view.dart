@@ -627,7 +627,6 @@ class ParkingDetails extends GetView<ParkingDetailsController> {
                                       onPressed: () async {
                                         CustomDialog().loadingDialog(context);
                                         String mapUrl = "";
-
                                         String dest =
                                             "${destLocation.latitude},${destLocation.longitude}";
                                         if (Platform.isIOS) {
@@ -656,7 +655,6 @@ class ParkingDetails extends GetView<ParkingDetailsController> {
                                   Container(width: 10),
                                   Expanded(
                                     child: CustomButton(
-                                      loading: controller.btnLoading.value,
                                       borderRadius: 25,
                                       text: "Book now",
                                       onPressed: controller.onClickBooking,

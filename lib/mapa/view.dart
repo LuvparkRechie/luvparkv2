@@ -96,9 +96,7 @@ class DashboardMapScreen extends GetView<DashboardMapController> {
                           parallaxEnabled: true,
                           controller: controller.panelController,
                           parallaxOffset: .3,
-                          onPanelOpened: () {
-                            print("on panel open");
-                          },
+                          onPanelOpened: () {},
                           body: _mapa(),
                           panelBuilder: (sc) => panelSearchedList(sc),
                           header:
@@ -159,7 +157,8 @@ class DashboardMapScreen extends GetView<DashboardMapController> {
                               right: 20,
                               child: InkWell(
                                 onTap: () {
-                                  Get.toNamed(Routes.wallet);
+                                  //  Get.toNamed(Routes.wallet);
+                                  controller.panelController.close();
                                 },
                                 child: Container(
                                   width: 178,
@@ -462,7 +461,7 @@ class DashboardMapScreen extends GetView<DashboardMapController> {
                           onTap: () {
                             FocusManager.instance.primaryFocus!.unfocus();
                             controller.searchCon.clear();
-                            controller.isClearSearch.value = true;
+
                             controller.suggestions.clear();
                             controller.panelController.close();
                           },
@@ -520,11 +519,6 @@ class DashboardMapScreen extends GetView<DashboardMapController> {
               },
               onChanged: (text) {
                 controller.searchCon.text = text;
-                if (text.isEmpty) {
-                  controller.isClearSearch.value = true;
-                } else {
-                  controller.isClearSearch.value = false;
-                }
                 controller.onSearchChanged();
               },
             ),

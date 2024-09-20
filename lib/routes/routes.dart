@@ -45,4 +45,7 @@ class Routes {
   static const otpUpdProfile = "/otp_update_profile";
   static const message = "/message";
   static const helpfeedback = "/help_feedback";
+
+  //IOS MAP
+  static const mapIos = "/map_ios";
 }

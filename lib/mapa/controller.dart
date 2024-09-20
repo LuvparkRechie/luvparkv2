@@ -30,12 +30,11 @@ class DashboardMapController extends GetxController
   // Dependencies
   final GlobalKey<ScaffoldState> dashboardScaffoldKey =
       GlobalKey<ScaffoldState>();
-  final GlobalKey headerKey = GlobalKey();
+
   final TextEditingController searchCon = TextEditingController();
   final PanelController panelController = PanelController();
   late AnimationController animationController;
 
-  RxBool isSidebarVisible = false.obs;
   bool isFilter = false;
   GoogleMapController? gMapController;
   CameraPosition? initialCameraPosition;
@@ -54,6 +53,7 @@ class DashboardMapController extends GetxController
   );
 
   LatLng searchCoordinates = const LatLng(0, 0);
+  LatLng currentCoord = LatLng(0, 0);
 
 //PIn icon
   List<String> searchImage = ['assets/dashboard_icon/location_pin.png'];
@@ -70,26 +70,16 @@ class DashboardMapController extends GetxController
   RxBool netConnected = true.obs;
   RxBool isLoading = true.obs;
   RxBool isGetNearData = false.obs;
-  RxBool isMarkerTapped = false.obs;
-  //Panel variables
-  RxDouble headerHeight = 0.0.obs;
-  RxDouble minHeight = 0.0.obs;
-  RxBool isClearSearch = true.obs;
   //Last Booking variables
   RxBool hasLastBooking = false.obs;
-  RxBool isSearch = false.obs;
   RxString plateNo = "".obs;
   RxString brandName = "".obs;
-  late StreamController<void> _dataController;
-  late StreamSubscription<void> dataSubscription;
-  LatLng currentCoord = LatLng(0, 0);
+
 //panel gg
   RxDouble panelHeightOpen = 180.0.obs;
   RxDouble initFabHeight = 80.0.obs;
   RxDouble fabHeight = 0.0.obs;
   RxDouble panelHeightClosed = 60.0.obs;
-  RxBool isOPenFab = false.obs;
-  bool isKeyboardVisible = false;
 
   Timer? debounce;
 
@@ -112,7 +102,7 @@ class DashboardMapController extends GetxController
     getUserData();
     getDefaultLocation();
     fabHeight.value = panelHeightOpen.value + 30;
-    _dataController = StreamController<void>();
+
     WidgetsBinding.instance.addObserver(this);
   }
 
@@ -121,8 +111,7 @@ class DashboardMapController extends GetxController
     super.onClose();
     gMapController!.dispose();
     animationController.dispose();
-    _dataController.close();
-    dataSubscription.cancel();
+
     debounce?.cancel();
     WidgetsBinding.instance.removeObserver(this);
   }
@@ -178,20 +167,10 @@ class DashboardMapController extends GetxController
         initFabHeight.value;
   }
 
-  void streamData() {
-    dataSubscription = _dataController.stream.listen((data) {});
-    fetchDataPeriodically();
-  }
-
-  void fetchDataPeriodically() async {
-    dataSubscription = Stream.periodic(const Duration(seconds: 10), (count) {
-      fetchData();
-    }).listen((event) {});
-  }
-
   Future<void> fetchData() async {
-    await Future.delayed(const Duration(seconds: 10));
-    getBalance();
+    Timer.periodic(const Duration(seconds: 10), (timer) async {
+      getBalance();
+    });
   }
 
   Future<void> refresher() async {
@@ -227,7 +206,7 @@ class DashboardMapController extends GetxController
     } else {
       myName.value = jsonDecode(userData)["first_name"];
     }
-    streamData();
+    fetchData();
   }
 
   //GEt nearest data based on
@@ -260,8 +239,6 @@ class DashboardMapController extends GetxController
         gMapController!.dispose();
 
         animationController.dispose();
-        _dataController.close();
-        dataSubscription.cancel();
       } else {
         isLoading.value = false;
         getNearest(dataBalance[0]["items"], coordinates);
@@ -529,16 +506,6 @@ class DashboardMapController extends GetxController
     searchCoordinates = coordinates;
     isFilter = true;
     bridgeLocation(coordinates);
-  }
-
-  //toggle
-  void toggleSidebar() {
-    if (isSidebarVisible.value) {
-      animationController.reverse();
-    } else {
-      animationController.forward();
-    }
-    isSidebarVisible.value = !isSidebarVisible.value;
   }
 
 //MAP SETUP
@@ -842,7 +809,6 @@ class DashboardMapController extends GetxController
 
   //onMarker tapped
   void onMarkerTapped(data) {
-    isMarkerTapped.value = false;
     isGetNearData.value = true;
 
     // isMarkerTapped.value = !isMarkerTapped.value;
@@ -852,7 +818,6 @@ class DashboardMapController extends GetxController
       DialogMarker(
           markerData: data,
           cb: (datas) {
-            isMarkerTapped.value = false;
             isGetNearData.value = true;
           }),
       barrierColor: Colors.black.withOpacity(.1),

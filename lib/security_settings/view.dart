@@ -17,51 +17,55 @@ class Security extends GetView<SecuritySettingsController> {
       appBar: const CustomAppbar(title: ""),
       body: StretchingOverscrollIndicator(
         axisDirection: AxisDirection.down,
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Container(
-              height: 20,
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Container(
-                  padding: const EdgeInsets.all(24.0),
-                  decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                    color: AppColor.primaryColor.withOpacity(0.1),
+        child: ScrollConfiguration(
+          behavior: ScrollBehavior().copyWith(overscroll: false),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Column(
+                children: [
+                  Container(
+                    height: 20,
                   ),
-                  child: Center(
-                    child: Icon(
-                      Iconsax.shield_tick,
-                      color: AppColor.primaryColor,
-                      size: 55,
-                    ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Container(
+                        padding: const EdgeInsets.all(24.0),
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          color: AppColor.primaryColor.withOpacity(0.1),
+                        ),
+                        child: Center(
+                          child: Icon(
+                            Iconsax.shield_tick,
+                            color: AppColor.primaryColor,
+                            size: 55,
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
-                ),
-              ],
-            ),
-            Container(
-              height: 10,
-            ),
-            const Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                CustomTitle(
-                  text: "Security Settings",
-                  fontSize: 16,
-                  fontStyle: FontStyle.normal,
-                  fontWeight: FontWeight.w700,
-                  letterSpacing: -0.408,
-                  color: Color(0xFF1C1C1E),
-                ),
-              ],
-            ),
-            Container(height: 20),
-            Expanded(
-              child: ScrollConfiguration(
-                behavior: ScrollBehavior().copyWith(overscroll: false),
+                  Container(
+                    height: 10,
+                  ),
+                  const Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      CustomTitle(
+                        text: "Security Settings",
+                        fontSize: 16,
+                        fontStyle: FontStyle.normal,
+                        fontWeight: FontWeight.w700,
+                        letterSpacing: -0.408,
+                        color: Color(0xFF1C1C1E),
+                      ),
+                    ],
+                  ),
+                  Container(height: 20),
+                ],
+              ),
+              Expanded(
                 child: ListView(
                   padding: const EdgeInsets.symmetric(
                     horizontal: 15,
@@ -135,47 +139,46 @@ class Security extends GetView<SecuritySettingsController> {
                   ],
                 ),
               ),
-            ),
-            Divider(color: Colors.grey.shade500),
-            Container(
-              padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 8),
-              child: ListTile(
-                leading: Container(
-                  padding: const EdgeInsets.all(13),
-                  decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                    color: Colors.red.withOpacity(0.1),
+              Divider(color: Colors.grey.shade500),
+              Container(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 15, vertical: 8),
+                child: ListTile(
+                  leading: Container(
+                    padding: const EdgeInsets.all(13),
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      color: Colors.red.withOpacity(0.1),
+                    ),
+                    child: const Icon(
+                      Iconsax.profile_delete,
+                      color: Colors.red,
+                      size: 20,
+                    ),
                   ),
-                  child: const Icon(
-                    Iconsax.profile_delete,
-                    color: Colors.red,
-                    size: 20,
+                  title: const CustomTitle(
+                    text: "Delete Your Account",
+                    fontSize: 14,
+                    fontStyle: FontStyle.normal,
+                    fontWeight: FontWeight.w700,
+                    letterSpacing: -0.408,
                   ),
+                  subtitle: const CustomParagraph(
+                    text:
+                        "Permanently remove your account. All associated data will be erased.",
+                    letterSpacing: -0.408,
+                    fontSize: 12,
+                  ),
+                  trailing: const Icon(Icons.chevron_right_sharp,
+                      color: Color(0xFF1C1C1E)),
+                  onTap: () {
+                    controller.deleteAccount();
+                  },
                 ),
-                title: const CustomTitle(
-                  text: "Delete Your Account",
-                  fontSize: 14,
-                  fontStyle: FontStyle.normal,
-                  fontWeight: FontWeight.w700,
-                  letterSpacing: -0.408,
-                ),
-                subtitle: const CustomParagraph(
-                  text:
-                      "Permanently remove your account. All associated data will be erased.",
-                  letterSpacing: -0.408,
-                  fontSize: 12,
-                ),
-                trailing: const Icon(Icons.chevron_right_sharp,
-                    color: Color(0xFF1C1C1E)),
-                onTap: () {
-                  controller.deleteAccount();
-                },
               ),
-            ),
-            Container(
-              height: 10,
-            ),
-          ],
+              Container(height: 20),
+            ],
+          ),
         ),
       ),
     );
