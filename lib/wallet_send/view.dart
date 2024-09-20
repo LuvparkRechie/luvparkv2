@@ -1,5 +1,7 @@
 // ignore_for_file: prefer_const_constructors, unrelated_type_equality_checks
 
+import 'dart:io';
+
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -98,30 +100,44 @@ class WalletSend extends GetView<WalletSendController> {
                         controller.onTextChange();
                       },
                       controller: controller.recipient,
-                      inputFormatters: [Variables.maskFormatter],
-                      keyboardType: TextInputType.number,
+                      inputFormatters: <TextInputFormatter>[
+                        FilteringTextInputFormatter.digitsOnly,
+                        FilteringTextInputFormatter.allow(
+                            RegExp(r'^\d*\.?\d*$')),
+                      ],
+                      keyboardType: Platform.isAndroid
+                          ? TextInputType.number
+                          : const TextInputType.numberWithOptions(
+                              signed: true, decimal: false),
                       labelText: "Recipient's Mobile Number",
                       validator: (value) {
-                        if (value == null || value.isEmpty) {
-                          return "Mobile number is required";
+                        if (value!.isEmpty) {
+                          return 'Field is required';
                         }
-
-                        if (value.length != 12) {
-                          return "Invalid Mobile Number";
+                        if (value.toString().replaceAll(" ", "").length <
+                            10) {
+                          return 'Invalid mobile number';
                         }
-
+                        if (value.toString().replaceAll(" ", "")[0] ==
+                            '0') {
+                          return 'Invalid mobile number';
+                        }
+        
                         return null;
                       },
                     ),
                     CustomTextField(
                       labelText: "Amount",
                       controller: controller.tokenAmount,
-                      keyboardType: TextInputType.number,
-                      inputFormatters: [
-                        LengthLimitingTextInputFormatter(
-                          15,
-                        ),
+                      inputFormatters: <TextInputFormatter>[
+                        FilteringTextInputFormatter.digitsOnly,
+                        FilteringTextInputFormatter.allow(
+                            RegExp(r'^\d*\.?\d*$')),
                       ],
+                      keyboardType: Platform.isAndroid
+                          ? TextInputType.number
+                          : const TextInputType.numberWithOptions(
+                              signed: true, decimal: false),
                       onChange: (text) {
                         controller.onTextChange();
                       },
@@ -129,18 +145,19 @@ class WalletSend extends GetView<WalletSendController> {
                         if (value == null || value.isEmpty) {
                           return "Amount is required";
                         }
-
+        
                         double parsedValue;
                         try {
                           parsedValue = double.parse(value);
                         } catch (e) {
                           return "Invalid amount";
                         }
-
+        
                         double availableBalance;
                         try {
-                          availableBalance = double.parse(
-                              controller.userData[0]["amount_bal"].toString());
+                          availableBalance = double.parse(controller
+                              .userData[0]["amount_bal"]
+                              .toString());
                         } catch (e) {
                           return "Error retrieving balance";
                         }
@@ -150,7 +167,7 @@ class WalletSend extends GetView<WalletSendController> {
                         if (parsedValue > availableBalance) {
                           return "You don't have enough balance to proceed";
                         }
-
+        
                         return null;
                       },
                     ),
@@ -163,7 +180,9 @@ class WalletSend extends GetView<WalletSendController> {
                       labelText: "Note",
                       controller: controller.message,
                     ),
-                    for (int i = 0; i < controller.padNumbers.length; i += 4)
+                    for (int i = 0;
+                        i < controller.padNumbers.length;
+                        i += 4)
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: [
@@ -187,7 +206,7 @@ class WalletSend extends GetView<WalletSendController> {
                                 .validate()) {
                               final item =
                                   await Authentication().getUserLogin();
-
+        
                               if (item["mobile_no"].toString() ==
                                   "63${controller.recipient.text.replaceAll(" ", "")}") {
                                 CustomDialog().snackbarDialog(
@@ -203,8 +222,11 @@ class WalletSend extends GetView<WalletSendController> {
                                   double.parse(controller.tokenAmount.text
                                       .toString()
                                       .removeAllWhitespace)) {
-                                CustomDialog().snackbarDialog(context,
-                                    "Insuficient balance.", Colors.red, () {});
+                                CustomDialog().snackbarDialog(
+                                    context,
+                                    "Insuficient balance.",
+                                    Colors.red,
+                                    () {});
                                 return;
                               }
                               CustomDialog().confirmationDialog(
