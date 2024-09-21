@@ -123,11 +123,11 @@ class CustomDrawer extends GetView<DashboardMapController> {
                         contentPadding: EdgeInsets.zero,
                         minLeadingWidth: 18,
                         leading: Icon(
-                          LucideIcons.blinds,
+                          LucideIcons.parkingSquare,
                           color: Colors.black,
                         ),
                         title: const CustomParagraph(
-                          text: "Legend",
+                          text: "Parking Legend",
                           fontSize: 16,
                           fontStyle: FontStyle.normal,
                           fontWeight: FontWeight.w600,
