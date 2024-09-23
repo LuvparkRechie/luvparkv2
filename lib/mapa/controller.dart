@@ -82,7 +82,6 @@ class DashboardMapController extends GetxController
   RxDouble panelHeightClosed = 60.0.obs;
 
   Timer? debounce;
-  Timer? debounceIdle;
 
   @override
   void onInit() {
@@ -253,7 +252,7 @@ class DashboardMapController extends GetxController
 
   void getNearest(dynamic userData, LatLng coordinates) async {
     String params =
-        "${ApiKeys.gApiSubGetNearybyParkings}?is_allow_overnight=$isAllowOverNight&parking_type_code=$pTypeCode&current_latitude=${currentCoord.latitude}&current_longitude=${currentCoord.longitude}&search_latitude=${coordinates.latitude}&search_longitude=${coordinates.longitude}&radius=${Variables.convertToMeters(ddRadius.value.toString())}&parking_amenity_code=$amenities&vehicle_type_id=$vtypeId";
+        "${ApiKeys.gApiSubGetNearybyParkings}?is_allow_overnight=$isAllowOverNight&parking_type_code=$pTypeCode&current_latitude=${currentCoord.latitude}&current_longitude=${currentCoord.longitude}&search_latitude=${searchCoordinates.latitude}&search_longitude=${searchCoordinates.longitude}&radius=${Variables.convertToMeters(ddRadius.value.toString())}&parking_amenity_code=$amenities&vehicle_type_id=$vtypeId";
     print(" params$params");
     try {
       var returnData = await HttpRequest(api: params).get();
@@ -330,6 +329,8 @@ class DashboardMapController extends GetxController
             showNearestSuggestDialog();
           });
         });
+      } else {
+        panelController.open();
       }
     }
 
@@ -501,16 +502,14 @@ class DashboardMapController extends GetxController
 
   //get curr location
   Future<void> getFilterNearest(data) async {
-    List ltlng = await Functions.getCurrentPosition();
-    LatLng coordinates = LatLng(ltlng[0]["lat"], ltlng[0]["long"]);
     ddRadius.value = data[0]["radius"];
     pTypeCode = data[0]["park_type"];
     amenities = data[0]["amen"];
     vtypeId = data[0]["vh_type"];
     isAllowOverNight = data[0]["ovp"];
-    searchCoordinates = coordinates;
+
     isFilter = true;
-    bridgeLocation(coordinates);
+    bridgeLocation(searchCoordinates);
   }
 
 //MAP SETUP
@@ -528,62 +527,49 @@ class DashboardMapController extends GetxController
   void onCameraMoveStarted() {
     isGetNearData.value = false;
     panelController.close();
-    print("on camerag move started");
+
     update();
   }
 
   void onCameraIdle() async {
     isGetNearData.value = true;
-    // if (debounceIdle?.isActive ?? false) debounceIdle?.cancel();
 
-    // Duration duration = const Duration(seconds: 2);
-
-    // debounceIdle = Timer(duration, () {
-    //   panelController.close();
-    //   update();
-    // });
     update();
   }
 
-  void animateCamera() {
+  void animateCamera() async {
     double filterRadius = Variables.convertToMeters(ddRadius.value);
 
-    // polyline = Polyline(
-    //   polylineId: const PolylineId('dottedCircle'),
-    //   color: AppColor.mainColor,
-    //   width: 4,
-    //   patterns: [
-    //     PatternItem.dash(20),
-    //     PatternItem.gap(20),
-    //   ],
-    //   points: List<LatLng>.generate(
-    //     360,
-    //     (index) => calculateNewCoordinates(
-    //       searchCoordinates.latitude,
-    //       searchCoordinates.longitude,
-    //       filterRadius,
-    //       double.parse(
-    //         index.toString(),
-    //       ),
-    //     ),
-    //   ),
-    // );
     polyline = Polyline(
-      polylineId: const PolylineId('solidCircle'),
+      polylineId: const PolylineId('dottedCircle'),
       color: AppColor.mainColor,
       width: 4,
+      patterns: [
+        PatternItem.dash(20),
+        PatternItem.gap(20),
+      ],
       points: List<LatLng>.generate(
         360,
         (index) => calculateNewCoordinates(
           searchCoordinates.latitude,
           searchCoordinates.longitude,
           filterRadius,
-          double.parse(index.toString()),
+          double.parse(
+            index.toString(),
+          ),
         ),
       ),
     );
-    isLoading.value = false;
 
+    isLoading.value = false;
+    final Uint8List availabeMarkIcons =
+        await Functions.getSearchMarker(searchImage[0], 90);
+    markers.add(Marker(
+      markerId: const MarkerId('Searched place'),
+      position: LatLng(initialCameraPosition!.target.latitude,
+          initialCameraPosition!.target.longitude),
+      icon: BitmapDescriptor.fromBytes(availabeMarkIcons),
+    ));
     if (gMapController != null) {
       gMapController!.animateCamera(
         CameraUpdate.newCameraPosition(
@@ -611,6 +597,12 @@ class DashboardMapController extends GetxController
       myName.value = jsonDecode(userData)["first_name"];
     }
     update();
+  }
+
+  void onBtnDrawerOpen(Function cb) {
+    FocusScope.of(Get.context!).unfocus();
+    panelController.close();
+    cb(true);
   }
 
   String getIconAssetForPwd(String parkingTypeCode, String vehicleTypes) {
@@ -801,6 +793,9 @@ class DashboardMapController extends GetxController
   void showNearestSuggestDialog() {
     Get.dialog(SuggestionsScreen(
       data: dataNearest,
+      cb: () {
+        panelController.open();
+      },
     ));
   }
 

@@ -265,9 +265,11 @@ class DashboardMapScreen extends GetView<DashboardMapController> {
                                       size: 30,
                                     ),
                                     onPressed: () {
-                                      controller
-                                          .dashboardScaffoldKey.currentState
-                                          ?.openDrawer();
+                                      controller.onBtnDrawerOpen((dd) {
+                                        controller
+                                            .dashboardScaffoldKey.currentState
+                                            ?.openDrawer();
+                                      });
                                     },
                                   ),
                                 ),

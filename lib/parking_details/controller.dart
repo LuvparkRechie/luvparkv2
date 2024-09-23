@@ -72,7 +72,7 @@ class ParkingDetailsController extends GetxController {
     parkSched =
         "${pantropiko[0]} ${pantropiko.length > 1 ? "to ${dataNearest["parking_schedule"].toString().split("-")[1]}" : ""}";
 
-    vehicleTypes.value = _parseVehicleTypes(vehicleTypesList);
+    vehicleTypes.value = _parseVehicleTypes(vehicleTypesList).reversed.toList();
     finalSttime = formatTime(dataNearest["start_time"]);
     finalEndtime = formatTime(dataNearest["end_time"]);
     isOpen.value = Functions.checkAvailability(finalSttime, finalEndtime);

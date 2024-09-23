@@ -786,6 +786,7 @@ class ParkingDetails extends GetView<ParkingDetailsController> {
                     child: Row(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: controller.vehicleTypes.map((type) {
+                        print("type $type");
                         final color = Color(
                             int.parse(type['color'].substring(1), radix: 16) +
                                 0xFF000000);

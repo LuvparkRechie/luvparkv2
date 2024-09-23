@@ -12,7 +12,8 @@ import '../../controller.dart';
 
 class SuggestionsScreen extends StatefulWidget {
   final List data;
-  SuggestionsScreen({super.key, required this.data});
+  final VoidCallback cb;
+  SuggestionsScreen({super.key, required this.data, required this.cb});
 
   @override
   State<SuggestionsScreen> createState() => _SuggestionsScreenState();
@@ -196,6 +197,7 @@ class _SuggestionsScreenState extends State<SuggestionsScreen> {
                             text: "Okay",
                             onPressed: () {
                               Get.back();
+                              widget.cb();
                             })
                       ],
                     ),
