@@ -97,6 +97,8 @@ class WalletScreen extends GetView<WalletController> {
                                             Row(
                                               children: [
                                                 Image(
+                                                  height: 30,
+                                                  fit: BoxFit.cover,
                                                   image: AssetImage(
                                                     "assets/images/wallet_luvpark1.png",
                                                   ),
