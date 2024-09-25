@@ -25,7 +25,6 @@ import '../../../custom_widgets/app_color.dart';
 import '../../../custom_widgets/custom_cutter.dart';
 import '../../../custom_widgets/custom_cutter_top_bottom.dart';
 import '../../../custom_widgets/custom_text.dart';
-import '../../../custom_widgets/flex_widget.dart';
 
 class BookingReceipt extends GetView<BookingReceiptController> {
   BookingReceipt({Key? key}) : super(key: key) {
@@ -35,9 +34,6 @@ class BookingReceipt extends GetView<BookingReceiptController> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      floatingActionButton: FloatingActionButton(onPressed: () {
-        Get.dialog(Material(child: printScreen()));
-      }),
       backgroundColor: AppColor.bodyColor,
       appBar: CustomAppbar(
         bgColor: AppColor.primaryColor,
@@ -407,8 +403,13 @@ class BookingReceipt extends GetView<BookingReceiptController> {
                           Get.back();
 
                           GallerySaver.saveImage(imagePath.path).then((result) {
-                            CustomDialog().snackbarDialog(Get.context!,
-                                "Successfully saved.", Colors.green, () {});
+                            CustomDialog().successDialog(
+                                Get.context!,
+                                "Success",
+                                "QR code has been saved. Please check your gallery.",
+                                "Okay", () {
+                              Get.back();
+                            });
                           });
                         });
                       }),
