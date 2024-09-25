@@ -265,11 +265,9 @@ class DashboardMapScreen extends GetView<DashboardMapController> {
                                       size: 30,
                                     ),
                                     onPressed: () {
-                                      controller.onBtnDrawerOpen((dd) {
-                                        controller
-                                            .dashboardScaffoldKey.currentState
-                                            ?.openDrawer();
-                                      });
+                                      controller
+                                          .dashboardScaffoldKey.currentState
+                                          ?.openDrawer();
                                     },
                                   ),
                                 ),
@@ -328,8 +326,17 @@ class DashboardMapScreen extends GetView<DashboardMapController> {
                   InkWell(
                       onTap: () async {
                         FocusManager.instance.primaryFocus!.unfocus();
-                        controller.panelController.close();
                         CustomDialog().loadingDialog(context);
+                        controller.panelController.close();
+                        controller.addressText.value = controller
+                                .suggestions[index]
+                                .split("=structured=")[1]
+                                .contains(",")
+                            ? controller.suggestions[index]
+                                .split("=structured=")[1]
+                                .split(",")[0]
+                            : controller.suggestions[index]
+                                .split("=structured=")[1];
                         await Functions.searchPlaces(context,
                             controller.suggestions[index].split("=Rechie=")[0],
                             (searchedPlace) {
@@ -340,8 +347,9 @@ class DashboardMapScreen extends GetView<DashboardMapController> {
                             controller.searchCoordinates =
                                 LatLng(searchedPlace[0], searchedPlace[1]);
                             controller.ddRadius.value = "2";
-                            controller
-                                .bridgeLocation(controller.searchCoordinates);
+                            controller.isSearched.value = true;
+                            controller.bridgeLocation(
+                                LatLng(searchedPlace[0], searchedPlace[1]));
                           }
                         });
                       },
@@ -468,7 +476,7 @@ class DashboardMapScreen extends GetView<DashboardMapController> {
                             controller.searchCon.clear();
 
                             controller.suggestions.clear();
-                            controller.panelController.close();
+                            controller.panelController.open();
                           },
                           child: SvgPicture.asset(
                               "assets/dashboard_icon/close.svg")),

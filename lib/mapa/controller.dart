@@ -21,6 +21,7 @@ import 'package:luvpark_get/routes/routes.dart';
 import 'package:sliding_up_panel/sliding_up_panel.dart';
 
 import '../custom_widgets/app_color.dart';
+import '../sqlite/pa_message_table.dart';
 import 'utils/marker_data_dialog/marker_data_dialog.dart';
 import 'utils/suggestions/suggestions.dart';
 
@@ -36,6 +37,7 @@ class DashboardMapController extends GetxController
   late AnimationController animationController;
 
   bool isFilter = false;
+
   GoogleMapController? gMapController;
   CameraPosition? initialCameraPosition;
   RxList<Marker> markers = <Marker>[].obs;
@@ -70,6 +72,7 @@ class DashboardMapController extends GetxController
   RxBool netConnected = true.obs;
   RxBool isLoading = true.obs;
   RxBool isGetNearData = false.obs;
+  RxBool isSearched = false.obs;
   //Last Booking variables
   RxBool hasLastBooking = false.obs;
   RxString plateNo = "".obs;
@@ -81,7 +84,11 @@ class DashboardMapController extends GetxController
   RxDouble fabHeight = 0.0.obs;
   RxDouble panelHeightClosed = 60.0.obs;
 
+//Drawer
+  RxInt unreadMsg = 0.obs;
+
   Timer? debounce;
+  Timer? debouncePanel;
 
   @override
   void onInit() {
@@ -112,16 +119,20 @@ class DashboardMapController extends GetxController
     animationController.dispose();
 
     debounce?.cancel();
+    debouncePanel?.cancel();
     WidgetsBinding.instance.removeObserver(this);
   }
 
   @override
   void didChangeMetrics() {
     final bottomInset = View.of(Get.context!).viewInsets.bottom;
-
-    if (bottomInset > 0) {
+    print("bottom insets $bottomInset");
+    // if (bottomInset > 0) {
+    //   panelController.open();
+    // } else {}
+    if (!isLoading.value) {
       panelController.open();
-    } else {}
+    }
 
     update();
     super.didChangeMetrics();
@@ -187,6 +198,10 @@ class DashboardMapController extends GetxController
 
   void getBalance() async {
     final item = await Authentication().getUserId();
+    List<dynamic> msgdata =
+        await PaMessageDatabase.instance.getUnreadMessages();
+    unreadMsg.value = msgdata.length;
+
     String subApi = "${ApiKeys.gApiSubFolderGetBalance}?user_id=$item";
 
     HttpRequest(api: subApi).get().then((returnBalance) async {
@@ -217,6 +232,7 @@ class DashboardMapController extends GetxController
   getDefaultLocation() {
     isLoading.value = true;
     isFilter = false;
+    isSearched.value = false;
     LocationService.grantPermission(Get.context!, (isGranted) async {
       if (isGranted) {
         List ltlng = await Functions.getCurrentPosition();
@@ -281,17 +297,22 @@ class DashboardMapController extends GetxController
   void handleNoInternet() {
     netConnected.value = false;
     isLoading.value = false;
+    dataNearest.value = [];
     CustomDialog().internetErrorDialog(Get.context!, () {
       Get.back();
+      panelController.open();
     });
+
     return;
   }
 
   void handleServerError() {
     netConnected.value = true;
     isLoading.value = false;
+    dataNearest.value = [];
     CustomDialog().serverErrorDialog(Get.context!, () {
       Get.back();
+      panelController.open();
     });
     return;
   }
@@ -299,13 +320,14 @@ class DashboardMapController extends GetxController
   void handleNoParkingFound(dynamic nearData) {
     netConnected.value = true;
     isLoading.value = false;
+    dataNearest.value = [];
     markers.clear();
     bool isDouble = ddRadius.value.contains(".");
     String message = isFilter
         ? "There are no parking areas available based on your filter."
         : "No parking area found within \n${(isDouble ? double.parse(ddRadius.value) : int.parse(ddRadius.value)) >= 1 ? '${ddRadius.value} Km' : '${double.parse(ddRadius.value) * 1000} meters'}, please change location.";
 
-    CustomDialog().errorDialog(Get.context!, "Luvpark", message, () {
+    CustomDialog().infoDialog("Map Filter", message, () {
       Get.back();
       showDottedCircle(nearData);
     });
@@ -324,7 +346,6 @@ class DashboardMapController extends GetxController
       if (dataNearest.isNotEmpty && !isShowPopUp) {
         Future.delayed(const Duration(seconds: 1), () {
           Authentication().setShowPopUpNearest(true);
-
           showLegend(() {
             showNearestSuggestDialog();
           });
@@ -533,8 +554,14 @@ class DashboardMapController extends GetxController
 
   void onCameraIdle() async {
     isGetNearData.value = true;
+    if (debouncePanel?.isActive ?? false) debouncePanel?.cancel();
 
-    update();
+    Duration duration = const Duration(seconds: 3);
+
+    debouncePanel = Timer(duration, () {
+      panelController.open();
+      update();
+    });
   }
 
   void animateCamera() async {
@@ -562,14 +589,18 @@ class DashboardMapController extends GetxController
     );
 
     isLoading.value = false;
-    final Uint8List availabeMarkIcons =
-        await Functions.getSearchMarker(searchImage[0], 90);
-    markers.add(Marker(
-      markerId: const MarkerId('Searched place'),
-      position: LatLng(initialCameraPosition!.target.latitude,
-          initialCameraPosition!.target.longitude),
-      icon: BitmapDescriptor.fromBytes(availabeMarkIcons),
-    ));
+    if (isSearched.value) {
+      final Uint8List availabeMarkIcons =
+          await Functions.getSearchMarker(searchImage[0], 90);
+      markers.add(Marker(
+        infoWindow: InfoWindow(title: addressText.value),
+        markerId: MarkerId(addressText.value),
+        position: LatLng(initialCameraPosition!.target.latitude,
+            initialCameraPosition!.target.longitude),
+        icon: BitmapDescriptor.fromBytes(availabeMarkIcons),
+      ));
+    }
+
     if (gMapController != null) {
       gMapController!.animateCamera(
         CameraUpdate.newCameraPosition(
@@ -589,20 +620,14 @@ class DashboardMapController extends GetxController
 
     userProfile = item;
     myProfPic.value = profPic;
-
     userProfile = item;
+
     if (jsonDecode(userData!)["first_name"] == null) {
       myName.value = "";
     } else {
       myName.value = jsonDecode(userData)["first_name"];
     }
     update();
-  }
-
-  void onBtnDrawerOpen(Function cb) {
-    FocusScope.of(Get.context!).unfocus();
-    panelController.close();
-    cb(true);
   }
 
   String getIconAssetForPwd(String parkingTypeCode, String vehicleTypes) {

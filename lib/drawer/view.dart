@@ -1,20 +1,16 @@
 // ignore_for_file: prefer_const_constructors, deprecated_member_use
 import 'dart:convert';
 
-import 'package:awesome_notifications/awesome_notifications.dart';
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:lucide_icons/lucide_icons.dart';
-import 'package:luvpark_get/auth/authentication.dart';
-import 'package:luvpark_get/custom_widgets/alert_dialog.dart';
 import 'package:luvpark_get/custom_widgets/app_color.dart';
 import 'package:luvpark_get/custom_widgets/custom_text.dart';
 import 'package:luvpark_get/custom_widgets/variables.dart';
 import 'package:luvpark_get/mapa/controller.dart';
 import 'package:luvpark_get/routes/routes.dart';
-import 'package:luvpark_get/sqlite/reserve_notification_table.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 import '../mapa/utils/legend/legend_dialog.dart';
 
@@ -175,16 +171,44 @@ class CustomDrawer extends GetView<DashboardMapController> {
                           color: Color(0xFF1C1C1E),
                         ),
 
-                        onTap: () {
+                        onTap: () async {
                           Get.toNamed(Routes.wallet);
                         },
                       ),
                       ListTile(
                         contentPadding: EdgeInsets.zero,
                         minLeadingWidth: 18,
-                        leading: Icon(
-                          LucideIcons.messageSquare,
-                          color: const Color.fromARGB(221, 32, 32, 32),
+                        leading: Stack(
+                          clipBehavior: Clip.none,
+                          alignment: Alignment.topRight,
+                          children: [
+                            Icon(
+                              LucideIcons.messageSquare,
+                              color: const Color.fromARGB(221, 32, 32, 32),
+                            ),
+                            Visibility(
+                              visible: controller.unreadMsg.value != 0,
+                              child: Positioned(
+                                top: -13,
+                                right: 0,
+                                child: Container(
+                                  padding: EdgeInsets.all(5),
+                                  decoration: BoxDecoration(
+                                    shape: BoxShape.circle,
+                                    color: AppColor.primaryColor,
+                                  ),
+                                  child: AutoSizeText(
+                                    "${controller.unreadMsg.value}",
+                                    style: TextStyle(
+                                        color: Colors.white,
+                                        fontFamily: "Manrope",
+                                        fontWeight: FontWeight.w600),
+                                    maxLines: 1,
+                                  ),
+                                ),
+                              ),
+                            )
+                          ],
                         ),
                         title: const CustomParagraph(
                           text: "Messages",
@@ -193,7 +217,7 @@ class CustomDrawer extends GetView<DashboardMapController> {
                           fontWeight: FontWeight.w600,
                           color: Color(0xFF1C1C1E),
                         ),
-                        onTap: () {
+                        onTap: () async {
                           Get.toNamed(Routes.message);
                         },
                       ),
@@ -264,57 +288,6 @@ class CustomDrawer extends GetView<DashboardMapController> {
                   ),
                 ),
               ),
-              ListTile(
-                contentPadding: EdgeInsets.symmetric(horizontal: 20),
-                leading: Icon(LucideIcons.logOut, color: Colors.red),
-                title: CustomTitle(
-                  text: "Logout",
-                  fontSize: 17,
-                  fontStyle: FontStyle.normal,
-                  fontWeight: FontWeight.w600,
-                  letterSpacing: -0.408,
-                  color: Colors.red,
-                ),
-                onTap: () {
-                  CustomDialog().customPopUp(
-                    context,
-                    'Logout?',
-                    'Are you sure you want to logout',
-                    'Cancel',
-                    'Yes, log out',
-                    imageName: 'pu_info',
-                    btnNotBackgroundColor: Colors.transparent,
-                    btnNotTextColor: AppColor.primaryColor,
-                    btnOkTextColor: Colors.white,
-                    btnOkBackgroundColor: AppColor.primaryColor,
-                    onTapClose: () async {
-                      Get.back();
-                    },
-                    onTapConfirm: () async {
-                      Get.back();
-                      CustomDialog().loadingDialog(context);
-                      await Future.delayed(const Duration(seconds: 3));
-                      final userLogin = await Authentication().getUserLogin();
-                      List userData = [userLogin];
-                      userData = userData.map((e) {
-                        e["is_login"] = "N";
-                        return e;
-                      }).toList();
-                      await NotificationDatabase.instance.deleteAll();
-                      await Authentication().setLogin(jsonEncode(userData[0]));
-                      final prefs = await SharedPreferences.getInstance();
-                      prefs.remove("last_booking");
-                      Authentication().setLogoutStatus(true);
-                      AwesomeNotifications().dismissAllNotifications();
-                      AwesomeNotifications().cancelAll();
-                      Get.back();
-                      Get.offAllNamed(Routes.splash);
-                    },
-                    showTwoButtons: true,
-                  );
-                },
-              ),
-              Divider(),
               Center(
                 child: CustomParagraph(
                   text: 'V${Variables.version}',

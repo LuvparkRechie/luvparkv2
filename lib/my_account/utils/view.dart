@@ -38,68 +38,73 @@ class UpdateProfile extends GetView<UpdateProfileController> {
               ),
               body: Padding(
                 padding: const EdgeInsets.all(15),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Container(height: 20),
-                    Row(
-                      children: [
-                        Expanded(
-                          child: Container(
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(10),
-                              color: controller.currentPage.value == 0
-                                  ? AppColor.primaryColor
-                                  : Colors.grey.shade300,
+                child: ScrollConfiguration(
+                  behavior: ScrollBehavior().copyWith(overscroll: false),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Container(height: 20),
+                      Row(
+                        children: [
+                          Expanded(
+                            child: Container(
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(10),
+                                color: controller.currentPage.value == 0
+                                    ? AppColor.primaryColor
+                                    : Colors.grey.shade300,
+                              ),
+                              height: 5,
                             ),
-                            height: 5,
                           ),
-                        ),
-                        Container(width: 10),
-                        Expanded(
-                          child: Container(
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(10),
-                              color: controller.currentPage.value == 1
-                                  ? AppColor.primaryColor
-                                  : Colors.grey.shade300,
+                          Container(width: 10),
+                          Expanded(
+                            child: Container(
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(10),
+                                color: controller.currentPage.value == 1
+                                    ? AppColor.primaryColor
+                                    : Colors.grey.shade300,
+                              ),
+                              height: 5,
                             ),
-                            height: 5,
                           ),
-                        ),
-                        Container(width: 10),
-                        Expanded(
-                          child: Container(
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(10),
-                              color: controller.currentPage.value == 2
-                                  ? AppColor.primaryColor
-                                  : Colors.grey.shade300,
+                          Container(width: 10),
+                          Expanded(
+                            child: Container(
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(10),
+                                color: controller.currentPage.value == 2
+                                    ? AppColor.primaryColor
+                                    : Colors.grey.shade300,
+                              ),
+                              height: 5,
                             ),
-                            height: 5,
                           ),
+                        ],
+                      ),
+                      Container(height: 20),
+                      Expanded(
+                          child: PageView(
+                        physics: const NeverScrollableScrollPhysics(),
+                        controller: controller.pageController,
+                        onPageChanged: (value) {
+                          controller.onPageChanged(value);
+                        },
+                        children: [step1(), step2(), step3()],
+                      )),
+                      if (MediaQuery.of(context).viewInsets.bottom == 0)
+                        CustomButton(
+                          text: controller.currentPage.value == 2
+                              ? "Submit"
+                              : "Next",
+                          onPressed: () {
+                            controller.onNextPage();
+                          },
                         ),
-                      ],
-                    ),
-                    Container(height: 20),
-                    Expanded(
-                        child: PageView(
-                      physics: const NeverScrollableScrollPhysics(),
-                      controller: controller.pageController,
-                      onPageChanged: (value) {
-                        controller.onPageChanged(value);
-                      },
-                      children: [step1(), step2(), step3()],
-                    )),
-                    CustomButton(
-                      text:
-                          controller.currentPage.value == 2 ? "Submit" : "Next",
-                      onPressed: () {
-                        controller.onNextPage();
-                      },
-                    ),
-                    if (Platform.isIOS) Container(height: 20),
-                  ],
+                      if (Platform.isIOS) Container(height: 20),
+                    ],
+                  ),
                 ),
               ),
             ),

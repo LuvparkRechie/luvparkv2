@@ -1,5 +1,3 @@
-// ignore_for_file: prefer_const_constructors
-
 import 'dart:io';
 
 import 'package:flutter/material.dart';
@@ -452,10 +450,29 @@ class BookingReceipt extends GetView<BookingReceiptController> {
     return Column(
       children: [
         Padding(
-          padding: const EdgeInsets.all(15),
+          padding: const EdgeInsets.all(15.0),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+              Row(
+                children: [
+                  Expanded(
+                    child: CustomTitle(
+                      text: "Total Token",
+                      color: AppColor.primaryColor,
+                    ),
+                  ),
+                  Expanded(
+                    child: Align(
+                      alignment: Alignment.centerLeft,
+                      child: CustomTitle(
+                        text: controller.parameters["amount"],
+                        color: AppColor.primaryColor,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
               const SizedBox(height: 10),
               ticketDetailsWidget(
                   'Plate No.', controller.parameters["plateNo"]),
@@ -479,26 +496,6 @@ class BookingReceipt extends GetView<BookingReceiptController> {
               const SizedBox(height: 5),
               ticketDetailsWidget(
                   'Reference No.', controller.parameters["refno"]),
-              Divider(),
-              Row(
-                children: [
-                  Expanded(
-                    child: CustomTitle(
-                      text: "Total Token",
-                      color: AppColor.primaryColor,
-                    ),
-                  ),
-                  Expanded(
-                    child: Align(
-                      alignment: Alignment.centerLeft,
-                      child: CustomTitle(
-                        text: controller.parameters["amount"],
-                        color: AppColor.primaryColor,
-                      ),
-                    ),
-                  ),
-                ],
-              ),
             ],
           ),
         ),

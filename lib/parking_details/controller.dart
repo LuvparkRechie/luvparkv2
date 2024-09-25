@@ -13,12 +13,13 @@ import 'package:luvpark_get/http/api_keys.dart';
 import 'package:luvpark_get/http/http_request.dart';
 import 'package:luvpark_get/routes/routes.dart';
 
-class ParkingDetailsController extends GetxController {
+class ParkingDetailsController extends GetxController
+    with GetSingleTickerProviderStateMixin {
   final dataNearest = Get.arguments;
   Rx<GoogleMapController?> googleMapController = Rx<GoogleMapController?>(null);
   final DraggableScrollableController dragController =
       DraggableScrollableController();
-
+  late TabController tabController;
   RxList<Widget> carsData = <Widget>[].obs;
   RxBool btnLoading = false.obs;
   RxBool isNetConnected = true.obs;
@@ -41,6 +42,11 @@ class ParkingDetailsController extends GetxController {
   ).obs;
   RxList<dynamic> vehicleTypes = <dynamic>[].obs;
   RxList<dynamic> vehicleRates = <dynamic>[].obs;
+  RxList<dynamic> tabNames = [
+    {'name': 'Vehicles'},
+    {'name': 'Ameneties'},
+    {'name': 'Parking Rates'},
+  ].obs;
   List iconAmen = [
     {"code": "D", "icon": "dimension"},
     {"code": "V", "icon": "covered_area"},
@@ -60,9 +66,15 @@ class ParkingDetailsController extends GetxController {
   @override
   void onInit() {
     super.onInit();
-
+    tabController = TabController(length: 3, vsync: this);
     goingBackToTheCornerWhenIFirstSawYou();
     refreshAmenData();
+  }
+
+  @override
+  void dispose() {
+    tabController.dispose();
+    super.dispose();
   }
 
   Future<void> goingBackToTheCornerWhenIFirstSawYou() async {
@@ -291,14 +303,11 @@ class ParkingDetailsController extends GetxController {
     if (dataNearest["is_allow_reserve"] == "N") {
       btnLoading.value = false;
       Get.back();
-      CustomDialog().errorDialog(
-        Get.context!,
-        "luvpark",
-        "This area is not available at the moment.",
-        () {
-          Get.back();
-        },
-      );
+      CustomDialog().infoDialog("Booking Unavailable",
+          "This area is currently unavailable. Please try again later.", () {
+        Get.back();
+      });
+
       return;
     }
 

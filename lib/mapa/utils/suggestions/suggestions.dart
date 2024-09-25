@@ -192,7 +192,7 @@ class _SuggestionsScreenState extends State<SuggestionsScreen> {
                             },
                           ),
                         ),
-                        SizedBox(height: 22),
+                        Container(height: 10),
                         CustomButton(
                             text: "Okay",
                             onPressed: () {
