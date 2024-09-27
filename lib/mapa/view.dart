@@ -16,6 +16,7 @@ import 'package:luvpark_get/routes/routes.dart';
 import 'package:luvpark_get/voice_search/view.dart';
 import 'package:sliding_up_panel/sliding_up_panel.dart';
 
+import '../custom_widgets/variables.dart';
 import 'controller.dart';
 import 'utils/filter_map/view.dart';
 
@@ -23,6 +24,7 @@ class DashboardMapScreen extends GetView<DashboardMapController> {
   const DashboardMapScreen({Key? key}) : super(key: key);
   @override
   Widget build(BuildContext context) {
+    Variables.init(context);
     Get.put(DashboardMapController());
 
     return Obx(() {
@@ -138,14 +140,20 @@ class DashboardMapScreen extends GetView<DashboardMapController> {
                                   //   Get.dialog(LegendDialogScreen());
                                   // }),
                                   // const SizedBox(width: 10),
-                                  _buildDialItem("parking", () {
-                                    Get.toNamed(Routes.parkingAreas,
-                                        arguments: controller.dataNearest);
-                                  }),
+                                  Container(
+                                    key: controller.parkKey,
+                                    child: _buildDialItem("parking", () {
+                                      Get.toNamed(Routes.parkingAreas,
+                                          arguments: controller.dataNearest);
+                                    }),
+                                  ),
                                   const SizedBox(width: 10),
-                                  _buildDialItem("gps", () {
-                                    controller.getCurrentLoc();
-                                  }),
+                                  Container(
+                                    key: controller.locKey,
+                                    child: _buildDialItem("gps", () {
+                                      controller.getCurrentLoc();
+                                    }),
+                                  ),
                                 ],
                               ),
                             ),
@@ -158,6 +166,7 @@ class DashboardMapScreen extends GetView<DashboardMapController> {
                                 top: 40,
                                 right: 20,
                                 child: InkWell(
+                                  key: controller.walletKey,
                                   onTap: () {
                                     Get.toNamed(Routes.wallet);
                                   },
@@ -257,6 +266,7 @@ class DashboardMapScreen extends GetView<DashboardMapController> {
                                     ],
                                   ),
                                   child: IconButton(
+                                    key: controller.menubarKey,
                                     icon: AnimatedIcon(
                                       icon: AnimatedIcons.menu_close,
                                       progress:

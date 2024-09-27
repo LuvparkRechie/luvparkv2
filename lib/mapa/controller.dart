@@ -17,8 +17,10 @@ import 'package:luvpark_get/http/api_keys.dart';
 import 'package:luvpark_get/http/http_request.dart';
 import 'package:luvpark_get/location_auth/location_auth.dart';
 import 'package:luvpark_get/mapa/utils/legend/legend_dialog.dart';
+import 'package:luvpark_get/mapa/utils/target.dart';
 import 'package:luvpark_get/routes/routes.dart';
 import 'package:sliding_up_panel/sliding_up_panel.dart';
+import 'package:tutorial_coach_mark/tutorial_coach_mark.dart';
 
 import '../custom_widgets/app_color.dart';
 import '../sqlite/pa_message_table.dart';
@@ -90,6 +92,13 @@ class DashboardMapController extends GetxController
   Timer? debounce;
   Timer? debouncePanel;
 
+  late TutorialCoachMark tutorialCoachMark;
+  RxBool isFromDrawer = false.obs;
+  final GlobalKey menubarKey = GlobalKey();
+  final GlobalKey walletKey = GlobalKey();
+  final GlobalKey parkKey = GlobalKey();
+  final GlobalKey locKey = GlobalKey();
+
   @override
   void onInit() {
     super.onInit();
@@ -110,6 +119,7 @@ class DashboardMapController extends GetxController
     getLastBooking();
     getUserData();
     getDefaultLocation();
+    initTargetTutorial();
   }
 
   @override
@@ -820,6 +830,7 @@ class DashboardMapController extends GetxController
       data: dataNearest,
       cb: () {
         panelController.open();
+        showTargetTutorial(Variables.ctxt!, false);
       },
     ));
   }
@@ -864,5 +875,45 @@ class DashboardMapController extends GetxController
     );
   }
 
-  //on[ anel slide]
+  void showTargetTutorial(BuildContext context, bool isDrawer) {
+    isFromDrawer.value = isDrawer;
+
+    Future.delayed(
+      const Duration(milliseconds: 300),
+      () {
+        tutorialCoachMark.show(context: context);
+      },
+    );
+  }
+
+  void initTargetTutorial() {
+    tutorialCoachMark = TutorialCoachMark(
+      targets: addTargetsPage(
+        menubar: menubarKey,
+        wallet: walletKey,
+        parkinginformation: parkKey,
+        currentlocation: locKey,
+      ),
+      textStyleSkip: const TextStyle(
+        color: Colors.white,
+        fontWeight: FontWeight.w600,
+        wordSpacing: 4,
+        fontSize: 14,
+      ),
+      colorShadow: Colors.black54,
+      paddingFocus: 10,
+      opacityShadow: 0.8,
+      onFinish: () {
+        if (isFromDrawer.value) {
+          dashboardScaffoldKey.currentState?.openDrawer();
+        }
+      },
+      onSkip: () {
+        if (isFromDrawer.value) {
+          dashboardScaffoldKey.currentState?.openDrawer();
+        }
+        return true;
+      },
+    );
+  }
 }

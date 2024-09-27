@@ -2,10 +2,18 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
+	<key>NSMicrophoneUsageDescription</key>
+	<string>We need access to your microphone for voice search.</string>
+	<key>NSSpeechRecognitionUsageDescription</key>
+	<string>We need access to speech recognition for voice search.</string>
+	<key>NSCameraUsageDescription</key>
+	<string>We would like to access the camera to take photos and videos.</string> 
+	<key>CADisableMinimumFrameDurationOnPhone</key>
+	<true/>
 	<key>CFBundleDevelopmentRegion</key>
 	<string>$(DEVELOPMENT_LANGUAGE)</string>
 	<key>CFBundleDisplayName</key>
-	<string>Luvpark Get</string>
+	<string>luvpark</string>
 	<key>CFBundleExecutable</key>
 	<string>$(EXECUTABLE_NAME)</string>
 	<key>CFBundleIdentifier</key>
@@ -13,7 +21,7 @@
 	<key>CFBundleInfoDictionaryVersion</key>
 	<string>6.0</string>
 	<key>CFBundleName</key>
-	<string>luvpark_get</string>
+	<string>luvpark</string>
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
 	<key>CFBundleShortVersionString</key>
@@ -22,7 +30,23 @@
 	<string>????</string>
 	<key>CFBundleVersion</key>
 	<string>$(FLUTTER_BUILD_NUMBER)</string>
+	<key>GoogleMapsApiKey</key>
+	<string>AIzaSyCaDHmbTEr-TVnJY8dG0ZnzsoBH3Mzh4cE</string>
+	<key>GooglePlacesAPIKey</key>
+	<string>AIzaSyCaDHmbTEr-TVnJY8dG0ZnzsoBH3Mzh4cE</string>
+	<key>ITSAppUsesNonExemptEncryption</key>
+	<false/>
 	<key>LSRequiresIPhoneOS</key>
+	<true/>
+	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
+	<string>luvpark needs Location access so that you can use the directions and map features in our app</string>
+	<key>NSLocationAlwaysUsageDescription</key>
+	<string>luvpark needs Location access so that you can use the directions and map features in our app</string>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>We request access to your location so that you can use the directions and map features in our app. This enables us to provide you with accurate and real-time navigation, helping you find your way and discover places of interest more conveniently. Your location data is used solely within the app and is not shared with third parties. Granting this permission enhances your user experience and ensures a seamless journey with our app. Thank you for choosing us!</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>This app needs access to your photo library in order to import and save images.</string>
+	<key>UIApplicationSupportsIndirectInputEvents</key>
 	<true/>
 	<key>UILaunchStoryboardName</key>
 	<string>LaunchScreen</string>
@@ -41,9 +65,5 @@
 		<string>UIInterfaceOrientationLandscapeLeft</string>
 		<string>UIInterfaceOrientationLandscapeRight</string>
 	</array>
-	<key>CADisableMinimumFrameDurationOnPhone</key>
-	<true/>
-	<key>UIApplicationSupportsIndirectInputEvents</key>
-	<true/>
 </dict>
 </plist>

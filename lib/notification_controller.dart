@@ -296,7 +296,6 @@ Future<void> getParkingTrans(int ctr) async {
     api:
         "${ApiKeys.gApiSubFolderGetActiveParking}?luvpay_id=${akongId.toString()}",
   ).get().then((notificationData) async {
-    print("notificationData $notificationData");
     if (notificationData == "No Internet") {
       return;
     }
@@ -339,14 +338,15 @@ Future<void> getParkingTrans(int ctr) async {
             "parking",
           );
           NotificationController.scheduleNewNotification(
-            int.parse(dataRow["reservation_id"].toString()),
+            int.parse(dataRow["reservation_id"].toString()) + 1,
             "luvpark",
             "Your Parking at ${dataRow["park_area_name"]} is about to expire.",
             dataRow["dt_out"].toString(),
             "parking",
           );
+          //closing schedule
           NotificationController.scheduleNewNotification(
-            int.parse(dataRow["reservation_id"].toString()) + 10,
+            int.parse(dataRow["reservation_id"].toString()) + 2,
             "luvpark",
             "Your parking at ${dataRow["park_area_name"]} will be closing soon.",
             dataRow["end_time"].toString(),
@@ -357,16 +357,16 @@ Future<void> getParkingTrans(int ctr) async {
           if (dataRow["dt_in"].toString().toLowerCase() !=
               returnData["dt_in"].toString().toLowerCase()) {
             NotificationController.cancelNotificationsById(
-                dataRow["mreservation_id"]);
+                dataRow["mreservation_id"] + 1);
             NotificationController.parkingNotif(
-              int.parse(dataRow["mreservation_id"].toString()),
+              int.parse(dataRow["reservation_id"].toString()),
               0,
               'Parking Auto Extend',
               "You've paid ${dataRow["amount"]} for your parking. Please check your balance.",
               "parking",
             );
             NotificationController.scheduleNewNotification(
-              int.parse(dataRow["mreservation_id"].toString()),
+              int.parse(dataRow["reservation_id"].toString()) + 1,
               "luvpark",
               "Your Parking at ${dataRow["park_area_name"]} is about to expire.",
               dataRow["dt_out"].toString(),

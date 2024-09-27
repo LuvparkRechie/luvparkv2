@@ -15,9 +15,8 @@ import 'package:pointycastle/export.dart' as crypto;
 import 'package:screenshot/screenshot.dart';
 import 'package:text_to_speech/text_to_speech.dart';
 
-BuildContext? ctxt;
-
 class Variables {
+  static BuildContext? ctxt;
   static late Size screenSize;
   static void init(BuildContext context) {
     ctxt = context;
