@@ -1,9 +1,11 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:luvpark_get/custom_widgets/app_color.dart';
 import 'package:luvpark_get/custom_widgets/custom_appbar.dart';
 import 'package:luvpark_get/custom_widgets/custom_text.dart';
+import 'package:luvpark_get/mapa/controller.dart';
 import 'package:luvpark_get/routes/routes.dart';
 import 'package:luvpark_get/security_settings/index.dart';
 
@@ -18,7 +20,7 @@ class Security extends GetView<SecuritySettingsController> {
       body: StretchingOverscrollIndicator(
         axisDirection: AxisDirection.down,
         child: ScrollConfiguration(
-          behavior: ScrollBehavior().copyWith(overscroll: false),
+          behavior: const ScrollBehavior().copyWith(overscroll: false),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
@@ -104,6 +106,44 @@ class Security extends GetView<SecuritySettingsController> {
                         Get.toNamed(Routes.changepassword);
                       },
                     ),
+                    ListTile(
+                      leading: Container(
+                        padding: const EdgeInsets.all(13),
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          color: AppColor.primaryColor.withOpacity(0.1),
+                        ),
+                        child: Icon(
+                          Iconsax.book,
+                          color: AppColor.primaryColor,
+                          size: 20,
+                        ),
+                      ),
+                      title: const CustomTitle(
+                        text: "Tutorial On/Off",
+                        fontSize: 14,
+                        fontStyle: FontStyle.normal,
+                        fontWeight: FontWeight.w700,
+                        letterSpacing: -0.408,
+                      ),
+                      subtitle: const CustomParagraph(
+                        text:
+                            "This function turns off guide in the app after logging in.",
+                        letterSpacing: -0.408,
+                        fontSize: 12,
+                      ),
+                      trailing: Obx(
+                        () => CupertinoSwitch(
+                            value: controller.switchGuide.value,
+                            onChanged: (bool newValue) {
+                              controller.saveSwitchGuideState(newValue);
+                            }),
+                      ),
+                      onTap: () {
+                        Get.toNamed(Routes.changepassword);
+                      },
+                    ),
+
                     // Divider(color: Colors.grey.shade500),
                     // ListTile(
                     //   leading: Container(

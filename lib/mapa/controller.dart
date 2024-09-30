@@ -10,6 +10,7 @@ import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:http/http.dart' as http;
 import 'package:luvpark_get/auth/authentication.dart';
+import 'package:luvpark_get/auth/tutorialapp.dart';
 import 'package:luvpark_get/custom_widgets/alert_dialog.dart';
 import 'package:luvpark_get/custom_widgets/variables.dart';
 import 'package:luvpark_get/functions/functions.dart';
@@ -57,7 +58,7 @@ class DashboardMapController extends GetxController
   );
 
   LatLng searchCoordinates = const LatLng(0, 0);
-  LatLng currentCoord = LatLng(0, 0);
+  LatLng currentCoord = const LatLng(0, 0);
 
 //PIn icon
   List<String> searchImage = ['assets/dashboard_icon/location_pin.png'];
@@ -115,7 +116,7 @@ class DashboardMapController extends GetxController
     );
     fabHeight.value = panelHeightOpen.value + 30;
     WidgetsBinding.instance.addObserver(this);
-
+    _checkSwitchGuideState();
     getLastBooking();
     getUserData();
     getDefaultLocation();
@@ -882,13 +883,30 @@ class DashboardMapController extends GetxController
     );
   }
 
+  Future<void> _checkSwitchGuideState() async {
+    bool switchGuide = await SaveTutorial().getSaveTutorialStatus();
+
+    if (!switchGuide) {
+      // If switchGuide is ON, show the tutorial on next refresh
+      showTargetTutorial(Get.context!, false);
+    }
+  }
+
   void showTargetTutorial(BuildContext context, bool isDrawer) {
     isFromDrawer.value = isDrawer;
 
     Future.delayed(
       const Duration(milliseconds: 300),
       () {
-        tutorialCoachMark.show(context: context);
+        // tutorialCoachMark.show(context: context);
+        SaveTutorial().getSaveTutorialStatus().then((value) {
+          if (!value) {
+            print("user has not seen this page");
+            tutorialCoachMark.show(context: context);
+          } else {
+            print("user has seen this page");
+          }
+        });
       },
     );
   }
@@ -911,6 +929,7 @@ class DashboardMapController extends GetxController
       paddingFocus: 10,
       opacityShadow: 0.8,
       onFinish: () {
+        SaveTutorial().saveTutorialStatus();
         if (isFromDrawer.value) {
           dashboardScaffoldKey.currentState?.openDrawer();
         }
