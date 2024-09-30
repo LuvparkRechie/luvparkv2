@@ -118,19 +118,20 @@ class ParkingDetailsController extends GetxController
       String eName;
 
       if (e["name"].toString().toLowerCase().contains("trikes")) {
-        eName = "Cars";
+        eName = e["count"].toString().length > 1 ? "Cars" : "Car";
       } else if (e["name"].toString().toLowerCase().contains("motor")) {
-        eName = "Motors";
+        eName = e["count"].toString().length > 1 ? "Motors" : "Motor";
       } else {
         eName = e["name"].toString();
       }
       e["name"] = eName;
       return e;
     }).toList();
-
-    vehicleTypes.value =
-        Functions.sortJsonList(inataya, 'count').reversed.toList();
-
+    inataya = inataya.where((element) {
+      return int.parse(element["count"].toString()) != 0;
+    }).toList();
+    vehicleTypes.value = Functions.sortJsonList(inataya, 'count');
+    print("inatay $vehicleTypes");
     finalSttime = formatTime(dataNearest["start_time"]);
     finalEndtime = formatTime(dataNearest["end_time"]);
     isOpen.value = Functions.checkAvailability(finalSttime, finalEndtime);

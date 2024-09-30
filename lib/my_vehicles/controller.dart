@@ -359,7 +359,7 @@ class MyVehiclesController extends GetxController {
         if (returnPost["success"] == 'Y') {
           onRefresh();
           CustomDialog().successDialog(
-              Get.context!, "Success", "Successfully added vehicle", "Okay",
+              Get.context!, "Success", "Successfully added vehicle.", "Okay",
               () {
             Get.back();
             Get.back();

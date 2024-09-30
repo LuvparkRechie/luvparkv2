@@ -120,8 +120,8 @@ class BookingController extends GetxController
     if (isShowNotice.value) {
       Get.back();
     }
-    CustomDialog().errorDialog(Get.context!, "No Interaction Detected",
-        "No Gestures were detected within the last minute. Reloading the page",
+    CustomDialog().errorDialog(Get.context!, "Screen Idle",
+        "No Gestures were detected within the last minute. Reloading the page.",
         () {
       Get.back();
       _reloadPage();

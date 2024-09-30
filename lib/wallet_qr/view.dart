@@ -184,7 +184,7 @@ class PayQr extends GetView<QrWalletController> {
                               padding: EdgeInsets.fromLTRB(0, 17, 0, 15),
                               child: Column(
                                 children: [
-                                  controller.userImage != null
+                                  controller.userImage == null
                                       ? Container(
                                           height: 70,
                                           width: 70,
@@ -444,7 +444,7 @@ class ReceiveQr extends GetView<QrWalletController> {
                 padding: EdgeInsets.fromLTRB(0, 17, 0, 15),
                 child: Column(
                   children: [
-                    controller.userImage != null
+                    controller.userImage == null
                         ? Container(
                             height: 70,
                             width: 70,

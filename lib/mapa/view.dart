@@ -483,10 +483,7 @@ class DashboardMapScreen extends GetView<DashboardMapController> {
                       InkWell(
                           onTap: () {
                             FocusManager.instance.primaryFocus!.unfocus();
-                            controller.searchCon.clear();
-
-                            controller.suggestions.clear();
-                            controller.panelController.open();
+                            controller.searchCon.text = "";
                           },
                           child: SvgPicture.asset(
                               "assets/dashboard_icon/close.svg")),
