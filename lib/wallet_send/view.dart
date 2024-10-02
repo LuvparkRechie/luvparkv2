@@ -16,6 +16,7 @@ import 'package:luvpark_get/custom_widgets/custom_textfield.dart';
 import 'package:luvpark_get/wallet_send/index.dart';
 
 import '../custom_widgets/app_color.dart';
+import '../custom_widgets/scanner/scanner_screen.dart';
 import '../custom_widgets/variables.dart';
 
 class WalletSend extends GetView<WalletSendController> {
@@ -118,6 +119,36 @@ class WalletSend extends GetView<WalletSendController> {
                         }
 
                         return null;
+                      },
+                      suffixIcon: Icons.qr_code,
+                      onIconTap: () {
+                        Get.to(ScannerScreen(
+                          onchanged: (ScannedData args) {
+                            String scannedMobileNumber = args.scanned_hash;
+                            String formattedNumber = scannedMobileNumber
+                                .replaceAll(RegExp(r'\D'), '');
+
+                            if (formattedNumber.length >= 12) {
+                              formattedNumber = formattedNumber.substring(2);
+                            }
+
+                            if (formattedNumber.isEmpty ||
+                                formattedNumber.length != 10 ||
+                                formattedNumber[0] == '0') {
+                              CustomDialog().errorDialog(
+                                context,
+                                "luvpark",
+                                "Invalid QR Code",
+                                () {
+                                  Get.back();
+                                },
+                              );
+                            } else {
+                              controller.recipient.text = formattedNumber;
+                              controller.onTextChange();
+                            }
+                          },
+                        ));
                       },
                     ),
                     CustomTextField(
