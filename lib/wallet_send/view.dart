@@ -233,7 +233,7 @@ class WalletSend extends GetView<WalletSendController> {
                                   "63${controller.recipient.text.replaceAll(" ", "")}") {
                                 // ignore: use_build_context_synchronously
                                 CustomDialog().snackbarDialog(
-                                    context,
+                                    Get.context!,
                                     "Please use another number.",
                                     Colors.red,
                                     () {});
@@ -252,7 +252,7 @@ class WalletSend extends GetView<WalletSendController> {
                               }
                               // ignore: use_build_context_synchronously
                               CustomDialog().confirmationDialog(
-                                  context,
+                                  Get.context!,
                                   "Confirmation",
                                   "Are you sure you want to proceed?",
                                   "Back",
@@ -281,22 +281,19 @@ class WalletSend extends GetView<WalletSendController> {
         child: Padding(
           padding: const EdgeInsets.all(3.0),
           child: InkWell(
-              // onTap: () => onTapChange("$value", index),
               child: Container(
             padding: const EdgeInsets.fromLTRB(20, 17, 20, 17),
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(7),
-              border: Border.all(
-                  color: Colors.grey.shade200,
-                  width: 1), // Color(0xFF2563EB) corresponds to #2563EB
+              border: Border.all(color: Colors.grey.shade200, width: 1),
               color: controller.indexbtn.value == value
                   ? AppColor.primaryColor
-                  : AppColor.bodyColor, // Background color
+                  : AppColor.bodyColor,
             ),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.center,
-              mainAxisSize: MainAxisSize.min, // Equivalent to flex-shrink: 0
+              mainAxisSize: MainAxisSize.min,
               children: [
                 AutoSizeText(
                   "$value",
