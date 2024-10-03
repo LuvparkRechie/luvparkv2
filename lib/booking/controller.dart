@@ -411,7 +411,7 @@ class BookingController extends GetxController
       "points_used": double.parse(usedRewards.toString()),
       "auto_extend": isExtendchecked.value ? "Y" : "N"
     };
-    print("das bookoing param $dynamicBookParam");
+
     CustomDialog().confirmationDialog(
         Get.context!,
         "Confirm Booking",

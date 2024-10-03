@@ -83,7 +83,6 @@ class DashboardMapController extends GetxController
   RxBool hasLastBooking = false.obs;
   RxString plateNo = "".obs;
   RxString brandName = "".obs;
-
 //panel gg
   RxDouble panelHeightOpen = 180.0.obs;
   RxDouble initFabHeight = 80.0.obs;
@@ -296,7 +295,7 @@ class DashboardMapController extends GetxController
   void getNearest(LatLng coordinates) async {
     String params =
         "${ApiKeys.gApiSubGetNearybyParkings}?is_allow_overnight=$isAllowOverNight&parking_type_code=$pTypeCode&current_latitude=${currentCoord.latitude}&current_longitude=${currentCoord.longitude}&search_latitude=${searchCoordinates.latitude}&search_longitude=${searchCoordinates.longitude}&radius=${Variables.convertToMeters(ddRadius.value.toString())}&parking_amenity_code=$amenities&vehicle_type_id=$vtypeId";
-    print(" params$params");
+    print("params $params");
     try {
       var returnData = await HttpRequest(api: params).get();
 
@@ -374,7 +373,7 @@ class DashboardMapController extends GetxController
     if (dataNearest.isNotEmpty && !isShowPopUp) {
       Future.delayed(const Duration(seconds: 1), () {
         Authentication().setShowPopUpNearest(true);
-        print("lastBookData $lastBookData");
+
         if (lastBookData.isEmpty || lastBookData == null) {
           showLegend(() {
             showNearestSuggestDialog();
@@ -1118,7 +1117,7 @@ class DashboardMapController extends GetxController
       return int.parse(element["count"].toString()) != 0;
     }).toList();
     vehicleTypes.value = Functions.sortJsonList(inataya, 'count');
-    print("inatay $vehicleTypes");
+
     finalSttime = formatTime(markerData[0]["start_time"]);
     finalEndtime = formatTime(markerData[0]["end_time"]);
     isOpen.value = Functions.checkAvailability(finalSttime, finalEndtime);
@@ -1244,7 +1243,6 @@ class DashboardMapController extends GetxController
     }
 
     Functions.getUserBalance(Get.context!, (dataBalance) async {
-      print("data balance $dataBalance");
       final userdata = dataBalance[0];
       final items = userdata["items"];
 
