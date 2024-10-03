@@ -2,7 +2,6 @@ import 'dart:convert';
 
 import 'package:get/get.dart';
 import 'package:luvpark_get/auth/authentication.dart';
-import 'package:luvpark_get/auth/tutorialapp.dart';
 import 'package:luvpark_get/custom_widgets/alert_dialog.dart';
 import 'package:luvpark_get/http/api_keys.dart';
 import 'package:luvpark_get/http/http_request.dart';
@@ -14,13 +13,6 @@ import '../routes/routes.dart';
 class SecuritySettingsController extends GetxController {
   RxString mobileNo = "".obs;
   RxList userData = [].obs;
-  RxBool switchGuide = false.obs;
-
-  @override
-  void onInit() {
-    super.onInit();
-    loadSwitchGuideState();
-  }
 
   Future<void> deleteAccount() async {
     CustomDialog().loadingDialog(Get.context!);
@@ -112,19 +104,5 @@ class SecuritySettingsController extends GetxController {
         },
       ));
     });
-  }
-
-  Future<void> loadSwitchGuideState() async {
-    bool guideStatus = await SaveTutorial().getSaveTutorialStatus();
-    switchGuide.value = !guideStatus;
-  }
-
-  Future<void> saveSwitchGuideState(bool value) async {
-    switchGuide.value = value;
-    if (value) {
-      SaveTutorial().saveTutorialStatus();
-    } else {
-      await SaveTutorial().clearTutorialStatus();
-    }
   }
 }

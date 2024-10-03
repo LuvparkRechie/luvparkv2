@@ -136,8 +136,6 @@ class CustomMobileNumber extends StatefulWidget {
   final Icon? prefixIcon;
   final bool isEnabled;
   final String? Function(String?)? validator;
-  final IconData? suffixIcon;
-  final Function? onIconTap;
 
   const CustomMobileNumber({
     super.key,
@@ -152,8 +150,6 @@ class CustomMobileNumber extends StatefulWidget {
     this.onTap,
     this.isEnabled = true,
     this.validator,
-    this.suffixIcon,
-    this.onIconTap,
   });
 
   @override
@@ -175,14 +171,6 @@ class _CustomMobileNumberState extends State<CustomMobileNumber> {
         enabled: widget.isEnabled,
         keyboardType: widget.keyboardType!,
         decoration: InputDecoration(
-          suffixIcon: widget.suffixIcon != null
-              ? InkWell(
-                  onTap: () {
-                    widget.onIconTap!();
-                  },
-                  child: Icon(widget.suffixIcon!),
-                )
-              : null,
           contentPadding:
               const EdgeInsets.symmetric(vertical: 10, horizontal: 12),
           focusedBorder: OutlineInputBorder(

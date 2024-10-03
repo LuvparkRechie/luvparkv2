@@ -16,7 +16,6 @@ import 'package:luvpark_get/custom_widgets/custom_textfield.dart';
 import 'package:luvpark_get/wallet_send/index.dart';
 
 import '../custom_widgets/app_color.dart';
-import '../custom_widgets/scanner/scanner_screen.dart';
 import '../custom_widgets/variables.dart';
 
 class WalletSend extends GetView<WalletSendController> {
@@ -120,36 +119,6 @@ class WalletSend extends GetView<WalletSendController> {
 
                         return null;
                       },
-                      suffixIcon: Icons.qr_code,
-                      onIconTap: () {
-                        Get.to(ScannerScreen(
-                          onchanged: (ScannedData args) {
-                            String scannedMobileNumber = args.scanned_hash;
-                            String formattedNumber = scannedMobileNumber
-                                .replaceAll(RegExp(r'\D'), '');
-
-                            if (formattedNumber.length >= 12) {
-                              formattedNumber = formattedNumber.substring(2);
-                            }
-
-                            if (formattedNumber.isEmpty ||
-                                formattedNumber.length != 10 ||
-                                formattedNumber[0] == '0') {
-                              CustomDialog().errorDialog(
-                                context,
-                                "luvpark",
-                                "Invalid QR Code",
-                                () {
-                                  Get.back();
-                                },
-                              );
-                            } else {
-                              controller.recipient.text = formattedNumber;
-                              controller.onTextChange();
-                            }
-                          },
-                        ));
-                      },
                     ),
                     CustomTextField(
                       labelText: "Amount",
@@ -233,7 +202,7 @@ class WalletSend extends GetView<WalletSendController> {
                                   "63${controller.recipient.text.replaceAll(" ", "")}") {
                                 // ignore: use_build_context_synchronously
                                 CustomDialog().snackbarDialog(
-                                    Get.context!,
+                                    context,
                                     "Please use another number.",
                                     Colors.red,
                                     () {});
@@ -252,7 +221,7 @@ class WalletSend extends GetView<WalletSendController> {
                               }
                               // ignore: use_build_context_synchronously
                               CustomDialog().confirmationDialog(
-                                  Get.context!,
+                                  context,
                                   "Confirmation",
                                   "Are you sure you want to proceed?",
                                   "Back",
@@ -281,19 +250,22 @@ class WalletSend extends GetView<WalletSendController> {
         child: Padding(
           padding: const EdgeInsets.all(3.0),
           child: InkWell(
+              // onTap: () => onTapChange("$value", index),
               child: Container(
             padding: const EdgeInsets.fromLTRB(20, 17, 20, 17),
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(7),
-              border: Border.all(color: Colors.grey.shade200, width: 1),
+              border: Border.all(
+                  color: Colors.grey.shade200,
+                  width: 1), // Color(0xFF2563EB) corresponds to #2563EB
               color: controller.indexbtn.value == value
                   ? AppColor.primaryColor
-                  : AppColor.bodyColor,
+                  : AppColor.bodyColor, // Background color
             ),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.center,
-              mainAxisSize: MainAxisSize.min,
+              mainAxisSize: MainAxisSize.min, // Equivalent to flex-shrink: 0
               children: [
                 AutoSizeText(
                   "$value",
