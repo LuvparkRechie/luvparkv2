@@ -348,10 +348,11 @@ class DashboardMapController extends GetxController
   }
 
   void handleNoParkingFound(dynamic nearData) {
+    markers.clear();
+    dataNearest.value = [];
     netConnected.value = true;
     isLoading.value = false;
-    dataNearest.value = [];
-    markers.clear();
+    showDottedCircle(nearData);
     bool isDouble = ddRadius.value.contains(".");
     String message = isFilter
         ? "There are no parking areas available based on your filter."
@@ -359,7 +360,6 @@ class DashboardMapController extends GetxController
 
     CustomDialog().infoDialog("Map Filter", message, () {
       Get.back();
-      showDottedCircle(nearData);
     });
   }
 
@@ -396,7 +396,7 @@ class DashboardMapController extends GetxController
     initialCameraPosition = CameraPosition(
       target: searchCoordinates,
       zoom: nearData.isEmpty ? 14 : 16,
-      tilt: 0,
+      tilt: 45,
       bearing: 0,
     );
 
